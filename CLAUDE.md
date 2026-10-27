@@ -189,7 +189,7 @@ git commit -m "feat: Add 3-tier web app pattern
 Closes #5"
 
 # Push
-git push origin main
+# Agents never push. The repo owner pushes after review.
 ```
 
 **Commit message format**:
