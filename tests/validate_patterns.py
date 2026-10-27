@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Validate cloud-patterns data structure and assets.
+Validate patterns data structure and assets.
 
 Prevents regressions by ensuring:
 - patterns.json has valid schema

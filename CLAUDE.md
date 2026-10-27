@@ -116,7 +116,7 @@ docker run -it -p 8080:8080 -v $(pwd)/diagrams:/data jgraph/drawio:latest
 ## Project Structure
 
 ```
-cloud-patterns/
+patterns/
 ├── README.md                      # Project overview
 ├── LEARNING.md                    # 8-week learning path
 ├── CLAUDE.md                      # This file

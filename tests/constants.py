@@ -1,4 +1,4 @@
-"""Repository root for cloud-patterns."""
+"""Repository root for patterns."""
 
 from pathlib import Path
 

@@ -55,7 +55,7 @@ Return index.html, style.css, 404.html
 
 ### Step 1: Start LocalStack
 ```bash
-cd /home/mark/projects/cloud-patterns
+cd /home/mark/projects/patterns
 docker-compose -f docker-compose/aws.yml up -d
 
 # Verify it's running
@@ -118,7 +118,7 @@ terraform destroy -auto-approve
 ```hcl
 resource "aws_s3_bucket" "website" {
   bucket = "my-website-bucket"  # Must be globally unique!
-  
+
   tags = {
     Name        = "my-website-bucket"
     Environment = "dev"
@@ -171,11 +171,11 @@ resource "aws_s3_bucket_policy" "website_policy" {
 ```hcl
 resource "aws_s3_bucket_website_configuration" "website" {
   bucket = aws_s3_bucket.website.id
-  
+
   index_document {
     suffix = "index.html"  # Serve this for / requests
   }
-  
+
   error_document {
     key = "404.html"  # Serve this for 404 errors
   }

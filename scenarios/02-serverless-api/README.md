@@ -74,7 +74,7 @@ Client Browser
 
 ### Step 1: Start LocalStack
 ```bash
-cd /home/mark/projects/cloud-patterns
+cd /home/mark/projects/patterns
 docker-compose -f docker-compose/aws.yml up -d
 
 # Verify it's running
@@ -197,7 +197,7 @@ def lambda_handler(event, context):
 - **CORS**: Handle cross-origin requests
 - **Stages**: dev, staging, prod environments
 
-**In this scenario**: 
+**In this scenario**:
 - Route `GET /hello` → Lambda function
 - Route `GET /hello/{name}` → Lambda function  
 - Route `GET /health` → Lambda function
@@ -282,7 +282,7 @@ def lambda_handler(event, context):
     #   - S3: Contains bucket, key, action
     #   - DynamoDB Streams: Contains modified records
     #   - etc.
-    
+
     # context: Lambda runtime metadata
     #   - context.function_name
     #   - context.function_version
@@ -290,7 +290,7 @@ def lambda_handler(event, context):
     #   - context.memory_limit_in_mb
     #   - context.get_remaining_time_in_millis()
     #   - etc.
-    
+
     return {
         'statusCode': 200,
         'body': json.dumps({'key': 'value'})
@@ -441,7 +441,7 @@ cd terraform && terraform apply && cd ..
 resource "aws_iam_role_policy" "lambda_s3" {
   name = "lambda-s3-policy"
   role = aws_iam_role.lambda_role.id
-  
+
   policy = jsonencode({
     Version = "2012-10-17"
     Statement = [{
@@ -569,7 +569,7 @@ except Exception as e:
 # Cache /health endpoint response for 60 seconds
 resource "aws_apigatewayv2_route" "health" {
   # ...
-  
+
   # Add caching configuration (requires REST API, not HTTP API)
   method_responses = [{
     status_code = "200"

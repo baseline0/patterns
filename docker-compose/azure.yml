@@ -6,7 +6,7 @@ services:
   # Endpoint: http://localhost:4577
   azure:
     image: floci/floci-az:latest
-    container_name: cloud-patterns-azure
+    container_name: patterns-azure
     ports:
       - "4577:4577"  # Main API endpoint
     environment:
@@ -16,8 +16,8 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     networks:
-      - cloud-patterns
+      - patterns
 
 networks:
-  cloud-patterns:
+  patterns:
     driver: bridge

@@ -15,9 +15,9 @@ export const model = defineModel(({ el, person, system, container }) => {
     technology: 'AWS S3',
     tags: ['storage'],
     links: [
-      { title: 'Terraform', url: 'https://github.com/baseline0/cloud-patterns/blob/main/scenarios/01-static-website/terraform/main.tf' },
-      { title: 'README', url: 'https://github.com/baseline0/cloud-patterns/blob/main/scenarios/01-static-website/README.md' },
-      { title: 'Local Setup', url: 'https://github.com/baseline0/cloud-patterns/blob/main/scenarios/01-static-website/local-setup.sh' }
+      { title: 'Terraform', url: 'https://github.com/baseline0/patterns/blob/main/scenarios/01-static-website/terraform/main.tf' },
+      { title: 'README', url: 'https://github.com/baseline0/patterns/blob/main/scenarios/01-static-website/README.md' },
+      { title: 'Local Setup', url: 'https://github.com/baseline0/patterns/blob/main/scenarios/01-static-website/local-setup.sh' }
     ]
   })
 
@@ -33,8 +33,8 @@ export const model = defineModel(({ el, person, system, container }) => {
     technology: 'AWS API Gateway',
     tags: ['api'],
     links: [
-      { title: 'Terraform', url: 'https://github.com/baseline0/cloud-patterns/blob/main/scenarios/02-serverless-api/terraform/main.tf' },
-      { title: 'README', url: 'https://github.com/baseline0/cloud-patterns/blob/main/scenarios/02-serverless-api/README.md' }
+      { title: 'Terraform', url: 'https://github.com/baseline0/patterns/blob/main/scenarios/02-serverless-api/terraform/main.tf' },
+      { title: 'README', url: 'https://github.com/baseline0/patterns/blob/main/scenarios/02-serverless-api/README.md' }
     ]
   })
 
@@ -43,8 +43,8 @@ export const model = defineModel(({ el, person, system, container }) => {
     technology: 'AWS Lambda',
     tags: ['compute'],
     links: [
-      { title: 'Handler', url: 'https://github.com/baseline0/cloud-patterns/blob/main/scenarios/02-serverless-api/lambda/' },
-      { title: 'Terraform', url: 'https://github.com/baseline0/cloud-patterns/blob/main/scenarios/02-serverless-api/terraform/main.tf' }
+      { title: 'Handler', url: 'https://github.com/baseline0/patterns/blob/main/scenarios/02-serverless-api/lambda/' },
+      { title: 'Terraform', url: 'https://github.com/baseline0/patterns/blob/main/scenarios/02-serverless-api/terraform/main.tf' }
     ]
   })
 
@@ -60,7 +60,7 @@ export const model = defineModel(({ el, person, system, container }) => {
     technology: 'AWS S3',
     tags: ['storage'],
     links: [
-      { title: 'Terraform', url: 'https://github.com/baseline0/cloud-patterns/blob/main/scenarios/03-event-driven/terraform/main.tf' }
+      { title: 'Terraform', url: 'https://github.com/baseline0/patterns/blob/main/scenarios/03-event-driven/terraform/main.tf' }
     ]
   })
 
@@ -69,7 +69,7 @@ export const model = defineModel(({ el, person, system, container }) => {
     technology: 'AWS SNS',
     tags: ['messaging'],
     links: [
-      { title: 'Terraform', url: 'https://github.com/baseline0/cloud-patterns/blob/main/scenarios/03-event-driven/terraform/main.tf' }
+      { title: 'Terraform', url: 'https://github.com/baseline0/patterns/blob/main/scenarios/03-event-driven/terraform/main.tf' }
     ]
   })
 
@@ -78,7 +78,7 @@ export const model = defineModel(({ el, person, system, container }) => {
     technology: 'AWS Lambda',
     tags: ['compute'],
     links: [
-      { title: 'Handler', url: 'https://github.com/baseline0/cloud-patterns/blob/main/scenarios/03-event-driven/lambda/' }
+      { title: 'Handler', url: 'https://github.com/baseline0/patterns/blob/main/scenarios/03-event-driven/lambda/' }
     ]
   })
 
@@ -94,7 +94,7 @@ export const model = defineModel(({ el, person, system, container }) => {
     technology: 'AWS DynamoDB',
     tags: ['database'],
     links: [
-      { title: 'Terraform', url: 'https://github.com/baseline0/cloud-patterns/blob/main/scenarios/04-crud-api/terraform/main.tf' }
+      { title: 'Terraform', url: 'https://github.com/baseline0/patterns/blob/main/scenarios/04-crud-api/terraform/main.tf' }
     ]
   })
 
@@ -103,7 +103,7 @@ export const model = defineModel(({ el, person, system, container }) => {
     technology: 'AWS Lambda',
     tags: ['compute'],
     links: [
-      { title: 'Handler', url: 'https://github.com/baseline0/cloud-patterns/blob/main/scenarios/04-crud-api/lambda/' }
+      { title: 'Handler', url: 'https://github.com/baseline0/patterns/blob/main/scenarios/04-crud-api/lambda/' }
     ]
   })
 
@@ -119,7 +119,7 @@ export const model = defineModel(({ el, person, system, container }) => {
     technology: 'AWS ALB',
     tags: ['networking'],
     links: [
-      { title: 'Terraform', url: 'https://github.com/baseline0/cloud-patterns/blob/main/scenarios/05-3tier-web/terraform/main.tf' }
+      { title: 'Terraform', url: 'https://github.com/baseline0/patterns/blob/main/scenarios/05-3tier-web/terraform/main.tf' }
     ]
   })
 
@@ -128,7 +128,7 @@ export const model = defineModel(({ el, person, system, container }) => {
     technology: 'AWS EC2',
     tags: ['compute'],
     links: [
-      { title: 'Terraform', url: 'https://github.com/baseline0/cloud-patterns/blob/main/scenarios/05-3tier-web/terraform/main.tf' }
+      { title: 'Terraform', url: 'https://github.com/baseline0/patterns/blob/main/scenarios/05-3tier-web/terraform/main.tf' }
     ]
   })
 
@@ -137,7 +137,7 @@ export const model = defineModel(({ el, person, system, container }) => {
     technology: 'AWS RDS',
     tags: ['database'],
     links: [
-      { title: 'Terraform', url: 'https://github.com/baseline0/cloud-patterns/blob/main/scenarios/05-3tier-web/terraform/main.tf' }
+      { title: 'Terraform', url: 'https://github.com/baseline0/patterns/blob/main/scenarios/05-3tier-web/terraform/main.tf' }
     ]
   })
 
@@ -153,7 +153,7 @@ export const model = defineModel(({ el, person, system, container }) => {
     technology: 'GitHub Actions',
     tags: ['cicd'],
     links: [
-      { title: 'README', url: 'https://github.com/baseline0/cloud-patterns/blob/main/scenarios/06-cicd-pipeline/README.md' }
+      { title: 'README', url: 'https://github.com/baseline0/patterns/blob/main/scenarios/06-cicd-pipeline/README.md' }
     ]
   })
 
@@ -169,7 +169,7 @@ export const model = defineModel(({ el, person, system, container }) => {
     technology: 'AWS CloudWatch',
     tags: ['monitoring'],
     links: [
-      { title: 'README', url: 'https://github.com/baseline0/cloud-patterns/blob/main/scenarios/07-monitoring/README.md' }
+      { title: 'README', url: 'https://github.com/baseline0/patterns/blob/main/scenarios/07-monitoring/README.md' }
     ]
   })
 
@@ -185,7 +185,7 @@ export const model = defineModel(({ el, person, system, container }) => {
     technology: 'AWS Kinesis',
     tags: ['streaming'],
     links: [
-      { title: 'README', url: 'https://github.com/baseline0/cloud-patterns/blob/main/scenarios/08-streaming/README.md' }
+      { title: 'README', url: 'https://github.com/baseline0/patterns/blob/main/scenarios/08-streaming/README.md' }
     ]
   })
 
@@ -201,7 +201,7 @@ export const model = defineModel(({ el, person, system, container }) => {
     technology: 'AWS ECS / Kubernetes',
     tags: ['orchestration'],
     links: [
-      { title: 'README', url: 'https://github.com/baseline0/cloud-patterns/blob/main/scenarios/09-microservices/README.md' }
+      { title: 'README', url: 'https://github.com/baseline0/patterns/blob/main/scenarios/09-microservices/README.md' }
     ]
   })
 
@@ -217,7 +217,7 @@ export const model = defineModel(({ el, person, system, container }) => {
     technology: 'AWS Region',
     tags: ['compute'],
     links: [
-      { title: 'README', url: 'https://github.com/baseline0/cloud-patterns/blob/main/scenarios/10-disaster-recovery/README.md' }
+      { title: 'README', url: 'https://github.com/baseline0/patterns/blob/main/scenarios/10-disaster-recovery/README.md' }
     ]
   })
 
@@ -226,7 +226,7 @@ export const model = defineModel(({ el, person, system, container }) => {
     technology: 'AWS Region',
     tags: ['compute'],
     links: [
-      { title: 'README', url: 'https://github.com/baseline0/cloud-patterns/blob/main/scenarios/10-disaster-recovery/README.md' }
+      { title: 'README', url: 'https://github.com/baseline0/patterns/blob/main/scenarios/10-disaster-recovery/README.md' }
     ]
   })
 

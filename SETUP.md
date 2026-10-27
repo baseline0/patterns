@@ -9,7 +9,7 @@ Quick start for reviewing and developing the cloud architecture patterns catalog
 ### Option 1: Fast Iteration (HTML/SVG edits)
 
 ```bash
-cd /home/mark/projects/web-apps/cloud-patterns
+cd /home/mark/projects/patterns
 just dev
 ```
 
@@ -41,7 +41,7 @@ Then visit:
 Browser (localhost:8080)
   │
   └── Nginx Reverse Proxy (gateway)
-        ├── /patterns/   → cloud-patterns/ (static files)
+        ├── /patterns/   → patterns/ (static files)
         ├── /api/        → uvicorn backend (future)
         └── /healthz     → health check
 
@@ -146,7 +146,7 @@ docker compose logs gateway
 **Static files not found:**
 - Check relative URLs in HTML
 - Verify volume mount in `docker-compose.yml`
-- Ensure file exists in `./` (cloud-patterns root)
+- Ensure file exists in `./` (patterns root)
 
 ---
 

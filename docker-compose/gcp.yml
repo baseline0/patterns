@@ -6,7 +6,7 @@ services:
   # Endpoint: http://localhost:4588
   gcp:
     image: floci/floci-gcp:latest
-    container_name: cloud-patterns-gcp
+    container_name: patterns-gcp
     ports:
       - "4588:4588"  # Main API endpoint
     environment:
@@ -16,8 +16,8 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     networks:
-      - cloud-patterns
+      - patterns
 
 networks:
-  cloud-patterns:
+  patterns:
     driver: bridge

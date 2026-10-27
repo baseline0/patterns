@@ -1,6 +1,6 @@
-# Contributing to cloud-patterns
+# Contributing to patterns
 
-Thank you for helping build cloud-patterns! This guide explains how to add new patterns, scenarios, or improvements.
+Thank you for helping build patterns! This guide explains how to add new patterns, scenarios, or improvements.
 
 ## 🎯 What We Accept
 
@@ -90,7 +90,7 @@ resource "aws_lb" "main" {
   name               = "app-lb"
   internal           = false
   load_balancer_type = "application"
-  
+
   tags = {
     Name = "app-lb"
   }
@@ -312,13 +312,13 @@ Before submitting:
 4. **Commit** with clear message:
    ```bash
    git commit -m "feat: Add serverless event-driven pattern
-   
+
    - Diagram with S3 → Lambda → DynamoDB
    - Terraform for AWS/Azure/GCP
    - Local emulator setup
    - Cost analysis ($50/month estimate)
    - Scenario: Photo processing pipeline
-   
+
    Closes #10"
    ```
 5. **Push** to your fork
@@ -364,7 +364,7 @@ Open an issue to discuss:
 
 ## 🙏 Thank You!
 
-Every contribution makes cloud-patterns better for learners worldwide. Whether it's a new pattern, typo fix, or documentation improvement—we appreciate it!
+Every contribution makes patterns better for learners worldwide. Whether it's a new pattern, typo fix, or documentation improvement—we appreciate it!
 
 ---
 
