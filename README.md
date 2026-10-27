@@ -1,14 +1,20 @@
-# Cloud Design Patterns: Vendor-Agnostic Learning
+# Patterns: Data Structures, Cloud Architecture, Game Theory
 
-**Master cloud architecture through hands-on practice—without cost risk or cloud accounts.**
+**Reusable patterns for building and reasoning about systems.** Formerly `cloud-patterns`.
 
-This repository teaches **cloud design patterns** (not provider features) using local emulators, infrastructure-as-code, and real-world scenarios. Learn once, apply anywhere (AWS, Azure, GCP, or any provider).
+This repository holds three pattern families:
+
+- **Data structures:** how information is shaped, indexed, and kept consistent.
+- **Cloud architecture:** vendor-agnostic cloud design patterns, taught through hands-on practice with local emulators, infrastructure-as-code, and real-world scenarios. Learn once, apply anywhere (AWS, Azure, GCP, or any provider).
+- **Game theory:** strategic interaction, incentives, and equilibria, applied to the decisions the other families create.
+
+The cloud architecture family is the current content. The other two are scoped here and not yet written.
 
 ## 🗺️ Interactive Architecture Diagrams
 
 Explore all 10 scenarios visually with clickable links to implementations:
 
-👉 **[View Interactive Diagrams →](https://baseline0.github.io/cloud-patterns/)** (Live on GitHub Pages)
+👉 **[View Interactive Diagrams →](https://baseline0.github.io/patterns/)** (Live on GitHub Pages)
 
 Each diagram links directly to:
 - 📂 Terraform infrastructure code (AWS/Azure/GCP)
@@ -157,7 +163,7 @@ Best practices from each provider:
 
 ```bash
 # Clone repo
-git clone <repo> cloud-patterns && cd cloud-patterns
+git clone <repo> patterns && cd patterns
 
 # Start AWS emulator
 docker-compose -f docker-compose/aws.yml up -d
@@ -219,7 +225,7 @@ After completing this repo, you'll understand:
 ## 📋 Project Structure
 
 ```
-cloud-patterns/
+patterns/
 ├── README.md                      # This file
 ├── LEARNING.md                    # 8-week learning path
 ├── CONTRIBUTING.md                # How to add patterns

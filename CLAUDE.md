@@ -1,12 +1,12 @@
-# cloud-patterns Configuration
+# patterns Configuration
 
-**Vendor-agnostic cloud design patterns with local emulators, IaC, and real-world scenarios.**
+**Reusable patterns: data structures, cloud architecture, and game theory.** (Formerly `cloud-patterns`.)
 
 For universal rules, see `~/.claude/CLAUDE.md`.
 
 ## Project Context
 
-**Purpose**: Teach cloud architecture patterns (vendor-agnostic) through hands-on practice using local emulators, Terraform, and scenario-based learning.
+**Purpose**: Hold three pattern families: data structures, cloud architecture (vendor-agnostic, taught through local emulators, Terraform, and scenario-based learning), and game theory. Cloud architecture is the only family with content today.
 
 **Key Principles**:
 - Patterns first, provider details second
