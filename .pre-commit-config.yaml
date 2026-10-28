@@ -46,7 +46,7 @@ repos:
           - pre-push
   - repo: local
     hooks:
-      - id: fleet-clean-vendored
+      - id: vendored-fleet-clean
         name: "[P1] just/fleet-clean.just matches fleet-base (hand edits fail)"
         entry: just check-fleet-clean
         language: system
@@ -93,7 +93,7 @@ repos:
     hooks:
       - id: vendored-current
         name: "[P1] vendored just modules are current with the latest fleet-base release (pre-push)"
-        entry: uv run --project ../fleet-base python -m fleet_base.vendor_just check --repo .
+        entry: uv run --project ../fleet-base python -m fleet_base.vendor_just check-current --repo .
         language: system
         pass_filenames: false
         always_run: true
