@@ -64,8 +64,12 @@ import 'just/fleet-test.just'
 # === Testing & Validation ===
 
 # Validate patterns.json schema and assets
-@test:
+@validate:
     python tests/validate_patterns.py
+
+# Run tests
+# Unit tests only, matching CI and the pre-push hook. Data validation is `just validate`.
+test: test-unit
 
 # Validate + watch for changes
 @test-watch:
@@ -79,9 +83,16 @@ import 'just/fleet-test.just'
         inotifywait -e modify data/patterns.json assets/diagrams/*.svg 2>/dev/null || sleep 2
     done
 
-# Unit tests: the gate the pre-push hook runs (fleet hook standard, fleet_base.hook_standard R4)
+# Unit tests only (what CI and the pre-push gate run). Self-contained: depends on no other recipe.
 test-unit:
-    just test
+    #!/usr/bin/env bash
+    set -euo pipefail
+    if uv run pytest --version >/dev/null 2>&1; then
+        uv run pytest -m unit --tb=short -v
+        exit 0
+    fi
+    echo "error: test-unit cannot run in this repo: install pytest as a dev dependency (uv add --dev pytest)" >&2
+    exit 1
 
 # ============================================================================
 # Shared fleet recipes, run by fleet-base's installed tool (run `just -f $FLEET_ROOT/fleet-base/justfile install-fleet`; ADR-020).
