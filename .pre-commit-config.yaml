@@ -6,9 +6,6 @@ repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v4.5.0
     hooks:
-      - id: trailing-whitespace
-        args: [--markdown-linebreak-ext=md]
-      - id: end-of-file-fixer
       - id: check-merge-conflict
       - id: check-added-large-files
         args: [--maxkb=1000]
@@ -24,6 +21,20 @@ repos:
         pass_filenames: false
         files: '\.py$'
         stages: [pre-commit]
+      - id: whitespace-check
+        name: '[P1] Whitespace in the staged diff (check only)'
+        entry: git diff --cached --check
+        language: system
+        pass_filenames: false
+        stages:
+          - pre-commit
+      - id: check-hook-writers
+        name: '[P1] No commit hook writes tracked files'
+        entry: fleet hook --name check-hook-writers
+        language: system
+        pass_filenames: false
+        stages:
+          - pre-commit
   - repo: local
     hooks:
       - id: check-argparse-prohibition
