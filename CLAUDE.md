@@ -168,29 +168,7 @@ patterns/
 
 ## Git Workflow
 
-Use raw `git` for this project (no `just` recipe needed):
-
-```bash
-# Check status
-git status
-
-# Stage specific files
-git add patterns/<pattern>/README.md
-
-# Commit (follow conventional commits)
-git commit -m "feat: Add 3-tier web app pattern
-
-- Diagram with load balancer, app tier, database
-- Terraform for AWS/Azure/GCP (use t2.micro, cost optimized)
-- Local emulator setup with Docker Compose
-- Scenario: E-commerce platform 10k daily users
-- Cost analysis: $500/month estimate
-
-Closes #5"
-
-# Push
-# Agents never push. The repo owner pushes after review.
-```
+The git rules (commits, pushes, branches) are in the fleet standard, which is installed as the global `~/.claude/CLAUDE.md`. Which guard enforces each rule is in `../infrastructure/docs/standard-enforcement.md`. This file does not repeat them.
 
 **Commit message format**:
 - Type: `feat:` (new pattern), `docs:` (documentation), `fix:` (bug fix), `refactor:` (improve existing)
