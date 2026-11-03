@@ -36,8 +36,6 @@ claims:
     text: "A dict key must be hashable. A list is not hashable, so it cannot be a key."
   - id: dict-preserves-insertion-order
     text: "dict iteration follows insertion order (a language guarantee since Python 3.7)."
-  - id: heap-root-is-minimum
-    text: "After heapq.heapify, the first element of the plain list is the minimum."
 
 complexity:
   - operation: "list.append"
