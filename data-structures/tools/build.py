@@ -143,6 +143,23 @@ def flashcards(topics: list[dict]) -> str:
     return buffer.getvalue()
 
 
+def family_index(topics: list[dict]) -> str:
+    lines = ["# Data structures", "", "> Generated from `content/`. Edit the YAML, then run `tools/build.py`.", ""]
+    lines += ["Each topic has a write-up, a quiz, and an HTML page. The topics:", ""]
+    for topic in topics:
+        lines.append(f"- [{topic['title']}]({topic['id']}/README.md): quiz in `{topic['id']}/quiz_guide.md`")
+    lines += [
+        "",
+        "## Use it",
+        "",
+        "- Regenerate every output: `uv run python data-structures/tools/build.py`",
+        "- Test the claims and the outputs: `uv run pytest tests/unit/test_data_structures.py`",
+        "- Take the quiz in a terminal: `uv run python data-structures/tools/quiz.py`",
+        "- Flashcards for Anki: `flashcards.csv`",
+    ]
+    return "\n".join(lines).rstrip("\n") + "\n"
+
+
 def render_all(content_dir: Path = CONTENT) -> dict[Path, str]:
     """Every generated file, keyed by its path under the family root. Pure: writes nothing."""
     topics = load_topics(content_dir)
@@ -153,6 +170,7 @@ def render_all(content_dir: Path = CONTENT) -> dict[Path, str]:
         outputs[Path(f"{stem}/quiz_guide.md")] = quiz_guide(topic)
         outputs[Path(f"{stem}/index.html")] = index_html(topic)
     outputs[Path("flashcards.csv")] = flashcards(topics)
+    outputs[Path("README.md")] = family_index(topics)
     return outputs
 
 

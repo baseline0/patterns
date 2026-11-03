@@ -227,3 +227,17 @@ CLAIM_CHECKS = {
 @pytest.mark.parametrize("claim_id", sorted(CLAIM_CHECKS))
 def test_claim(claim_id: str) -> None:
     CLAIM_CHECKS[claim_id]()
+
+
+def test_quiz_scores_every_question_across_topics(
+    monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """Answering every question correctly scores all of them, across every topic, in the same run."""
+    quiz = _load("quiz")
+    topics = build.load_topics()
+    total = sum(len(topic["quiz"]) for topic in topics)
+    answers = iter("ABCDEFGH"[item["answer"]] for topic in topics for item in topic["quiz"])
+    monkeypatch.setattr("builtins.input", lambda prompt="": next(answers))
+
+    assert quiz.run() == 0
+    assert f"Score: {total} of {total}" in capsys.readouterr().out
