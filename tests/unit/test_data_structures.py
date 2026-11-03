@@ -190,6 +190,24 @@ def _nlargest_beats_a_full_sort_for_small_k() -> None:
     assert t_heap < t_sort
 
 
+def _set_membership_beats_list_search() -> None:
+    items = list(range(10_000))
+    as_set = set(items)
+    target = 9_999  # the worst case for the list: the scan reaches the end
+    t_list = _best_time(lambda: target in items, repeat=5)
+    t_set = _best_time(lambda: target in as_set, repeat=5)
+    assert t_list > 50 * t_set
+
+
+def _dict_lookup_is_constant_time() -> None:
+    small = {i: i for i in range(1_000)}
+    large = {i: i for i in range(1_000_000)}
+    t_small = _best_time(lambda: small[500], repeat=5)
+    t_large = _best_time(lambda: large[500_000], repeat=5)
+    # A linear structure would be about 1000 times slower on the large dict. Cache effects add a few times.
+    assert t_large < 10 * t_small
+
+
 CLAIM_CHECKS = {
     "list-append-is-amortized-constant": _list_growth_is_geometric,
     "list-pop-zero-scales-linearly": _pop_zero_scales_linearly,
@@ -199,6 +217,8 @@ CLAIM_CHECKS = {
     "dict-preserves-insertion-order": _dict_preserves_insertion_order,
     "heap-root-is-minimum": _heap_root_is_minimum,
     "heappop-yields-sorted-order": _heappop_yields_sorted_order,
+    "set-membership-beats-list-search": _set_membership_beats_list_search,
+    "dict-lookup-is-constant-time": _dict_lookup_is_constant_time,
     "heapify-is-linear": _heapify_is_linear,
     "nlargest-beats-a-full-sort-for-small-k": _nlargest_beats_a_full_sort_for_small_k,
 }

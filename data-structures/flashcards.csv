@@ -1,3 +1,11 @@
+Why can a tuple be a dict key but a list cannot?,"A tuple is immutable, so its hash cannot change; a list is mutable and not hashable. A key's hash must stay fixed while the key is stored. Only immutable values can guarantee that.",hash-tables
+"On average, what does membership testing cost in a set of n items?","O(1). The hash picks a slot directly. Only collisions add probes, and those are rare.",hash-tables
+"Since Python 3.7, what does iterating over a dict return?","Keys in insertion order. Insertion order is a language guarantee, because entries are stored in a dense array in that order.",hash-tables
+Why is the 'group anagrams' problem a fit for defaultdict(list)?,"Each new key gets an empty list on first use, so grouping needs no existence check. defaultdict creates the missing list on access, so each word appends to its group in one step.",hash-tables
+Time complexity of dict[key] / key in dict?,O(1) average,hash-tables complexity
+Time complexity of dict[key] = value?,O(1) average,hash-tables complexity
+Time complexity of set add / remove / in?,O(1) average,hash-tables complexity
+Time complexity of list membership (x in list)?,O(n),hash-tables complexity
 Why does heapq store a heap in a plain list?,"The children of index i are at 2i+1 and 2i+2, so no node objects are needed. The array layout gives the tree's parent and child positions by arithmetic, with no pointers to manage.",heaps
 What is the cost of heapq.heappop on a heap of n items?,"O(log n). The last item moves to the root and sifts down at most one path, about log n levels.",heaps
 heapq is a min-heap. How do you get the largest value first?,"Push the negated values and pop the smallest. The most negative number is the one with the largest magnitude, so negating turns max into min.",heaps

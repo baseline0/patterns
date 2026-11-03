@@ -51,5 +51,3 @@ Removing the first element of a list shifts every remaining pointer one slot lef
 - `list-pop-zero-scales-linearly`: list.pop(0) cost grows with the list length, because every remaining pointer shifts.
 - `deque-popleft-is-constant`: deque.popleft cost does not grow with the deque length.
 - `insort-shift-is-linear`: bisect.insort is a binary search plus a list shift, so insertion at the front is linear; the search alone is logarithmic.
-- `dict-keys-must-be-hashable`: A dict key must be hashable. A list is not hashable, so it cannot be a key.
-- `dict-preserves-insertion-order`: dict iteration follows insertion order (a language guarantee since Python 3.7).
