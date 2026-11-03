@@ -1,0 +1,13 @@
+Why is list.pop(0) a poor choice for a BFS queue?,"It shifts every remaining pointer, so each pop costs O(n). A list is a contiguous array. Removing the first element moves each remaining pointer one slot left.",lists-and-deques
+Which structure is the right queue for BFS in Python?,"collections.deque with popleft. deque.popleft is O(1), because it touches only the block at the front.",lists-and-deques
+Why are appends to a list amortized O(1)?,"Capacity grows by a fraction each time it is exceeded, so copies are rare. Spare capacity grows geometrically, so the cost of the occasional copy spreads across many appends.",lists-and-deques
+bisect.insort on a sorted list is O(log n) per insert. True or false?,False: the search is O(log n) but the list shift makes insertion O(n). Finding the position is logarithmic. Inserting the value shifts the elements after it.,lists-and-deques
+Why can a list not be a dict key?,"Lists are not hashable: their contents can change, so their hash would change too. A key's hash must stay constant while it is in the table. A mutable list cannot guarantee that.",lists-and-deques
+Time complexity of list.append?,O(1) amortized,lists-and-deques complexity
+Time complexity of list.pop()  (end)?,O(1),lists-and-deques complexity
+"Time complexity of list.pop(0) / insert(0, x)?",O(n),lists-and-deques complexity
+Time complexity of list[i]?,O(1),lists-and-deques complexity
+Time complexity of deque.appendleft / popleft?,O(1),lists-and-deques complexity
+Time complexity of deque[i] (middle)?,O(n),lists-and-deques complexity
+Time complexity of bisect.bisect_left (search)?,O(log n),lists-and-deques complexity
+Time complexity of bisect.insort (insert)?,O(n),lists-and-deques complexity

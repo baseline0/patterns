@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lists and deques: contiguous arrays versus block lists</title>
+<style>body{font-family:system-ui,sans-serif;max-width:52rem;margin:2rem auto;padding:0 1rem;line-height:1.5}table{border-collapse:collapse;width:100%}td,th{border:1px solid #ccc;padding:.4rem;text-align:left;vertical-align:top}code{background:#f3f3f3;padding:0 .2rem}</style>
+</head><body>
+<h1>Lists and deques: contiguous arrays versus block lists</h1>
+<p>A Python list is a contiguous array of object pointers that grows geometrically. A deque is a chain of fixed-size blocks, so both of its ends are cheap to change. Choosing between them is a question about where a container changes.</p>
+<h2>list: a contiguous array of pointers</h2><p>A list stores pointers to objects, not the objects themselves. Appending writes into spare capacity. When the spare capacity runs out, CPython allocates a larger array and copies the pointers across. The new capacity is about 1/8 larger plus a small constant, so copies are rare and the average append stays constant (amortized O(1)).</p>
+<h2>deque: a chain of fixed-size blocks</h2><p>A deque is a doubly linked chain of blocks, each holding 64 pointers. Operations at either end touch only the block at that end, so popleft and appendleft are O(1). Reaching the middle means walking blocks, so indexing is linear in the position, not constant.</p>
+<h2>why list.pop(0) is the trap</h2><p>Removing the first element of a list shifts every remaining pointer one slot left. The cost grows with the length of the list. Used as a FIFO queue in a loop, it turns a linear traversal into quadratic work.</p>
+<h2>Complexity</h2><table><tr><th>Operation</th><th>Time</th><th>Note</th></tr>
+<tr><td><code>list.append</code></td><td>O(1) amortized</td><td>geometric growth of spare capacity</td></tr>
+<tr><td><code>list.pop()  (end)</code></td><td>O(1)</td><td></td></tr>
+<tr><td><code>list.pop(0) / insert(0, x)</code></td><td>O(n)</td><td>every pointer shifts</td></tr>
+<tr><td><code>list[i]</code></td><td>O(1)</td><td>direct offset into the array</td></tr>
+<tr><td><code>deque.appendleft / popleft</code></td><td>O(1)</td><td>touches only the end block</td></tr>
+<tr><td><code>deque[i] (middle)</code></td><td>O(n)</td><td>walks blocks; not constant</td></tr>
+<tr><td><code>bisect.bisect_left (search)</code></td><td>O(log n)</td><td>on a sorted list</td></tr>
+<tr><td><code>bisect.insort (insert)</code></td><td>O(n)</td><td>the search is O(log n); the shift is linear</td></tr>
+</table><h2>Signal to structure</h2><table><tr><th>Signal</th><th>Requirement</th>
+<th>Structure</th><th>Python tool</th><th>Example</th></tr>
+<tr><td>Process in first-in, first-out order, with work added and removed at both ends</td><td>O(1) at both ends</td><td>block list</td><td><code>collections.deque</code></td><td>Binary Tree Level Order Traversal (LeetCode 102)</td></tr>
+<tr><td>Last-in, first-out; nearest greater or smaller element in one pass</td><td>O(1) push and pop at one end; O(n) total</td><td>contiguous array used as a stack</td><td><code>list (append / pop)</code></td><td>Daily Temperatures (LeetCode 739)</td></tr>
+<tr><td>Maintain a sorted sequence while looking values up</td><td>O(log n) search; insertion dominated by the shift</td><td>sorted contiguous array</td><td><code>bisect</code></td><td>Searching a sorted list; avoid repeated insort in hot loops</td></tr>
+</table><h2>Problems</h2><table><tr><th>Problem</th><th>Container</th><th>Pattern</th>
+<th>Python tool</th><th>Why</th></tr>
+<tr><td>LeetCode 102 Binary Tree Level Order Traversal</td><td>block list (deque)</td><td>breadth-first search</td><td><code>collections.deque: append and popleft</code></td><td>The frontier is a FIFO queue. list.pop(0) would shift the whole frontier on every step.</td></tr>
+<tr><td>LeetCode 739 Daily Temperatures</td><td>contiguous array (list)</td><td>monotonic stack</td><td><code>list: append and pop</code></td><td>The stack is used only at one end, so a plain list costs O(1) per push and pop.</td></tr>
+<tr><td>LeetCode 11 Container With Most Water</td><td>contiguous array (list)</td><td>two pointers</td><td><code>list indexing</code></td><td>Random access by position is O(1), which the two pointers rely on.</td></tr>
+</table></body></html>

@@ -1,0 +1,143 @@
+# Source of truth for one topic. Every generated output (README, quiz guide, HTML, flashcards) is built from this file.
+# Each claim id must have a check in tests/test_data_structures.py; a claim without a check fails the suite.
+
+id: lists-and-deques
+title: "Lists and deques: contiguous arrays versus block lists"
+summary: >
+  A Python list is a contiguous array of object pointers that grows geometrically. A deque is a chain of fixed-size
+  blocks, so both of its ends are cheap to change. Choosing between them is a question about where a container changes.
+
+mechanics:
+  - heading: "list: a contiguous array of pointers"
+    body: >
+      A list stores pointers to objects, not the objects themselves. Appending writes into spare capacity. When the spare
+      capacity runs out, CPython allocates a larger array and copies the pointers across. The new capacity is about 1/8
+      larger plus a small constant, so copies are rare and the average append stays constant (amortized O(1)).
+  - heading: "deque: a chain of fixed-size blocks"
+    body: >
+      A deque is a doubly linked chain of blocks, each holding 64 pointers. Operations at either end touch only the
+      block at that end, so popleft and appendleft are O(1). Reaching the middle means walking blocks, so indexing is
+      linear in the position, not constant.
+  - heading: "why list.pop(0) is the trap"
+    body: >
+      Removing the first element of a list shifts every remaining pointer one slot left. The cost grows with the length
+      of the list. Used as a FIFO queue in a loop, it turns a linear traversal into quadratic work.
+
+claims:
+  - id: list-append-is-amortized-constant
+    text: "List growth is geometric: capacity grows by a bounded fraction each time it is exceeded, so appends stay O(1) amortized."
+  - id: list-pop-zero-scales-linearly
+    text: "list.pop(0) cost grows with the list length, because every remaining pointer shifts."
+  - id: deque-popleft-is-constant
+    text: "deque.popleft cost does not grow with the deque length."
+  - id: insort-shift-is-linear
+    text: "bisect.insort is a binary search plus a list shift, so insertion at the front is linear; the search alone is logarithmic."
+  - id: dict-keys-must-be-hashable
+    text: "A dict key must be hashable. A list is not hashable, so it cannot be a key."
+  - id: dict-preserves-insertion-order
+    text: "dict iteration follows insertion order (a language guarantee since Python 3.7)."
+  - id: heap-root-is-minimum
+    text: "After heapq.heapify, the first element of the plain list is the minimum."
+
+complexity:
+  - operation: "list.append"
+    time: "O(1) amortized"
+    note: "geometric growth of spare capacity"
+  - operation: "list.pop()  (end)"
+    time: "O(1)"
+    note: ""
+  - operation: "list.pop(0) / insert(0, x)"
+    time: "O(n)"
+    note: "every pointer shifts"
+  - operation: "list[i]"
+    time: "O(1)"
+    note: "direct offset into the array"
+  - operation: "deque.appendleft / popleft"
+    time: "O(1)"
+    note: "touches only the end block"
+  - operation: "deque[i] (middle)"
+    time: "O(n)"
+    note: "walks blocks; not constant"
+  - operation: "bisect.bisect_left (search)"
+    time: "O(log n)"
+    note: "on a sorted list"
+  - operation: "bisect.insort (insert)"
+    time: "O(n)"
+    note: "the search is O(log n); the shift is linear"
+
+signals:
+  - signal: "Process in first-in, first-out order, with work added and removed at both ends"
+    requirement: "O(1) at both ends"
+    structure: "block list"
+    stdlib: "collections.deque"
+    example: "Binary Tree Level Order Traversal (LeetCode 102)"
+  - signal: "Last-in, first-out; nearest greater or smaller element in one pass"
+    requirement: "O(1) push and pop at one end; O(n) total"
+    structure: "contiguous array used as a stack"
+    stdlib: "list (append / pop)"
+    example: "Daily Temperatures (LeetCode 739)"
+  - signal: "Maintain a sorted sequence while looking values up"
+    requirement: "O(log n) search; insertion dominated by the shift"
+    structure: "sorted contiguous array"
+    stdlib: "bisect"
+    example: "Searching a sorted list; avoid repeated insort in hot loops"
+
+problems:
+  - number: 102
+    title: "Binary Tree Level Order Traversal"
+    container: "block list (deque)"
+    pattern: "breadth-first search"
+    stdlib: "collections.deque: append and popleft"
+    why: "The frontier is a FIFO queue. list.pop(0) would shift the whole frontier on every step."
+  - number: 739
+    title: "Daily Temperatures"
+    container: "contiguous array (list)"
+    pattern: "monotonic stack"
+    stdlib: "list: append and pop"
+    why: "The stack is used only at one end, so a plain list costs O(1) per push and pop."
+  - number: 11
+    title: "Container With Most Water"
+    container: "contiguous array (list)"
+    pattern: "two pointers"
+    stdlib: "list indexing"
+    why: "Random access by position is O(1), which the two pointers rely on."
+
+quiz:
+  - question: "Why is list.pop(0) a poor choice for a BFS queue?"
+    choices:
+      - "It allocates a new list every time"
+      - "It shifts every remaining pointer, so each pop costs O(n)"
+      - "It is not allowed on lists"
+      - "It is only slow for strings"
+    answer: 1
+    explanation: "A list is a contiguous array. Removing the first element moves each remaining pointer one slot left."
+  - question: "Which structure is the right queue for BFS in Python?"
+    choices:
+      - "list with pop(0)"
+      - "collections.deque with popleft"
+      - "dict with the smallest key"
+      - "set with pop()"
+    answer: 1
+    explanation: "deque.popleft is O(1), because it touches only the block at the front."
+  - question: "Why are appends to a list amortized O(1)?"
+    choices:
+      - "Each append reserves exactly one slot"
+      - "Capacity grows by a fraction each time it is exceeded, so copies are rare"
+      - "Appends never copy"
+      - "CPython stores lists as linked nodes"
+    answer: 1
+    explanation: "Spare capacity grows geometrically, so the cost of the occasional copy spreads across many appends."
+  - question: "bisect.insort on a sorted list is O(log n) per insert. True or false?"
+    choices:
+      - "True: the binary search dominates"
+      - "False: the search is O(log n) but the list shift makes insertion O(n)"
+    answer: 1
+    explanation: "Finding the position is logarithmic. Inserting the value shifts the elements after it."
+  - question: "Why can a list not be a dict key?"
+    choices:
+      - "Lists are too large"
+      - "Lists are not hashable: their contents can change, so their hash would change too"
+      - "Dict keys must be strings"
+      - "Lists are stored out of order"
+    answer: 1
+    explanation: "A key's hash must stay constant while it is in the table. A mutable list cannot guarantee that."
