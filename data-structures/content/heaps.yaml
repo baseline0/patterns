@@ -1,0 +1,122 @@
+# Source of truth for the heaps topic. Generated outputs are built from this file by tools/build.py.
+# Each claim id needs a check in tests/unit/test_data_structures.py.
+
+id: heaps
+title: "Heaps: a priority queue in a flat list"
+summary: >
+  heapq keeps a binary heap inside an ordinary list. The smallest element is always at index 0, so reading it is O(1);
+  insertion and removal are O(log n). It is the standard tool when a problem asks for the next smallest or largest
+  element while the data keeps changing.
+
+mechanics:
+  - heading: "a binary heap in a flat array"
+    body: >
+      A heap is a complete binary tree stored level by level in a list. The children of index i sit at 2i+1 and 2i+2,
+      and the parent of i sits at (i-1)//2. heapq maintains the min-heap rule: every parent is no larger than its
+      children, so the minimum is at index 0.
+  - heading: "push and pop move one path"
+    body: >
+      heappush appends the item and sifts it up past larger parents, at most log n steps. heappop removes index 0, moves
+      the last item to the root, and sifts it down, again at most log n steps. Neither touches the whole list.
+  - heading: "heapify builds a heap in linear time"
+    body: >
+      heapq.heapify restructures an existing list in place, sifting down from the middle. Building a heap this way is
+      O(n), cheaper than n pushes. A max-heap is a min-heap of negated values, since heapq has no max-heap mode.
+
+claims:
+  - id: heap-root-is-minimum
+    text: "After heapq.heapify, the first element of the plain list is the minimum."
+  - id: heappop-yields-sorted-order
+    text: "Repeated heappop returns the elements in ascending order."
+  - id: heapify-is-linear
+    text: "heapify on n items costs about n, not n log n: doubling n roughly doubles the time, not more."
+  - id: nlargest-beats-a-full-sort-for-small-k
+    text: "heapq.nlargest(k, data) for small k is faster than sorting all of data and slicing."
+
+complexity:
+  - operation: "heap[0] (peek minimum)"
+    time: "O(1)"
+    note: "the minimum is always at index 0"
+  - operation: "heapq.heappush"
+    time: "O(log n)"
+    note: "sift up at most log n levels"
+  - operation: "heapq.heappop"
+    time: "O(log n)"
+    note: "move the last item to the root, sift down"
+  - operation: "heapq.heapify"
+    time: "O(n)"
+    note: "bottom-up, in place"
+  - operation: "heapq.nlargest(k, data)"
+    time: "O(n log k)"
+    note: "keeps a heap of size k while scanning"
+
+signals:
+  - signal: "Find the k largest or smallest elements in a stream or a large list"
+    requirement: "O(n log k), with only k items held"
+    structure: "binary heap of size k"
+    stdlib: "heapq (heappush / heappop) or heapq.nlargest"
+    example: "Top K Frequent Elements (LeetCode 347)"
+  - signal: "Repeatedly take the two smallest and combine them"
+    requirement: "O(log n) per step, the smallest always available"
+    structure: "binary heap"
+    stdlib: "heapq"
+    example: "Minimum Cost to Connect Sticks (LeetCode 1167)"
+  - signal: "Merge several sorted sequences in order"
+    requirement: "O(N log k) for N items from k sources"
+    structure: "heap of one head per source"
+    stdlib: "heapq.merge"
+    example: "Merge k Sorted Lists (LeetCode 23)"
+
+problems:
+  - number: 347
+    title: "Top K Frequent Elements"
+    container: "binary heap (heapq)"
+    pattern: "top-k selection"
+    stdlib: "collections.Counter, then heapq.nlargest"
+    why: "Only the k most frequent matter, so a heap of size k beats sorting every distinct value."
+  - number: 215
+    title: "Kth Largest Element in an Array"
+    container: "binary heap of size k"
+    pattern: "top-k selection"
+    stdlib: "heapq: heappush, and heappop when the heap grows past k"
+    why: "A min-heap of the k largest seen so far keeps its root as the answer."
+  - number: 23
+    title: "Merge k Sorted Lists"
+    container: "binary heap of list heads"
+    pattern: "k-way merge"
+    stdlib: "heapq.heappush / heappop, or heapq.merge"
+    why: "One head per list in the heap gives the next smallest value across all lists in O(log k)."
+
+quiz:
+  - question: "Why does heapq store a heap in a plain list?"
+    choices:
+      - "Lists are the only mutable sequence in Python"
+      - "The children of index i are at 2i+1 and 2i+2, so no node objects are needed"
+      - "heapq only works on tuples"
+      - "A heap is faster to store as a list because it stays sorted"
+    answer: 1
+    explanation: "The array layout gives the tree's parent and child positions by arithmetic, with no pointers to manage."
+  - question: "What is the cost of heapq.heappop on a heap of n items?"
+    choices:
+      - "O(1)"
+      - "O(log n)"
+      - "O(n)"
+      - "O(n log n)"
+    answer: 1
+    explanation: "The last item moves to the root and sifts down at most one path, about log n levels."
+  - question: "heapq is a min-heap. How do you get the largest value first?"
+    choices:
+      - "Call heapq.heappop(max=True)"
+      - "Push the negated values and pop the smallest"
+      - "Sort the list first"
+      - "Use a deque instead"
+    answer: 1
+    explanation: "The most negative number is the one with the largest magnitude, so negating turns max into min."
+  - question: "Why is building a heap from a list with heapify faster than n heappush calls?"
+    choices:
+      - "heapify skips the comparisons"
+      - "heapify is O(n) bottom-up, while n pushes cost O(n log n) in total"
+      - "heappush cannot be used on lists"
+      - "heapify sorts the list first"
+    answer: 1
+    explanation: "Sifting down from the middle does less total work than sifting up each item as it arrives."

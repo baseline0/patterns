@@ -1,3 +1,12 @@
+Why does heapq store a heap in a plain list?,"The children of index i are at 2i+1 and 2i+2, so no node objects are needed. The array layout gives the tree's parent and child positions by arithmetic, with no pointers to manage.",heaps
+What is the cost of heapq.heappop on a heap of n items?,"O(log n). The last item moves to the root and sifts down at most one path, about log n levels.",heaps
+heapq is a min-heap. How do you get the largest value first?,"Push the negated values and pop the smallest. The most negative number is the one with the largest magnitude, so negating turns max into min.",heaps
+Why is building a heap from a list with heapify faster than n heappush calls?,"heapify is O(n) bottom-up, while n pushes cost O(n log n) in total. Sifting down from the middle does less total work than sifting up each item as it arrives.",heaps
+Time complexity of heap[0] (peek minimum)?,O(1),heaps complexity
+Time complexity of heapq.heappush?,O(log n),heaps complexity
+Time complexity of heapq.heappop?,O(log n),heaps complexity
+Time complexity of heapq.heapify?,O(n),heaps complexity
+"Time complexity of heapq.nlargest(k, data)?",O(n log k),heaps complexity
 Why is list.pop(0) a poor choice for a BFS queue?,"It shifts every remaining pointer, so each pop costs O(n). A list is a contiguous array. Removing the first element moves each remaining pointer one slot left.",lists-and-deques
 Which structure is the right queue for BFS in Python?,"collections.deque with popleft. deque.popleft is O(1), because it touches only the block at the front.",lists-and-deques
 Why are appends to a list amortized O(1)?,"Capacity grows by a fraction each time it is exceeded, so copies are rare. Spare capacity grows geometrically, so the cost of the occasional copy spreads across many appends.",lists-and-deques

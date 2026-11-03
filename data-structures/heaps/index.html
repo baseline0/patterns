@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Heaps: a priority queue in a flat list</title>
+<style>body{font-family:system-ui,sans-serif;max-width:52rem;margin:2rem auto;padding:0 1rem;line-height:1.5}table{border-collapse:collapse;width:100%}td,th{border:1px solid #ccc;padding:.4rem;text-align:left;vertical-align:top}code{background:#f3f3f3;padding:0 .2rem}</style>
+</head><body>
+<h1>Heaps: a priority queue in a flat list</h1>
+<p>heapq keeps a binary heap inside an ordinary list. The smallest element is always at index 0, so reading it is O(1); insertion and removal are O(log n). It is the standard tool when a problem asks for the next smallest or largest element while the data keeps changing.</p>
+<h2>a binary heap in a flat array</h2><p>A heap is a complete binary tree stored level by level in a list. The children of index i sit at 2i+1 and 2i+2, and the parent of i sits at (i-1)//2. heapq maintains the min-heap rule: every parent is no larger than its children, so the minimum is at index 0.</p>
+<h2>push and pop move one path</h2><p>heappush appends the item and sifts it up past larger parents, at most log n steps. heappop removes index 0, moves the last item to the root, and sifts it down, again at most log n steps. Neither touches the whole list.</p>
+<h2>heapify builds a heap in linear time</h2><p>heapq.heapify restructures an existing list in place, sifting down from the middle. Building a heap this way is O(n), cheaper than n pushes. A max-heap is a min-heap of negated values, since heapq has no max-heap mode.</p>
+<h2>Complexity</h2><table><tr><th>Operation</th><th>Time</th><th>Note</th></tr>
+<tr><td><code>heap[0] (peek minimum)</code></td><td>O(1)</td><td>the minimum is always at index 0</td></tr>
+<tr><td><code>heapq.heappush</code></td><td>O(log n)</td><td>sift up at most log n levels</td></tr>
+<tr><td><code>heapq.heappop</code></td><td>O(log n)</td><td>move the last item to the root, sift down</td></tr>
+<tr><td><code>heapq.heapify</code></td><td>O(n)</td><td>bottom-up, in place</td></tr>
+<tr><td><code>heapq.nlargest(k, data)</code></td><td>O(n log k)</td><td>keeps a heap of size k while scanning</td></tr>
+</table><h2>Signal to structure</h2><table><tr><th>Signal</th><th>Requirement</th>
+<th>Structure</th><th>Python tool</th><th>Example</th></tr>
+<tr><td>Find the k largest or smallest elements in a stream or a large list</td><td>O(n log k), with only k items held</td><td>binary heap of size k</td><td><code>heapq (heappush / heappop) or heapq.nlargest</code></td><td>Top K Frequent Elements (LeetCode 347)</td></tr>
+<tr><td>Repeatedly take the two smallest and combine them</td><td>O(log n) per step, the smallest always available</td><td>binary heap</td><td><code>heapq</code></td><td>Minimum Cost to Connect Sticks (LeetCode 1167)</td></tr>
+<tr><td>Merge several sorted sequences in order</td><td>O(N log k) for N items from k sources</td><td>heap of one head per source</td><td><code>heapq.merge</code></td><td>Merge k Sorted Lists (LeetCode 23)</td></tr>
+</table><h2>Problems</h2><table><tr><th>Problem</th><th>Container</th><th>Pattern</th>
+<th>Python tool</th><th>Why</th></tr>
+<tr><td>LeetCode 347 Top K Frequent Elements</td><td>binary heap (heapq)</td><td>top-k selection</td><td><code>collections.Counter, then heapq.nlargest</code></td><td>Only the k most frequent matter, so a heap of size k beats sorting every distinct value.</td></tr>
+<tr><td>LeetCode 215 Kth Largest Element in an Array</td><td>binary heap of size k</td><td>top-k selection</td><td><code>heapq: heappush, and heappop when the heap grows past k</code></td><td>A min-heap of the k largest seen so far keeps its root as the answer.</td></tr>
+<tr><td>LeetCode 23 Merge k Sorted Lists</td><td>binary heap of list heads</td><td>k-way merge</td><td><code>heapq.heappush / heappop, or heapq.merge</code></td><td>One head per list in the heap gives the next smallest value across all lists in O(log k).</td></tr>
+</table></body></html>

@@ -156,6 +156,40 @@ def _heap_root_is_minimum() -> None:
     assert values[0] == min(values)
 
 
+def _heappop_yields_sorted_order() -> None:
+    import heapq
+    import random
+
+    rng = random.Random(7)
+    values = [rng.randrange(10_000) for _ in range(1_000)]
+    heap = list(values)
+    heapq.heapify(heap)
+    popped = [heapq.heappop(heap) for _ in range(len(values))]
+    assert popped == sorted(values)
+
+
+def _heapify_is_linear() -> None:
+    import heapq
+
+    small = list(range(200_000, 0, -1))
+    large = list(range(400_000, 0, -1))
+    t_small = _best_time(lambda: heapq.heapify(small[:]), repeat=5)
+    t_large = _best_time(lambda: heapq.heapify(large[:]), repeat=5)
+    # Linear work doubles with n; n log n would be a little more than double. The bound leaves room for noise.
+    assert t_large < 3 * t_small
+
+
+def _nlargest_beats_a_full_sort_for_small_k() -> None:
+    import heapq
+    import random
+
+    rng = random.Random(11)
+    data = [rng.random() for _ in range(500_000)]
+    t_sort = _best_time(lambda: sorted(data)[-10:], repeat=3)
+    t_heap = _best_time(lambda: heapq.nlargest(10, data), repeat=3)
+    assert t_heap < t_sort
+
+
 CLAIM_CHECKS = {
     "list-append-is-amortized-constant": _list_growth_is_geometric,
     "list-pop-zero-scales-linearly": _pop_zero_scales_linearly,
@@ -164,6 +198,9 @@ CLAIM_CHECKS = {
     "dict-keys-must-be-hashable": _dict_keys_must_be_hashable,
     "dict-preserves-insertion-order": _dict_preserves_insertion_order,
     "heap-root-is-minimum": _heap_root_is_minimum,
+    "heappop-yields-sorted-order": _heappop_yields_sorted_order,
+    "heapify-is-linear": _heapify_is_linear,
+    "nlargest-beats-a-full-sort-for-small-k": _nlargest_beats_a_full_sort_for_small_k,
 }
 
 
