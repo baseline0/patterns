@@ -32,10 +32,6 @@ claims:
     text: "deque.popleft cost does not grow with the deque length."
   - id: insort-shift-is-linear
     text: "bisect.insort is a binary search plus a list shift, so insertion at the front is linear; the search alone is logarithmic."
-  - id: dict-keys-must-be-hashable
-    text: "A dict key must be hashable. A list is not hashable, so it cannot be a key."
-  - id: dict-preserves-insertion-order
-    text: "dict iteration follows insertion order (a language guarantee since Python 3.7)."
 
 complexity:
   - operation: "list.append"

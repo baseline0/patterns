@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Hash tables: dict and set</title>
+<style>body{font-family:system-ui,sans-serif;max-width:52rem;margin:2rem auto;padding:0 1rem;line-height:1.5}table{border-collapse:collapse;width:100%}td,th{border:1px solid #ccc;padding:.4rem;text-align:left;vertical-align:top}code{background:#f3f3f3;padding:0 .2rem}</style>
+</head><body>
+<h1>Hash tables: dict and set</h1>
+<p>A dict and a set find an item by hashing its key, so a lookup costs about the same whether the container holds ten items or a million. The price is that keys must be hashable and must not change while they are stored.</p>
+<h2>hash, then probe</h2><p>Python computes a hash for each key and uses it to pick a starting slot. If that slot is taken by a different key, the table probes further slots. With a sensible fill level, the expected number of probes stays small, which is why lookup, insert, and delete are O(1) on average.</p>
+<h2>a compact layout since 3.6</h2><p>CPython keeps entries in a dense array in insertion order, and a separate sparse index maps hashes to positions in that array. The dense array is what keeps iteration in insertion order, and it uses less memory than a table of mostly empty slots.</p>
+<h2>why keys must be hashable and stable</h2><p>A key&#x27;s hash decides where it is stored. If a key changes after it is stored, its hash changes, and the table looks in the wrong slot and cannot find it. That is why a list cannot be a key: it is mutable and not hashable. A tuple of immutable items can be a key.</p>
+<h2>Complexity</h2><table><tr><th>Operation</th><th>Time</th><th>Note</th></tr>
+<tr><td><code>dict[key] / key in dict</code></td><td>O(1) average</td><td>worst case O(n) when hashes collide; rare with a good hash</td></tr>
+<tr><td><code>dict[key] = value</code></td><td>O(1) average</td><td>amortized, including the occasional resize</td></tr>
+<tr><td><code>set add / remove / in</code></td><td>O(1) average</td><td>a dict with no values</td></tr>
+<tr><td><code>list membership (x in list)</code></td><td>O(n)</td><td>for comparison: a linear scan</td></tr>
+</table><h2>Signal to structure</h2><table><tr><th>Signal</th><th>Requirement</th>
+<th>Structure</th><th>Python tool</th><th>Example</th></tr>
+<tr><td>Has this value been seen before, in one pass</td><td>O(1) per check</td><td>hash set</td><td><code>set</code></td><td>Two Sum (LeetCode 1): a dict of values already seen</td></tr>
+<tr><td>Group items that share a computed key</td><td>O(1) per item to find its group</td><td>hash table of lists</td><td><code>collections.defaultdict(list)</code></td><td>Group Anagrams (LeetCode 49)</td></tr>
+<tr><td>Find the longest run of consecutive values without sorting</td><td>O(n) total, each value checked in O(1)</td><td>hash set</td><td><code>set</code></td><td>Longest Consecutive Sequence (LeetCode 128)</td></tr>
+</table><h2>Problems</h2><table><tr><th>Problem</th><th>Container</th><th>Pattern</th>
+<th>Python tool</th><th>Why</th></tr>
+<tr><td>LeetCode 1 Two Sum</td><td>hash table (dict)</td><td>complement lookup</td><td><code>dict: store each value&#x27;s index, check for the complement</code></td><td>Looking up target minus the current value is O(1), so one pass finds the pair.</td></tr>
+<tr><td>LeetCode 49 Group Anagrams</td><td>hash table of lists</td><td>group by a canonical key</td><td><code>collections.defaultdict(list), keyed by the sorted letters</code></td><td>Anagrams share a key, so each word joins its group with one lookup.</td></tr>
+<tr><td>LeetCode 128 Longest Consecutive Sequence</td><td>hash set</td><td>start only at the beginning of a run</td><td><code>set: membership checks</code></td><td>Checking a value&#x27;s neighbours is O(1), and only run starts need extending, so the total stays O(n).</td></tr>
+</table></body></html>

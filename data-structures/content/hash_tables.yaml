@@ -1,0 +1,120 @@
+# Source of truth for the hash tables topic. Generated outputs are built from this file by tools/build.py.
+# Each claim id needs a check in tests/unit/test_data_structures.py.
+
+id: hash-tables
+title: "Hash tables: dict and set"
+summary: >
+  A dict and a set find an item by hashing its key, so a lookup costs about the same whether the container holds ten
+  items or a million. The price is that keys must be hashable and must not change while they are stored.
+
+mechanics:
+  - heading: "hash, then probe"
+    body: >
+      Python computes a hash for each key and uses it to pick a starting slot. If that slot is taken by a different key,
+      the table probes further slots. With a sensible fill level, the expected number of probes stays small, which is
+      why lookup, insert, and delete are O(1) on average.
+  - heading: "a compact layout since 3.6"
+    body: >
+      CPython keeps entries in a dense array in insertion order, and a separate sparse index maps hashes to positions in
+      that array. The dense array is what keeps iteration in insertion order, and it uses less memory than a table of
+      mostly empty slots.
+  - heading: "why keys must be hashable and stable"
+    body: >
+      A key's hash decides where it is stored. If a key changes after it is stored, its hash changes, and the table looks
+      in the wrong slot and cannot find it. That is why a list cannot be a key: it is mutable and not hashable. A tuple of
+      immutable items can be a key.
+
+claims:
+  - id: dict-keys-must-be-hashable
+    text: "A dict key must be hashable. A list is not hashable, so it cannot be a key."
+  - id: dict-preserves-insertion-order
+    text: "dict iteration follows insertion order (a language guarantee since Python 3.7)."
+  - id: set-membership-beats-list-search
+    text: "Testing membership in a set is far faster than a linear search of a list of the same items."
+  - id: dict-lookup-is-constant-time
+    text: "A dict lookup does not grow with the dict: a dict 1000 times larger costs far less than 1000 times more per lookup."
+
+complexity:
+  - operation: "dict[key] / key in dict"
+    time: "O(1) average"
+    note: "worst case O(n) when hashes collide; rare with a good hash"
+  - operation: "dict[key] = value"
+    time: "O(1) average"
+    note: "amortized, including the occasional resize"
+  - operation: "set add / remove / in"
+    time: "O(1) average"
+    note: "a dict with no values"
+  - operation: "list membership (x in list)"
+    time: "O(n)"
+    note: "for comparison: a linear scan"
+
+signals:
+  - signal: "Has this value been seen before, in one pass"
+    requirement: "O(1) per check"
+    structure: "hash set"
+    stdlib: "set"
+    example: "Two Sum (LeetCode 1): a dict of values already seen"
+  - signal: "Group items that share a computed key"
+    requirement: "O(1) per item to find its group"
+    structure: "hash table of lists"
+    stdlib: "collections.defaultdict(list)"
+    example: "Group Anagrams (LeetCode 49)"
+  - signal: "Find the longest run of consecutive values without sorting"
+    requirement: "O(n) total, each value checked in O(1)"
+    structure: "hash set"
+    stdlib: "set"
+    example: "Longest Consecutive Sequence (LeetCode 128)"
+
+problems:
+  - number: 1
+    title: "Two Sum"
+    container: "hash table (dict)"
+    pattern: "complement lookup"
+    stdlib: "dict: store each value's index, check for the complement"
+    why: "Looking up target minus the current value is O(1), so one pass finds the pair."
+  - number: 49
+    title: "Group Anagrams"
+    container: "hash table of lists"
+    pattern: "group by a canonical key"
+    stdlib: "collections.defaultdict(list), keyed by the sorted letters"
+    why: "Anagrams share a key, so each word joins its group with one lookup."
+  - number: 128
+    title: "Longest Consecutive Sequence"
+    container: "hash set"
+    pattern: "start only at the beginning of a run"
+    stdlib: "set: membership checks"
+    why: "Checking a value's neighbours is O(1), and only run starts need extending, so the total stays O(n)."
+
+quiz:
+  - question: "Why can a tuple be a dict key but a list cannot?"
+    choices:
+      - "Tuples are faster to hash"
+      - "A tuple is immutable, so its hash cannot change; a list is mutable and not hashable"
+      - "Lists are too large to store"
+      - "Dicts only accept strings and tuples"
+    answer: 1
+    explanation: "A key's hash must stay fixed while the key is stored. Only immutable values can guarantee that."
+  - question: "On average, what does membership testing cost in a set of n items?"
+    choices:
+      - "O(1)"
+      - "O(log n)"
+      - "O(n)"
+      - "O(n log n)"
+    answer: 0
+    explanation: "The hash picks a slot directly. Only collisions add probes, and those are rare."
+  - question: "Since Python 3.7, what does iterating over a dict return?"
+    choices:
+      - "Keys in sorted order"
+      - "Keys in insertion order"
+      - "Keys in random order"
+      - "Keys in order of their hash"
+    answer: 1
+    explanation: "Insertion order is a language guarantee, because entries are stored in a dense array in that order."
+  - question: "Why is the 'group anagrams' problem a fit for defaultdict(list)?"
+    choices:
+      - "It sorts the words automatically"
+      - "Each new key gets an empty list on first use, so grouping needs no existence check"
+      - "It removes duplicate words"
+      - "It keeps the groups sorted"
+    answer: 1
+    explanation: "defaultdict creates the missing list on access, so each word appends to its group in one step."
