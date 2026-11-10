@@ -1,0 +1,231 @@
+[
+  {
+    "title": "Claim: two-pointers-check-palindrome",
+    "body": "Two pointers from opposite ends can check a palindrome in O(n) time and O(1) space without reversing.",
+    "tags": [
+      "strings",
+      "claim",
+      "two-pointers-check-palindrome"
+    ]
+  },
+  {
+    "title": "Claim: anagram-count-vs-sort",
+    "body": "Anagrams have identical character counts. Comparing counts is O(n); sorting both strings is O(n log n).",
+    "tags": [
+      "strings",
+      "claim",
+      "anagram-count-vs-sort"
+    ]
+  },
+  {
+    "title": "Claim: sliding-window-is-linear",
+    "body": "A sliding window processes each character at most twice, keeping substring search O(n) instead of O(n^2).",
+    "tags": [
+      "strings",
+      "claim",
+      "sliding-window-is-linear"
+    ]
+  },
+  {
+    "title": "Claim: in-place-reversal-no-allocation",
+    "body": "Reversing a string in place by swapping characters uses O(1) space; building a reversed copy uses O(n).",
+    "tags": [
+      "strings",
+      "claim",
+      "in-place-reversal-no-allocation"
+    ]
+  },
+  {
+    "title": "Complexity: palindrome check (two pointers)",
+    "body": "**O(n) time, O(1) space**\n\nmove from ends inward; no allocation",
+    "tags": [
+      "strings",
+      "complexity",
+      "operation"
+    ]
+  },
+  {
+    "title": "Complexity: reverse string in place (swap)",
+    "body": "**O(n) time, O(1) space**\n\nswap characters with two pointers",
+    "tags": [
+      "strings",
+      "complexity",
+      "operation"
+    ]
+  },
+  {
+    "title": "Complexity: anagram check (character count)",
+    "body": "**O(n)**\n\ndict lookups are O(1); faster than sorting",
+    "tags": [
+      "strings",
+      "complexity",
+      "operation"
+    ]
+  },
+  {
+    "title": "Complexity: anagram check (sort both)",
+    "body": "**O(n log n)**\n\nfor comparison; sorting is more overhead than needed",
+    "tags": [
+      "strings",
+      "complexity",
+      "operation"
+    ]
+  },
+  {
+    "title": "Complexity: substring search (naive)",
+    "body": "**O(n*m)**\n\nnested loop: for each position, match up to m chars",
+    "tags": [
+      "strings",
+      "complexity",
+      "operation"
+    ]
+  },
+  {
+    "title": "Complexity: longest substring without repeats",
+    "body": "**O(n)**\n\nsliding window; each char seen at most twice",
+    "tags": [
+      "strings",
+      "complexity",
+      "operation"
+    ]
+  },
+  {
+    "title": "Q1: When two pointers check a palindrome from the ends inward, w",
+    "body": "A. The left pointer reaches the right pointer\nB. Characters at the current positions do not match\nC. The string has an odd length\nD. The string contains a space\n\n**B.** Palindromes have matching characters at symmetric positions. Any mismatch means the string is not a palindrome.",
+    "tags": [
+      "strings",
+      "quiz",
+      "question"
+    ]
+  },
+  {
+    "title": "Q2: Why is checking if two strings are anagrams using Counter fa",
+    "body": "A. Counter is implemented in C and always faster\nB. Counter is O(n); sorting both is O(n log n)\nC. Counter eliminates duplicate characters\nD. Sorting cannot compare frequencies\n\n**B.** Counting characters is linear. Sorting is O(n log n), so dict lookup is more efficient for anagram detection.",
+    "tags": [
+      "strings",
+      "quiz",
+      "question"
+    ]
+  },
+  {
+    "title": "Q3: In the sliding-window approach to 'longest substring without",
+    "body": "A. Tracks the start of the current valid substring\nB. Points to the rightmost character\nC. Remains at the first character\nD. Skips whitespace\n\n**A.** The right pointer expands the window; the left retracts when a repeat is found. The distance between them is the substring length.",
+    "tags": [
+      "strings",
+      "quiz",
+      "question"
+    ]
+  },
+  {
+    "title": "Q4: Why does reversing a string with two pointers and swapping u",
+    "body": "A. Swapping modifies the original; slicing allocates a new string\nB. Two pointers are inherently more efficient\nC. Slicing only works on immutable strings\nD. Swapping runs in the CPU cache\n\n**A.** Strings in Python are immutable, so str[::-1] allocates a new string. In-place swaps work on lists or character arrays.",
+    "tags": [
+      "strings",
+      "quiz",
+      "question"
+    ]
+  },
+  {
+    "title": "Q5: When comparing anagrams, why must we count all characters in",
+    "body": "A. Duplicates are not relevant to anagrams\nB. We need to verify the same multiset of characters appears in both strings\nC. Counting is always faster than checking\nD. Anagrams only have unique characters\n\n**B.** Anagrams have the same characters with the same frequencies. Checking duplicates alone misses frequency differences.",
+    "tags": [
+      "strings",
+      "quiz",
+      "question"
+    ]
+  },
+  {
+    "title": "LeetCode 28: Implement strStr",
+    "body": "**Pattern**: substring search at each position\n\n**Why**: Comparing characters position by position finds the first match in O(n*m). Rolling hash improves to O(n) but naive is sufficient for moderate lengths.\n\n**Python**: `str.find or manual char-by-char comparison`",
+    "tags": [
+      "strings",
+      "problem",
+      "leetcode-28"
+    ]
+  },
+  {
+    "title": "LeetCode 125: Valid Palindrome",
+    "body": "**Pattern**: two pointers ignoring non-alphanumeric\n\n**Why**: Two pointers from the ends check symmetry in O(n) without allocating a reversed or cleaned string.\n\n**Python**: `str.isalnum and lower for filtering; two pointers`",
+    "tags": [
+      "strings",
+      "problem",
+      "leetcode-125"
+    ]
+  },
+  {
+    "title": "LeetCode 242: Valid Anagram",
+    "body": "**Pattern**: count and compare\n\n**Why**: Counting character frequencies is O(n). Sorting both strings is O(n log n). Counter is optimal for this check.\n\n**Python**: `collections.Counter`",
+    "tags": [
+      "strings",
+      "problem",
+      "leetcode-242"
+    ]
+  },
+  {
+    "title": "LeetCode 58: Length of Last Word",
+    "body": "**Pattern**: reverse scan to skip trailing spaces\n\n**Why**: Scanning backward from the end finds the last word in one pass, avoiding the overhead of splitting and reversing.\n\n**Python**: `str.split or manual indexing from the end`",
+    "tags": [
+      "strings",
+      "problem",
+      "leetcode-58"
+    ]
+  },
+  {
+    "title": "LeetCode 151: Reverse Words in a String",
+    "body": "**Pattern**: word-by-word reversal with space handling\n\n**Why**: Using split().reverse().join() is Pythonic and concise. Manual reversal in place avoids intermediate allocations.\n\n**Python**: `str.split and reverse and join, or two-pointer character swap`",
+    "tags": [
+      "strings",
+      "problem",
+      "leetcode-151"
+    ]
+  },
+  {
+    "title": "LeetCode 680: Valid Palindrome II",
+    "body": "**Pattern**: two pointers with one skip allowed\n\n**Why**: When a mismatch is found, we must try skipping the left or right character. Backtracking checks both without full string duplication.\n\n**Python**: `two-pointer recursion or backtracking to check both skip cases`",
+    "tags": [
+      "strings",
+      "problem",
+      "leetcode-680"
+    ]
+  },
+  {
+    "title": "Signal: Verify a string reads the same forward and backward",
+    "body": "**Structure**: two pointers from ends\n\n**Requirement**: O(n) time, O(1) space\n\n**Python**: `str indexing`\n\n**Example**: Valid Palindrome (LeetCode 125)",
+    "tags": [
+      "strings",
+      "signal"
+    ]
+  },
+  {
+    "title": "Signal: Compare words by their letters, ignoring order",
+    "body": "**Structure**: character frequency dict\n\n**Requirement**: O(n) without sorting\n\n**Python**: `collections.Counter`\n\n**Example**: Valid Anagram (LeetCode 242)",
+    "tags": [
+      "strings",
+      "signal"
+    ]
+  },
+  {
+    "title": "Signal: Find longest substring with a property (no repeats, all vowe",
+    "body": "**Structure**: sliding window with dict\n\n**Requirement**: O(n) in one pass\n\n**Python**: `dict or set to track character presence`\n\n**Example**: Longest Substring Without Repeating Characters (LeetCode 3)",
+    "tags": [
+      "strings",
+      "signal"
+    ]
+  },
+  {
+    "title": "Signal: Locate first occurrence of a pattern or substring",
+    "body": "**Structure**: rolling hash or KMP\n\n**Requirement**: O(n) or O(n+m) without O(n*m)\n\n**Python**: `str.find or manual index-by-index`\n\n**Example**: Implement strStr (LeetCode 28)",
+    "tags": [
+      "strings",
+      "signal"
+    ]
+  },
+  {
+    "title": "Signal: Reverse, rotate, or rearrange words in a string",
+    "body": "**Structure**: two-pointer reversal\n\n**Requirement**: O(n) time, O(1) space\n\n**Python**: `str.split and join, or manual swap`\n\n**Example**: Reverse Words in a String (LeetCode 151)",
+    "tags": [
+      "strings",
+      "signal"
+    ]
+  }
+]

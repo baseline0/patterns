@@ -4,6 +4,7 @@ Outputs (all generated; edit the YAML, then run this file):
     README.md        the topic write-up, complexity table, signals, and problem mapping
     quiz_guide.md    the quiz with answers and explanations
     index.html       a single static page with the same content
+    glossary.json    flashcards glossary format (compatible with flashcards repo)
     flashcards.csv   Anki-importable cards: one per quiz item and one per complexity row
 
 Run with no arguments to write the outputs. tests/test_data_structures.py regenerates them in memory and fails
@@ -15,6 +16,7 @@ from __future__ import annotations
 import csv
 import html
 import io
+import json
 from pathlib import Path
 
 import yaml
@@ -131,6 +133,69 @@ def index_html(topic: dict) -> str:
     return "\n".join(parts) + "\n"
 
 
+def glossary_slides(topic: dict) -> list[dict]:
+    """Convert YAML topic to flashcards glossary format (list of slides as dicts).
+
+    Each slide has title, body, and tags. Compatible with flashcards repo format.
+    Generates one slide per claim, complexity operation, quiz question, problem, and signal.
+    """
+    slides = []
+    topic_id = topic["id"]
+
+    # Claims → slides (one per claim)
+    for claim in topic["claims"]:
+        slides.append({
+            "title": f"Claim: {claim['id']}",
+            "body": claim["text"],
+            "tags": [topic_id, "claim", claim["id"]]
+        })
+
+    # Complexity → slides (one per operation)
+    for row in topic["complexity"]:
+        slides.append({
+            "title": f"Complexity: {row['operation']}",
+            "body": f"**{row['time']}**\n\n{row['note']}",
+            "tags": [topic_id, "complexity", "operation"]
+        })
+
+    # Quiz → slides (one per question, Q on front, A+explanation on back)
+    for i, item in enumerate(topic["quiz"], 1):
+        choices_str = "\n".join(f"{chr(65 + j)}. {c}" for j, c in enumerate(item["choices"]))
+        answer_letter = chr(65 + item["answer"])
+        body = f"{choices_str}\n\n**{answer_letter}.** {item['explanation']}"
+        slides.append({
+            "title": f"Q{i}: {item['question'][:60]}",
+            "body": body,
+            "tags": [topic_id, "quiz", "question"]
+        })
+
+    # Problems → slides (one per problem)
+    for p in topic["problems"]:
+        body = f"**Pattern**: {p['pattern']}\n\n**Why**: {p['why']}\n\n**Python**: `{p['stdlib']}`"
+        slides.append({
+            "title": f"LeetCode {p['number']}: {p['title']}",
+            "body": body,
+            "tags": [topic_id, "problem", f"leetcode-{p['number']}"]
+        })
+
+    # Signals → slides (one per signal)
+    for s in topic["signals"]:
+        body = f"**Structure**: {s['structure']}\n\n**Requirement**: {s['requirement']}\n\n**Python**: `{s['stdlib']}`\n\n**Example**: {s['example']}"
+        slides.append({
+            "title": f"Signal: {s['signal'][:60]}",
+            "body": body,
+            "tags": [topic_id, "signal"]
+        })
+
+    return slides
+
+
+def glossary_json(topic: dict) -> str:
+    """Render glossary as JSON (flashcards format)."""
+    slides = glossary_slides(topic)
+    return json.dumps(slides, indent=2) + "\n"
+
+
 def flashcards(topics: list[dict]) -> str:
     buffer = io.StringIO()
     writer = csv.writer(buffer, lineterminator="\n")
@@ -169,6 +234,7 @@ def render_all(content_dir: Path = CONTENT) -> dict[Path, str]:
         outputs[Path(f"{stem}/README.md")] = readme(topic)
         outputs[Path(f"{stem}/quiz_guide.md")] = quiz_guide(topic)
         outputs[Path(f"{stem}/index.html")] = index_html(topic)
+        outputs[Path(f"{stem}/glossary.json")] = glossary_json(topic)
     outputs[Path("flashcards.csv")] = flashcards(topics)
     outputs[Path("README.md")] = family_index(topics)
     return outputs

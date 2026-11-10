@@ -1,0 +1,206 @@
+[
+  {
+    "title": "Claim: list-append-is-amortized-constant",
+    "body": "List growth is geometric: capacity grows by a bounded fraction each time it is exceeded, so appends stay O(1) amortized.",
+    "tags": [
+      "lists-and-deques",
+      "claim",
+      "list-append-is-amortized-constant"
+    ]
+  },
+  {
+    "title": "Claim: list-pop-zero-scales-linearly",
+    "body": "list.pop(0) cost grows with the list length, because every remaining pointer shifts.",
+    "tags": [
+      "lists-and-deques",
+      "claim",
+      "list-pop-zero-scales-linearly"
+    ]
+  },
+  {
+    "title": "Claim: deque-popleft-is-constant",
+    "body": "deque.popleft cost does not grow with the deque length.",
+    "tags": [
+      "lists-and-deques",
+      "claim",
+      "deque-popleft-is-constant"
+    ]
+  },
+  {
+    "title": "Claim: insort-shift-is-linear",
+    "body": "bisect.insort is a binary search plus a list shift, so insertion at the front is linear; the search alone is logarithmic.",
+    "tags": [
+      "lists-and-deques",
+      "claim",
+      "insort-shift-is-linear"
+    ]
+  },
+  {
+    "title": "Complexity: list.append",
+    "body": "**O(1) amortized**\n\ngeometric growth of spare capacity",
+    "tags": [
+      "lists-and-deques",
+      "complexity",
+      "operation"
+    ]
+  },
+  {
+    "title": "Complexity: list.pop()  (end)",
+    "body": "**O(1)**\n\n",
+    "tags": [
+      "lists-and-deques",
+      "complexity",
+      "operation"
+    ]
+  },
+  {
+    "title": "Complexity: list.pop(0) / insert(0, x)",
+    "body": "**O(n)**\n\nevery pointer shifts",
+    "tags": [
+      "lists-and-deques",
+      "complexity",
+      "operation"
+    ]
+  },
+  {
+    "title": "Complexity: list[i]",
+    "body": "**O(1)**\n\ndirect offset into the array",
+    "tags": [
+      "lists-and-deques",
+      "complexity",
+      "operation"
+    ]
+  },
+  {
+    "title": "Complexity: deque.appendleft / popleft",
+    "body": "**O(1)**\n\ntouches only the end block",
+    "tags": [
+      "lists-and-deques",
+      "complexity",
+      "operation"
+    ]
+  },
+  {
+    "title": "Complexity: deque[i] (middle)",
+    "body": "**O(n)**\n\nwalks blocks; not constant",
+    "tags": [
+      "lists-and-deques",
+      "complexity",
+      "operation"
+    ]
+  },
+  {
+    "title": "Complexity: bisect.bisect_left (search)",
+    "body": "**O(log n)**\n\non a sorted list",
+    "tags": [
+      "lists-and-deques",
+      "complexity",
+      "operation"
+    ]
+  },
+  {
+    "title": "Complexity: bisect.insort (insert)",
+    "body": "**O(n)**\n\nthe search is O(log n); the shift is linear",
+    "tags": [
+      "lists-and-deques",
+      "complexity",
+      "operation"
+    ]
+  },
+  {
+    "title": "Q1: Why is list.pop(0) a poor choice for a BFS queue?",
+    "body": "A. It allocates a new list every time\nB. It shifts every remaining pointer, so each pop costs O(n)\nC. It is not allowed on lists\nD. It is only slow for strings\n\n**B.** A list is a contiguous array. Removing the first element moves each remaining pointer one slot left.",
+    "tags": [
+      "lists-and-deques",
+      "quiz",
+      "question"
+    ]
+  },
+  {
+    "title": "Q2: Which structure is the right queue for BFS in Python?",
+    "body": "A. list with pop(0)\nB. collections.deque with popleft\nC. dict with the smallest key\nD. set with pop()\n\n**B.** deque.popleft is O(1), because it touches only the block at the front.",
+    "tags": [
+      "lists-and-deques",
+      "quiz",
+      "question"
+    ]
+  },
+  {
+    "title": "Q3: Why are appends to a list amortized O(1)?",
+    "body": "A. Each append reserves exactly one slot\nB. Capacity grows by a fraction each time it is exceeded, so copies are rare\nC. Appends never copy\nD. CPython stores lists as linked nodes\n\n**B.** Spare capacity grows geometrically, so the cost of the occasional copy spreads across many appends.",
+    "tags": [
+      "lists-and-deques",
+      "quiz",
+      "question"
+    ]
+  },
+  {
+    "title": "Q4: bisect.insort on a sorted list is O(log n) per insert. True ",
+    "body": "A. True: the binary search dominates\nB. False: the search is O(log n) but the list shift makes insertion O(n)\n\n**B.** Finding the position is logarithmic. Inserting the value shifts the elements after it.",
+    "tags": [
+      "lists-and-deques",
+      "quiz",
+      "question"
+    ]
+  },
+  {
+    "title": "Q5: Why can a list not be a dict key?",
+    "body": "A. Lists are too large\nB. Lists are not hashable: their contents can change, so their hash would change too\nC. Dict keys must be strings\nD. Lists are stored out of order\n\n**B.** A key's hash must stay constant while it is in the table. A mutable list cannot guarantee that.",
+    "tags": [
+      "lists-and-deques",
+      "quiz",
+      "question"
+    ]
+  },
+  {
+    "title": "LeetCode 102: Binary Tree Level Order Traversal",
+    "body": "**Pattern**: breadth-first search\n\n**Why**: The frontier is a FIFO queue. list.pop(0) would shift the whole frontier on every step.\n\n**Python**: `collections.deque: append and popleft`",
+    "tags": [
+      "lists-and-deques",
+      "problem",
+      "leetcode-102"
+    ]
+  },
+  {
+    "title": "LeetCode 739: Daily Temperatures",
+    "body": "**Pattern**: monotonic stack\n\n**Why**: The stack is used only at one end, so a plain list costs O(1) per push and pop.\n\n**Python**: `list: append and pop`",
+    "tags": [
+      "lists-and-deques",
+      "problem",
+      "leetcode-739"
+    ]
+  },
+  {
+    "title": "LeetCode 11: Container With Most Water",
+    "body": "**Pattern**: two pointers\n\n**Why**: Random access by position is O(1), which the two pointers rely on.\n\n**Python**: `list indexing`",
+    "tags": [
+      "lists-and-deques",
+      "problem",
+      "leetcode-11"
+    ]
+  },
+  {
+    "title": "Signal: Process in first-in, first-out order, with work added and re",
+    "body": "**Structure**: block list\n\n**Requirement**: O(1) at both ends\n\n**Python**: `collections.deque`\n\n**Example**: Binary Tree Level Order Traversal (LeetCode 102)",
+    "tags": [
+      "lists-and-deques",
+      "signal"
+    ]
+  },
+  {
+    "title": "Signal: Last-in, first-out; nearest greater or smaller element in on",
+    "body": "**Structure**: contiguous array used as a stack\n\n**Requirement**: O(1) push and pop at one end; O(n) total\n\n**Python**: `list (append / pop)`\n\n**Example**: Daily Temperatures (LeetCode 739)",
+    "tags": [
+      "lists-and-deques",
+      "signal"
+    ]
+  },
+  {
+    "title": "Signal: Maintain a sorted sequence while looking values up",
+    "body": "**Structure**: sorted contiguous array\n\n**Requirement**: O(log n) search; insertion dominated by the shift\n\n**Python**: `bisect`\n\n**Example**: Searching a sorted list; avoid repeated insort in hot loops",
+    "tags": [
+      "lists-and-deques",
+      "signal"
+    ]
+  }
+]

@@ -1,0 +1,267 @@
+[
+  {
+    "title": "Claim: sliding-window-avoids-nesting",
+    "body": "Sliding window processes each element at most twice, keeping subarray problems O(n) instead of O(n^2).",
+    "tags": [
+      "arrays-and-2d-arrays",
+      "claim",
+      "sliding-window-avoids-nesting"
+    ]
+  },
+  {
+    "title": "Claim: prefix-sum-enables-constant-range-queries",
+    "body": "A prefix sum array answers any subarray-sum query in O(1) after O(n) preprocessing.",
+    "tags": [
+      "arrays-and-2d-arrays",
+      "claim",
+      "prefix-sum-enables-constant-range-queries"
+    ]
+  },
+  {
+    "title": "Claim: two-pointers-solve-ksum-in-polynomial",
+    "body": "Two pointers on a sorted array reduce k-sum from O(n^k) brute force to O(n^(k-1)) by solving one subproblem in linear time.",
+    "tags": [
+      "arrays-and-2d-arrays",
+      "claim",
+      "two-pointers-solve-ksum-in-polynomial"
+    ]
+  },
+  {
+    "title": "Claim: in-place-rotation-uses-constant-space",
+    "body": "Rotating a matrix 90 degrees in place uses O(1) extra space; allocating a new matrix uses O(n^2).",
+    "tags": [
+      "arrays-and-2d-arrays",
+      "claim",
+      "in-place-rotation-uses-constant-space"
+    ]
+  },
+  {
+    "title": "Claim: product-except-self-without-division",
+    "body": "Computing product of array except self is possible without division by combining left and right products.",
+    "tags": [
+      "arrays-and-2d-arrays",
+      "claim",
+      "product-except-self-without-division"
+    ]
+  },
+  {
+    "title": "Complexity: subarray sum (all pairs, brute force)",
+    "body": "**O(n^2)**\n\nnested loop over start and end indices",
+    "tags": [
+      "arrays-and-2d-arrays",
+      "complexity",
+      "operation"
+    ]
+  },
+  {
+    "title": "Complexity: subarray sum (prefix sum query)",
+    "body": "**O(n) setup, O(1) per query**\n\ncumulative total lookup",
+    "tags": [
+      "arrays-and-2d-arrays",
+      "complexity",
+      "operation"
+    ]
+  },
+  {
+    "title": "Complexity: sliding window (max in subarray, longest substring)",
+    "body": "**O(n)**\n\neach element added and removed once",
+    "tags": [
+      "arrays-and-2d-arrays",
+      "complexity",
+      "operation"
+    ]
+  },
+  {
+    "title": "Complexity: two sum (sorted array)",
+    "body": "**O(n)**\n\ntwo pointers converge to target",
+    "tags": [
+      "arrays-and-2d-arrays",
+      "complexity",
+      "operation"
+    ]
+  },
+  {
+    "title": "Complexity: three sum (brute force)",
+    "body": "**O(n^3)**\n\nthree nested loops",
+    "tags": [
+      "arrays-and-2d-arrays",
+      "complexity",
+      "operation"
+    ]
+  },
+  {
+    "title": "Complexity: three sum (sorted + two pointers)",
+    "body": "**O(n^2)**\n\nfix one element, use two pointers for complement",
+    "tags": [
+      "arrays-and-2d-arrays",
+      "complexity",
+      "operation"
+    ]
+  },
+  {
+    "title": "Complexity: rotate matrix 90 degrees in place",
+    "body": "**O(n^2) and O(1) space**\n\ntranspose and reverse, or rotate layers",
+    "tags": [
+      "arrays-and-2d-arrays",
+      "complexity",
+      "operation"
+    ]
+  },
+  {
+    "title": "Complexity: spiral matrix traversal",
+    "body": "**O(n*m) and O(1) space**\n\ntrack four boundaries; visit each cell once",
+    "tags": [
+      "arrays-and-2d-arrays",
+      "complexity",
+      "operation"
+    ]
+  },
+  {
+    "title": "Q1: In a sliding window for 'longest substring without repetitio",
+    "body": "A. Adds a new character to the window\nB. Removes a character from the window to eliminate a repetition\nC. Resets the window to start over\nD. Moves to the center of the string\n\n**B.** When a repeated character is found, the left pointer contracts to exclude the older occurrence and maintain the no-repeat property.",
+    "tags": [
+      "arrays-and-2d-arrays",
+      "quiz",
+      "question"
+    ]
+  },
+  {
+    "title": "Q2: A prefix sum array allows answering 'sum of elements from in",
+    "body": "A. O(n)\nB. O(j - i)\nC. O(1)\nD. O(log n)\n\n**C.** Prefix[j] - prefix[i-1] is a single array lookup. Preprocessing takes O(n); each query is O(1).",
+    "tags": [
+      "arrays-and-2d-arrays",
+      "quiz",
+      "question"
+    ]
+  },
+  {
+    "title": "Q3: In 3Sum, after sorting the array, why do we use two pointers",
+    "body": "A. Two pointers are always faster than nested loops in general\nB. Two pointers reduce the inner loop from O(n) to O(1), making 3Sum O(n^2) instead of O(n^3)\nC. Nested loops are not allowed on sorted arrays\nD. Two pointers find the exact center of the array\n\n**B.** Fixing one element and using two pointers to find the complementary pair is O(n) per element, so O(n^2) total with sorting.",
+    "tags": [
+      "arrays-and-2d-arrays",
+      "quiz",
+      "question"
+    ]
+  },
+  {
+    "title": "Q4: Why can product of array except self be computed without div",
+    "body": "A. Division would lose precision for floating-point numbers\nB. Left and right products multiply to give the product of all except element i\nC. All elements are guaranteed to be non-zero\nD. Multiplication is always faster than division\n\n**B.** Prefix products (left of i) and suffix products (right of i) are computed separately, then combined. This avoids division by zero and is general.",
+    "tags": [
+      "arrays-and-2d-arrays",
+      "quiz",
+      "question"
+    ]
+  },
+  {
+    "title": "Q5: What is the space complexity of rotating a 90-degree matrix ",
+    "body": "A. O(n)\nB. O(n^2)\nC. O(1)\nD. O(log n)\n\n**C.** In-place rotation using transpose and row reversal (or layer-by-layer swaps) uses only a constant number of temporary variables.",
+    "tags": [
+      "arrays-and-2d-arrays",
+      "quiz",
+      "question"
+    ]
+  },
+  {
+    "title": "LeetCode 1: Two Sum",
+    "body": "**Pattern**: complement lookup in one pass\n\n**Why**: Complement lookup is O(1), so one pass finds the pair without sorting. Hash table avoids O(n^2) nested loops.\n\n**Python**: `dict to store value-index pairs; check for target - current`",
+    "tags": [
+      "arrays-and-2d-arrays",
+      "problem",
+      "leetcode-1"
+    ]
+  },
+  {
+    "title": "LeetCode 11: Container With Most Water",
+    "body": "**Pattern**: two pointers from ends moving inward\n\n**Why**: Area is limited by the shorter height. Moving from the widest pair inward, we skip impossible pairs in O(n) instead of O(n^2).\n\n**Python**: `list indexing; compute area = height * width`",
+    "tags": [
+      "arrays-and-2d-arrays",
+      "problem",
+      "leetcode-11"
+    ]
+  },
+  {
+    "title": "LeetCode 15: 3Sum",
+    "body": "**Pattern**: fix one element, use two pointers for complement\n\n**Why**: Fixing each element and solving two-sum with two pointers reduces O(n^3) brute force to O(n^2) after sorting.\n\n**Python**: `sort once, then two pointers for each fixed element`",
+    "tags": [
+      "arrays-and-2d-arrays",
+      "problem",
+      "leetcode-15"
+    ]
+  },
+  {
+    "title": "LeetCode 53: Maximum Subarray",
+    "body": "**Pattern**: Kadane's algorithm (track max ending here and global max)\n\n**Why**: At each position, choose: extend the previous subarray or start new. Tracking both maxima finds the best in O(n).\n\n**Python**: `single-pass loop with running sum`",
+    "tags": [
+      "arrays-and-2d-arrays",
+      "problem",
+      "leetcode-53"
+    ]
+  },
+  {
+    "title": "LeetCode 238: Product of Array Except Self",
+    "body": "**Pattern**: left products, right products, combine\n\n**Why**: Division by zero is avoided. Left products (all before i) and right products (all after i) multiply to the result. O(n) without division.\n\n**Python**: `two passes over the array; no division`",
+    "tags": [
+      "arrays-and-2d-arrays",
+      "problem",
+      "leetcode-238"
+    ]
+  },
+  {
+    "title": "LeetCode 48: Rotate Matrix",
+    "body": "**Pattern**: transpose then reverse rows, or rotate layer by layer\n\n**Why**: In-place rotation uses O(1) extra space by transforming indices and swapping. Allocating a new matrix would use O(n^2) space.\n\n**Python**: `nested loops with index algebra; swap elements in place`",
+    "tags": [
+      "arrays-and-2d-arrays",
+      "problem",
+      "leetcode-48"
+    ]
+  },
+  {
+    "title": "LeetCode 54: Spiral Matrix",
+    "body": "**Pattern**: traverse in layers: top row, right column, bottom row, left column\n\n**Why**: Tracking boundaries and spiraling inward visits each element exactly once in O(n*m) with O(1) extra space.\n\n**Python**: `four boundaries (top, bottom, left, right) updated after each side`",
+    "tags": [
+      "arrays-and-2d-arrays",
+      "problem",
+      "leetcode-54"
+    ]
+  },
+  {
+    "title": "Signal: Find the subarray with max sum, longest run, or extreme prop",
+    "body": "**Structure**: sliding window or dynamic programming\n\n**Requirement**: O(n) without nested loops\n\n**Python**: `list indexing and two pointers`\n\n**Example**: Maximum Subarray (LeetCode 53); Kadane's algorithm",
+    "tags": [
+      "arrays-and-2d-arrays",
+      "signal"
+    ]
+  },
+  {
+    "title": "Signal: Find all pairs or triplets that satisfy a constraint (sum to",
+    "body": "**Structure**: two pointers on sorted array; hash set for complements\n\n**Requirement**: O(n) or O(n^2) without O(n^3) brute force\n\n**Python**: `set or dict for Two Sum; sort then two pointers for k-sum`\n\n**Example**: Two Sum (LeetCode 1); 3Sum (LeetCode 15)",
+    "tags": [
+      "arrays-and-2d-arrays",
+      "signal"
+    ]
+  },
+  {
+    "title": "Signal: Answer range queries on subarrays (sum, product, max, min, c",
+    "body": "**Structure**: prefix or suffix array (cumulative aggregation)\n\n**Requirement**: O(1) per query after preprocessing\n\n**Python**: `list with cumulative values`\n\n**Example**: Product of Array Except Self (LeetCode 238); Range Sum Query",
+    "tags": [
+      "arrays-and-2d-arrays",
+      "signal"
+    ]
+  },
+  {
+    "title": "Signal: Manipulate a 2D matrix without allocating new space",
+    "body": "**Structure**: in-place index transformations and swaps\n\n**Requirement**: O(1) extra space, no new matrix allocation\n\n**Python**: `list of lists, index arithmetic`\n\n**Example**: Rotate Matrix (LeetCode 48); Spiral Matrix (LeetCode 54)",
+    "tags": [
+      "arrays-and-2d-arrays",
+      "signal"
+    ]
+  },
+  {
+    "title": "Signal: Maximize or minimize a value between two positions",
+    "body": "**Structure**: two pointers or one-pass greedy\n\n**Requirement**: O(n) without enumerating all pairs\n\n**Python**: `list indexing and comparison`\n\n**Example**: Container With Most Water (LeetCode 11); Trapping Rain Water",
+    "tags": [
+      "arrays-and-2d-arrays",
+      "signal"
+    ]
+  }
+]

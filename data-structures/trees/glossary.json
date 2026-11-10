@@ -1,0 +1,258 @@
+[
+  {
+    "title": "Claim: tree-is-recursive-structure",
+    "body": "A binary tree is defined recursively: a node with a left and right subtree, each of which is a binary tree (or empty).",
+    "tags": [
+      "trees",
+      "claim",
+      "tree-is-recursive-structure"
+    ]
+  },
+  {
+    "title": "Claim: bst-maintains-invariant",
+    "body": "A binary search tree maintains the invariant that every left descendant is smaller and every right descendant is larger.",
+    "tags": [
+      "trees",
+      "claim",
+      "bst-maintains-invariant"
+    ]
+  },
+  {
+    "title": "Claim: inorder-traversal-yields-sorted",
+    "body": "In-order traversal of a BST visits nodes in sorted order.",
+    "tags": [
+      "trees",
+      "claim",
+      "inorder-traversal-yields-sorted"
+    ]
+  },
+  {
+    "title": "Claim: tree-height-bounds-recursive-depth",
+    "body": "The height of a tree bounds the recursion depth and the required stack space.",
+    "tags": [
+      "trees",
+      "claim",
+      "tree-height-bounds-recursive-depth"
+    ]
+  },
+  {
+    "title": "Claim: balanced-tree-search-is-logarithmic",
+    "body": "Search in a balanced BST takes O(log n) time because each comparison eliminates about half the tree.",
+    "tags": [
+      "trees",
+      "claim",
+      "balanced-tree-search-is-logarithmic"
+    ]
+  },
+  {
+    "title": "Complexity: BST search (balanced)",
+    "body": "**O(log n)**\n\neach comparison halves the tree; unbalanced tree degrades to O(n)",
+    "tags": [
+      "trees",
+      "complexity",
+      "operation"
+    ]
+  },
+  {
+    "title": "Complexity: BST insert (balanced)",
+    "body": "**O(log n)**\n\nsearch for the position, then add a leaf",
+    "tags": [
+      "trees",
+      "complexity",
+      "operation"
+    ]
+  },
+  {
+    "title": "Complexity: BST delete (balanced)",
+    "body": "**O(log n)**\n\nsearch, then restructure; unbalanced tree O(n)",
+    "tags": [
+      "trees",
+      "complexity",
+      "operation"
+    ]
+  },
+  {
+    "title": "Complexity: Tree traversal (DFS pre/in/post)",
+    "body": "**O(n)**\n\nvisit every node and edge once; recursive depth is O(h)",
+    "tags": [
+      "trees",
+      "complexity",
+      "operation"
+    ]
+  },
+  {
+    "title": "Complexity: Tree traversal (BFS level-order)",
+    "body": "**O(n)**\n\ndeque maintains the frontier; space is O(w) where w is max width",
+    "tags": [
+      "trees",
+      "complexity",
+      "operation"
+    ]
+  },
+  {
+    "title": "Complexity: Find LCA (lowest common ancestor)",
+    "body": "**O(n)**\n\nsearch both subtrees to find the split point; O(h) on a balanced tree",
+    "tags": [
+      "trees",
+      "complexity",
+      "operation"
+    ]
+  },
+  {
+    "title": "Complexity: Validate BST",
+    "body": "**O(n)**\n\ncheck every node's invariant and track bounds",
+    "tags": [
+      "trees",
+      "complexity",
+      "operation"
+    ]
+  },
+  {
+    "title": "Q1: Why is recursion a natural fit for tree problems?",
+    "body": "A. Trees are always small, so recursion never overflows\nB. Each subtree is a smaller instance of the same problem, making induction natural\nC. Recursion is faster than iteration\nD. Trees require random access, which recursion provides\n\n**B.** The recursive structure of a tree (subtree is a tree) matches the recursive structure of the solution (solve left, right, combine).",
+    "tags": [
+      "trees",
+      "quiz",
+      "question"
+    ]
+  },
+  {
+    "title": "Q2: What does in-order traversal of a BST produce?",
+    "body": "A. Nodes in reverse sorted order\nB. Nodes sorted from smallest to largest\nC. Nodes in the order they were inserted\nD. Nodes in reverse insertion order\n\n**B.** In-order traversal visits left subtree, then node, then right subtree. In a BST, left nodes are smaller, so the result is sorted.",
+    "tags": [
+      "trees",
+      "quiz",
+      "question"
+    ]
+  },
+  {
+    "title": "Q3: Why does BST search run in O(log n) time on a balanced tree ",
+    "body": "A. Unbalanced trees store data differently\nB. Unbalanced trees require random access\nC. A balanced tree eliminates about half the tree per comparison; an unbalanced tree may eliminate only one node\nD. Unbalanced trees require more memory\n\n**C.** On a balanced tree, comparison with the root partitions the remaining nodes. On a chain (unbalanced), only one node is eliminated per step.",
+    "tags": [
+      "trees",
+      "quiz",
+      "question"
+    ]
+  },
+  {
+    "title": "Q4: Which traversal naturally uses a queue instead of recursion?",
+    "body": "A. Pre-order (depth-first)\nB. In-order (depth-first)\nC. Level-order (breadth-first)\nD. Post-order (depth-first)\n\n**C.** Level-order visits nodes by depth, layer by layer, which a queue enforces naturally. DFS traversals use recursion or a stack.",
+    "tags": [
+      "trees",
+      "quiz",
+      "question"
+    ]
+  },
+  {
+    "title": "Q5: What invariant must a BST maintain?",
+    "body": "A. Left children are smaller, right children are larger\nB. All nodes at each level are sorted\nC. The tree is always perfectly balanced\nD. Child values are the average of their parent and sibling\n\n**A.** In a BST, every node must have smaller values in its left subtree and larger values in its right subtree.",
+    "tags": [
+      "trees",
+      "quiz",
+      "question"
+    ]
+  },
+  {
+    "title": "LeetCode 100: Same Tree",
+    "body": "**Pattern**: structural equality check\n\n**Why**: Two trees are the same if their roots have equal values and both subtrees are identical. Recursion naturally expresses this.\n\n**Python**: `recursion; compare node values and recurse on subtrees`",
+    "tags": [
+      "trees",
+      "problem",
+      "leetcode-100"
+    ]
+  },
+  {
+    "title": "LeetCode 104: Maximum Depth of Binary Tree",
+    "body": "**Pattern**: post-order traversal\n\n**Why**: Depth of a tree is one plus the maximum depth of its subtrees. Recursion unwraps this definition.\n\n**Python**: `recursion; max(depth(left), depth(right)) + 1`",
+    "tags": [
+      "trees",
+      "problem",
+      "leetcode-104"
+    ]
+  },
+  {
+    "title": "LeetCode 98: Validate Binary Search Tree",
+    "body": "**Pattern**: constrained recursion\n\n**Why**: A BST must satisfy bounds at every node. Recursion tracks constraints: left subtree < node < right subtree.\n\n**Python**: `recursion; pass min and max bounds down the tree`",
+    "tags": [
+      "trees",
+      "problem",
+      "leetcode-98"
+    ]
+  },
+  {
+    "title": "LeetCode 102: Binary Tree Level Order Traversal",
+    "body": "**Pattern**: level-order traversal\n\n**Why**: Level-order requires visiting all nodes at depth d before depth d+1, which a queue naturally provides.\n\n**Python**: `collections.deque; append children, popleft to process`",
+    "tags": [
+      "trees",
+      "problem",
+      "leetcode-102"
+    ]
+  },
+  {
+    "title": "LeetCode 105: Construct Binary Tree from Preorder and Inorder Traversal",
+    "body": "**Pattern**: divideandconquer via traversal properties\n\n**Why**: Preorder starts with the root. Inorder shows which nodes are left and right. Recursion reconstructs subtrees.\n\n**Python**: `recursion; preorder gives root, inorder partitions left/right`",
+    "tags": [
+      "trees",
+      "problem",
+      "leetcode-105"
+    ]
+  },
+  {
+    "title": "LeetCode 236: Lowest Common Ancestor of a Binary Tree",
+    "body": "**Pattern**: postorder traversal for result aggregation\n\n**Why**: The LCA is the deepest node that has both targets as descendants. Recursion finds it by returning the first non-null result.\n\n**Python**: `recursion; check left and right subtrees, return non-null result`",
+    "tags": [
+      "trees",
+      "problem",
+      "leetcode-236"
+    ]
+  },
+  {
+    "title": "LeetCode 543: Diameter of Binary Tree",
+    "body": "**Pattern**: postorder traversal tracking global max\n\n**Why**: The diameter passes through some node as the longest path from left to right. Recursion computes heights and tracks the max sum.\n\n**Python**: `recursion; track height and update max diameter`",
+    "tags": [
+      "trees",
+      "problem",
+      "leetcode-543"
+    ]
+  },
+  {
+    "title": "Signal: Check if two trees have the same structure and values",
+    "body": "**Structure**: recursive comparison\n\n**Requirement**: Compare recursively; O(n) in worst case\n\n**Python**: `recursion; compare left and right subtrees`\n\n**Example**: Same Tree (LeetCode 100)",
+    "tags": [
+      "trees",
+      "signal"
+    ]
+  },
+  {
+    "title": "Signal: Find maximum depth or path length from root",
+    "body": "**Structure**: post-order recursion\n\n**Requirement**: Recurse to each leaf and combine results\n\n**Python**: `recursion on left and right subtrees`\n\n**Example**: Maximum Depth of Binary Tree (LeetCode 104)",
+    "tags": [
+      "trees",
+      "signal"
+    ]
+  },
+  {
+    "title": "Signal: Verify that a tree satisfies BST properties at every node",
+    "body": "**Structure**: recursive validation with min/max bounds\n\n**Requirement**: Track bounds; no value escapes left < node < right\n\n**Python**: `recursion; pass down constraints`\n\n**Example**: Validate Binary Search Tree (LeetCode 98)",
+    "tags": [
+      "trees",
+      "signal"
+    ]
+  },
+  {
+    "title": "Signal: Collect results from each level of the tree",
+    "body": "**Structure**: breadth-first with a queue\n\n**Requirement**: Visit all nodes at depth d before depth d+1\n\n**Python**: `collections.deque; append and popleft`\n\n**Example**: Binary Tree Level Order Traversal (LeetCode 102)",
+    "tags": [
+      "trees",
+      "signal"
+    ]
+  },
+  {
+    "title": "Signal: Find paths or relationships between nodes in the tree",
+    "body": "**Structure**: recursive search with context\n\n**Requirement**: Locate common ancestor or nearest node in sorted order\n\n**Python**: `recursion; track path or constraint`\n\n**Example**: Lowest Common Ancestor (LeetCode 236)",
+    "tags": [
+      "trees",
+      "signal"
+    ]
+  }
+]
