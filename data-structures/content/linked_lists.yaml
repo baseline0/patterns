@@ -1,0 +1,169 @@
+# Source of truth for linked lists topic. Generated outputs are built from this file by tools/build.py.
+# Each claim id needs a check in tests/unit/test_data_structures.py.
+
+id: linked-lists
+title: "Linked lists: pointers, reversal, and cycle detection"
+summary: >
+  A linked list chains nodes together with pointers, so insertion and deletion at a known position cost O(1). The price is that reaching a position requires walking from the head, which costs O(n). Linked list problems are solved by careful pointer manipulation: maintaining two pointers to track state, reversing in-place by redirecting links, or detecting cycles by observing that two pointers moving at different speeds must meet if a cycle exists.
+
+mechanics:
+  - heading: "node-based structure: pointer chaining"
+    body: >
+      Each node holds a value and a pointer to the next node. Unlike arrays, there is no random access; reaching a node requires starting at the head and following pointers. This sequential access makes insertion and deletion at a known position cheap (no shifting), but finding a position is expensive (no binary search).
+  - heading: "reversal: redirect pointers in-place"
+    body: >
+      To reverse a linked list, redirect each node's pointer to point backward instead of forward. Iterate through the list, keeping track of the previous node. At each step, change the current node's pointer from next to previous, then advance. This reverses the chain in-place without allocating new nodes, using O(1) extra space.
+  - heading: "cycle detection: two pointers at different speeds"
+    body: >
+      If a list has a cycle, a fast pointer (advancing 2 steps per iteration) and a slow pointer (advancing 1 step) will eventually meet. If the fast pointer reaches null, there is no cycle. Once a cycle is found, the distance from the head to the cycle entry equals the distance from the meeting point back to the entry, a fact that allows finding the cycle start.
+  - heading: "merging and multi-pointer patterns"
+    body: >
+      Many linked list problems require tracking multiple pointers simultaneously: a dummy node simplifies edge cases at the head, a fast and slow pointer find the middle, or two pointers track positions in different lists. Careful pointer management avoids breaking the chain or creating dangling references.
+
+claims:
+  - id: linked-list-no-random-access
+    text: "A linked list requires O(n) steps to reach a position, so binary search is impossible without modifying the structure."
+  - id: linked-list-insert-delete-constant
+    text: "Insertion and deletion at a known node (with a pointer to it) cost O(1), because no shifting is required."
+  - id: reversal-redirects-pointers-inplace
+    text: "Reversing a linked list in-place by redirecting pointers uses O(1) extra space and O(n) time."
+  - id: cycle-detection-two-pointers
+    text: "A cycle in a linked list can be detected by advancing two pointers at different speeds; if they meet, a cycle exists."
+  - id: dummy-node-simplifies-head-cases
+    text: "A dummy node pointing to the head eliminates special cases when modifying the head node."
+
+complexity:
+  - operation: "Traverse the list (find a node)"
+    time: "O(n)"
+    note: "must follow pointers from the head"
+  - operation: "Insert at a known position (with a pointer to the previous node)"
+    time: "O(1)"
+    note: "redirect two pointers, no shifting"
+  - operation: "Delete at a known position (with a pointer to the previous node)"
+    time: "O(1)"
+    note: "redirect one pointer, no shifting"
+  - operation: "Reverse the entire list"
+    time: "O(n)"
+    note: "one pass, redirecting pointers; O(1) extra space"
+  - operation: "Detect a cycle"
+    time: "O(n)"
+    note: "fast and slow pointers; they meet if a cycle exists"
+  - operation: "Merge two sorted lists"
+    time: "O(n + m)"
+    note: "compare nodes from both lists, advance the smaller"
+  - operation: "Merge k sorted lists (naive)"
+    time: "O(n * k^2)"
+    note: "merge pairwise; improve with a heap or merge sort strategy"
+
+signals:
+  - signal: "Reverse a sequence when you cannot use an array"
+    requirement: "Change direction in-place; O(n) time"
+    structure: "pointer redirection in a single pass"
+    stdlib: "manual pointer management"
+    example: "Reverse Linked List (LeetCode 206)"
+  - signal: "Detect or break a cycle in a chain"
+    requirement: "Identify loops without extra space or mutation"
+    structure: "two-pointer race: fast and slow"
+    stdlib: "two pointer variables"
+    example: "Linked List Cycle (LeetCode 141)"
+  - signal: "Merge multiple sequences while maintaining order"
+    requirement: "Compare heads, advance the smaller, O(n + m) for two lists"
+    structure: "pointer manipulation with a dummy node"
+    stdlib: "manual pointer chaining"
+    example: "Merge Two Sorted Lists (LeetCode 21)"
+  - signal: "Find the middle of a list or reverse a section"
+    requirement: "Locate a position without knowing the length"
+    structure: "two pointers: one moves 2 steps, one moves 1"
+    stdlib: "two pointer variables; count or fast/slow"
+    example: "Reverse Linked List II (LeetCode 92)"
+  - signal: "Simulate addition with numbers stored as linked list nodes"
+    requirement: "Process digit by digit with carry; may need to extend the list"
+    structure: "traverse both lists in parallel, manage carry state"
+    stdlib: "manual pointer advancement and node creation"
+    example: "Add Two Numbers (LeetCode 2)"
+
+problems:
+  - number: 206
+    title: "Reverse Linked List"
+    container: "pointer redirection in-place"
+    pattern: "iterative pointer reversal"
+    stdlib: "manual pointer management; track previous, current, next"
+    why: "Reversing requires redirecting each node's pointer from forward to backward. Tracking three pointers (prev, curr, next) allows safe redirection in one pass."
+  - number: 141
+    title: "Linked List Cycle"
+    container: "two-pointer cycle detection"
+    pattern: "tortoise and hare"
+    stdlib: "two pointer variables advancing at different speeds"
+    why: "If a cycle exists, two pointers at different speeds must meet. If the fast pointer reaches null, there is no cycle."
+  - number: 21
+    title: "Merge Two Sorted Lists"
+    container: "pointer-based merge with dummy node"
+    pattern: "two-pointer list merging"
+    stdlib: "dummy node, manual pointer chaining"
+    why: "Merging compares heads and advances the smaller pointer. A dummy node avoids special-casing the new head."
+  - number: 23
+    title: "Merge K Sorted Lists"
+    container: "heap-based or divide-and-conquer merging"
+    pattern: "reduce k lists to 1 via pairwise merging"
+    stdlib: "heapq.heappush for efficient next-smallest, or recursion"
+    why: "Naive pairwise merging is slow; a heap picks the next smallest in O(log k) time, making total time O(n log k)."
+  - number: 92
+    title: "Reverse Linked List II"
+    container: "pointer redirection in a range"
+    pattern: "bounded reversal"
+    stdlib: "manual pointer management; track boundaries"
+    why: "Reversing only a section requires finding the start, reversing in place, then connecting back. Careful pointer tracking avoids breaking the chain."
+  - number: 2
+    title: "Add Two Numbers"
+    container: "parallel node traversal with carry"
+    pattern: "digit-by-digit addition"
+    stdlib: "manual pointer advancement, node creation"
+    why: "Addition processes digits in parallel, managing carry state. New nodes are created for the result; careful pointer management avoids leaks."
+  - number: 160
+    title: "Intersection of Two Linked Lists"
+    container: "two-pointer convergence"
+    pattern: "length-adjusted pointers"
+    stdlib: "manual pointer advancement; two passes to align"
+    why: "If two lists intersect, advancing through both at equal speed detects the intersection. Equal-length traversal aligns the pointers."
+
+quiz:
+  - question: "Why is reversal a natural fit for linked lists?"
+    choices:
+      - "Linked lists are smaller than arrays"
+      - "Pointers can be redirected in-place without allocating new nodes, using O(1) extra space"
+      - "Reversing arrays requires copying the entire array"
+      - "Linked lists are always bidirectional"
+    answer: 1
+    explanation: "Reversing a linked list changes the direction of pointers, not the nodes themselves. This in-place redirection uses constant extra space."
+  - question: "How does the two-pointer cycle detection algorithm work?"
+    choices:
+      - "Mark visited nodes with a flag"
+      - "Use a set to track seen nodes"
+      - "Advance two pointers at different speeds; they meet if a cycle exists"
+      - "Count nodes and check if the count exceeds the list length"
+    answer: 2
+    explanation: "A fast pointer (2 steps per iteration) and a slow pointer (1 step) eventually meet if a cycle exists. If the fast pointer reaches null, there is no cycle."
+  - question: "Why is a dummy node useful when merging linked lists?"
+    choices:
+      - "It makes the list shorter"
+      - "It holds the smaller of the two heads"
+      - "It eliminates special cases at the head by providing a node to attach to initially"
+      - "It is required by the algorithm"
+    answer: 2
+    explanation: "A dummy node lets the merge code treat the head uniformly. Instead of checking 'is this the first node?', the code always attaches to the previous node."
+  - question: "In the 'Merge K Sorted Lists' problem, why is a heap faster than pairwise merging?"
+    choices:
+      - "Heaps use less memory"
+      - "Heaps sort the lists automatically"
+      - "Finding the next smallest among k lists is O(log k) with a heap instead of O(k) with linear search"
+      - "Heaps eliminate the need for pointers"
+    answer: 2
+    explanation: "A heap tracks the smallest head across k lists. Inserting and extracting takes O(log k) per step, making the total time O(n log k) instead of O(n * k)."
+  - question: "What is the time complexity of traversing a linked list to find a specific node?"
+    choices:
+      - "O(1)"
+      - "O(log n)"
+      - "O(n)"
+      - "O(n log n)"
+    answer: 2
+    explanation: "A linked list has no random access. Reaching a node requires following pointers from the head, which takes O(n) in the worst case."

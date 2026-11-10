@@ -1,0 +1,169 @@
+# Source of truth for binary trees and BSTs. Generated outputs are built from this file by tools/build.py.
+# Each claim id needs a check in tests/unit/test_data_structures.py.
+
+id: trees
+title: "Binary trees and BSTs: traversal, recursion, and tree properties"
+summary: >
+  A tree is a directed acyclic graph where each node (except the root) has one parent. A binary tree restricts each node to at most two children. A binary search tree adds the invariant that left descendants are smaller and right descendants are larger, making search and insertion natural recursive tasks. Tree problems are solved by recognizing that each subtree is a smaller instance of the same problem.
+
+mechanics:
+  - heading: "recursive structure: each subtree is a tree"
+    body: >
+      The key insight is that a subtree rooted at any node is itself a tree. This recursive structure makes induction natural. A function that solves the problem for a subtree can solve it for any tree by calling itself on the left and right children, then combining the results. Recursion eliminates explicit stack management for many tree problems.
+  - heading: "search in a BST: left is smaller, right is larger"
+    body: >
+      A BST maintains the invariant: every node in the left subtree is smaller, every node in the right subtree is larger. This allows search to eliminate half the tree at each step, giving O(log n) search on a balanced tree. Insertion and deletion maintain the invariant by choosing a branch based on the comparison.
+  - heading: "traversal orders: pre, in, post, level"
+    body: >
+      Pre-order visits the node before its children (node-left-right). In-order visits the left subtree, then the node, then the right subtree (left-node-right); on a BST this yields sorted order. Post-order visits children before the node (left-right-node), useful for deletion. Level-order visits nodes by depth, layer by layer, and naturally uses a queue instead of recursion.
+  - heading: "recursive vs. iterative traversal"
+    body: >
+      Recursion is elegant and matches the problem structure, but it uses stack space proportional to tree height. An iterative traversal uses an explicit stack (or deque for level-order) and avoids recursion limits. The choice depends on the tree depth and whether recursion clarity matters more than stack efficiency.
+
+claims:
+  - id: tree-is-recursive-structure
+    text: "A binary tree is defined recursively: a node with a left and right subtree, each of which is a binary tree (or empty)."
+  - id: bst-maintains-invariant
+    text: "A binary search tree maintains the invariant that every left descendant is smaller and every right descendant is larger."
+  - id: inorder-traversal-yields-sorted
+    text: "In-order traversal of a BST visits nodes in sorted order."
+  - id: tree-height-bounds-recursive-depth
+    text: "The height of a tree bounds the recursion depth and the required stack space."
+  - id: balanced-tree-search-is-logarithmic
+    text: "Search in a balanced BST takes O(log n) time because each comparison eliminates about half the tree."
+
+complexity:
+  - operation: "BST search (balanced)"
+    time: "O(log n)"
+    note: "each comparison halves the tree; unbalanced tree degrades to O(n)"
+  - operation: "BST insert (balanced)"
+    time: "O(log n)"
+    note: "search for the position, then add a leaf"
+  - operation: "BST delete (balanced)"
+    time: "O(log n)"
+    note: "search, then restructure; unbalanced tree O(n)"
+  - operation: "Tree traversal (DFS pre/in/post)"
+    time: "O(n)"
+    note: "visit every node and edge once; recursive depth is O(h)"
+  - operation: "Tree traversal (BFS level-order)"
+    time: "O(n)"
+    note: "deque maintains the frontier; space is O(w) where w is max width"
+  - operation: "Find LCA (lowest common ancestor)"
+    time: "O(n)"
+    note: "search both subtrees to find the split point; O(h) on a balanced tree"
+  - operation: "Validate BST"
+    time: "O(n)"
+    note: "check every node's invariant and track bounds"
+
+signals:
+  - signal: "Check if two trees have the same structure and values"
+    requirement: "Compare recursively; O(n) in worst case"
+    structure: "recursive comparison"
+    stdlib: "recursion; compare left and right subtrees"
+    example: "Same Tree (LeetCode 100)"
+  - signal: "Find maximum depth or path length from root"
+    requirement: "Recurse to each leaf and combine results"
+    structure: "post-order recursion"
+    stdlib: "recursion on left and right subtrees"
+    example: "Maximum Depth of Binary Tree (LeetCode 104)"
+  - signal: "Verify that a tree satisfies BST properties at every node"
+    requirement: "Track bounds; no value escapes left < node < right"
+    structure: "recursive validation with min/max bounds"
+    stdlib: "recursion; pass down constraints"
+    example: "Validate Binary Search Tree (LeetCode 98)"
+  - signal: "Collect results from each level of the tree"
+    requirement: "Visit all nodes at depth d before depth d+1"
+    structure: "breadth-first with a queue"
+    stdlib: "collections.deque; append and popleft"
+    example: "Binary Tree Level Order Traversal (LeetCode 102)"
+  - signal: "Find paths or relationships between nodes in the tree"
+    requirement: "Locate common ancestor or nearest node in sorted order"
+    structure: "recursive search with context"
+    stdlib: "recursion; track path or constraint"
+    example: "Lowest Common Ancestor (LeetCode 236)"
+
+problems:
+  - number: 100
+    title: "Same Tree"
+    container: "recursive tree comparison"
+    pattern: "structural equality check"
+    stdlib: "recursion; compare node values and recurse on subtrees"
+    why: "Two trees are the same if their roots have equal values and both subtrees are identical. Recursion naturally expresses this."
+  - number: 104
+    title: "Maximum Depth of Binary Tree"
+    container: "recursive depth computation"
+    pattern: "post-order traversal"
+    stdlib: "recursion; max(depth(left), depth(right)) + 1"
+    why: "Depth of a tree is one plus the maximum depth of its subtrees. Recursion unwraps this definition."
+  - number: 98
+    title: "Validate Binary Search Tree"
+    container: "recursive BST validation with bounds"
+    pattern: "constrained recursion"
+    stdlib: "recursion; pass min and max bounds down the tree"
+    why: "A BST must satisfy bounds at every node. Recursion tracks constraints: left subtree < node < right subtree."
+  - number: 102
+    title: "Binary Tree Level Order Traversal"
+    container: "breadth-first search with deque"
+    pattern: "level-order traversal"
+    stdlib: "collections.deque; append children, popleft to process"
+    why: "Level-order requires visiting all nodes at depth d before depth d+1, which a queue naturally provides."
+  - number: 105
+    title: "Construct Binary Tree from Preorder and Inorder Traversal"
+    container: "recursive tree reconstruction"
+    pattern: "divideandconquer via traversal properties"
+    stdlib: "recursion; preorder gives root, inorder partitions left/right"
+    why: "Preorder starts with the root. Inorder shows which nodes are left and right. Recursion reconstructs subtrees."
+  - number: 236
+    title: "Lowest Common Ancestor of a Binary Tree"
+    container: "recursive ancestor search"
+    pattern: "postorder traversal for result aggregation"
+    stdlib: "recursion; check left and right subtrees, return non-null result"
+    why: "The LCA is the deepest node that has both targets as descendants. Recursion finds it by returning the first non-null result."
+  - number: 543
+    title: "Diameter of Binary Tree"
+    container: "recursive path length computation"
+    pattern: "postorder traversal tracking global max"
+    stdlib: "recursion; track height and update max diameter"
+    why: "The diameter passes through some node as the longest path from left to right. Recursion computes heights and tracks the max sum."
+
+quiz:
+  - question: "Why is recursion a natural fit for tree problems?"
+    choices:
+      - "Trees are always small, so recursion never overflows"
+      - "Each subtree is a smaller instance of the same problem, making induction natural"
+      - "Recursion is faster than iteration"
+      - "Trees require random access, which recursion provides"
+    answer: 1
+    explanation: "The recursive structure of a tree (subtree is a tree) matches the recursive structure of the solution (solve left, right, combine)."
+  - question: "What does in-order traversal of a BST produce?"
+    choices:
+      - "Nodes in reverse sorted order"
+      - "Nodes sorted from smallest to largest"
+      - "Nodes in the order they were inserted"
+      - "Nodes in reverse insertion order"
+    answer: 1
+    explanation: "In-order traversal visits left subtree, then node, then right subtree. In a BST, left nodes are smaller, so the result is sorted."
+  - question: "Why does BST search run in O(log n) time on a balanced tree but O(n) on an unbalanced tree?"
+    choices:
+      - "Unbalanced trees store data differently"
+      - "Unbalanced trees require random access"
+      - "A balanced tree eliminates about half the tree per comparison; an unbalanced tree may eliminate only one node"
+      - "Unbalanced trees require more memory"
+    answer: 2
+    explanation: "On a balanced tree, comparison with the root partitions the remaining nodes. On a chain (unbalanced), only one node is eliminated per step."
+  - question: "Which traversal naturally uses a queue instead of recursion?"
+    choices:
+      - "Pre-order (depth-first)"
+      - "In-order (depth-first)"
+      - "Level-order (breadth-first)"
+      - "Post-order (depth-first)"
+    answer: 2
+    explanation: "Level-order visits nodes by depth, layer by layer, which a queue enforces naturally. DFS traversals use recursion or a stack."
+  - question: "What invariant must a BST maintain?"
+    choices:
+      - "Left children are smaller, right children are larger"
+      - "All nodes at each level are sorted"
+      - "The tree is always perfectly balanced"
+      - "Child values are the average of their parent and sibling"
+    answer: 0
+    explanation: "In a BST, every node must have smaller values in its left subtree and larger values in its right subtree."

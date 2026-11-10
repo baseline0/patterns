@@ -1,0 +1,179 @@
+# Source of truth for the arrays and 2D arrays topic. Generated outputs are built from this file by tools/build.py.
+# Each claim id needs a check in tests/unit/test_data_structures.py.
+
+id: arrays-and-2d-arrays
+title: "Arrays and 2D arrays: subarrays, sliding window, and in-place operations"
+summary: >
+  Arrays store elements in contiguous memory for O(1) indexing. Subarrays are contiguous ranges; sliding windows
+  and prefix sums solve subarray problems in linear time. Two pointers on sorted arrays find pairs without nested loops.
+  In-place operations on 2D arrays avoid allocating new matrices by using index algebra and element swaps.
+
+mechanics:
+  - heading: "sliding window for subarray conditions"
+    body: >
+      Two pointers bound a window. The right pointer expands to add elements; the left contracts to maintain a condition
+      (max length, sum within range, no repeats). Each element is added and removed once, keeping work linear.
+  - heading: "prefix sums for constant-time range queries"
+    body: >
+      A prefix sum array stores cumulative totals at each position. Any subarray sum can be computed in O(1) using
+      prefix[end] - prefix[start-1]. This trades O(n) preprocessing for O(1) per query.
+  - heading: "two pointers converging toward a target"
+    body: >
+      Two pointers at opposite ends move inward toward a target. If the sum is too small, move the left pointer right
+      (increase sum); if too large, move the right pointer left (decrease sum). This solves two-sum and k-sum problems
+      in O(n) on sorted arrays.
+  - heading: "in-place matrix operations via index algebra"
+    body: >
+      Rotating and spiraling through a matrix in place uses index transformations and element swaps. Tracking layer
+      boundaries or computing new positions avoids allocating new matrices.
+
+claims:
+  - id: sliding-window-avoids-nesting
+    text: "Sliding window processes each element at most twice, keeping subarray problems O(n) instead of O(n^2)."
+  - id: prefix-sum-enables-constant-range-queries
+    text: "A prefix sum array answers any subarray-sum query in O(1) after O(n) preprocessing."
+  - id: two-pointers-solve-ksum-in-polynomial
+    text: "Two pointers on a sorted array reduce k-sum from O(n^k) brute force to O(n^(k-1)) by solving one subproblem in linear time."
+  - id: in-place-rotation-uses-constant-space
+    text: "Rotating a matrix 90 degrees in place uses O(1) extra space; allocating a new matrix uses O(n^2)."
+  - id: product-except-self-without-division
+    text: "Computing product of array except self is possible without division by combining left and right products."
+
+complexity:
+  - operation: "subarray sum (all pairs, brute force)"
+    time: "O(n^2)"
+    note: "nested loop over start and end indices"
+  - operation: "subarray sum (prefix sum query)"
+    time: "O(n) setup, O(1) per query"
+    note: "cumulative total lookup"
+  - operation: "sliding window (max in subarray, longest substring)"
+    time: "O(n)"
+    note: "each element added and removed once"
+  - operation: "two sum (sorted array)"
+    time: "O(n)"
+    note: "two pointers converge to target"
+  - operation: "three sum (brute force)"
+    time: "O(n^3)"
+    note: "three nested loops"
+  - operation: "three sum (sorted + two pointers)"
+    time: "O(n^2)"
+    note: "fix one element, use two pointers for complement"
+  - operation: "rotate matrix 90 degrees in place"
+    time: "O(n^2) and O(1) space"
+    note: "transpose and reverse, or rotate layers"
+  - operation: "spiral matrix traversal"
+    time: "O(n*m) and O(1) space"
+    note: "track four boundaries; visit each cell once"
+
+signals:
+  - signal: "Find the subarray with max sum, longest run, or extreme property"
+    requirement: "O(n) without nested loops"
+    structure: "sliding window or dynamic programming"
+    stdlib: "list indexing and two pointers"
+    example: "Maximum Subarray (LeetCode 53); Kadane's algorithm"
+  - signal: "Find all pairs or triplets that satisfy a constraint (sum to target, meet criteria)"
+    requirement: "O(n) or O(n^2) without O(n^3) brute force"
+    structure: "two pointers on sorted array; hash set for complements"
+    stdlib: "set or dict for Two Sum; sort then two pointers for k-sum"
+    example: "Two Sum (LeetCode 1); 3Sum (LeetCode 15)"
+  - signal: "Answer range queries on subarrays (sum, product, max, min, count)"
+    requirement: "O(1) per query after preprocessing"
+    structure: "prefix or suffix array (cumulative aggregation)"
+    stdlib: "list with cumulative values"
+    example: "Product of Array Except Self (LeetCode 238); Range Sum Query"
+  - signal: "Manipulate a 2D matrix without allocating new space"
+    requirement: "O(1) extra space, no new matrix allocation"
+    structure: "in-place index transformations and swaps"
+    stdlib: "list of lists, index arithmetic"
+    example: "Rotate Matrix (LeetCode 48); Spiral Matrix (LeetCode 54)"
+  - signal: "Maximize or minimize a value between two positions"
+    requirement: "O(n) without enumerating all pairs"
+    structure: "two pointers or one-pass greedy"
+    stdlib: "list indexing and comparison"
+    example: "Container With Most Water (LeetCode 11); Trapping Rain Water"
+
+problems:
+  - number: 1
+    title: "Two Sum"
+    container: "hash table (dict)"
+    pattern: "complement lookup in one pass"
+    stdlib: "dict to store value-index pairs; check for target - current"
+    why: "Complement lookup is O(1), so one pass finds the pair without sorting. Hash table avoids O(n^2) nested loops."
+  - number: 11
+    title: "Container With Most Water"
+    container: "contiguous array"
+    pattern: "two pointers from ends moving inward"
+    stdlib: "list indexing; compute area = height * width"
+    why: "Area is limited by the shorter height. Moving from the widest pair inward, we skip impossible pairs in O(n) instead of O(n^2)."
+  - number: 15
+    title: "3Sum"
+    container: "sorted array"
+    pattern: "fix one element, use two pointers for complement"
+    stdlib: "sort once, then two pointers for each fixed element"
+    why: "Fixing each element and solving two-sum with two pointers reduces O(n^3) brute force to O(n^2) after sorting."
+  - number: 53
+    title: "Maximum Subarray"
+    container: "contiguous array"
+    pattern: "Kadane's algorithm (track max ending here and global max)"
+    stdlib: "single-pass loop with running sum"
+    why: "At each position, choose: extend the previous subarray or start new. Tracking both maxima finds the best in O(n)."
+  - number: 238
+    title: "Product of Array Except Self"
+    container: "prefix and suffix product arrays"
+    pattern: "left products, right products, combine"
+    stdlib: "two passes over the array; no division"
+    why: "Division by zero is avoided. Left products (all before i) and right products (all after i) multiply to the result. O(n) without division."
+  - number: 48
+    title: "Rotate Matrix"
+    container: "2D array (square matrix)"
+    pattern: "transpose then reverse rows, or rotate layer by layer"
+    stdlib: "nested loops with index algebra; swap elements in place"
+    why: "In-place rotation uses O(1) extra space by transforming indices and swapping. Allocating a new matrix would use O(n^2) space."
+  - number: 54
+    title: "Spiral Matrix"
+    container: "2D array"
+    pattern: "traverse in layers: top row, right column, bottom row, left column"
+    stdlib: "four boundaries (top, bottom, left, right) updated after each side"
+    why: "Tracking boundaries and spiraling inward visits each element exactly once in O(n*m) with O(1) extra space."
+
+quiz:
+  - question: "In a sliding window for 'longest substring without repetition,' what does moving the left pointer accomplish?"
+    choices:
+      - "Adds a new character to the window"
+      - "Removes a character from the window to eliminate a repetition"
+      - "Resets the window to start over"
+      - "Moves to the center of the string"
+    answer: 1
+    explanation: "When a repeated character is found, the left pointer contracts to exclude the older occurrence and maintain the no-repeat property."
+  - question: "A prefix sum array allows answering 'sum of elements from index i to j' in what time?"
+    choices:
+      - "O(n)"
+      - "O(j - i)"
+      - "O(1)"
+      - "O(log n)"
+    answer: 2
+    explanation: "Prefix[j] - prefix[i-1] is a single array lookup. Preprocessing takes O(n); each query is O(1)."
+  - question: "In 3Sum, after sorting the array, why do we use two pointers instead of nested loops?"
+    choices:
+      - "Two pointers are always faster than nested loops in general"
+      - "Two pointers reduce the inner loop from O(n) to O(1), making 3Sum O(n^2) instead of O(n^3)"
+      - "Nested loops are not allowed on sorted arrays"
+      - "Two pointers find the exact center of the array"
+    answer: 1
+    explanation: "Fixing one element and using two pointers to find the complementary pair is O(n) per element, so O(n^2) total with sorting."
+  - question: "Why can product of array except self be computed without division?"
+    choices:
+      - "Division would lose precision for floating-point numbers"
+      - "Left and right products multiply to give the product of all except element i"
+      - "All elements are guaranteed to be non-zero"
+      - "Multiplication is always faster than division"
+    answer: 1
+    explanation: "Prefix products (left of i) and suffix products (right of i) are computed separately, then combined. This avoids division by zero and is general."
+  - question: "What is the space complexity of rotating a 90-degree matrix in place using transpose and row reversal?"
+    choices:
+      - "O(n)"
+      - "O(n^2)"
+      - "O(1)"
+      - "O(log n)"
+    answer: 2
+    explanation: "In-place rotation using transpose and row reversal (or layer-by-layer swaps) uses only a constant number of temporary variables."

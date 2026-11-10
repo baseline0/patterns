@@ -1,0 +1,164 @@
+# Source of truth for the strings topic. Generated outputs are built from this file by tools/build.py.
+# Each claim id needs a check in tests/unit/test_data_structures.py.
+
+id: strings
+title: "Strings: pattern matching, substring search, and palindromes"
+summary: >
+  Strings are sequences of characters. Finding patterns in strings uses two pointers to check palindromes
+  and reverse sequences without allocating new strings. Hashing character positions or frequencies enables
+  substring search and anagram detection in linear time without nested loops.
+
+mechanics:
+  - heading: "two pointers for symmetry checks"
+    body: >
+      Two pointers starting from opposite ends move inward simultaneously. This checks palindromes and
+      validates symmetric properties without reversing the string. The only extra space is the pointers.
+  - heading: "character frequency hashing"
+    body: >
+      A dict or Counter maps characters to their counts or positions. Anagrams share the same character counts,
+      and comparing counts is O(1) per character instead of O(n log n) if the strings were sorted.
+  - heading: "sliding window for unique-character substrings"
+    body: >
+      One pointer extends a window to add characters; the other retracts when a condition is violated (repetition,
+      invalid character). Each character is added and removed once, keeping work linear.
+  - heading: "pattern searching and string reversal"
+    body: >
+      Reversing words or characters in place uses index swapping. Finding a substring uses either naive
+      position-by-position comparison or a rolling hash to detect the pattern in O(n).
+
+claims:
+  - id: two-pointers-check-palindrome
+    text: "Two pointers from opposite ends can check a palindrome in O(n) time and O(1) space without reversing."
+  - id: anagram-count-vs-sort
+    text: "Anagrams have identical character counts. Comparing counts is O(n); sorting both strings is O(n log n)."
+  - id: sliding-window-is-linear
+    text: "A sliding window processes each character at most twice, keeping substring search O(n) instead of O(n^2)."
+  - id: in-place-reversal-no-allocation
+    text: "Reversing a string in place by swapping characters uses O(1) space; building a reversed copy uses O(n)."
+
+complexity:
+  - operation: "palindrome check (two pointers)"
+    time: "O(n) time, O(1) space"
+    note: "move from ends inward; no allocation"
+  - operation: "reverse string in place (swap)"
+    time: "O(n) time, O(1) space"
+    note: "swap characters with two pointers"
+  - operation: "anagram check (character count)"
+    time: "O(n)"
+    note: "dict lookups are O(1); faster than sorting"
+  - operation: "anagram check (sort both)"
+    time: "O(n log n)"
+    note: "for comparison; sorting is more overhead than needed"
+  - operation: "substring search (naive)"
+    time: "O(n*m)"
+    note: "nested loop: for each position, match up to m chars"
+  - operation: "longest substring without repeats"
+    time: "O(n)"
+    note: "sliding window; each char seen at most twice"
+
+signals:
+  - signal: "Verify a string reads the same forward and backward"
+    requirement: "O(n) time, O(1) space"
+    structure: "two pointers from ends"
+    stdlib: "str indexing"
+    example: "Valid Palindrome (LeetCode 125)"
+  - signal: "Compare words by their letters, ignoring order"
+    requirement: "O(n) without sorting"
+    structure: "character frequency dict"
+    stdlib: "collections.Counter"
+    example: "Valid Anagram (LeetCode 242)"
+  - signal: "Find longest substring with a property (no repeats, all vowels, etc.)"
+    requirement: "O(n) in one pass"
+    structure: "sliding window with dict"
+    stdlib: "dict or set to track character presence"
+    example: "Longest Substring Without Repeating Characters (LeetCode 3)"
+  - signal: "Locate first occurrence of a pattern or substring"
+    requirement: "O(n) or O(n+m) without O(n*m)"
+    structure: "rolling hash or KMP"
+    stdlib: "str.find or manual index-by-index"
+    example: "Implement strStr (LeetCode 28)"
+  - signal: "Reverse, rotate, or rearrange words in a string"
+    requirement: "O(n) time, O(1) space"
+    structure: "two-pointer reversal"
+    stdlib: "str.split and join, or manual swap"
+    example: "Reverse Words in a String (LeetCode 151)"
+
+problems:
+  - number: 28
+    title: "Implement strStr"
+    container: "string"
+    pattern: "substring search at each position"
+    stdlib: "str.find or manual char-by-char comparison"
+    why: "Comparing characters position by position finds the first match in O(n*m). Rolling hash improves to O(n) but naive is sufficient for moderate lengths."
+  - number: 125
+    title: "Valid Palindrome"
+    container: "string"
+    pattern: "two pointers ignoring non-alphanumeric"
+    stdlib: "str.isalnum and lower for filtering; two pointers"
+    why: "Two pointers from the ends check symmetry in O(n) without allocating a reversed or cleaned string."
+  - number: 242
+    title: "Valid Anagram"
+    container: "character frequency dict"
+    pattern: "count and compare"
+    stdlib: "collections.Counter"
+    why: "Counting character frequencies is O(n). Sorting both strings is O(n log n). Counter is optimal for this check."
+  - number: 58
+    title: "Length of Last Word"
+    container: "string"
+    pattern: "reverse scan to skip trailing spaces"
+    stdlib: "str.split or manual indexing from the end"
+    why: "Scanning backward from the end finds the last word in one pass, avoiding the overhead of splitting and reversing."
+  - number: 151
+    title: "Reverse Words in a String"
+    container: "string"
+    pattern: "word-by-word reversal with space handling"
+    stdlib: "str.split and reverse and join, or two-pointer character swap"
+    why: "Using split().reverse().join() is Pythonic and concise. Manual reversal in place avoids intermediate allocations."
+  - number: 680
+    title: "Valid Palindrome II"
+    container: "string"
+    pattern: "two pointers with one skip allowed"
+    stdlib: "two-pointer recursion or backtracking to check both skip cases"
+    why: "When a mismatch is found, we must try skipping the left or right character. Backtracking checks both without full string duplication."
+
+quiz:
+  - question: "When two pointers check a palindrome from the ends inward, what triggers a failed check?"
+    choices:
+      - "The left pointer reaches the right pointer"
+      - "Characters at the current positions do not match"
+      - "The string has an odd length"
+      - "The string contains a space"
+    answer: 1
+    explanation: "Palindromes have matching characters at symmetric positions. Any mismatch means the string is not a palindrome."
+  - question: "Why is checking if two strings are anagrams using Counter faster than sorting both?"
+    choices:
+      - "Counter is implemented in C and always faster"
+      - "Counter is O(n); sorting both is O(n log n)"
+      - "Counter eliminates duplicate characters"
+      - "Sorting cannot compare frequencies"
+    answer: 1
+    explanation: "Counting characters is linear. Sorting is O(n log n), so dict lookup is more efficient for anagram detection."
+  - question: "In the sliding-window approach to 'longest substring without repetition,' what does the left pointer do?"
+    choices:
+      - "Tracks the start of the current valid substring"
+      - "Points to the rightmost character"
+      - "Remains at the first character"
+      - "Skips whitespace"
+    answer: 0
+    explanation: "The right pointer expands the window; the left retracts when a repeat is found. The distance between them is the substring length."
+  - question: "Why does reversing a string with two pointers and swapping use O(1) space while str[::-1] uses O(n)?"
+    choices:
+      - "Swapping modifies the original; slicing allocates a new string"
+      - "Two pointers are inherently more efficient"
+      - "Slicing only works on immutable strings"
+      - "Swapping runs in the CPU cache"
+    answer: 0
+    explanation: "Strings in Python are immutable, so str[::-1] allocates a new string. In-place swaps work on lists or character arrays."
+  - question: "When comparing anagrams, why must we count all characters instead of just checking for duplicates?"
+    choices:
+      - "Duplicates are not relevant to anagrams"
+      - "We need to verify the same multiset of characters appears in both strings"
+      - "Counting is always faster than checking"
+      - "Anagrams only have unique characters"
+    answer: 1
+    explanation: "Anagrams have the same characters with the same frequencies. Checking duplicates alone misses frequency differences."
