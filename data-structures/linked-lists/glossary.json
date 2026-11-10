@@ -2,257 +2,291 @@
   {
     "title": "Claim: linked-list-no-random-access",
     "body": "A linked list requires O(n) steps to reach a position, so binary search is impossible without modifying the structure.",
-    "tags": [
-      "linked-lists",
-      "claim",
-      "linked-list-no-random-access"
-    ]
+    "metadata": {
+      "tags": [
+        "linked-lists",
+        "claim"
+      ]
+    }
   },
   {
     "title": "Claim: linked-list-insert-delete-constant",
     "body": "Insertion and deletion at a known node (with a pointer to it) cost O(1), because no shifting is required.",
-    "tags": [
-      "linked-lists",
-      "claim",
-      "linked-list-insert-delete-constant"
-    ]
+    "metadata": {
+      "tags": [
+        "linked-lists",
+        "claim"
+      ]
+    }
   },
   {
     "title": "Claim: reversal-redirects-pointers-inplace",
     "body": "Reversing a linked list in-place by redirecting pointers uses O(1) extra space and O(n) time.",
-    "tags": [
-      "linked-lists",
-      "claim",
-      "reversal-redirects-pointers-inplace"
-    ]
+    "metadata": {
+      "tags": [
+        "linked-lists",
+        "claim"
+      ]
+    }
   },
   {
     "title": "Claim: cycle-detection-two-pointers",
     "body": "A cycle in a linked list can be detected by advancing two pointers at different speeds; if they meet, a cycle exists.",
-    "tags": [
-      "linked-lists",
-      "claim",
-      "cycle-detection-two-pointers"
-    ]
+    "metadata": {
+      "tags": [
+        "linked-lists",
+        "claim"
+      ]
+    }
   },
   {
     "title": "Claim: dummy-node-simplifies-head-cases",
     "body": "A dummy node pointing to the head eliminates special cases when modifying the head node.",
-    "tags": [
-      "linked-lists",
-      "claim",
-      "dummy-node-simplifies-head-cases"
-    ]
+    "metadata": {
+      "tags": [
+        "linked-lists",
+        "claim"
+      ]
+    }
   },
   {
     "title": "Complexity: Traverse the list (find a node)",
     "body": "**O(n)**\n\nmust follow pointers from the head",
-    "tags": [
-      "linked-lists",
-      "complexity",
-      "operation"
-    ]
+    "metadata": {
+      "tags": [
+        "linked-lists",
+        "complexity"
+      ]
+    }
   },
   {
     "title": "Complexity: Insert at a known position (with a pointer to the previous node)",
     "body": "**O(1)**\n\nredirect two pointers, no shifting",
-    "tags": [
-      "linked-lists",
-      "complexity",
-      "operation"
-    ]
+    "metadata": {
+      "tags": [
+        "linked-lists",
+        "complexity"
+      ]
+    }
   },
   {
     "title": "Complexity: Delete at a known position (with a pointer to the previous node)",
     "body": "**O(1)**\n\nredirect one pointer, no shifting",
-    "tags": [
-      "linked-lists",
-      "complexity",
-      "operation"
-    ]
+    "metadata": {
+      "tags": [
+        "linked-lists",
+        "complexity"
+      ]
+    }
   },
   {
     "title": "Complexity: Reverse the entire list",
     "body": "**O(n)**\n\none pass, redirecting pointers; O(1) extra space",
-    "tags": [
-      "linked-lists",
-      "complexity",
-      "operation"
-    ]
+    "metadata": {
+      "tags": [
+        "linked-lists",
+        "complexity"
+      ]
+    }
   },
   {
     "title": "Complexity: Detect a cycle",
     "body": "**O(n)**\n\nfast and slow pointers; they meet if a cycle exists",
-    "tags": [
-      "linked-lists",
-      "complexity",
-      "operation"
-    ]
+    "metadata": {
+      "tags": [
+        "linked-lists",
+        "complexity"
+      ]
+    }
   },
   {
     "title": "Complexity: Merge two sorted lists",
     "body": "**O(n + m)**\n\ncompare nodes from both lists, advance the smaller",
-    "tags": [
-      "linked-lists",
-      "complexity",
-      "operation"
-    ]
+    "metadata": {
+      "tags": [
+        "linked-lists",
+        "complexity"
+      ]
+    }
   },
   {
     "title": "Complexity: Merge k sorted lists (naive)",
     "body": "**O(n * k^2)**\n\nmerge pairwise; improve with a heap or merge sort strategy",
-    "tags": [
-      "linked-lists",
-      "complexity",
-      "operation"
-    ]
+    "metadata": {
+      "tags": [
+        "linked-lists",
+        "complexity"
+      ]
+    }
   },
   {
     "title": "Q1: Why is reversal a natural fit for linked lists?",
     "body": "A. Linked lists are smaller than arrays\nB. Pointers can be redirected in-place without allocating new nodes, using O(1) extra space\nC. Reversing arrays requires copying the entire array\nD. Linked lists are always bidirectional\n\n**B.** Reversing a linked list changes the direction of pointers, not the nodes themselves. This in-place redirection uses constant extra space.",
-    "tags": [
-      "linked-lists",
-      "quiz",
-      "question"
-    ]
+    "metadata": {
+      "tags": [
+        "linked-lists",
+        "question"
+      ]
+    }
   },
   {
     "title": "Q2: How does the two-pointer cycle detection algorithm work?",
     "body": "A. Mark visited nodes with a flag\nB. Use a set to track seen nodes\nC. Advance two pointers at different speeds; they meet if a cycle exists\nD. Count nodes and check if the count exceeds the list length\n\n**C.** A fast pointer (2 steps per iteration) and a slow pointer (1 step) eventually meet if a cycle exists. If the fast pointer reaches null, there is no cycle.",
-    "tags": [
-      "linked-lists",
-      "quiz",
-      "question"
-    ]
+    "metadata": {
+      "tags": [
+        "linked-lists",
+        "question"
+      ]
+    }
   },
   {
     "title": "Q3: Why is a dummy node useful when merging linked lists?",
     "body": "A. It makes the list shorter\nB. It holds the smaller of the two heads\nC. It eliminates special cases at the head by providing a node to attach to initially\nD. It is required by the algorithm\n\n**C.** A dummy node lets the merge code treat the head uniformly. Instead of checking 'is this the first node?', the code always attaches to the previous node.",
-    "tags": [
-      "linked-lists",
-      "quiz",
-      "question"
-    ]
+    "metadata": {
+      "tags": [
+        "linked-lists",
+        "question"
+      ]
+    }
   },
   {
     "title": "Q4: In the 'Merge K Sorted Lists' problem, why is a heap faster ",
     "body": "A. Heaps use less memory\nB. Heaps sort the lists automatically\nC. Finding the next smallest among k lists is O(log k) with a heap instead of O(k) with linear search\nD. Heaps eliminate the need for pointers\n\n**C.** A heap tracks the smallest head across k lists. Inserting and extracting takes O(log k) per step, making the total time O(n log k) instead of O(n * k).",
-    "tags": [
-      "linked-lists",
-      "quiz",
-      "question"
-    ]
+    "metadata": {
+      "tags": [
+        "linked-lists",
+        "question"
+      ]
+    }
   },
   {
     "title": "Q5: What is the time complexity of traversing a linked list to f",
     "body": "A. O(1)\nB. O(log n)\nC. O(n)\nD. O(n log n)\n\n**C.** A linked list has no random access. Reaching a node requires following pointers from the head, which takes O(n) in the worst case.",
-    "tags": [
-      "linked-lists",
-      "quiz",
-      "question"
-    ]
+    "metadata": {
+      "tags": [
+        "linked-lists",
+        "question"
+      ]
+    }
   },
   {
     "title": "LeetCode 206: Reverse Linked List",
     "body": "**Pattern**: iterative pointer reversal\n\n**Why**: Reversing requires redirecting each node's pointer from forward to backward. Tracking three pointers (prev, curr, next) allows safe redirection in one pass.\n\n**Python**: `manual pointer management; track previous, current, next`",
-    "tags": [
-      "linked-lists",
-      "problem",
-      "leetcode-206"
-    ]
+    "metadata": {
+      "tags": [
+        "linked-lists",
+        "problem"
+      ]
+    }
   },
   {
     "title": "LeetCode 141: Linked List Cycle",
     "body": "**Pattern**: tortoise and hare\n\n**Why**: If a cycle exists, two pointers at different speeds must meet. If the fast pointer reaches null, there is no cycle.\n\n**Python**: `two pointer variables advancing at different speeds`",
-    "tags": [
-      "linked-lists",
-      "problem",
-      "leetcode-141"
-    ]
+    "metadata": {
+      "tags": [
+        "linked-lists",
+        "problem"
+      ]
+    }
   },
   {
     "title": "LeetCode 21: Merge Two Sorted Lists",
     "body": "**Pattern**: two-pointer list merging\n\n**Why**: Merging compares heads and advances the smaller pointer. A dummy node avoids special-casing the new head.\n\n**Python**: `dummy node, manual pointer chaining`",
-    "tags": [
-      "linked-lists",
-      "problem",
-      "leetcode-21"
-    ]
+    "metadata": {
+      "tags": [
+        "linked-lists",
+        "problem"
+      ]
+    }
   },
   {
     "title": "LeetCode 23: Merge K Sorted Lists",
     "body": "**Pattern**: reduce k lists to 1 via pairwise merging\n\n**Why**: Naive pairwise merging is slow; a heap picks the next smallest in O(log k) time, making total time O(n log k).\n\n**Python**: `heapq.heappush for efficient next-smallest, or recursion`",
-    "tags": [
-      "linked-lists",
-      "problem",
-      "leetcode-23"
-    ]
+    "metadata": {
+      "tags": [
+        "linked-lists",
+        "problem"
+      ]
+    }
   },
   {
     "title": "LeetCode 92: Reverse Linked List II",
     "body": "**Pattern**: bounded reversal\n\n**Why**: Reversing only a section requires finding the start, reversing in place, then connecting back. Careful pointer tracking avoids breaking the chain.\n\n**Python**: `manual pointer management; track boundaries`",
-    "tags": [
-      "linked-lists",
-      "problem",
-      "leetcode-92"
-    ]
+    "metadata": {
+      "tags": [
+        "linked-lists",
+        "problem"
+      ]
+    }
   },
   {
     "title": "LeetCode 2: Add Two Numbers",
     "body": "**Pattern**: digit-by-digit addition\n\n**Why**: Addition processes digits in parallel, managing carry state. New nodes are created for the result; careful pointer management avoids leaks.\n\n**Python**: `manual pointer advancement, node creation`",
-    "tags": [
-      "linked-lists",
-      "problem",
-      "leetcode-2"
-    ]
+    "metadata": {
+      "tags": [
+        "linked-lists",
+        "problem"
+      ]
+    }
   },
   {
     "title": "LeetCode 160: Intersection of Two Linked Lists",
     "body": "**Pattern**: length-adjusted pointers\n\n**Why**: If two lists intersect, advancing through both at equal speed detects the intersection. Equal-length traversal aligns the pointers.\n\n**Python**: `manual pointer advancement; two passes to align`",
-    "tags": [
-      "linked-lists",
-      "problem",
-      "leetcode-160"
-    ]
+    "metadata": {
+      "tags": [
+        "linked-lists",
+        "problem"
+      ]
+    }
   },
   {
     "title": "Signal: Reverse a sequence when you cannot use an array",
     "body": "**Structure**: pointer redirection in a single pass\n\n**Requirement**: Change direction in-place; O(n) time\n\n**Python**: `manual pointer management`\n\n**Example**: Reverse Linked List (LeetCode 206)",
-    "tags": [
-      "linked-lists",
-      "signal"
-    ]
+    "metadata": {
+      "tags": [
+        "linked-lists",
+        "signal"
+      ]
+    }
   },
   {
     "title": "Signal: Detect or break a cycle in a chain",
     "body": "**Structure**: two-pointer race: fast and slow\n\n**Requirement**: Identify loops without extra space or mutation\n\n**Python**: `two pointer variables`\n\n**Example**: Linked List Cycle (LeetCode 141)",
-    "tags": [
-      "linked-lists",
-      "signal"
-    ]
+    "metadata": {
+      "tags": [
+        "linked-lists",
+        "signal"
+      ]
+    }
   },
   {
     "title": "Signal: Merge multiple sequences while maintaining order",
     "body": "**Structure**: pointer manipulation with a dummy node\n\n**Requirement**: Compare heads, advance the smaller, O(n + m) for two lists\n\n**Python**: `manual pointer chaining`\n\n**Example**: Merge Two Sorted Lists (LeetCode 21)",
-    "tags": [
-      "linked-lists",
-      "signal"
-    ]
+    "metadata": {
+      "tags": [
+        "linked-lists",
+        "signal"
+      ]
+    }
   },
   {
     "title": "Signal: Find the middle of a list or reverse a section",
     "body": "**Structure**: two pointers: one moves 2 steps, one moves 1\n\n**Requirement**: Locate a position without knowing the length\n\n**Python**: `two pointer variables; count or fast/slow`\n\n**Example**: Reverse Linked List II (LeetCode 92)",
-    "tags": [
-      "linked-lists",
-      "signal"
-    ]
+    "metadata": {
+      "tags": [
+        "linked-lists",
+        "signal"
+      ]
+    }
   },
   {
     "title": "Signal: Simulate addition with numbers stored as linked list nodes",
     "body": "**Structure**: traverse both lists in parallel, manage carry state\n\n**Requirement**: Process digit by digit with carry; may need to extend the list\n\n**Python**: `manual pointer advancement and node creation`\n\n**Example**: Add Two Numbers (LeetCode 2)",
-    "tags": [
-      "linked-lists",
-      "signal"
-    ]
+    "metadata": {
+      "tags": [
+        "linked-lists",
+        "signal"
+      ]
+    }
   }
 ]

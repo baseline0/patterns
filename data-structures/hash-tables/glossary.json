@@ -2,160 +2,181 @@
   {
     "title": "Claim: dict-keys-must-be-hashable",
     "body": "A dict key must be hashable. A list is not hashable, so it cannot be a key.",
-    "tags": [
-      "hash-tables",
-      "claim",
-      "dict-keys-must-be-hashable"
-    ]
+    "metadata": {
+      "tags": [
+        "hash-tables",
+        "claim"
+      ]
+    }
   },
   {
     "title": "Claim: dict-preserves-insertion-order",
     "body": "dict iteration follows insertion order (a language guarantee since Python 3.7).",
-    "tags": [
-      "hash-tables",
-      "claim",
-      "dict-preserves-insertion-order"
-    ]
+    "metadata": {
+      "tags": [
+        "hash-tables",
+        "claim"
+      ]
+    }
   },
   {
     "title": "Claim: set-membership-beats-list-search",
     "body": "Testing membership in a set is far faster than a linear search of a list of the same items.",
-    "tags": [
-      "hash-tables",
-      "claim",
-      "set-membership-beats-list-search"
-    ]
+    "metadata": {
+      "tags": [
+        "hash-tables",
+        "claim"
+      ]
+    }
   },
   {
     "title": "Claim: dict-lookup-is-constant-time",
     "body": "A dict lookup does not grow with the dict: a dict 1000 times larger costs far less than 1000 times more per lookup.",
-    "tags": [
-      "hash-tables",
-      "claim",
-      "dict-lookup-is-constant-time"
-    ]
+    "metadata": {
+      "tags": [
+        "hash-tables",
+        "claim"
+      ]
+    }
   },
   {
     "title": "Complexity: dict[key] / key in dict",
     "body": "**O(1) average**\n\nworst case O(n) when hashes collide; rare with a good hash",
-    "tags": [
-      "hash-tables",
-      "complexity",
-      "operation"
-    ]
+    "metadata": {
+      "tags": [
+        "hash-tables",
+        "complexity"
+      ]
+    }
   },
   {
     "title": "Complexity: dict[key] = value",
     "body": "**O(1) average**\n\namortized, including the occasional resize",
-    "tags": [
-      "hash-tables",
-      "complexity",
-      "operation"
-    ]
+    "metadata": {
+      "tags": [
+        "hash-tables",
+        "complexity"
+      ]
+    }
   },
   {
     "title": "Complexity: set add / remove / in",
     "body": "**O(1) average**\n\na dict with no values",
-    "tags": [
-      "hash-tables",
-      "complexity",
-      "operation"
-    ]
+    "metadata": {
+      "tags": [
+        "hash-tables",
+        "complexity"
+      ]
+    }
   },
   {
     "title": "Complexity: list membership (x in list)",
     "body": "**O(n)**\n\nfor comparison: a linear scan",
-    "tags": [
-      "hash-tables",
-      "complexity",
-      "operation"
-    ]
+    "metadata": {
+      "tags": [
+        "hash-tables",
+        "complexity"
+      ]
+    }
   },
   {
     "title": "Q1: Why can a tuple be a dict key but a list cannot?",
     "body": "A. Tuples are faster to hash\nB. A tuple is immutable, so its hash cannot change; a list is mutable and not hashable\nC. Lists are too large to store\nD. Dicts only accept strings and tuples\n\n**B.** A key's hash must stay fixed while the key is stored. Only immutable values can guarantee that.",
-    "tags": [
-      "hash-tables",
-      "quiz",
-      "question"
-    ]
+    "metadata": {
+      "tags": [
+        "hash-tables",
+        "question"
+      ]
+    }
   },
   {
     "title": "Q2: On average, what does membership testing cost in a set of n ",
     "body": "A. O(1)\nB. O(log n)\nC. O(n)\nD. O(n log n)\n\n**A.** The hash picks a slot directly. Only collisions add probes, and those are rare.",
-    "tags": [
-      "hash-tables",
-      "quiz",
-      "question"
-    ]
+    "metadata": {
+      "tags": [
+        "hash-tables",
+        "question"
+      ]
+    }
   },
   {
     "title": "Q3: Since Python 3.7, what does iterating over a dict return?",
     "body": "A. Keys in sorted order\nB. Keys in insertion order\nC. Keys in random order\nD. Keys in order of their hash\n\n**B.** Insertion order is a language guarantee, because entries are stored in a dense array in that order.",
-    "tags": [
-      "hash-tables",
-      "quiz",
-      "question"
-    ]
+    "metadata": {
+      "tags": [
+        "hash-tables",
+        "question"
+      ]
+    }
   },
   {
     "title": "Q4: Why is the 'group anagrams' problem a fit for defaultdict(li",
     "body": "A. It sorts the words automatically\nB. Each new key gets an empty list on first use, so grouping needs no existence check\nC. It removes duplicate words\nD. It keeps the groups sorted\n\n**B.** defaultdict creates the missing list on access, so each word appends to its group in one step.",
-    "tags": [
-      "hash-tables",
-      "quiz",
-      "question"
-    ]
+    "metadata": {
+      "tags": [
+        "hash-tables",
+        "question"
+      ]
+    }
   },
   {
     "title": "LeetCode 1: Two Sum",
     "body": "**Pattern**: complement lookup\n\n**Why**: Looking up target minus the current value is O(1), so one pass finds the pair.\n\n**Python**: `dict: store each value's index, check for the complement`",
-    "tags": [
-      "hash-tables",
-      "problem",
-      "leetcode-1"
-    ]
+    "metadata": {
+      "tags": [
+        "hash-tables",
+        "problem"
+      ]
+    }
   },
   {
     "title": "LeetCode 49: Group Anagrams",
     "body": "**Pattern**: group by a canonical key\n\n**Why**: Anagrams share a key, so each word joins its group with one lookup.\n\n**Python**: `collections.defaultdict(list), keyed by the sorted letters`",
-    "tags": [
-      "hash-tables",
-      "problem",
-      "leetcode-49"
-    ]
+    "metadata": {
+      "tags": [
+        "hash-tables",
+        "problem"
+      ]
+    }
   },
   {
     "title": "LeetCode 128: Longest Consecutive Sequence",
     "body": "**Pattern**: start only at the beginning of a run\n\n**Why**: Checking a value's neighbours is O(1), and only run starts need extending, so the total stays O(n).\n\n**Python**: `set: membership checks`",
-    "tags": [
-      "hash-tables",
-      "problem",
-      "leetcode-128"
-    ]
+    "metadata": {
+      "tags": [
+        "hash-tables",
+        "problem"
+      ]
+    }
   },
   {
     "title": "Signal: Has this value been seen before, in one pass",
     "body": "**Structure**: hash set\n\n**Requirement**: O(1) per check\n\n**Python**: `set`\n\n**Example**: Two Sum (LeetCode 1): a dict of values already seen",
-    "tags": [
-      "hash-tables",
-      "signal"
-    ]
+    "metadata": {
+      "tags": [
+        "hash-tables",
+        "signal"
+      ]
+    }
   },
   {
     "title": "Signal: Group items that share a computed key",
     "body": "**Structure**: hash table of lists\n\n**Requirement**: O(1) per item to find its group\n\n**Python**: `collections.defaultdict(list)`\n\n**Example**: Group Anagrams (LeetCode 49)",
-    "tags": [
-      "hash-tables",
-      "signal"
-    ]
+    "metadata": {
+      "tags": [
+        "hash-tables",
+        "signal"
+      ]
+    }
   },
   {
     "title": "Signal: Find the longest run of consecutive values without sorting",
     "body": "**Structure**: hash set\n\n**Requirement**: O(n) total, each value checked in O(1)\n\n**Python**: `set`\n\n**Example**: Longest Consecutive Sequence (LeetCode 128)",
-    "tags": [
-      "hash-tables",
-      "signal"
-    ]
+    "metadata": {
+      "tags": [
+        "hash-tables",
+        "signal"
+      ]
+    }
   }
 ]

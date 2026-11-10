@@ -134,31 +134,24 @@ def index_html(topic: dict) -> str:
 
 
 def glossary_slides(topic: dict) -> list[dict]:
-    """Convert YAML topic to flashcards glossary format (list of slides as dicts).
-
-    Each slide has title, body, and tags. Compatible with flashcards repo format.
-    Generates one slide per claim, complexity operation, quiz question, problem, and signal.
-    """
+    """Convert YAML topic to flashcards glossary format (metadata.tags)."""
     slides = []
     topic_id = topic["id"]
 
-    # Claims → slides (one per claim)
     for claim in topic["claims"]:
         slides.append({
             "title": f"Claim: {claim['id']}",
             "body": claim["text"],
-            "tags": [topic_id, "claim", claim["id"]]
+            "metadata": {"tags": [topic_id, "claim"]}
         })
 
-    # Complexity → slides (one per operation)
     for row in topic["complexity"]:
         slides.append({
             "title": f"Complexity: {row['operation']}",
             "body": f"**{row['time']}**\n\n{row['note']}",
-            "tags": [topic_id, "complexity", "operation"]
+            "metadata": {"tags": [topic_id, "complexity"]}
         })
 
-    # Quiz → slides (one per question, Q on front, A+explanation on back)
     for i, item in enumerate(topic["quiz"], 1):
         choices_str = "\n".join(f"{chr(65 + j)}. {c}" for j, c in enumerate(item["choices"]))
         answer_letter = chr(65 + item["answer"])
@@ -166,25 +159,23 @@ def glossary_slides(topic: dict) -> list[dict]:
         slides.append({
             "title": f"Q{i}: {item['question'][:60]}",
             "body": body,
-            "tags": [topic_id, "quiz", "question"]
+            "metadata": {"tags": [topic_id, "question"]}
         })
 
-    # Problems → slides (one per problem)
     for p in topic["problems"]:
         body = f"**Pattern**: {p['pattern']}\n\n**Why**: {p['why']}\n\n**Python**: `{p['stdlib']}`"
         slides.append({
             "title": f"LeetCode {p['number']}: {p['title']}",
             "body": body,
-            "tags": [topic_id, "problem", f"leetcode-{p['number']}"]
+            "metadata": {"tags": [topic_id, "problem"]}
         })
 
-    # Signals → slides (one per signal)
     for s in topic["signals"]:
         body = f"**Structure**: {s['structure']}\n\n**Requirement**: {s['requirement']}\n\n**Python**: `{s['stdlib']}`\n\n**Example**: {s['example']}"
         slides.append({
             "title": f"Signal: {s['signal'][:60]}",
             "body": body,
-            "tags": [topic_id, "signal"]
+            "metadata": {"tags": [topic_id, "signal"]}
         })
 
     return slides
