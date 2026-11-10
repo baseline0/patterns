@@ -1,3 +1,16 @@
+"In a sliding window for 'longest substring without repetition,' what does moving the left pointer accomplish?","Removes a character from the window to eliminate a repetition. When a repeated character is found, the left pointer contracts to exclude the older occurrence and maintain the no-repeat property.",arrays-and-2d-arrays
+A prefix sum array allows answering 'sum of elements from index i to j' in what time?,O(1). Prefix[j] - prefix[i-1] is a single array lookup. Preprocessing takes O(n); each query is O(1).,arrays-and-2d-arrays
+"In 3Sum, after sorting the array, why do we use two pointers instead of nested loops?","Two pointers reduce the inner loop from O(n) to O(1), making 3Sum O(n^2) instead of O(n^3). Fixing one element and using two pointers to find the complementary pair is O(n) per element, so O(n^2) total with sorting.",arrays-and-2d-arrays
+Why can product of array except self be computed without division?,"Left and right products multiply to give the product of all except element i. Prefix products (left of i) and suffix products (right of i) are computed separately, then combined. This avoids division by zero and is general.",arrays-and-2d-arrays
+What is the space complexity of rotating a 90-degree matrix in place using transpose and row reversal?,O(1). In-place rotation using transpose and row reversal (or layer-by-layer swaps) uses only a constant number of temporary variables.,arrays-and-2d-arrays
+"Time complexity of subarray sum (all pairs, brute force)?",O(n^2),arrays-and-2d-arrays complexity
+Time complexity of subarray sum (prefix sum query)?,"O(n) setup, O(1) per query",arrays-and-2d-arrays complexity
+"Time complexity of sliding window (max in subarray, longest substring)?",O(n),arrays-and-2d-arrays complexity
+Time complexity of two sum (sorted array)?,O(n),arrays-and-2d-arrays complexity
+Time complexity of three sum (brute force)?,O(n^3),arrays-and-2d-arrays complexity
+Time complexity of three sum (sorted + two pointers)?,O(n^2),arrays-and-2d-arrays complexity
+Time complexity of rotate matrix 90 degrees in place?,O(n^2) and O(1) space,arrays-and-2d-arrays complexity
+Time complexity of spiral matrix traversal?,O(n*m) and O(1) space,arrays-and-2d-arrays complexity
 Why can a tuple be a dict key but a list cannot?,"A tuple is immutable, so its hash cannot change; a list is mutable and not hashable. A key's hash must stay fixed while the key is stored. Only immutable values can guarantee that.",hash-tables
 "On average, what does membership testing cost in a set of n items?","O(1). The hash picks a slot directly. Only collisions add probes, and those are rare.",hash-tables
 "Since Python 3.7, what does iterating over a dict return?","Keys in insertion order. Insertion order is a language guarantee, because entries are stored in a dense array in that order.",hash-tables
@@ -15,6 +28,18 @@ Time complexity of heapq.heappush?,O(log n),heaps complexity
 Time complexity of heapq.heappop?,O(log n),heaps complexity
 Time complexity of heapq.heapify?,O(n),heaps complexity
 "Time complexity of heapq.nlargest(k, data)?",O(n log k),heaps complexity
+Why is reversal a natural fit for linked lists?,"Pointers can be redirected in-place without allocating new nodes, using O(1) extra space. Reversing a linked list changes the direction of pointers, not the nodes themselves. This in-place redirection uses constant extra space.",linked-lists
+How does the two-pointer cycle detection algorithm work?,"Advance two pointers at different speeds; they meet if a cycle exists. A fast pointer (2 steps per iteration) and a slow pointer (1 step) eventually meet if a cycle exists. If the fast pointer reaches null, there is no cycle.",linked-lists
+Why is a dummy node useful when merging linked lists?,"It eliminates special cases at the head by providing a node to attach to initially. A dummy node lets the merge code treat the head uniformly. Instead of checking 'is this the first node?', the code always attaches to the previous node.",linked-lists
+"In the 'Merge K Sorted Lists' problem, why is a heap faster than pairwise merging?","Finding the next smallest among k lists is O(log k) with a heap instead of O(k) with linear search. A heap tracks the smallest head across k lists. Inserting and extracting takes O(log k) per step, making the total time O(n log k) instead of O(n * k).",linked-lists
+What is the time complexity of traversing a linked list to find a specific node?,"O(n). A linked list has no random access. Reaching a node requires following pointers from the head, which takes O(n) in the worst case.",linked-lists
+Time complexity of Traverse the list (find a node)?,O(n),linked-lists complexity
+Time complexity of Insert at a known position (with a pointer to the previous node)?,O(1),linked-lists complexity
+Time complexity of Delete at a known position (with a pointer to the previous node)?,O(1),linked-lists complexity
+Time complexity of Reverse the entire list?,O(n),linked-lists complexity
+Time complexity of Detect a cycle?,O(n),linked-lists complexity
+Time complexity of Merge two sorted lists?,O(n + m),linked-lists complexity
+Time complexity of Merge k sorted lists (naive)?,O(n * k^2),linked-lists complexity
 Why is list.pop(0) a poor choice for a BFS queue?,"It shifts every remaining pointer, so each pop costs O(n). A list is a contiguous array. Removing the first element moves each remaining pointer one slot left.",lists-and-deques
 Which structure is the right queue for BFS in Python?,"collections.deque with popleft. deque.popleft is O(1), because it touches only the block at the front.",lists-and-deques
 Why are appends to a list amortized O(1)?,"Capacity grows by a fraction each time it is exceeded, so copies are rare. Spare capacity grows geometrically, so the cost of the occasional copy spreads across many appends.",lists-and-deques
@@ -28,3 +53,26 @@ Time complexity of deque.appendleft / popleft?,O(1),lists-and-deques complexity
 Time complexity of deque[i] (middle)?,O(n),lists-and-deques complexity
 Time complexity of bisect.bisect_left (search)?,O(log n),lists-and-deques complexity
 Time complexity of bisect.insort (insert)?,O(n),lists-and-deques complexity
+"When two pointers check a palindrome from the ends inward, what triggers a failed check?",Characters at the current positions do not match. Palindromes have matching characters at symmetric positions. Any mismatch means the string is not a palindrome.,strings
+Why is checking if two strings are anagrams using Counter faster than sorting both?,"Counter is O(n); sorting both is O(n log n). Counting characters is linear. Sorting is O(n log n), so dict lookup is more efficient for anagram detection.",strings
+"In the sliding-window approach to 'longest substring without repetition,' what does the left pointer do?",Tracks the start of the current valid substring. The right pointer expands the window; the left retracts when a repeat is found. The distance between them is the substring length.,strings
+Why does reversing a string with two pointers and swapping use O(1) space while str[::-1] uses O(n)?,"Swapping modifies the original; slicing allocates a new string. Strings in Python are immutable, so str[::-1] allocates a new string. In-place swaps work on lists or character arrays.",strings
+"When comparing anagrams, why must we count all characters instead of just checking for duplicates?",We need to verify the same multiset of characters appears in both strings. Anagrams have the same characters with the same frequencies. Checking duplicates alone misses frequency differences.,strings
+Time complexity of palindrome check (two pointers)?,"O(n) time, O(1) space",strings complexity
+Time complexity of reverse string in place (swap)?,"O(n) time, O(1) space",strings complexity
+Time complexity of anagram check (character count)?,O(n),strings complexity
+Time complexity of anagram check (sort both)?,O(n log n),strings complexity
+Time complexity of substring search (naive)?,O(n*m),strings complexity
+Time complexity of longest substring without repeats?,O(n),strings complexity
+Why is recursion a natural fit for tree problems?,"Each subtree is a smaller instance of the same problem, making induction natural. The recursive structure of a tree (subtree is a tree) matches the recursive structure of the solution (solve left, right, combine).",trees
+What does in-order traversal of a BST produce?,"Nodes sorted from smallest to largest. In-order traversal visits left subtree, then node, then right subtree. In a BST, left nodes are smaller, so the result is sorted.",trees
+Why does BST search run in O(log n) time on a balanced tree but O(n) on an unbalanced tree?,"A balanced tree eliminates about half the tree per comparison; an unbalanced tree may eliminate only one node. On a balanced tree, comparison with the root partitions the remaining nodes. On a chain (unbalanced), only one node is eliminated per step.",trees
+Which traversal naturally uses a queue instead of recursion?,"Level-order (breadth-first). Level-order visits nodes by depth, layer by layer, which a queue enforces naturally. DFS traversals use recursion or a stack.",trees
+What invariant must a BST maintain?,"Left children are smaller, right children are larger. In a BST, every node must have smaller values in its left subtree and larger values in its right subtree.",trees
+Time complexity of BST search (balanced)?,O(log n),trees complexity
+Time complexity of BST insert (balanced)?,O(log n),trees complexity
+Time complexity of BST delete (balanced)?,O(log n),trees complexity
+Time complexity of Tree traversal (DFS pre/in/post)?,O(n),trees complexity
+Time complexity of Tree traversal (BFS level-order)?,O(n),trees complexity
+Time complexity of Find LCA (lowest common ancestor)?,O(n),trees complexity
+Time complexity of Validate BST?,O(n),trees complexity

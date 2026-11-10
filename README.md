@@ -273,6 +273,7 @@ patterns/
 
 ## 🔗 External References
 
+**Cloud Architecture**:
 - [AWS Well-Architected Framework](https://aws.amazon.com/architecture/well-architected/)
 - [Azure Architecture Center](https://learn.microsoft.com/en-us/azure/architecture/)
 - [GCP Architecture Framework](https://cloud.google.com/architecture/framework)
@@ -281,6 +282,9 @@ patterns/
 - [Terraform AWS Provider](https://registry.terraform.io/providers/hashicorp/aws/latest)
 - [Terraform Azure Provider](https://registry.terraform.io/providers/hashicorp/azurerm/latest)
 - [Terraform GCP Provider](https://registry.terraform.io/providers/hashicorp/google/latest)
+
+**Data Structures & Algorithms**:
+- [LeetScrape](https://github.com/nikhil-ravi/LeetScrape) — Extract and analyze LeetCode problem metadata (patterns, topics, solutions)
 
 ## 💡 Contributing
 

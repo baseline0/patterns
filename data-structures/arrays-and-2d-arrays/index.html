@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Arrays and 2D arrays: subarrays, sliding window, and in-place operations</title>
+<style>body{font-family:system-ui,sans-serif;max-width:52rem;margin:2rem auto;padding:0 1rem;line-height:1.5}table{border-collapse:collapse;width:100%}td,th{border:1px solid #ccc;padding:.4rem;text-align:left;vertical-align:top}code{background:#f3f3f3;padding:0 .2rem}</style>
+</head><body>
+<h1>Arrays and 2D arrays: subarrays, sliding window, and in-place operations</h1>
+<p>Arrays store elements in contiguous memory for O(1) indexing. Subarrays are contiguous ranges; sliding windows and prefix sums solve subarray problems in linear time. Two pointers on sorted arrays find pairs without nested loops. In-place operations on 2D arrays avoid allocating new matrices by using index algebra and element swaps.</p>
+<h2>sliding window for subarray conditions</h2><p>Two pointers bound a window. The right pointer expands to add elements; the left contracts to maintain a condition (max length, sum within range, no repeats). Each element is added and removed once, keeping work linear.</p>
+<h2>prefix sums for constant-time range queries</h2><p>A prefix sum array stores cumulative totals at each position. Any subarray sum can be computed in O(1) using prefix[end] - prefix[start-1]. This trades O(n) preprocessing for O(1) per query.</p>
+<h2>two pointers converging toward a target</h2><p>Two pointers at opposite ends move inward toward a target. If the sum is too small, move the left pointer right (increase sum); if too large, move the right pointer left (decrease sum). This solves two-sum and k-sum problems in O(n) on sorted arrays.</p>
+<h2>in-place matrix operations via index algebra</h2><p>Rotating and spiraling through a matrix in place uses index transformations and element swaps. Tracking layer boundaries or computing new positions avoids allocating new matrices.</p>
+<h2>Complexity</h2><table><tr><th>Operation</th><th>Time</th><th>Note</th></tr>
+<tr><td><code>subarray sum (all pairs, brute force)</code></td><td>O(n^2)</td><td>nested loop over start and end indices</td></tr>
+<tr><td><code>subarray sum (prefix sum query)</code></td><td>O(n) setup, O(1) per query</td><td>cumulative total lookup</td></tr>
+<tr><td><code>sliding window (max in subarray, longest substring)</code></td><td>O(n)</td><td>each element added and removed once</td></tr>
+<tr><td><code>two sum (sorted array)</code></td><td>O(n)</td><td>two pointers converge to target</td></tr>
+<tr><td><code>three sum (brute force)</code></td><td>O(n^3)</td><td>three nested loops</td></tr>
+<tr><td><code>three sum (sorted + two pointers)</code></td><td>O(n^2)</td><td>fix one element, use two pointers for complement</td></tr>
+<tr><td><code>rotate matrix 90 degrees in place</code></td><td>O(n^2) and O(1) space</td><td>transpose and reverse, or rotate layers</td></tr>
+<tr><td><code>spiral matrix traversal</code></td><td>O(n*m) and O(1) space</td><td>track four boundaries; visit each cell once</td></tr>
+</table><h2>Signal to structure</h2><table><tr><th>Signal</th><th>Requirement</th>
+<th>Structure</th><th>Python tool</th><th>Example</th></tr>
+<tr><td>Find the subarray with max sum, longest run, or extreme property</td><td>O(n) without nested loops</td><td>sliding window or dynamic programming</td><td><code>list indexing and two pointers</code></td><td>Maximum Subarray (LeetCode 53); Kadane&#x27;s algorithm</td></tr>
+<tr><td>Find all pairs or triplets that satisfy a constraint (sum to target, meet criteria)</td><td>O(n) or O(n^2) without O(n^3) brute force</td><td>two pointers on sorted array; hash set for complements</td><td><code>set or dict for Two Sum; sort then two pointers for k-sum</code></td><td>Two Sum (LeetCode 1); 3Sum (LeetCode 15)</td></tr>
+<tr><td>Answer range queries on subarrays (sum, product, max, min, count)</td><td>O(1) per query after preprocessing</td><td>prefix or suffix array (cumulative aggregation)</td><td><code>list with cumulative values</code></td><td>Product of Array Except Self (LeetCode 238); Range Sum Query</td></tr>
+<tr><td>Manipulate a 2D matrix without allocating new space</td><td>O(1) extra space, no new matrix allocation</td><td>in-place index transformations and swaps</td><td><code>list of lists, index arithmetic</code></td><td>Rotate Matrix (LeetCode 48); Spiral Matrix (LeetCode 54)</td></tr>
+<tr><td>Maximize or minimize a value between two positions</td><td>O(n) without enumerating all pairs</td><td>two pointers or one-pass greedy</td><td><code>list indexing and comparison</code></td><td>Container With Most Water (LeetCode 11); Trapping Rain Water</td></tr>
+</table><h2>Problems</h2><table><tr><th>Problem</th><th>Container</th><th>Pattern</th>
+<th>Python tool</th><th>Why</th></tr>
+<tr><td>LeetCode 1 Two Sum</td><td>hash table (dict)</td><td>complement lookup in one pass</td><td><code>dict to store value-index pairs; check for target - current</code></td><td>Complement lookup is O(1), so one pass finds the pair without sorting. Hash table avoids O(n^2) nested loops.</td></tr>
+<tr><td>LeetCode 11 Container With Most Water</td><td>contiguous array</td><td>two pointers from ends moving inward</td><td><code>list indexing; compute area = height * width</code></td><td>Area is limited by the shorter height. Moving from the widest pair inward, we skip impossible pairs in O(n) instead of O(n^2).</td></tr>
+<tr><td>LeetCode 15 3Sum</td><td>sorted array</td><td>fix one element, use two pointers for complement</td><td><code>sort once, then two pointers for each fixed element</code></td><td>Fixing each element and solving two-sum with two pointers reduces O(n^3) brute force to O(n^2) after sorting.</td></tr>
+<tr><td>LeetCode 53 Maximum Subarray</td><td>contiguous array</td><td>Kadane&#x27;s algorithm (track max ending here and global max)</td><td><code>single-pass loop with running sum</code></td><td>At each position, choose: extend the previous subarray or start new. Tracking both maxima finds the best in O(n).</td></tr>
+<tr><td>LeetCode 238 Product of Array Except Self</td><td>prefix and suffix product arrays</td><td>left products, right products, combine</td><td><code>two passes over the array; no division</code></td><td>Division by zero is avoided. Left products (all before i) and right products (all after i) multiply to the result. O(n) without division.</td></tr>
+<tr><td>LeetCode 48 Rotate Matrix</td><td>2D array (square matrix)</td><td>transpose then reverse rows, or rotate layer by layer</td><td><code>nested loops with index algebra; swap elements in place</code></td><td>In-place rotation uses O(1) extra space by transforming indices and swapping. Allocating a new matrix would use O(n^2) space.</td></tr>
+<tr><td>LeetCode 54 Spiral Matrix</td><td>2D array</td><td>traverse in layers: top row, right column, bottom row, left column</td><td><code>four boundaries (top, bottom, left, right) updated after each side</code></td><td>Tracking boundaries and spiraling inward visits each element exactly once in O(n*m) with O(1) extra space.</td></tr>
+</table></body></html>

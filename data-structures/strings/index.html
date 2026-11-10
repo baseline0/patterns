@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Strings: pattern matching, substring search, and palindromes</title>
+<style>body{font-family:system-ui,sans-serif;max-width:52rem;margin:2rem auto;padding:0 1rem;line-height:1.5}table{border-collapse:collapse;width:100%}td,th{border:1px solid #ccc;padding:.4rem;text-align:left;vertical-align:top}code{background:#f3f3f3;padding:0 .2rem}</style>
+</head><body>
+<h1>Strings: pattern matching, substring search, and palindromes</h1>
+<p>Strings are sequences of characters. Finding patterns in strings uses two pointers to check palindromes and reverse sequences without allocating new strings. Hashing character positions or frequencies enables substring search and anagram detection in linear time without nested loops.</p>
+<h2>two pointers for symmetry checks</h2><p>Two pointers starting from opposite ends move inward simultaneously. This checks palindromes and validates symmetric properties without reversing the string. The only extra space is the pointers.</p>
+<h2>character frequency hashing</h2><p>A dict or Counter maps characters to their counts or positions. Anagrams share the same character counts, and comparing counts is O(1) per character instead of O(n log n) if the strings were sorted.</p>
+<h2>sliding window for unique-character substrings</h2><p>One pointer extends a window to add characters; the other retracts when a condition is violated (repetition, invalid character). Each character is added and removed once, keeping work linear.</p>
+<h2>pattern searching and string reversal</h2><p>Reversing words or characters in place uses index swapping. Finding a substring uses either naive position-by-position comparison or a rolling hash to detect the pattern in O(n).</p>
+<h2>Complexity</h2><table><tr><th>Operation</th><th>Time</th><th>Note</th></tr>
+<tr><td><code>palindrome check (two pointers)</code></td><td>O(n) time, O(1) space</td><td>move from ends inward; no allocation</td></tr>
+<tr><td><code>reverse string in place (swap)</code></td><td>O(n) time, O(1) space</td><td>swap characters with two pointers</td></tr>
+<tr><td><code>anagram check (character count)</code></td><td>O(n)</td><td>dict lookups are O(1); faster than sorting</td></tr>
+<tr><td><code>anagram check (sort both)</code></td><td>O(n log n)</td><td>for comparison; sorting is more overhead than needed</td></tr>
+<tr><td><code>substring search (naive)</code></td><td>O(n*m)</td><td>nested loop: for each position, match up to m chars</td></tr>
+<tr><td><code>longest substring without repeats</code></td><td>O(n)</td><td>sliding window; each char seen at most twice</td></tr>
+</table><h2>Signal to structure</h2><table><tr><th>Signal</th><th>Requirement</th>
+<th>Structure</th><th>Python tool</th><th>Example</th></tr>
+<tr><td>Verify a string reads the same forward and backward</td><td>O(n) time, O(1) space</td><td>two pointers from ends</td><td><code>str indexing</code></td><td>Valid Palindrome (LeetCode 125)</td></tr>
+<tr><td>Compare words by their letters, ignoring order</td><td>O(n) without sorting</td><td>character frequency dict</td><td><code>collections.Counter</code></td><td>Valid Anagram (LeetCode 242)</td></tr>
+<tr><td>Find longest substring with a property (no repeats, all vowels, etc.)</td><td>O(n) in one pass</td><td>sliding window with dict</td><td><code>dict or set to track character presence</code></td><td>Longest Substring Without Repeating Characters (LeetCode 3)</td></tr>
+<tr><td>Locate first occurrence of a pattern or substring</td><td>O(n) or O(n+m) without O(n*m)</td><td>rolling hash or KMP</td><td><code>str.find or manual index-by-index</code></td><td>Implement strStr (LeetCode 28)</td></tr>
+<tr><td>Reverse, rotate, or rearrange words in a string</td><td>O(n) time, O(1) space</td><td>two-pointer reversal</td><td><code>str.split and join, or manual swap</code></td><td>Reverse Words in a String (LeetCode 151)</td></tr>
+</table><h2>Problems</h2><table><tr><th>Problem</th><th>Container</th><th>Pattern</th>
+<th>Python tool</th><th>Why</th></tr>
+<tr><td>LeetCode 28 Implement strStr</td><td>string</td><td>substring search at each position</td><td><code>str.find or manual char-by-char comparison</code></td><td>Comparing characters position by position finds the first match in O(n*m). Rolling hash improves to O(n) but naive is sufficient for moderate lengths.</td></tr>
+<tr><td>LeetCode 125 Valid Palindrome</td><td>string</td><td>two pointers ignoring non-alphanumeric</td><td><code>str.isalnum and lower for filtering; two pointers</code></td><td>Two pointers from the ends check symmetry in O(n) without allocating a reversed or cleaned string.</td></tr>
+<tr><td>LeetCode 242 Valid Anagram</td><td>character frequency dict</td><td>count and compare</td><td><code>collections.Counter</code></td><td>Counting character frequencies is O(n). Sorting both strings is O(n log n). Counter is optimal for this check.</td></tr>
+<tr><td>LeetCode 58 Length of Last Word</td><td>string</td><td>reverse scan to skip trailing spaces</td><td><code>str.split or manual indexing from the end</code></td><td>Scanning backward from the end finds the last word in one pass, avoiding the overhead of splitting and reversing.</td></tr>
+<tr><td>LeetCode 151 Reverse Words in a String</td><td>string</td><td>word-by-word reversal with space handling</td><td><code>str.split and reverse and join, or two-pointer character swap</code></td><td>Using split().reverse().join() is Pythonic and concise. Manual reversal in place avoids intermediate allocations.</td></tr>
+<tr><td>LeetCode 680 Valid Palindrome II</td><td>string</td><td>two pointers with one skip allowed</td><td><code>two-pointer recursion or backtracking to check both skip cases</code></td><td>When a mismatch is found, we must try skipping the left or right character. Backtracking checks both without full string duplication.</td></tr>
+</table></body></html>

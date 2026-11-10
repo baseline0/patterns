@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Linked lists: pointers, reversal, and cycle detection</title>
+<style>body{font-family:system-ui,sans-serif;max-width:52rem;margin:2rem auto;padding:0 1rem;line-height:1.5}table{border-collapse:collapse;width:100%}td,th{border:1px solid #ccc;padding:.4rem;text-align:left;vertical-align:top}code{background:#f3f3f3;padding:0 .2rem}</style>
+</head><body>
+<h1>Linked lists: pointers, reversal, and cycle detection</h1>
+<p>A linked list chains nodes together with pointers, so insertion and deletion at a known position cost O(1). The price is that reaching a position requires walking from the head, which costs O(n). Linked list problems are solved by careful pointer manipulation: maintaining two pointers to track state, reversing in-place by redirecting links, or detecting cycles by observing that two pointers moving at different speeds must meet if a cycle exists.</p>
+<h2>node-based structure: pointer chaining</h2><p>Each node holds a value and a pointer to the next node. Unlike arrays, there is no random access; reaching a node requires starting at the head and following pointers. This sequential access makes insertion and deletion at a known position cheap (no shifting), but finding a position is expensive (no binary search).</p>
+<h2>reversal: redirect pointers in-place</h2><p>To reverse a linked list, redirect each node&#x27;s pointer to point backward instead of forward. Iterate through the list, keeping track of the previous node. At each step, change the current node&#x27;s pointer from next to previous, then advance. This reverses the chain in-place without allocating new nodes, using O(1) extra space.</p>
+<h2>cycle detection: two pointers at different speeds</h2><p>If a list has a cycle, a fast pointer (advancing 2 steps per iteration) and a slow pointer (advancing 1 step) will eventually meet. If the fast pointer reaches null, there is no cycle. Once a cycle is found, the distance from the head to the cycle entry equals the distance from the meeting point back to the entry, a fact that allows finding the cycle start.</p>
+<h2>merging and multi-pointer patterns</h2><p>Many linked list problems require tracking multiple pointers simultaneously: a dummy node simplifies edge cases at the head, a fast and slow pointer find the middle, or two pointers track positions in different lists. Careful pointer management avoids breaking the chain or creating dangling references.</p>
+<h2>Complexity</h2><table><tr><th>Operation</th><th>Time</th><th>Note</th></tr>
+<tr><td><code>Traverse the list (find a node)</code></td><td>O(n)</td><td>must follow pointers from the head</td></tr>
+<tr><td><code>Insert at a known position (with a pointer to the previous node)</code></td><td>O(1)</td><td>redirect two pointers, no shifting</td></tr>
+<tr><td><code>Delete at a known position (with a pointer to the previous node)</code></td><td>O(1)</td><td>redirect one pointer, no shifting</td></tr>
+<tr><td><code>Reverse the entire list</code></td><td>O(n)</td><td>one pass, redirecting pointers; O(1) extra space</td></tr>
+<tr><td><code>Detect a cycle</code></td><td>O(n)</td><td>fast and slow pointers; they meet if a cycle exists</td></tr>
+<tr><td><code>Merge two sorted lists</code></td><td>O(n + m)</td><td>compare nodes from both lists, advance the smaller</td></tr>
+<tr><td><code>Merge k sorted lists (naive)</code></td><td>O(n * k^2)</td><td>merge pairwise; improve with a heap or merge sort strategy</td></tr>
+</table><h2>Signal to structure</h2><table><tr><th>Signal</th><th>Requirement</th>
+<th>Structure</th><th>Python tool</th><th>Example</th></tr>
+<tr><td>Reverse a sequence when you cannot use an array</td><td>Change direction in-place; O(n) time</td><td>pointer redirection in a single pass</td><td><code>manual pointer management</code></td><td>Reverse Linked List (LeetCode 206)</td></tr>
+<tr><td>Detect or break a cycle in a chain</td><td>Identify loops without extra space or mutation</td><td>two-pointer race: fast and slow</td><td><code>two pointer variables</code></td><td>Linked List Cycle (LeetCode 141)</td></tr>
+<tr><td>Merge multiple sequences while maintaining order</td><td>Compare heads, advance the smaller, O(n + m) for two lists</td><td>pointer manipulation with a dummy node</td><td><code>manual pointer chaining</code></td><td>Merge Two Sorted Lists (LeetCode 21)</td></tr>
+<tr><td>Find the middle of a list or reverse a section</td><td>Locate a position without knowing the length</td><td>two pointers: one moves 2 steps, one moves 1</td><td><code>two pointer variables; count or fast/slow</code></td><td>Reverse Linked List II (LeetCode 92)</td></tr>
+<tr><td>Simulate addition with numbers stored as linked list nodes</td><td>Process digit by digit with carry; may need to extend the list</td><td>traverse both lists in parallel, manage carry state</td><td><code>manual pointer advancement and node creation</code></td><td>Add Two Numbers (LeetCode 2)</td></tr>
+</table><h2>Problems</h2><table><tr><th>Problem</th><th>Container</th><th>Pattern</th>
+<th>Python tool</th><th>Why</th></tr>
+<tr><td>LeetCode 206 Reverse Linked List</td><td>pointer redirection in-place</td><td>iterative pointer reversal</td><td><code>manual pointer management; track previous, current, next</code></td><td>Reversing requires redirecting each node&#x27;s pointer from forward to backward. Tracking three pointers (prev, curr, next) allows safe redirection in one pass.</td></tr>
+<tr><td>LeetCode 141 Linked List Cycle</td><td>two-pointer cycle detection</td><td>tortoise and hare</td><td><code>two pointer variables advancing at different speeds</code></td><td>If a cycle exists, two pointers at different speeds must meet. If the fast pointer reaches null, there is no cycle.</td></tr>
+<tr><td>LeetCode 21 Merge Two Sorted Lists</td><td>pointer-based merge with dummy node</td><td>two-pointer list merging</td><td><code>dummy node, manual pointer chaining</code></td><td>Merging compares heads and advances the smaller pointer. A dummy node avoids special-casing the new head.</td></tr>
+<tr><td>LeetCode 23 Merge K Sorted Lists</td><td>heap-based or divide-and-conquer merging</td><td>reduce k lists to 1 via pairwise merging</td><td><code>heapq.heappush for efficient next-smallest, or recursion</code></td><td>Naive pairwise merging is slow; a heap picks the next smallest in O(log k) time, making total time O(n log k).</td></tr>
+<tr><td>LeetCode 92 Reverse Linked List II</td><td>pointer redirection in a range</td><td>bounded reversal</td><td><code>manual pointer management; track boundaries</code></td><td>Reversing only a section requires finding the start, reversing in place, then connecting back. Careful pointer tracking avoids breaking the chain.</td></tr>
+<tr><td>LeetCode 2 Add Two Numbers</td><td>parallel node traversal with carry</td><td>digit-by-digit addition</td><td><code>manual pointer advancement, node creation</code></td><td>Addition processes digits in parallel, managing carry state. New nodes are created for the result; careful pointer management avoids leaks.</td></tr>
+<tr><td>LeetCode 160 Intersection of Two Linked Lists</td><td>two-pointer convergence</td><td>length-adjusted pointers</td><td><code>manual pointer advancement; two passes to align</code></td><td>If two lists intersect, advancing through both at equal speed detects the intersection. Equal-length traversal aligns the pointers.</td></tr>
+</table></body></html>
