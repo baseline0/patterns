@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Test fixtures: pytest conftest patterns, scope, and dependency injection</title>
+<style>body{font-family:system-ui,sans-serif;max-width:52rem;margin:2rem auto;padding:0 1rem;line-height:1.5}table{border-collapse:collapse;width:100%}td,th{border:1px solid #ccc;padding:.4rem;text-align:left;vertical-align:top}code{background:#f3f3f3;padding:0 .2rem}pre{background:#f3f3f3;padding:1rem;overflow-x:auto}</style>
+</head><body>
+<h1>Test fixtures: pytest conftest patterns, scope, and dependency injection</h1>
+<p>Pytest fixtures are reusable setup/teardown functions that tests depend on. Fixtures manage resources (databases, temporary files, mocks) and provide them to tests via dependency injection. A fixture&#x27;s scope (function, class, module, session) determines when setup runs and cleanup happens. conftest.py is a pytest file that defines fixtures shared across tests in a directory and subdirectories. Fixtures compose: one fixture can depend on another, building up complex test environments from simple pieces.</p>
+<h2>Fixtures as dependency injection for tests</h2><p>A test declares its dependencies (database, mock service) as function parameters. Pytest matches parameters to fixture names and injects them. This decouples test code from setup logic and makes dependencies explicit in the test signature.</p>
+<h2>conftest.py defines shared fixtures</h2><p>conftest.py is a pytest convention file where fixtures are defined. Pytest discovers conftest.py files in the test directory and parent directories, automatically making fixtures available to all tests. This avoids importing fixtures explicitly.</p>
+<h2>Fixture scope controls setup reuse (function, module, session)</h2><p>A function-scoped fixture runs setup before each test and cleanup after. A module-scoped fixture runs setup once per module and cleans up after the module. Session-scoped fixtures run once per test session. Broader scopes reuse setup (faster) but risk test coupling; narrower scopes ensure isolation.</p>
+<h2>Fixtures compose: one fixture depends on another</h2><p>A fixture can take another fixture as a parameter. Pytest resolves the dependency chain and runs setup in order. This builds complex environments from simple pieces and avoids duplication.</p>
+<h2>Complexity</h2><table><tr><th>Operation</th><th>Time</th><th>Note</th></tr>
+<tr><td><code>simple fixture (no dependencies, function scope)</code></td><td>O(1) setup, O(1) cleanup per test</td><td>minimal overhead</td></tr>
+<tr><td><code>session-scoped fixture (reused across all tests)</code></td><td>O(1) setup once; O(1) cleanup at end</td><td>expensive setup amortized across all tests</td></tr>
+<tr><td><code>fixture composition (fixture depends on another fixture)</code></td><td>O(1) per dependency; resolved in order</td><td>dependency resolution is linear in dependency depth</td></tr>
+<tr><td><code>fixture with monkeypatch (patching module globals)</code></td><td>O(1) patch, O(1) restore</td><td>restores patches automatically after test</td></tr>
+<tr><td><code>parameterized fixture (@pytest.fixture(params=[...]))</code></td><td>O(n) where n is number of parameter values</td><td>test runs once per parameter value</td></tr>
+</table><h2>Signal to structure</h2><table><tr><th>Signal</th><th>Requirement</th>
+<th>Structure</th><th>Python tool</th><th>Example</th></tr>
+<tr><td>Multiple tests need the same resource (database, temporary directory, mock)</td><td>DRY: avoid duplicating setup logic in each test</td><td>fixture with @pytest.fixture decorator, injected as test parameter</td><td><code>@pytest.fixture, yield for cleanup</code></td><td>all tests need a temporary directory; define tmp_path fixture once</td></tr>
+<tr><td>Setup and cleanup must happen in a specific order</td><td>Automatic teardown without explicit cleanup code</td><td>fixture with `yield` to separate setup and cleanup</td><td><code>def fixture(...): setup_code; yield; cleanup_code</code></td><td>start a server, yield, then stop it</td></tr>
+<tr><td>A test depends on multiple resources (database, mock, config)</td><td>Compose fixtures; avoid deeply nested setup</td><td>fixture takes other fixtures as parameters</td><td><code>def fixture_a(fixture_b, fixture_c): ...</code></td><td>a service fixture depends on a database fixture and a config fixture</td></tr>
+<tr><td>Expensive setup should be reused across tests (avoid repeating)</td><td>Balance speed (reuse) and isolation (fresh state)</td><td>session or module-scoped fixture</td><td><code>@pytest.fixture(scope=&#x27;module&#x27; or &#x27;session&#x27;)</code></td><td>database connection or service startup, reused across tests</td></tr>
+<tr><td>Run the same test with different parameter values</td><td>DRY: avoid copy-pasting the test</td><td>@pytest.fixture(params=[...]) or @pytest.mark.parametrize</td><td><code>@pytest.fixture(params=...) or @pytest.mark.parametrize(...)</code></td><td>test the same function with 5 different input values</td></tr>
+</table><h2>Problems</h2><table><tr><th>Problem</th><th>Container</th><th>Pattern</th>
+<th>Python tool</th><th>Why</th></tr>
+<tr><td>1. Multiple tests need the same temporary directory</td><td>pytest&#x27;s built-in tmp_path fixture</td><td>test declares tmp_path parameter; pytest injects it</td><td><code>@pytest.fixture (tmp_path is built-in)</code></td><td>Avoids manual tempdir cleanup; pytest manages it. Each test gets a fresh directory.</td></tr>
+<tr><td>2. Setup and cleanup must be coordinated (e.g., start/stop a server)</td><td>custom fixture with yield</td><td>setup before yield; cleanup after yield</td><td><code>@pytest.fixture with yield</code></td><td>Cleanup is guaranteed even if the test fails; no manual try/finally needed.</td></tr>
+<tr><td>3. A fixture depends on another fixture (composition)</td><td>two fixtures with dependency</td><td>fixture_a takes fixture_b as parameter</td><td><code>@pytest.fixture, parameter passing</code></td><td>Avoids duplication; complex environments built from simple fixtures.</td></tr>
+<tr><td>4. Expensive setup (database) should be reused across tests</td><td>session or module-scoped fixture</td><td>@pytest.fixture(scope=&#x27;session&#x27; or &#x27;module&#x27;)</td><td><code>@pytest.fixture(scope=...)</code></td><td>Amortizes expensive setup cost; tests run faster.</td></tr>
+<tr><td>5. Run the same test with 10 different inputs</td><td>parameterized fixture or parametrized test</td><td>@pytest.fixture(params=[...]) or @pytest.mark.parametrize(...)</td><td><code>@pytest.fixture(params=...) or @pytest.mark.parametrize(...)</code></td><td>DRY: avoid copy-pasting the test 10 times.</td></tr>
+</table><h2>Code Examples</h2>
+<h3>fleet-base: conftest.py with shared fixtures</h3>
+<pre><code>&quot;&quot;&quot;Shared fixtures for all tests (from fleet-base).&quot;&quot;&quot;
+@pytest.fixture
+def settings() -&gt; Callable[..., FleetSettings]:
+    def build(settings_class: type[FleetSettings] = FleetSettings, **overrides):
+        return _without_process_env(settings_class)(**overrides)
+    return build
+
+def test_settings_from_overrides(settings):
+    cfg = settings(api_key=&quot;secret&quot;)
+    assert cfg.api_key == &quot;secret&quot;
+# The settings fixture is defined in conftest.py; all tests can use it by declaring the parameter.
+</code></pre>
+<h3>pytest: fixture with setup and cleanup (yield)</h3>
+<pre><code>&quot;&quot;&quot;Fixture that starts a resource and cleans it up.&quot;&quot;&quot;
+@pytest.fixture
+def temp_repo(tmp_path: Path) -&gt; Path:
+    repo = tmp_path / &quot;test_repo&quot;
+    repo.mkdir()
+    (repo / &quot;.git&quot;).mkdir()
+    yield repo  # Test runs here
+    # Cleanup (if needed) happens after yield
+
+def test_repo_exists(temp_repo):
+    assert (temp_repo / &quot;.git&quot;).exists()
+# tmp_path is injected; yield provides the repo to the test; cleanup (none here) runs after.
+</code></pre>
+<h3>fleet-base: fixture composition (one fixture depends on another)</h3>
+<pre><code>&quot;&quot;&quot;Fixture that depends on another fixture.&quot;&quot;&quot;
+@pytest.fixture
+def isolated_git_env(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -&gt; Path:
+    empty_config = tmp_path / &quot;empty-gitconfig&quot;
+    empty_config.write_text(&quot;&quot;, encoding=&quot;utf-8&quot;)
+    monkeypatch.setenv(&quot;GIT_CONFIG_GLOBAL&quot;, str(empty_config))
+    return empty_config
+
+def test_git_isolation(isolated_git_env: Path):
+    # isolated_git_env depends on tmp_path and monkeypatch
+    # Pytest injects them in order, then isolated_git_env
+    import subprocess
+    result = subprocess.run([&#x27;git&#x27;, &#x27;config&#x27;, &#x27;--global&#x27;, &#x27;user.name&#x27;],
+                            capture_output=True, text=True)
+    assert result.stdout.strip() == &#x27;&#x27;
+# tmp_path and monkeypatch are injected; isolated_git_env is constructed using them.
+</code></pre>
+<h3>pytest: session-scoped fixture for expensive setup</h3>
+<pre><code>&quot;&quot;&quot;Expensive setup reused across all tests in the session.&quot;&quot;&quot;
+@pytest.fixture(scope=&#x27;session&#x27;)
+def database():
+    &quot;&quot;&quot;Create and migrate database once per session.&quot;&quot;&quot;
+    engine = create_engine(&quot;sqlite:///:memory:&quot;)
+    Base.metadata.create_all(engine)
+    yield engine
+    engine.dispose()
+
+def test_first_query(database):
+    session = Session(database)
+    items = session.query(Item).all()
+    assert items == []
+
+def test_second_query(database):
+    # Same database as first test; expensive setup not repeated
+    session = Session(database)
+    items = session.query(Item).all()
+    assert items == []
+# Both tests reuse the same database session, avoiding repeated setup.
+</code></pre>
+<h3>pytest: parameterized fixture</h3>
+<pre><code>&quot;&quot;&quot;Run a test with different parameter values.&quot;&quot;&quot;
+@pytest.fixture(params=[&quot;value1&quot;, &quot;value2&quot;, &quot;value3&quot;])
+def param_value(request):
+    return request.param
+
+def test_with_params(param_value):
+    assert param_value in [&quot;value1&quot;, &quot;value2&quot;, &quot;value3&quot;]
+# The test runs three times, once for each parameter value.
+</code></pre>
+<h3>fleet-base: automatic marker assignment in conftest.py</h3>
+<pre><code>&quot;&quot;&quot;conftest.py hook to automatically assign markers based on directory.&quot;&quot;&quot;
+def pytest_collection_modifyitems(items: list[pytest.Item]) -&gt; None:
+    for item in items:
+        path = Path(str(item.fspath)).resolve()
+        relative = path.relative_to(TESTS_ROOT.resolve())
+        top_level = relative.parts[0] if relative.parts else &quot;&quot;
+        marker_name = DIRECTORY_MARKERS.get(top_level)
+        if marker_name:
+            item.add_marker(getattr(pytest.mark, marker_name))
+# Conftest.py uses pytest hooks; markers are assigned based on test directory.
+</code></pre>
+</body></html>

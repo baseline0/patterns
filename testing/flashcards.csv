@@ -1,0 +1,42 @@
+What is a consumer-driven contract?,A contract where the client defines expectations and the server implements to meet them. Consumer-driven contracts empower clients to define their needs; providers implement to satisfy the contract.,contract-testing
+How do contract tests differ from end-to-end tests?,"Contract tests are faster because they focus on API format, not full system behavior. Contract tests validate API format without requiring full service startup. They're faster than end-to-end tests and provide quicker feedback.",contract-testing
+"What does jsonschema.validate(response, schema) do?","It checks that the response matches the expected schema (required fields, types). jsonschema.validate checks that the response conforms to the schema: required fields are present, types are correct, and no extra fields violate constraints.",contract-testing
+Why should contract tests run in CI?,"To catch breaking changes before merging, preventing integration failures. Contract tests in CI fail when an API change breaks compatibility, preventing merges and catching issues early before they reach production.",contract-testing
+What should happen if a provider contract test fails?,"Fix the implementation to satisfy the contract, or update the contract if intentional. A failing provider contract means the implementation doesn't meet the contract. Either fix the implementation or intentionally update the contract (and notify clients).",contract-testing
+Time complexity of consumer-driven contract test (client expectations)?,O(1) milliseconds,contract-testing complexity
+Time complexity of provider contract test (server behavior)?,O(n) where n is number of scenarios,contract-testing complexity
+Time complexity of schema validation (request or response)?,O(n) where n is schema depth,contract-testing complexity
+Time complexity of end-to-end test (full client + server interaction)?,O(n) seconds,contract-testing complexity
+Time complexity of contract test in CI with multiple consumers?,"O(n*m) where n is consumers, m is scenarios per consumer",contract-testing complexity
+What is the main difference between unit tests and integration tests?,Unit tests are faster and test components in isolation; integration tests verify interactions between components. Unit tests isolate components; integration tests verify cross-component interactions. Integration tests may use real databases or in-memory replicas.,integration-testing
+What does a session-scoped fixture do?,Runs setup once per test session and reuses it across all tests. Session-scoped fixtures run setup once and reuse the result across all tests in the session. This amortizes expensive setup cost but requires careful cleanup.,integration-testing
+How does transaction rollback keep database tests isolated?,"It reverts all changes after each test, so the database is clean for the next test. A test's writes are wrapped in a transaction that rolls back, leaving the database clean. No explicit cleanup needed; the database is fresh for the next test.",integration-testing
+What is a contract test?,"A test that verifies a service conforms to its API contract (request/response format). Contract tests verify that both client and server agree on API format (schema, status codes, error messages). Misalignment breaks the contract.",integration-testing
+Why might you use a module-scoped fixture instead of a session-scoped one?,"Module scope provides finer isolation granularity; setup is shared per module, not per session. Module scope balances speed (reuse setup per module) and isolation (fresh setup for each new module). It's a middle ground between function and session scopes.",integration-testing
+"Time complexity of integration test (real database, transaction rollback)?","O(n) milliseconds to seconds, depends on database operations",integration-testing complexity
+"Time complexity of session-scoped fixture (database connection, expensive setup)?",O(1) setup per session; reused across all tests,integration-testing complexity
+Time complexity of module-scoped fixture?,O(1) setup per module,integration-testing complexity
+Time complexity of function-scoped fixture (cleanup after each test)?,O(n) where n is number of tests,integration-testing complexity
+Time complexity of contract test (verify request/response schemas)?,O(1) for each contract assertion,integration-testing complexity
+Time complexity of parallel integration tests (pytest-xdist with real database)?,O(n/p) but limited by database connection pool,integration-testing complexity
+What is dependency injection in pytest?,"Tests declare parameters matching fixture names; pytest injects the fixtures. Pytest uses the test function's parameter names to match fixtures. If a test has a parameter named 'tmp_path', Pytest injects the built-in tmp_path fixture.",test-fixtures
+What is conftest.py?,A pytest file that defines shared fixtures available to all tests in that directory and subdirectories. conftest.py is a pytest convention; fixtures defined there are automatically discovered and available to all tests in that directory and subdirectories.,test-fixtures
+How does the `yield` keyword in a fixture work?,"It separates setup (before yield) from cleanup (after yield). yield separates setup and cleanup in a fixture. Code before yield runs before the test; code after yield runs after the test, even if the test fails.",test-fixtures
+What does fixture scope control?,"When setup runs and when cleanup happens (function, module, session). Fixture scope determines: function-scoped fixtures run before each test; module-scoped fixtures run once per module; session-scoped fixtures run once per session.",test-fixtures
+How can a fixture depend on another fixture?,By declaring the other fixture as a parameter. A fixture can take another fixture as a parameter. Pytest resolves the dependency chain and runs setup in order.,test-fixtures
+"Time complexity of simple fixture (no dependencies, function scope)?","O(1) setup, O(1) cleanup per test",test-fixtures complexity
+Time complexity of session-scoped fixture (reused across all tests)?,O(1) setup once; O(1) cleanup at end,test-fixtures complexity
+Time complexity of fixture composition (fixture depends on another fixture)?,O(1) per dependency; resolved in order,test-fixtures complexity
+Time complexity of fixture with monkeypatch (patching module globals)?,"O(1) patch, O(1) restore",test-fixtures complexity
+Time complexity of parameterized fixture (@pytest.fixture(params=[...]))?,O(n) where n is number of parameter values,test-fixtures complexity
+Why should unit tests avoid calling external services like databases or APIs?,"Tests should be hermetic: deterministic, fast, and runnable in any order or location. Hermetic tests are isolated and reproducible. They run in milliseconds, in any order, and don't depend on network or service availability.",unit-testing
+"Which pytest marker should a fast, isolated test declare?","@pytest.mark.unit. @pytest.mark.unit tags fast, isolated component tests. Markers allow running only unit tests before commit with `pytest -m unit`.",unit-testing
+What does unittest.mock.MagicMock.side_effect do?,Raises an exception or returns a value when the mock is called. side_effect can be an exception (raises it) or a callable (calls it). This lets tests trigger error paths without raising real errors.,unit-testing
+"In dependency injection, what is passed to the function being tested?","A mock object that simulates the service. Mocks replace real dependencies in tests, allowing control over inputs and verification of behavior without side effects.",unit-testing
+What does @pytest.mark.parametrize do?,"Runs a test multiple times with different inputs. Parametrize runs the same test function with different arguments, specified as a list of tuples. This keeps tests DRY.",unit-testing
+Time complexity of unit test (mock dependency)?,O(1) milliseconds,unit-testing complexity
+Time complexity of unit test setup (fixture with monkeypatch)?,O(1) setup time,unit-testing complexity
+"Time complexity of mock assertion (verify call count, args)?",O(1),unit-testing complexity
+Time complexity of unit test with parametrize (@pytest.mark.parametrize)?,O(n) for n inputs,unit-testing complexity
+Time complexity of test collection (pytest discovery)?,O(n) where n is number of test files,unit-testing complexity
+"Time complexity of parallel unit tests (pytest-xdist, -n auto)?",O(n/p) where p is number of processes,unit-testing complexity

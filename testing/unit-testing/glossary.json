@@ -1,0 +1,262 @@
+[
+  {
+    "title": "Claim: unit-tests-run-fast",
+    "body": "Unit tests on isolated components run in milliseconds, not seconds, because they avoid I/O.",
+    "metadata": {
+      "tags": [
+        "unit-testing",
+        "claim"
+      ]
+    }
+  },
+  {
+    "title": "Claim: hermetic-tests-never-touch-external-services",
+    "body": "Hermetic tests mock all external dependencies: databases, networks, file systems, caches.",
+    "metadata": {
+      "tags": [
+        "unit-testing",
+        "claim"
+      ]
+    }
+  },
+  {
+    "title": "Claim: dependency-injection-enables-mocking",
+    "body": "Functions that take dependencies as parameters (not globals) can be tested with mock objects.",
+    "metadata": {
+      "tags": [
+        "unit-testing",
+        "claim"
+      ]
+    }
+  },
+  {
+    "title": "Claim: markers-enable-selective-execution",
+    "body": "@pytest.mark.unit and @pytest.mark.integration allow running only a subset of tests before commit.",
+    "metadata": {
+      "tags": [
+        "unit-testing",
+        "claim"
+      ]
+    }
+  },
+  {
+    "title": "Claim: mocking-is-for-external-io",
+    "body": "Mock external services (HTTP, database, file I/O); test real logic with real domain objects.",
+    "metadata": {
+      "tags": [
+        "unit-testing",
+        "claim"
+      ]
+    }
+  },
+  {
+    "title": "Complexity: unit test (mock dependency)",
+    "body": "**O(1) milliseconds**\n\nisolated component, no I/O",
+    "metadata": {
+      "tags": [
+        "unit-testing",
+        "complexity"
+      ]
+    }
+  },
+  {
+    "title": "Complexity: unit test setup (fixture with monkeypatch)",
+    "body": "**O(1) setup time**\n\nin-memory fixture; minimal allocation",
+    "metadata": {
+      "tags": [
+        "unit-testing",
+        "complexity"
+      ]
+    }
+  },
+  {
+    "title": "Complexity: mock assertion (verify call count, args)",
+    "body": "**O(1)**\n\nrecorded in-memory; no I/O",
+    "metadata": {
+      "tags": [
+        "unit-testing",
+        "complexity"
+      ]
+    }
+  },
+  {
+    "title": "Complexity: unit test with parametrize (@pytest.mark.parametrize)",
+    "body": "**O(n) for n inputs**\n\nsame test run multiple times; linear in test count",
+    "metadata": {
+      "tags": [
+        "unit-testing",
+        "complexity"
+      ]
+    }
+  },
+  {
+    "title": "Complexity: test collection (pytest discovery)",
+    "body": "**O(n) where n is number of test files**\n\nimports all test modules; linear scan",
+    "metadata": {
+      "tags": [
+        "unit-testing",
+        "complexity"
+      ]
+    }
+  },
+  {
+    "title": "Complexity: parallel unit tests (pytest-xdist, -n auto)",
+    "body": "**O(n/p) where p is number of processes**\n\nideal speedup if tests are independent",
+    "metadata": {
+      "tags": [
+        "unit-testing",
+        "complexity"
+      ]
+    }
+  },
+  {
+    "title": "Q1: Why should unit tests avoid calling external services like d",
+    "body": "A. External services are always slower, so tests must be fast\nB. Tests should be hermetic: deterministic, fast, and runnable in any order or location\nC. External services are not available in the test environment\nD. All of the above\n\n**B.** Hermetic tests are isolated and reproducible. They run in milliseconds, in any order, and don't depend on network or service availability.",
+    "metadata": {
+      "tags": [
+        "unit-testing",
+        "question"
+      ]
+    }
+  },
+  {
+    "title": "Q2: Which pytest marker should a fast, isolated test declare?",
+    "body": "A. @pytest.mark.integration\nB. @pytest.mark.unit\nC. @pytest.mark.slow\nD. @pytest.mark.skip\n\n**B.** @pytest.mark.unit tags fast, isolated component tests. Markers allow running only unit tests before commit with `pytest -m unit`.",
+    "metadata": {
+      "tags": [
+        "unit-testing",
+        "question"
+      ]
+    }
+  },
+  {
+    "title": "Q3: What does unittest.mock.MagicMock.side_effect do?",
+    "body": "A. Records how many times the mock was called\nB. Defines the return value of the mock\nC. Raises an exception or returns a value when the mock is called\nD. Prevents the mock from being called more than once\n\n**C.** side_effect can be an exception (raises it) or a callable (calls it). This lets tests trigger error paths without raising real errors.",
+    "metadata": {
+      "tags": [
+        "unit-testing",
+        "question"
+      ]
+    }
+  },
+  {
+    "title": "Q4: In dependency injection, what is passed to the function bein",
+    "body": "A. The real external service\nB. A mock object that simulates the service\nC. A stub that returns a default value\nD. Both mock and stub objects\n\n**B.** Mocks replace real dependencies in tests, allowing control over inputs and verification of behavior without side effects.",
+    "metadata": {
+      "tags": [
+        "unit-testing",
+        "question"
+      ]
+    }
+  },
+  {
+    "title": "Q5: What does @pytest.mark.parametrize do?",
+    "body": "A. Skips a test until it passes\nB. Runs a test multiple times with different inputs\nC. Marks a test as slow or expensive\nD. Enables parallel test execution\n\n**B.** Parametrize runs the same test function with different arguments, specified as a list of tuples. This keeps tests DRY.",
+    "metadata": {
+      "tags": [
+        "unit-testing",
+        "question"
+      ]
+    }
+  },
+  {
+    "title": "1. Isolate a function from a database dependency",
+    "body": "**Pattern**: dependency injection (pass mock as parameter or fixture)\n\n**Why**: A function that queries a database cannot run fast or repeatably. Mock the database to return test data.\n\n**Python**: `unittest.mock.MagicMock or pytest-mock`",
+    "metadata": {
+      "tags": [
+        "unit-testing",
+        "problem"
+      ]
+    }
+  },
+  {
+    "title": "2. Test error handling without triggering real errors",
+    "body": "**Pattern**: mock.side_effect = ExceptionType() to trigger error paths\n\n**Why**: Testing error paths without actually raising them lets tests run fast and verify both success and failure.\n\n**Python**: `unittest.mock.MagicMock.side_effect`",
+    "metadata": {
+      "tags": [
+        "unit-testing",
+        "problem"
+      ]
+    }
+  },
+  {
+    "title": "3. Verify a function logs the correct message",
+    "body": "**Pattern**: pass mock logger to function; assert mock.assert_called_with(...)\n\n**Why**: Capturing logging without side effects; verify the function called log with the right args.\n\n**Python**: `unittest.mock.patch, pytest-mock, capsys`",
+    "metadata": {
+      "tags": [
+        "unit-testing",
+        "problem"
+      ]
+    }
+  },
+  {
+    "title": "4. Test a class that depends on an external service",
+    "body": "**Pattern**: constructor injection (pass mock in __init__); mock returns test data\n\n**Why**: Classes that call external APIs must be testable without hitting the network; inject mocks.\n\n**Python**: `unittest.mock.MagicMock, @pytest.fixture`",
+    "metadata": {
+      "tags": [
+        "unit-testing",
+        "problem"
+      ]
+    }
+  },
+  {
+    "title": "5. Run the same test on 10 different inputs",
+    "body": "**Pattern**: @pytest.mark.parametrize with list of (input, expected)\n\n**Why**: Avoids copy-pasting the same test 10 times; DRY principle for test cases.\n\n**Python**: `@pytest.mark.parametrize decorator`",
+    "metadata": {
+      "tags": [
+        "unit-testing",
+        "problem"
+      ]
+    }
+  },
+  {
+    "title": "Signal: Verify a single function's behavior given various inputs",
+    "body": "**Structure**: function under test + mock dependencies + assertions\n\n**Requirement**: O(1) milliseconds, no external calls\n\n**Python**: `@pytest.fixture, unittest.mock.MagicMock, pytest-mock`\n\n**Example**: test_branch_from_result_whitespace_frozen; verify branch_from_result('   ') is None",
+    "metadata": {
+      "tags": [
+        "unit-testing",
+        "signal"
+      ]
+    }
+  },
+  {
+    "title": "Signal: Test a class constructor, field assignment, and simple metho",
+    "body": "**Structure**: instantiate class, set fields, call methods, assert results\n\n**Requirement**: O(1), no I/O or network\n\n**Python**: `@pytest.fixture for object construction, capsys for stdout capture`\n\n**Example**: test_error_initialization; verify FleetError('msg').message == 'msg'",
+    "metadata": {
+      "tags": [
+        "unit-testing",
+        "signal"
+      ]
+    }
+  },
+  {
+    "title": "Signal: Test error handling and exception messages",
+    "body": "**Structure**: pytest.raises(ExceptionType), assert error details\n\n**Requirement**: O(1), verify exception type and message text\n\n**Python**: `pytest.raises context manager`\n\n**Example**: test_policy_violation_includes_rule_id; verify PolicyViolation('X').rule_id == 'X'",
+    "metadata": {
+      "tags": [
+        "unit-testing",
+        "signal"
+      ]
+    }
+  },
+  {
+    "title": "Signal: Verify function calls to a mocked dependency (call count, ar",
+    "body": "**Structure**: mock.assert_called_once_with(...) or mock.call_count assertions\n\n**Requirement**: O(1), inspect mock call history\n\n**Python**: `unittest.mock.MagicMock, pytest-mock`\n\n**Example**: verify a logger was called with the correct message",
+    "metadata": {
+      "tags": [
+        "unit-testing",
+        "signal"
+      ]
+    }
+  },
+  {
+    "title": "Signal: Run the same test on multiple inputs (parametrize)",
+    "body": "**Structure**: @pytest.mark.parametrize with list of (input, expected) tuples\n\n**Requirement**: O(n) where n is number of inputs, but DRY\n\n**Python**: `@pytest.mark.parametrize decorator`\n\n**Example**: test_json_parse with [('{\"a\":1}', {'a': 1}), ('bad', ValueError)]",
+    "metadata": {
+      "tags": [
+        "unit-testing",
+        "signal"
+      ]
+    }
+  }
+]

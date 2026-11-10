@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Unit testing: test isolation, hermetic tests, and mocking strategies</title>
+<style>body{font-family:system-ui,sans-serif;max-width:52rem;margin:2rem auto;padding:0 1rem;line-height:1.5}table{border-collapse:collapse;width:100%}td,th{border:1px solid #ccc;padding:.4rem;text-align:left;vertical-align:top}code{background:#f3f3f3;padding:0 .2rem}pre{background:#f3f3f3;padding:1rem;overflow-x:auto}</style>
+</head><body>
+<h1>Unit testing: test isolation, hermetic tests, and mocking strategies</h1>
+<p>Unit tests verify single functions or classes in isolation, fast and deterministically. Hermetic tests are self-contained: they never touch external services, file systems, or databases. Mocking replaces dependencies, allowing tests to control inputs and verify behavior. Pytest markers (@pytest.mark.unit) organize tests by scope. Fixtures manage setup and teardown, keeping tests DRY.</p>
+<h2>Isolation through dependency injection</h2><p>Tests pass dependencies explicitly: a function takes a database connector as a parameter, and the test passes a mock. This breaks coupling and makes behavior testable. Avoid global state; instead, inject or monkeypatch.</p>
+<h2>Hermetic tests: no external I/O</h2><p>Hermetic tests never hit the network, disk, or external services. All I/O is mocked or replaced with in-memory stubs. A test should pass or fail the same way in isolation, in parallel, or in a different order.</p>
+<h2>Mocking libraries: unittest.mock and pytest-mock</h2><p>Mock objects replace real dependencies. unittest.mock.MagicMock records calls and returns, pytest-mock wraps it. Mocks allow tests to verify behavior without running expensive operations (database commits, HTTP calls).</p>
+<h2>Markers partition tests by scope and runtime cost</h2><p>@pytest.mark.unit tags fast, isolated tests. @pytest.mark.integration tags cross-component tests. Markers allow running only unit tests before commit (@pytest -m unit), or integration tests in CI only.</p>
+<h2>Complexity</h2><table><tr><th>Operation</th><th>Time</th><th>Note</th></tr>
+<tr><td><code>unit test (mock dependency)</code></td><td>O(1) milliseconds</td><td>isolated component, no I/O</td></tr>
+<tr><td><code>unit test setup (fixture with monkeypatch)</code></td><td>O(1) setup time</td><td>in-memory fixture; minimal allocation</td></tr>
+<tr><td><code>mock assertion (verify call count, args)</code></td><td>O(1)</td><td>recorded in-memory; no I/O</td></tr>
+<tr><td><code>unit test with parametrize (@pytest.mark.parametrize)</code></td><td>O(n) for n inputs</td><td>same test run multiple times; linear in test count</td></tr>
+<tr><td><code>test collection (pytest discovery)</code></td><td>O(n) where n is number of test files</td><td>imports all test modules; linear scan</td></tr>
+<tr><td><code>parallel unit tests (pytest-xdist, -n auto)</code></td><td>O(n/p) where p is number of processes</td><td>ideal speedup if tests are independent</td></tr>
+</table><h2>Signal to structure</h2><table><tr><th>Signal</th><th>Requirement</th>
+<th>Structure</th><th>Python tool</th><th>Example</th></tr>
+<tr><td>Verify a single function&#x27;s behavior given various inputs</td><td>O(1) milliseconds, no external calls</td><td>function under test + mock dependencies + assertions</td><td><code>@pytest.fixture, unittest.mock.MagicMock, pytest-mock</code></td><td>test_branch_from_result_whitespace_frozen; verify branch_from_result(&#x27;   &#x27;) is None</td></tr>
+<tr><td>Test a class constructor, field assignment, and simple methods</td><td>O(1), no I/O or network</td><td>instantiate class, set fields, call methods, assert results</td><td><code>@pytest.fixture for object construction, capsys for stdout capture</code></td><td>test_error_initialization; verify FleetError(&#x27;msg&#x27;).message == &#x27;msg&#x27;</td></tr>
+<tr><td>Test error handling and exception messages</td><td>O(1), verify exception type and message text</td><td>pytest.raises(ExceptionType), assert error details</td><td><code>pytest.raises context manager</code></td><td>test_policy_violation_includes_rule_id; verify PolicyViolation(&#x27;X&#x27;).rule_id == &#x27;X&#x27;</td></tr>
+<tr><td>Verify function calls to a mocked dependency (call count, args)</td><td>O(1), inspect mock call history</td><td>mock.assert_called_once_with(...) or mock.call_count assertions</td><td><code>unittest.mock.MagicMock, pytest-mock</code></td><td>verify a logger was called with the correct message</td></tr>
+<tr><td>Run the same test on multiple inputs (parametrize)</td><td>O(n) where n is number of inputs, but DRY</td><td>@pytest.mark.parametrize with list of (input, expected) tuples</td><td><code>@pytest.mark.parametrize decorator</code></td><td>test_json_parse with [(&#x27;{&quot;a&quot;:1}&#x27;, {&#x27;a&#x27;: 1}), (&#x27;bad&#x27;, ValueError)]</td></tr>
+</table><h2>Problems</h2><table><tr><th>Problem</th><th>Container</th><th>Pattern</th>
+<th>Python tool</th><th>Why</th></tr>
+<tr><td>1. Isolate a function from a database dependency</td><td>function + mock database</td><td>dependency injection (pass mock as parameter or fixture)</td><td><code>unittest.mock.MagicMock or pytest-mock</code></td><td>A function that queries a database cannot run fast or repeatably. Mock the database to return test data.</td></tr>
+<tr><td>2. Test error handling without triggering real errors</td><td>mock + exception</td><td>mock.side_effect = ExceptionType() to trigger error paths</td><td><code>unittest.mock.MagicMock.side_effect</code></td><td>Testing error paths without actually raising them lets tests run fast and verify both success and failure.</td></tr>
+<tr><td>3. Verify a function logs the correct message</td><td>mock logger + capsys</td><td>pass mock logger to function; assert mock.assert_called_with(...)</td><td><code>unittest.mock.patch, pytest-mock, capsys</code></td><td>Capturing logging without side effects; verify the function called log with the right args.</td></tr>
+<tr><td>4. Test a class that depends on an external service</td><td>class + mocked service</td><td>constructor injection (pass mock in __init__); mock returns test data</td><td><code>unittest.mock.MagicMock, @pytest.fixture</code></td><td>Classes that call external APIs must be testable without hitting the network; inject mocks.</td></tr>
+<tr><td>5. Run the same test on 10 different inputs</td><td>parametrized test</td><td>@pytest.mark.parametrize with list of (input, expected)</td><td><code>@pytest.mark.parametrize decorator</code></td><td>Avoids copy-pasting the same test 10 times; DRY principle for test cases.</td></tr>
+</table><h2>Code Examples</h2>
+<h3>fleet-base: test isolation via mock dependency</h3>
+<pre><code>&quot;&quot;&quot;Test commit_message.attribution_lines without file I/O.&quot;&quot;&quot;
+def test_co_authored_by_trailer_fails_in_any_case(tmp_path: Path) -&gt; None:
+    path = _message(tmp_path, &quot;fix: x\n\nco-authored-by: Someone &lt;a@b.invalid&gt;\n&quot;)
+    assert commit_message.attribution_lines(Path(path).read_text(encoding=&quot;utf-8&quot;)) == [
+        &quot;co-authored-by: Someone &lt;a@b.invalid&gt;&quot;
+    ]
+# The function is tested in isolation; mocking file I/O is avoided by passing text directly.
+</code></pre>
+<h3>fleet-base: hermetic test with monkeypatch</h3>
+<pre><code>&quot;&quot;&quot;A settings factory that never reads the process environment.&quot;&quot;&quot;
+@pytest.fixture
+def settings() -&gt; Callable[..., FleetSettings]:
+    def build(settings_class: type[FleetSettings] = FleetSettings, **overrides):
+        return _without_process_env(settings_class)(**overrides)
+    return build
+# The fixture isolates settings from the real environment; tests control all inputs.
+</code></pre>
+<h3>fleet-ops: test with mock return value</h3>
+<pre><code>&quot;&quot;&quot;Test branch_from_result parsing.&quot;&quot;&quot;
+def test_a_whitespace_only_result_names_no_branch() -&gt; None:
+    assert branch_from_result(&quot;   &quot;) is None
+# No mocking needed; the function is pure. Input and output are tested directly.
+</code></pre>
+<h3>pytest: parametrized test for multiple inputs</h3>
+<pre><code>&quot;&quot;&quot;Test a function on multiple inputs.&quot;&quot;&quot;
+@pytest.mark.parametrize(&quot;input_val,expected&quot;, [
+    (&quot;  &quot;, None),
+    (&#x27;{&quot;branch&quot;: &quot;agent/x&quot;}&#x27;, &quot;agent/x&quot;),
+])
+def test_branch_from_result(input_val: str, expected) -&gt; None:
+    assert branch_from_result(input_val) == expected
+# The same test runs twice with different inputs; the test code is not duplicated.
+</code></pre>
+<h3>pytest: capsys to verify output without side effects</h3>
+<pre><code>&quot;&quot;&quot;Capture stdout/stderr to verify logging without side effects.&quot;&quot;&quot;
+def test_co_authored_by_trailer_fails(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -&gt; None:
+    path = _message(tmp_path, &quot;feat: add thing\n\nCo-Authored-By: Claude &lt;noreply@anthropic.com&gt;\n&quot;)
+    with pytest.raises(SystemExit) as exit_info:
+        commit_message.main([path])
+    assert exit_info.value.code == 1
+    assert &quot;Co-Authored-By: Claude &lt;noreply@anthropic.com&gt;&quot; in capsys.readouterr().err
+# capsys captures output without mocking; the test verifies error messages were printed.
+</code></pre>
+<h3>pytest: fixture for object construction and teardown</h3>
+<pre><code>&quot;&quot;&quot;Fixture that constructs and tears down an object.&quot;&quot;&quot;
+@pytest.fixture
+def temp_repo(tmp_path: Path) -&gt; Path:
+    repo = tmp_path / &quot;test_repo&quot;
+    repo.mkdir()
+    (repo / &quot;.git&quot;).mkdir()
+    yield repo
+    # Cleanup is automatic after the test.
+def test_repo_operations(temp_repo: Path) -&gt; None:
+    assert (temp_repo / &quot;.git&quot;).exists()
+# The fixture handles setup and teardown; tests use clean state each run.
+</code></pre>
+</body></html>

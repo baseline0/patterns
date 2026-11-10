@@ -1,0 +1,262 @@
+[
+  {
+    "title": "Claim: integration-tests-verify-component-interactions",
+    "body": "Integration tests verify that components work together correctly across service boundaries.",
+    "metadata": {
+      "tags": [
+        "integration-testing",
+        "claim"
+      ]
+    }
+  },
+  {
+    "title": "Claim: integration-tests-are-slower-but-more-realistic",
+    "body": "Integration tests may hit real databases or local services, so they run slower than unit tests but catch more real-world issues.",
+    "metadata": {
+      "tags": [
+        "integration-testing",
+        "claim"
+      ]
+    }
+  },
+  {
+    "title": "Claim: fixture-scope-balances-speed-and-isolation",
+    "body": "Function-scoped fixtures ensure isolation; session-scoped fixtures reuse expensive setup. Choose the right scope for your trade-off.",
+    "metadata": {
+      "tags": [
+        "integration-testing",
+        "claim"
+      ]
+    }
+  },
+  {
+    "title": "Claim: transaction-rollback-keeps-db-clean",
+    "body": "Tests that use a database can wrap in transactions that roll back, so the database is clean for the next test.",
+    "metadata": {
+      "tags": [
+        "integration-testing",
+        "claim"
+      ]
+    }
+  },
+  {
+    "title": "Claim: contract-tests-prevent-api-misalignment",
+    "body": "Contract tests verify both client and server agree on request/response format, preventing integration breaks.",
+    "metadata": {
+      "tags": [
+        "integration-testing",
+        "claim"
+      ]
+    }
+  },
+  {
+    "title": "Complexity: integration test (real database, transaction rollback)",
+    "body": "**O(n) milliseconds to seconds, depends on database operations**\n\nmay hit real I/O; slower than unit tests",
+    "metadata": {
+      "tags": [
+        "integration-testing",
+        "complexity"
+      ]
+    }
+  },
+  {
+    "title": "Complexity: session-scoped fixture (database connection, expensive setup)",
+    "body": "**O(1) setup per session; reused across all tests**\n\namortizes expensive setup cost",
+    "metadata": {
+      "tags": [
+        "integration-testing",
+        "complexity"
+      ]
+    }
+  },
+  {
+    "title": "Complexity: module-scoped fixture",
+    "body": "**O(1) setup per module**\n\nfiner granularity than session, coarser than function",
+    "metadata": {
+      "tags": [
+        "integration-testing",
+        "complexity"
+      ]
+    }
+  },
+  {
+    "title": "Complexity: function-scoped fixture (cleanup after each test)",
+    "body": "**O(n) where n is number of tests**\n\nmost isolation; all setup/teardown happens per-test",
+    "metadata": {
+      "tags": [
+        "integration-testing",
+        "complexity"
+      ]
+    }
+  },
+  {
+    "title": "Complexity: contract test (verify request/response schemas)",
+    "body": "**O(1) for each contract assertion**\n\nfast; no external service calls, just schema validation",
+    "metadata": {
+      "tags": [
+        "integration-testing",
+        "complexity"
+      ]
+    }
+  },
+  {
+    "title": "Complexity: parallel integration tests (pytest-xdist with real database)",
+    "body": "**O(n/p) but limited by database connection pool**\n\nparallelism may be bottlenecked by database access",
+    "metadata": {
+      "tags": [
+        "integration-testing",
+        "complexity"
+      ]
+    }
+  },
+  {
+    "title": "Q1: What is the main difference between unit tests and integrati",
+    "body": "A. Unit tests are faster and test components in isolation; integration tests verify interactions between components\nB. Integration tests are always faster because they use mocking\nC. Unit tests require mocking; integration tests never use mocks\nD. Integration tests always use a real database\n\n**A.** Unit tests isolate components; integration tests verify cross-component interactions. Integration tests may use real databases or in-memory replicas.",
+    "metadata": {
+      "tags": [
+        "integration-testing",
+        "question"
+      ]
+    }
+  },
+  {
+    "title": "Q2: What does a session-scoped fixture do?",
+    "body": "A. Runs setup before each test\nB. Runs setup once per test session and reuses it across all tests\nC. Runs setup once per test module\nD. Disables setup and teardown entirely\n\n**B.** Session-scoped fixtures run setup once and reuse the result across all tests in the session. This amortizes expensive setup cost but requires careful cleanup.",
+    "metadata": {
+      "tags": [
+        "integration-testing",
+        "question"
+      ]
+    }
+  },
+  {
+    "title": "Q3: How does transaction rollback keep database tests isolated?",
+    "body": "A. It reverts all changes after each test, so the database is clean for the next test\nB. It prevents tests from writing to the database\nC. It duplicates the database for each test\nD. It disables database commits entirely\n\n**A.** A test's writes are wrapped in a transaction that rolls back, leaving the database clean. No explicit cleanup needed; the database is fresh for the next test.",
+    "metadata": {
+      "tags": [
+        "integration-testing",
+        "question"
+      ]
+    }
+  },
+  {
+    "title": "Q4: What is a contract test?",
+    "body": "A. A test that verifies a service conforms to its API contract (request/response format)\nB. A test that always passes\nC. A test that uses mocking instead of real services\nD. A test that runs only on Sundays\n\n**A.** Contract tests verify that both client and server agree on API format (schema, status codes, error messages). Misalignment breaks the contract.",
+    "metadata": {
+      "tags": [
+        "integration-testing",
+        "question"
+      ]
+    }
+  },
+  {
+    "title": "Q5: Why might you use a module-scoped fixture instead of a sessi",
+    "body": "A. Module scope runs faster because it reuses setup across more tests\nB. Module scope provides finer isolation granularity; setup is shared per module, not per session\nC. Module scope is always slower and should be avoided\nD. Module scope disables cleanup\n\n**B.** Module scope balances speed (reuse setup per module) and isolation (fresh setup for each new module). It's a middle ground between function and session scopes.",
+    "metadata": {
+      "tags": [
+        "integration-testing",
+        "question"
+      ]
+    }
+  },
+  {
+    "title": "1. Test interaction between a service and a repository",
+    "body": "**Pattern**: integration fixture with session or module scope; verify service calls repository correctly\n\n**Why**: Unit tests alone don't catch bugs in cross-component interaction; integration tests verify the real integration.\n\n**Python**: `@pytest.fixture with SQLAlchemy or custom repository`",
+    "metadata": {
+      "tags": [
+        "integration-testing",
+        "problem"
+      ]
+    }
+  },
+  {
+    "title": "2. Keep a database clean between tests without manual cleanup",
+    "body": "**Pattern**: session starts transaction before test, rolls back after\n\n**Why**: Explicit cleanup is error-prone; transaction rollback is automatic and keeps tests isolated.\n\n**Python**: `SQLAlchemy session with context manager`",
+    "metadata": {
+      "tags": [
+        "integration-testing",
+        "problem"
+      ]
+    }
+  },
+  {
+    "title": "3. Verify that an API request/response matches a schema",
+    "body": "**Pattern**: contract test framework (Pact) or manual schema assertions\n\n**Why**: Schema misalignment causes silent failures at runtime; contract tests catch it before integration.\n\n**Python**: `jsonschema, Pact, or custom validation`",
+    "metadata": {
+      "tags": [
+        "integration-testing",
+        "problem"
+      ]
+    }
+  },
+  {
+    "title": "4. Reuse expensive setup (database connection, service startup) across tests",
+    "body": "**Pattern**: fixture with scope='session' or scope='module' and cleanup in yield\n\n**Why**: Recreating expensive resources for each test slows down the test suite; reuse amortizes the cost.\n\n**Python**: `@pytest.fixture(scope='...')`",
+    "metadata": {
+      "tags": [
+        "integration-testing",
+        "problem"
+      ]
+    }
+  },
+  {
+    "title": "5. Test a multi-step workflow involving multiple services",
+    "body": "**Pattern**: orchestrate service calls in test; verify final state and side effects\n\n**Why**: Unit tests of individual services don't catch orchestration bugs; integration tests verify the whole flow.\n\n**Python**: `pytest with integration fixtures`",
+    "metadata": {
+      "tags": [
+        "integration-testing",
+        "problem"
+      ]
+    }
+  },
+  {
+    "title": "Signal: Test interaction between a service and a repository or exter",
+    "body": "**Structure**: real or in-memory database, service layer, integration fixture\n\n**Requirement**: Slower than unit tests, but still deterministic and repeatable\n\n**Python**: `@pytest.fixture(scope='module'), SQLAlchemy session, transaction rollback`\n\n**Example**: test_work_item_dispatch verifies fleet-ops service calls the work-item repository",
+    "metadata": {
+      "tags": [
+        "integration-testing",
+        "signal"
+      ]
+    }
+  },
+  {
+    "title": "Signal: Test API contract between client and server (request/respons",
+    "body": "**Structure**: contract test framework (Pact) or manual schema validation\n\n**Requirement**: Both sides must agree on schema; misalignment is a contract violation\n\n**Python**: `pytest with custom assertions on request/response shape`\n\n**Example**: verify that a request to /api/health returns {status: 'ok'}",
+    "metadata": {
+      "tags": [
+        "integration-testing",
+        "signal"
+      ]
+    }
+  },
+  {
+    "title": "Signal: Database tests that need clean state between tests",
+    "body": "**Structure**: transaction rollback fixture or database reset between tests\n\n**Requirement**: Each test sees a clean database; no test pollution\n\n**Python**: `@pytest.fixture with connection.rollback() or database reset`\n\n**Example**: test_insert_work_item; insert, query, verify, rollback",
+    "metadata": {
+      "tags": [
+        "integration-testing",
+        "signal"
+      ]
+    }
+  },
+  {
+    "title": "Signal: Test a workflow across multiple components (end-to-end orche",
+    "body": "**Structure**: integration test with multiple components in-process or containerized\n\n**Requirement**: Slower but realistic; uses real components where possible\n\n**Python**: `pytest, docker-compose, or local service instances`\n\n**Example**: test_workflow_dispatch_and_queue verifies dispatch creates a queued job",
+    "metadata": {
+      "tags": [
+        "integration-testing",
+        "signal"
+      ]
+    }
+  },
+  {
+    "title": "Signal: Reuse expensive setup (database, service startup) across tes",
+    "body": "**Structure**: session or module-scoped fixture with careful teardown\n\n**Requirement**: Balance speed and isolation; minimize setup/teardown overhead\n\n**Python**: `@pytest.fixture(scope='session' or 'module')`\n\n**Example**: session-scoped database connection shared across all integration tests",
+    "metadata": {
+      "tags": [
+        "integration-testing",
+        "signal"
+      ]
+    }
+  }
+]

@@ -1,0 +1,278 @@
+# Contract Testing: API contracts, consumer-driven contracts
+# Source of truth for contract testing patterns. Generated outputs built from this file by tools/build.py.
+
+id: contract-testing
+title: "Contract testing: API contracts and consumer-driven contracts"
+summary: >
+  Contract tests verify that a client and a server agree on the shape and behavior of their API:
+  request format, response schema, status codes, and error handling. Consumer-driven contracts start
+  with the client's expectations and verify the server meets them. Provider contracts test the server's
+  behavior independently. Contract tests prevent integration breaks: when a contract test fails, the
+  API has changed in a way that breaks the client. Contract tests are faster than end-to-end tests
+  and catch misalignment early.
+
+mechanics:
+  - heading: "Consumer-driven contracts: client defines expectations"
+    body: >
+      The client (consumer) defines what it expects from the server (provider) in a contract file.
+      The contract specifies request format, response schema, status codes, and error messages.
+      The provider implements to satisfy the contract; both sides validate against it.
+  - heading: "Provider contracts: server defines its capabilities"
+    body: >
+      The provider defines what it guarantees: API version, supported methods, response schemas.
+      The provider tests that it meets its contract. When a consumer violates the contract (e.g.,
+      sends invalid input), the provider's contract test might not catch it, but the consumer's
+      contract test should.
+  - heading: "Schema validation as a lightweight contract test"
+    body: >
+      Without a formal contract framework (like Pact), schema validation can enforce contracts:
+      jsonschema, OpenAPI specs, or GraphQL schemas. Tests validate requests against schemas
+      before sending and responses after receiving. This catches misalignment faster than
+      end-to-end tests.
+  - heading: "Contract tests in CI catch breaking changes early"
+    body: >
+      Contract tests run in CI before merging. If a PR changes the API in a breaking way, the
+      contract test fails, preventing the merge. This is faster feedback than waiting for
+      end-to-end tests or production issues.
+
+claims:
+  - id: contract-tests-prevent-api-misalignment
+    text: "Contract tests verify that both client and server agree on API format before integration."
+  - id: consumer-driven-contracts-empower-clients
+    text: "Consumer-driven contracts let clients define their needs; providers implement to meet them."
+  - id: contract-tests-are-faster-than-e2e-tests
+    text: "Contract tests don't require full service startup; they're faster than end-to-end tests and provide quicker feedback."
+  - id: schema-validation-enforces-contracts-without-pact
+    text: "JSON Schema, OpenAPI, and GraphQL schemas enforce contracts; tests validate requests and responses."
+  - id: contract-tests-in-ci-prevent-breaking-changes
+    text: "Contract tests fail when an API change breaks compatibility, preventing merges and catching issues early."
+
+complexity:
+  - operation: "consumer-driven contract test (client expectations)"
+    time: "O(1) milliseconds"
+    note: "no service calls; validates against schema"
+  - operation: "provider contract test (server behavior)"
+    time: "O(n) where n is number of scenarios"
+    note: "server must respond to all expected requests"
+  - operation: "schema validation (request or response)"
+    time: "O(n) where n is schema depth"
+    note: "linear in schema complexity"
+  - operation: "end-to-end test (full client + server interaction)"
+    time: "O(n) seconds"
+    note: "slower than contract tests; full startup and teardown"
+  - operation: "contract test in CI with multiple consumers"
+    time: "O(n*m) where n is consumers, m is scenarios per consumer"
+    note: "parallelizable; each consumer's tests run independently"
+
+signals:
+  - signal: "API client and server agree on request/response format before integration"
+    requirement: "Prevent breaking changes; catch misalignment early"
+    structure: "consumer-driven contract (Pact) or schema validation (JSON Schema, OpenAPI)"
+    stdlib: "jsonschema for schema validation; Pact for formal contracts"
+    example: "verify that GET /api/health returns {status: 'ok'} and status 200"
+  - signal: "Prevent API breaking changes in CI before merging"
+    requirement: "Fail the contract test if API changes incompatibly"
+    structure: "contract test in CI; run against main branch and PR branch"
+    stdlib: "pytest with contract assertions; Pact broker for distributed contracts"
+    example: "contract test fails if response schema changes"
+  - signal: "Validate that a request matches the API schema before sending"
+    requirement: "O(1) per request; fail fast if schema is violated"
+    structure: "JSON Schema validation on request construction"
+    stdlib: "jsonschema.validate(request, request_schema)"
+    example: "verify request body has required fields and correct types"
+  - signal: "Validate that a response matches the expected schema after receiving"
+    requirement: "O(1) per response; fail fast if schema is violated"
+    structure: "JSON Schema validation on response processing"
+    stdlib: "jsonschema.validate(response, response_schema)"
+    example: "verify response has status, data, and optional error fields"
+  - signal: "Test error scenarios: client sends invalid input, server returns correct error"
+    requirement: "Both sides agree on error format and status codes"
+    structure: "contract test with error scenarios"
+    stdlib: "pytest with error assertions; schema validation on error response"
+    example: "verify that POST /api/item with missing 'name' returns 400 {error: 'name required'}"
+
+problems:
+  - number: 1
+    title: "Define API contract between client and server"
+    container: "Pact file or JSON Schema"
+    pattern: "consumer-driven contract: client defines expectations, server implements"
+    stdlib: "Pact CLI or jsonschema"
+    why: "Formal contracts prevent misalignment; both sides validate against the contract before integrating."
+  - number: 2
+    title: "Validate API request against schema before sending"
+    container: "request object + JSON Schema"
+    pattern: "validate request before making HTTP call"
+    stdlib: "jsonschema.validate(request, schema)"
+    why: "Catching schema violations early saves time debugging invalid requests."
+  - number: 3
+    title: "Validate API response against schema after receiving"
+    container: "response object + JSON Schema"
+    pattern: "validate response after receiving HTTP response"
+    stdlib: "jsonschema.validate(response, schema)"
+    why: "Mismatched responses are caught immediately, not silently processed as wrong data."
+  - number: 4
+    title: "Test that error responses match the contract (error format, status code)"
+    container: "contract test with error scenarios"
+    pattern: "send invalid request, assert error status and error message format"
+    stdlib: "pytest with assertions on response status and body"
+    why: "Clients rely on error format and codes; contracts ensure consistency."
+  - number: 5
+    title: "Prevent API breaking changes in CI"
+    container: "contract test in CI pipeline"
+    pattern: "run contract tests for main and PR; fail if contract is violated"
+    stdlib: "CI integration with pytest"
+    why: "Catching breaking changes before merge prevents integration failures and reduces incidents."
+
+quiz:
+  - question: "What is a consumer-driven contract?"
+    choices:
+      - "A contract where the server defines all the rules and the client must obey"
+      - "A contract where the client defines expectations and the server implements to meet them"
+      - "A contract that is agreed upon after integration issues occur"
+      - "A contract that only applies to external APIs"
+    answer: 1
+    explanation: "Consumer-driven contracts empower clients to define their needs; providers implement to satisfy the contract."
+  - question: "How do contract tests differ from end-to-end tests?"
+    choices:
+      - "Contract tests are slower because they test the entire system"
+      - "Contract tests are faster because they focus on API format, not full system behavior"
+      - "Contract tests require a running server; end-to-end tests do not"
+      - "Contract tests and end-to-end tests are the same thing"
+    answer: 1
+    explanation: "Contract tests validate API format without requiring full service startup. They're faster than end-to-end tests and provide quicker feedback."
+  - question: "What does jsonschema.validate(response, schema) do?"
+    choices:
+      - "It sends a request to verify the server is running"
+      - "It checks that the response matches the expected schema (required fields, types)"
+      - "It converts the response to a different format"
+      - "It compresses the response for storage"
+    answer: 1
+    explanation: "jsonschema.validate checks that the response conforms to the schema: required fields are present, types are correct, and no extra fields violate constraints."
+  - question: "Why should contract tests run in CI?"
+    choices:
+      - "To slow down the build and catch fewer bugs"
+      - "To catch breaking changes before merging, preventing integration failures"
+      - "To replace all unit and integration tests"
+      - "To verify that the code is fast enough"
+    answer: 1
+    explanation: "Contract tests in CI fail when an API change breaks compatibility, preventing merges and catching issues early before they reach production."
+  - question: "What should happen if a provider contract test fails?"
+    choices:
+      - "Ignore the failure and merge anyway"
+      - "Fix the implementation to satisfy the contract, or update the contract if intentional"
+      - "Always update the contract to match the implementation"
+      - "Delete the contract test"
+    answer: 1
+    explanation: "A failing provider contract means the implementation doesn't meet the contract. Either fix the implementation or intentionally update the contract (and notify clients)."
+
+examples:
+  - title: "Consumer-driven contract: Pact definition"
+    code: |
+      """Consumer-driven contract in Pact format."""
+      {
+        "interactions": [
+          {
+            "description": "a request for health status",
+            "request": {
+              "method": "GET",
+              "path": "/healthz"
+            },
+            "response": {
+              "status": 200,
+              "body": {
+                "status": "ok"
+              }
+            }
+          }
+        ]
+      }
+      # The client expects GET /healthz to return {status: "ok"} with status 200.
+      # The server must satisfy this contract.
+  - title: "Schema validation: validate request"
+    code: |
+      """Validate request against JSON Schema before sending."""
+      from jsonschema import validate, ValidationError
+
+      request_schema = {
+          "type": "object",
+          "properties": {
+              "name": {"type": "string"},
+              "age": {"type": "integer", "minimum": 0}
+          },
+          "required": ["name"]
+      }
+
+      request_data = {"name": "Alice", "age": 30}
+      validate(instance=request_data, schema=request_schema)
+      # If request_data were {"age": 30}, validation would fail: 'name' is required.
+  - title: "Schema validation: validate response"
+    code: |
+      """Validate response against JSON Schema after receiving."""
+      from jsonschema import validate
+
+      response_schema = {
+          "type": "object",
+          "properties": {
+              "id": {"type": "integer"},
+              "name": {"type": "string"},
+              "status": {"type": "string", "enum": ["active", "inactive"]}
+          },
+          "required": ["id", "name", "status"]
+      }
+
+      response = {"id": 1, "name": "Alice", "status": "active"}
+      validate(instance=response, schema=response_schema)
+      # If response were {"id": 1, "name": "Alice"}, validation would fail: 'status' is required.
+  - title: "Contract test: error response format"
+    code: |
+      """Test that error responses match the contract."""
+      import requests
+      from jsonschema import validate
+
+      error_schema = {
+          "type": "object",
+          "properties": {
+              "error": {"type": "string"},
+              "code": {"type": "string"}
+          },
+          "required": ["error", "code"]
+      }
+
+      def test_error_response_format():
+          response = requests.post("http://localhost:8080/api/item", json={})
+          assert response.status_code == 400
+          validate(instance=response.json(), schema=error_schema)
+      # The contract specifies error format and status code; the test verifies both.
+  - title: "OpenAPI schema as contract"
+    code: |
+      """OpenAPI spec as a contract for API clients and servers."""
+      openapi: 3.0.0
+      info:
+        title: Work Item API
+        version: 1.0.0
+      paths:
+        /api/items:
+          get:
+            responses:
+              200:
+                description: List of work items
+                content:
+                  application/json:
+                    schema:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          id: {type: integer}
+                          task: {type: string}
+                        required: [id, task]
+      # The OpenAPI spec defines the contract; both client and server must conform.
+  - title: "Contract test CI failure prevents breaking changes"
+    code: |
+      """Contract test in CI: fails if API changes incompatibly."""
+      def test_contract_health_endpoint():
+          # This test is part of CI
+          response = requests.get("http://localhost:8080/healthz")
+          assert response.status_code == 200
+          assert response.json() == {"status": "ok"}
+      # If a PR changes the response to {"health": "ok"}, the test fails, blocking the merge.

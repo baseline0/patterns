@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Contract testing: API contracts and consumer-driven contracts</title>
+<style>body{font-family:system-ui,sans-serif;max-width:52rem;margin:2rem auto;padding:0 1rem;line-height:1.5}table{border-collapse:collapse;width:100%}td,th{border:1px solid #ccc;padding:.4rem;text-align:left;vertical-align:top}code{background:#f3f3f3;padding:0 .2rem}pre{background:#f3f3f3;padding:1rem;overflow-x:auto}</style>
+</head><body>
+<h1>Contract testing: API contracts and consumer-driven contracts</h1>
+<p>Contract tests verify that a client and a server agree on the shape and behavior of their API: request format, response schema, status codes, and error handling. Consumer-driven contracts start with the client&#x27;s expectations and verify the server meets them. Provider contracts test the server&#x27;s behavior independently. Contract tests prevent integration breaks: when a contract test fails, the API has changed in a way that breaks the client. Contract tests are faster than end-to-end tests and catch misalignment early.</p>
+<h2>Consumer-driven contracts: client defines expectations</h2><p>The client (consumer) defines what it expects from the server (provider) in a contract file. The contract specifies request format, response schema, status codes, and error messages. The provider implements to satisfy the contract; both sides validate against it.</p>
+<h2>Provider contracts: server defines its capabilities</h2><p>The provider defines what it guarantees: API version, supported methods, response schemas. The provider tests that it meets its contract. When a consumer violates the contract (e.g., sends invalid input), the provider&#x27;s contract test might not catch it, but the consumer&#x27;s contract test should.</p>
+<h2>Schema validation as a lightweight contract test</h2><p>Without a formal contract framework (like Pact), schema validation can enforce contracts: jsonschema, OpenAPI specs, or GraphQL schemas. Tests validate requests against schemas before sending and responses after receiving. This catches misalignment faster than end-to-end tests.</p>
+<h2>Contract tests in CI catch breaking changes early</h2><p>Contract tests run in CI before merging. If a PR changes the API in a breaking way, the contract test fails, preventing the merge. This is faster feedback than waiting for end-to-end tests or production issues.</p>
+<h2>Complexity</h2><table><tr><th>Operation</th><th>Time</th><th>Note</th></tr>
+<tr><td><code>consumer-driven contract test (client expectations)</code></td><td>O(1) milliseconds</td><td>no service calls; validates against schema</td></tr>
+<tr><td><code>provider contract test (server behavior)</code></td><td>O(n) where n is number of scenarios</td><td>server must respond to all expected requests</td></tr>
+<tr><td><code>schema validation (request or response)</code></td><td>O(n) where n is schema depth</td><td>linear in schema complexity</td></tr>
+<tr><td><code>end-to-end test (full client + server interaction)</code></td><td>O(n) seconds</td><td>slower than contract tests; full startup and teardown</td></tr>
+<tr><td><code>contract test in CI with multiple consumers</code></td><td>O(n*m) where n is consumers, m is scenarios per consumer</td><td>parallelizable; each consumer&#x27;s tests run independently</td></tr>
+</table><h2>Signal to structure</h2><table><tr><th>Signal</th><th>Requirement</th>
+<th>Structure</th><th>Python tool</th><th>Example</th></tr>
+<tr><td>API client and server agree on request/response format before integration</td><td>Prevent breaking changes; catch misalignment early</td><td>consumer-driven contract (Pact) or schema validation (JSON Schema, OpenAPI)</td><td><code>jsonschema for schema validation; Pact for formal contracts</code></td><td>verify that GET /api/health returns {status: &#x27;ok&#x27;} and status 200</td></tr>
+<tr><td>Prevent API breaking changes in CI before merging</td><td>Fail the contract test if API changes incompatibly</td><td>contract test in CI; run against main branch and PR branch</td><td><code>pytest with contract assertions; Pact broker for distributed contracts</code></td><td>contract test fails if response schema changes</td></tr>
+<tr><td>Validate that a request matches the API schema before sending</td><td>O(1) per request; fail fast if schema is violated</td><td>JSON Schema validation on request construction</td><td><code>jsonschema.validate(request, request_schema)</code></td><td>verify request body has required fields and correct types</td></tr>
+<tr><td>Validate that a response matches the expected schema after receiving</td><td>O(1) per response; fail fast if schema is violated</td><td>JSON Schema validation on response processing</td><td><code>jsonschema.validate(response, response_schema)</code></td><td>verify response has status, data, and optional error fields</td></tr>
+<tr><td>Test error scenarios: client sends invalid input, server returns correct error</td><td>Both sides agree on error format and status codes</td><td>contract test with error scenarios</td><td><code>pytest with error assertions; schema validation on error response</code></td><td>verify that POST /api/item with missing &#x27;name&#x27; returns 400 {error: &#x27;name required&#x27;}</td></tr>
+</table><h2>Problems</h2><table><tr><th>Problem</th><th>Container</th><th>Pattern</th>
+<th>Python tool</th><th>Why</th></tr>
+<tr><td>1. Define API contract between client and server</td><td>Pact file or JSON Schema</td><td>consumer-driven contract: client defines expectations, server implements</td><td><code>Pact CLI or jsonschema</code></td><td>Formal contracts prevent misalignment; both sides validate against the contract before integrating.</td></tr>
+<tr><td>2. Validate API request against schema before sending</td><td>request object + JSON Schema</td><td>validate request before making HTTP call</td><td><code>jsonschema.validate(request, schema)</code></td><td>Catching schema violations early saves time debugging invalid requests.</td></tr>
+<tr><td>3. Validate API response against schema after receiving</td><td>response object + JSON Schema</td><td>validate response after receiving HTTP response</td><td><code>jsonschema.validate(response, schema)</code></td><td>Mismatched responses are caught immediately, not silently processed as wrong data.</td></tr>
+<tr><td>4. Test that error responses match the contract (error format, status code)</td><td>contract test with error scenarios</td><td>send invalid request, assert error status and error message format</td><td><code>pytest with assertions on response status and body</code></td><td>Clients rely on error format and codes; contracts ensure consistency.</td></tr>
+<tr><td>5. Prevent API breaking changes in CI</td><td>contract test in CI pipeline</td><td>run contract tests for main and PR; fail if contract is violated</td><td><code>CI integration with pytest</code></td><td>Catching breaking changes before merge prevents integration failures and reduces incidents.</td></tr>
+</table><h2>Code Examples</h2>
+<h3>Consumer-driven contract: Pact definition</h3>
+<pre><code>&quot;&quot;&quot;Consumer-driven contract in Pact format.&quot;&quot;&quot;
+{
+  &quot;interactions&quot;: [
+    {
+      &quot;description&quot;: &quot;a request for health status&quot;,
+      &quot;request&quot;: {
+        &quot;method&quot;: &quot;GET&quot;,
+        &quot;path&quot;: &quot;/healthz&quot;
+      },
+      &quot;response&quot;: {
+        &quot;status&quot;: 200,
+        &quot;body&quot;: {
+          &quot;status&quot;: &quot;ok&quot;
+        }
+      }
+    }
+  ]
+}
+# The client expects GET /healthz to return {status: &quot;ok&quot;} with status 200.
+# The server must satisfy this contract.
+</code></pre>
+<h3>Schema validation: validate request</h3>
+<pre><code>&quot;&quot;&quot;Validate request against JSON Schema before sending.&quot;&quot;&quot;
+from jsonschema import validate, ValidationError
+
+request_schema = {
+    &quot;type&quot;: &quot;object&quot;,
+    &quot;properties&quot;: {
+        &quot;name&quot;: {&quot;type&quot;: &quot;string&quot;},
+        &quot;age&quot;: {&quot;type&quot;: &quot;integer&quot;, &quot;minimum&quot;: 0}
+    },
+    &quot;required&quot;: [&quot;name&quot;]
+}
+
+request_data = {&quot;name&quot;: &quot;Alice&quot;, &quot;age&quot;: 30}
+validate(instance=request_data, schema=request_schema)
+# If request_data were {&quot;age&quot;: 30}, validation would fail: &#x27;name&#x27; is required.
+</code></pre>
+<h3>Schema validation: validate response</h3>
+<pre><code>&quot;&quot;&quot;Validate response against JSON Schema after receiving.&quot;&quot;&quot;
+from jsonschema import validate
+
+response_schema = {
+    &quot;type&quot;: &quot;object&quot;,
+    &quot;properties&quot;: {
+        &quot;id&quot;: {&quot;type&quot;: &quot;integer&quot;},
+        &quot;name&quot;: {&quot;type&quot;: &quot;string&quot;},
+        &quot;status&quot;: {&quot;type&quot;: &quot;string&quot;, &quot;enum&quot;: [&quot;active&quot;, &quot;inactive&quot;]}
+    },
+    &quot;required&quot;: [&quot;id&quot;, &quot;name&quot;, &quot;status&quot;]
+}
+
+response = {&quot;id&quot;: 1, &quot;name&quot;: &quot;Alice&quot;, &quot;status&quot;: &quot;active&quot;}
+validate(instance=response, schema=response_schema)
+# If response were {&quot;id&quot;: 1, &quot;name&quot;: &quot;Alice&quot;}, validation would fail: &#x27;status&#x27; is required.
+</code></pre>
+<h3>Contract test: error response format</h3>
+<pre><code>&quot;&quot;&quot;Test that error responses match the contract.&quot;&quot;&quot;
+import requests
+from jsonschema import validate
+
+error_schema = {
+    &quot;type&quot;: &quot;object&quot;,
+    &quot;properties&quot;: {
+        &quot;error&quot;: {&quot;type&quot;: &quot;string&quot;},
+        &quot;code&quot;: {&quot;type&quot;: &quot;string&quot;}
+    },
+    &quot;required&quot;: [&quot;error&quot;, &quot;code&quot;]
+}
+
+def test_error_response_format():
+    response = requests.post(&quot;http://localhost:8080/api/item&quot;, json={})
+    assert response.status_code == 400
+    validate(instance=response.json(), schema=error_schema)
+# The contract specifies error format and status code; the test verifies both.
+</code></pre>
+<h3>OpenAPI schema as contract</h3>
+<pre><code>&quot;&quot;&quot;OpenAPI spec as a contract for API clients and servers.&quot;&quot;&quot;
+openapi: 3.0.0
+info:
+  title: Work Item API
+  version: 1.0.0
+paths:
+  /api/items:
+    get:
+      responses:
+        200:
+          description: List of work items
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id: {type: integer}
+                    task: {type: string}
+                  required: [id, task]
+# The OpenAPI spec defines the contract; both client and server must conform.
+</code></pre>
+<h3>Contract test CI failure prevents breaking changes</h3>
+<pre><code>&quot;&quot;&quot;Contract test in CI: fails if API changes incompatibly.&quot;&quot;&quot;
+def test_contract_health_endpoint():
+    # This test is part of CI
+    response = requests.get(&quot;http://localhost:8080/healthz&quot;)
+    assert response.status_code == 200
+    assert response.json() == {&quot;status&quot;: &quot;ok&quot;}
+# If a PR changes the response to {&quot;health&quot;: &quot;ok&quot;}, the test fails, blocking the merge.
+</code></pre>
+</body></html>

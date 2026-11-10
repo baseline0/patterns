@@ -1,0 +1,265 @@
+# Integration Testing: service boundaries, fixture lifecycle, database tests
+# Source of truth for integration testing patterns. Generated outputs built from this file by tools/build.py.
+
+id: integration-testing
+title: "Integration testing: service boundaries, fixture lifecycle, and database tests"
+summary: >
+  Integration tests verify interactions between multiple components: a service calling a repository,
+  a repository querying a database, or an API calling a downstream service. Unlike unit tests,
+  integration tests may use real databases (or in-memory replicas), but they must still be hermetic
+  and reproducible. Fixture scopes (function, session, module) manage expensive setup; transaction
+  rollback keeps tests isolated. Contract tests define boundaries between services and verify
+  both sides adhere to the contract.
+
+mechanics:
+  - heading: "Define service boundaries and test across them"
+    body: >
+      A service (e.g., fleet-ops orchestration) depends on a repository (e.g., work-item store).
+      Integration tests verify the service calls the repository correctly and handles results.
+      These tests may use a real repository (local SQLite) or a mock, depending on the boundary's
+      cost and realism.
+  - heading: "Fixture scope controls setup reuse and isolation"
+    body: >
+      Fixture scope (function, class, module, session) determines how often setup runs and when
+      teardown occurs. A function-scoped fixture runs before each test; a session-scoped fixture
+      runs once per test session. Choose scopes to balance speed (reuse expensive setup) and isolation
+      (avoid test coupling).
+  - heading: "Transaction rollback keeps database tests isolated"
+    body: >
+      Tests that write to a database can roll back transactions after each test, ensuring clean state.
+      SQLAlchemy's session fixture can wrap each test in a transaction that rolls back, so the
+      database is clean for the next test without explicit teardown.
+  - heading: "Contract tests enforce API boundaries"
+    body: >
+      A contract test verifies that both a client and a server adhere to their agreement (API schema,
+      request/response format, error codes). Consumer-driven contracts start with the client's expectations.
+      Provider contracts test the server's behavior. Both must pass; misalignment breaks the contract.
+
+claims:
+  - id: integration-tests-verify-component-interactions
+    text: "Integration tests verify that components work together correctly across service boundaries."
+  - id: integration-tests-are-slower-but-more-realistic
+    text: "Integration tests may hit real databases or local services, so they run slower than unit tests but catch more real-world issues."
+  - id: fixture-scope-balances-speed-and-isolation
+    text: "Function-scoped fixtures ensure isolation; session-scoped fixtures reuse expensive setup. Choose the right scope for your trade-off."
+  - id: transaction-rollback-keeps-db-clean
+    text: "Tests that use a database can wrap in transactions that roll back, so the database is clean for the next test."
+  - id: contract-tests-prevent-api-misalignment
+    text: "Contract tests verify both client and server agree on request/response format, preventing integration breaks."
+
+complexity:
+  - operation: "integration test (real database, transaction rollback)"
+    time: "O(n) milliseconds to seconds, depends on database operations"
+    note: "may hit real I/O; slower than unit tests"
+  - operation: "session-scoped fixture (database connection, expensive setup)"
+    time: "O(1) setup per session; reused across all tests"
+    note: "amortizes expensive setup cost"
+  - operation: "module-scoped fixture"
+    time: "O(1) setup per module"
+    note: "finer granularity than session, coarser than function"
+  - operation: "function-scoped fixture (cleanup after each test)"
+    time: "O(n) where n is number of tests"
+    note: "most isolation; all setup/teardown happens per-test"
+  - operation: "contract test (verify request/response schemas)"
+    time: "O(1) for each contract assertion"
+    note: "fast; no external service calls, just schema validation"
+  - operation: "parallel integration tests (pytest-xdist with real database)"
+    time: "O(n/p) but limited by database connection pool"
+    note: "parallelism may be bottlenecked by database access"
+
+signals:
+  - signal: "Test interaction between a service and a repository or external dependency"
+    requirement: "Slower than unit tests, but still deterministic and repeatable"
+    structure: "real or in-memory database, service layer, integration fixture"
+    stdlib: "@pytest.fixture(scope='module'), SQLAlchemy session, transaction rollback"
+    example: "test_work_item_dispatch verifies fleet-ops service calls the work-item repository"
+  - signal: "Test API contract between client and server (request/response format)"
+    requirement: "Both sides must agree on schema; misalignment is a contract violation"
+    structure: "contract test framework (Pact) or manual schema validation"
+    stdlib: "pytest with custom assertions on request/response shape"
+    example: "verify that a request to /api/health returns {status: 'ok'}"
+  - signal: "Database tests that need clean state between tests"
+    requirement: "Each test sees a clean database; no test pollution"
+    structure: "transaction rollback fixture or database reset between tests"
+    stdlib: "@pytest.fixture with connection.rollback() or database reset"
+    example: "test_insert_work_item; insert, query, verify, rollback"
+  - signal: "Test a workflow across multiple components (end-to-end orchestration)"
+    requirement: "Slower but realistic; uses real components where possible"
+    structure: "integration test with multiple components in-process or containerized"
+    stdlib: "pytest, docker-compose, or local service instances"
+    example: "test_workflow_dispatch_and_queue verifies dispatch creates a queued job"
+  - signal: "Reuse expensive setup (database, service startup) across tests"
+    requirement: "Balance speed and isolation; minimize setup/teardown overhead"
+    structure: "session or module-scoped fixture with careful teardown"
+    stdlib: "@pytest.fixture(scope='session' or 'module')"
+    example: "session-scoped database connection shared across all integration tests"
+
+problems:
+  - number: 1
+    title: "Test interaction between a service and a repository"
+    container: "service + real repository (or mock)"
+    pattern: "integration fixture with session or module scope; verify service calls repository correctly"
+    stdlib: "@pytest.fixture with SQLAlchemy or custom repository"
+    why: "Unit tests alone don't catch bugs in cross-component interaction; integration tests verify the real integration."
+  - number: 2
+    title: "Keep a database clean between tests without manual cleanup"
+    container: "database + transaction rollback fixture"
+    pattern: "session starts transaction before test, rolls back after"
+    stdlib: "SQLAlchemy session with context manager"
+    why: "Explicit cleanup is error-prone; transaction rollback is automatic and keeps tests isolated."
+  - number: 3
+    title: "Verify that an API request/response matches a schema"
+    container: "contract test (client + server schema)"
+    pattern: "contract test framework (Pact) or manual schema assertions"
+    stdlib: "jsonschema, Pact, or custom validation"
+    why: "Schema misalignment causes silent failures at runtime; contract tests catch it before integration."
+  - number: 4
+    title: "Reuse expensive setup (database connection, service startup) across tests"
+    container: "session or module-scoped fixture"
+    pattern: "fixture with scope='session' or scope='module' and cleanup in yield"
+    stdlib: "@pytest.fixture(scope='...')"
+    why: "Recreating expensive resources for each test slows down the test suite; reuse amortizes the cost."
+  - number: 5
+    title: "Test a multi-step workflow involving multiple services"
+    container: "integration test with real or mocked services"
+    pattern: "orchestrate service calls in test; verify final state and side effects"
+    stdlib: "pytest with integration fixtures"
+    why: "Unit tests of individual services don't catch orchestration bugs; integration tests verify the whole flow."
+
+quiz:
+  - question: "What is the main difference between unit tests and integration tests?"
+    choices:
+      - "Unit tests are faster and test components in isolation; integration tests verify interactions between components"
+      - "Integration tests are always faster because they use mocking"
+      - "Unit tests require mocking; integration tests never use mocks"
+      - "Integration tests always use a real database"
+    answer: 0
+    explanation: "Unit tests isolate components; integration tests verify cross-component interactions. Integration tests may use real databases or in-memory replicas."
+  - question: "What does a session-scoped fixture do?"
+    choices:
+      - "Runs setup before each test"
+      - "Runs setup once per test session and reuses it across all tests"
+      - "Runs setup once per test module"
+      - "Disables setup and teardown entirely"
+    answer: 1
+    explanation: "Session-scoped fixtures run setup once and reuse the result across all tests in the session. This amortizes expensive setup cost but requires careful cleanup."
+  - question: "How does transaction rollback keep database tests isolated?"
+    choices:
+      - "It reverts all changes after each test, so the database is clean for the next test"
+      - "It prevents tests from writing to the database"
+      - "It duplicates the database for each test"
+      - "It disables database commits entirely"
+    answer: 0
+    explanation: "A test's writes are wrapped in a transaction that rolls back, leaving the database clean. No explicit cleanup needed; the database is fresh for the next test."
+  - question: "What is a contract test?"
+    choices:
+      - "A test that verifies a service conforms to its API contract (request/response format)"
+      - "A test that always passes"
+      - "A test that uses mocking instead of real services"
+      - "A test that runs only on Sundays"
+    answer: 0
+    explanation: "Contract tests verify that both client and server agree on API format (schema, status codes, error messages). Misalignment breaks the contract."
+  - question: "Why might you use a module-scoped fixture instead of a session-scoped one?"
+    choices:
+      - "Module scope runs faster because it reuses setup across more tests"
+      - "Module scope provides finer isolation granularity; setup is shared per module, not per session"
+      - "Module scope is always slower and should be avoided"
+      - "Module scope disables cleanup"
+    answer: 1
+    explanation: "Module scope balances speed (reuse setup per module) and isolation (fresh setup for each new module). It's a middle ground between function and session scopes."
+
+examples:
+  - title: "fleet-base: integration test with isolated_git_env fixture"
+    code: |
+      """Integration test that needs a clean git environment."""
+      def test_commit_with_git_isolation(isolated_git_env: Path) -> None:
+          # isolated_git_env is a session or module-scoped fixture
+          # that sets up a temporary git config, removing global state
+          import subprocess
+          result = subprocess.run(['git', 'config', '--global', 'user.name'],
+                                  capture_output=True, text=True)
+          assert result.stdout.strip() == ''  # Global config is empty
+      # This test verifies git behavior in isolation, without affecting the developer's real git config.
+  - title: "fleet-ops: integration test across service boundary"
+    code: |
+      """Test that a service correctly calls a repository."""
+      @pytest.fixture(scope='module')
+      def work_item_repo():
+          """Module-scoped fixture: reused across all tests in this module."""
+          return WorkItemRepository()
+
+      def test_dispatch_creates_work_item(work_item_repo):
+          service = DispatchService(work_item_repo)
+          service.dispatch(task="test_task")
+          items = work_item_repo.list()
+          assert len(items) == 1
+          assert items[0].task == "test_task"
+      # The service and repository are real; this test verifies their integration.
+  - title: "pytest: transaction rollback fixture for database tests"
+    code: |
+      """Database tests with automatic rollback."""
+      @pytest.fixture
+      def db_session(db_engine):
+          connection = db_engine.connect()
+          transaction = connection.begin()
+          session = Session(bind=connection)
+          yield session
+          transaction.rollback()
+          connection.close()
+
+      def test_insert_and_query(db_session):
+          db_session.add(WorkItem(task="x"))
+          items = db_session.query(WorkItem).all()
+          assert len(items) == 1
+      # Each test inserts data; after the test, the transaction rolls back, cleaning the database.
+  - title: "contract test: verify API schema"
+    code: |
+      """Verify that an API response matches the expected schema."""
+      from jsonschema import validate, ValidationError
+
+      health_schema = {
+          "type": "object",
+          "properties": {"status": {"type": "string"}},
+          "required": ["status"]
+      }
+
+      def test_health_endpoint_schema():
+          import requests
+          response = requests.get("http://localhost:8080/healthz")
+          validate(instance=response.json(), schema=health_schema)
+      # The test verifies that the API response conforms to the contract.
+  - title: "pytest: reuse session-scoped fixture across tests"
+    code: |
+      """Session-scoped fixture shared across all tests."""
+      @pytest.fixture(scope='session')
+      def database_session():
+          """Expensive setup: database connection, migrations."""
+          engine = create_engine("sqlite:///:memory:")
+          Base.metadata.create_all(engine)
+          session = Session(engine)
+          yield session
+          session.close()
+
+      def test_first_query(database_session):
+          result = database_session.query(WorkItem).all()
+          assert result == []
+
+      def test_second_query(database_session):
+          # Same session as first test; reuses expensive setup
+          result = database_session.query(WorkItem).all()
+          assert result == []
+      # Both tests reuse the same database session, amortizing setup cost.
+  - title: "fleet-base: conftest.py automatic marker assignment"
+    code: |
+      """Automatic marker assignment based on directory."""
+      def pytest_collection_modifyitems(items: list[pytest.Item]) -> None:
+          """Assign markers based on test directory (unit, integration, contract)."""
+          for item in items:
+              path = Path(str(item.fspath)).resolve()
+              relative = path.relative_to(TESTS_ROOT.resolve())
+              top_level = relative.parts[0] if relative.parts else ""
+
+              marker_name = DIRECTORY_MARKERS.get(top_level)
+              if marker_name:
+                  item.add_marker(getattr(pytest.mark, marker_name))
+      # Tests in tests/unit/ automatically get @pytest.mark.unit; tests/integration/ get @pytest.mark.integration.

@@ -1,0 +1,252 @@
+[
+  {
+    "title": "Claim: contract-tests-prevent-api-misalignment",
+    "body": "Contract tests verify that both client and server agree on API format before integration.",
+    "metadata": {
+      "tags": [
+        "contract-testing",
+        "claim"
+      ]
+    }
+  },
+  {
+    "title": "Claim: consumer-driven-contracts-empower-clients",
+    "body": "Consumer-driven contracts let clients define their needs; providers implement to meet them.",
+    "metadata": {
+      "tags": [
+        "contract-testing",
+        "claim"
+      ]
+    }
+  },
+  {
+    "title": "Claim: contract-tests-are-faster-than-e2e-tests",
+    "body": "Contract tests don't require full service startup; they're faster than end-to-end tests and provide quicker feedback.",
+    "metadata": {
+      "tags": [
+        "contract-testing",
+        "claim"
+      ]
+    }
+  },
+  {
+    "title": "Claim: schema-validation-enforces-contracts-without-pact",
+    "body": "JSON Schema, OpenAPI, and GraphQL schemas enforce contracts; tests validate requests and responses.",
+    "metadata": {
+      "tags": [
+        "contract-testing",
+        "claim"
+      ]
+    }
+  },
+  {
+    "title": "Claim: contract-tests-in-ci-prevent-breaking-changes",
+    "body": "Contract tests fail when an API change breaks compatibility, preventing merges and catching issues early.",
+    "metadata": {
+      "tags": [
+        "contract-testing",
+        "claim"
+      ]
+    }
+  },
+  {
+    "title": "Complexity: consumer-driven contract test (client expectations)",
+    "body": "**O(1) milliseconds**\n\nno service calls; validates against schema",
+    "metadata": {
+      "tags": [
+        "contract-testing",
+        "complexity"
+      ]
+    }
+  },
+  {
+    "title": "Complexity: provider contract test (server behavior)",
+    "body": "**O(n) where n is number of scenarios**\n\nserver must respond to all expected requests",
+    "metadata": {
+      "tags": [
+        "contract-testing",
+        "complexity"
+      ]
+    }
+  },
+  {
+    "title": "Complexity: schema validation (request or response)",
+    "body": "**O(n) where n is schema depth**\n\nlinear in schema complexity",
+    "metadata": {
+      "tags": [
+        "contract-testing",
+        "complexity"
+      ]
+    }
+  },
+  {
+    "title": "Complexity: end-to-end test (full client + server interaction)",
+    "body": "**O(n) seconds**\n\nslower than contract tests; full startup and teardown",
+    "metadata": {
+      "tags": [
+        "contract-testing",
+        "complexity"
+      ]
+    }
+  },
+  {
+    "title": "Complexity: contract test in CI with multiple consumers",
+    "body": "**O(n*m) where n is consumers, m is scenarios per consumer**\n\nparallelizable; each consumer's tests run independently",
+    "metadata": {
+      "tags": [
+        "contract-testing",
+        "complexity"
+      ]
+    }
+  },
+  {
+    "title": "Q1: What is a consumer-driven contract?",
+    "body": "A. A contract where the server defines all the rules and the client must obey\nB. A contract where the client defines expectations and the server implements to meet them\nC. A contract that is agreed upon after integration issues occur\nD. A contract that only applies to external APIs\n\n**B.** Consumer-driven contracts empower clients to define their needs; providers implement to satisfy the contract.",
+    "metadata": {
+      "tags": [
+        "contract-testing",
+        "question"
+      ]
+    }
+  },
+  {
+    "title": "Q2: How do contract tests differ from end-to-end tests?",
+    "body": "A. Contract tests are slower because they test the entire system\nB. Contract tests are faster because they focus on API format, not full system behavior\nC. Contract tests require a running server; end-to-end tests do not\nD. Contract tests and end-to-end tests are the same thing\n\n**B.** Contract tests validate API format without requiring full service startup. They're faster than end-to-end tests and provide quicker feedback.",
+    "metadata": {
+      "tags": [
+        "contract-testing",
+        "question"
+      ]
+    }
+  },
+  {
+    "title": "Q3: What does jsonschema.validate(response, schema) do?",
+    "body": "A. It sends a request to verify the server is running\nB. It checks that the response matches the expected schema (required fields, types)\nC. It converts the response to a different format\nD. It compresses the response for storage\n\n**B.** jsonschema.validate checks that the response conforms to the schema: required fields are present, types are correct, and no extra fields violate constraints.",
+    "metadata": {
+      "tags": [
+        "contract-testing",
+        "question"
+      ]
+    }
+  },
+  {
+    "title": "Q4: Why should contract tests run in CI?",
+    "body": "A. To slow down the build and catch fewer bugs\nB. To catch breaking changes before merging, preventing integration failures\nC. To replace all unit and integration tests\nD. To verify that the code is fast enough\n\n**B.** Contract tests in CI fail when an API change breaks compatibility, preventing merges and catching issues early before they reach production.",
+    "metadata": {
+      "tags": [
+        "contract-testing",
+        "question"
+      ]
+    }
+  },
+  {
+    "title": "Q5: What should happen if a provider contract test fails?",
+    "body": "A. Ignore the failure and merge anyway\nB. Fix the implementation to satisfy the contract, or update the contract if intentional\nC. Always update the contract to match the implementation\nD. Delete the contract test\n\n**B.** A failing provider contract means the implementation doesn't meet the contract. Either fix the implementation or intentionally update the contract (and notify clients).",
+    "metadata": {
+      "tags": [
+        "contract-testing",
+        "question"
+      ]
+    }
+  },
+  {
+    "title": "1. Define API contract between client and server",
+    "body": "**Pattern**: consumer-driven contract: client defines expectations, server implements\n\n**Why**: Formal contracts prevent misalignment; both sides validate against the contract before integrating.\n\n**Python**: `Pact CLI or jsonschema`",
+    "metadata": {
+      "tags": [
+        "contract-testing",
+        "problem"
+      ]
+    }
+  },
+  {
+    "title": "2. Validate API request against schema before sending",
+    "body": "**Pattern**: validate request before making HTTP call\n\n**Why**: Catching schema violations early saves time debugging invalid requests.\n\n**Python**: `jsonschema.validate(request, schema)`",
+    "metadata": {
+      "tags": [
+        "contract-testing",
+        "problem"
+      ]
+    }
+  },
+  {
+    "title": "3. Validate API response against schema after receiving",
+    "body": "**Pattern**: validate response after receiving HTTP response\n\n**Why**: Mismatched responses are caught immediately, not silently processed as wrong data.\n\n**Python**: `jsonschema.validate(response, schema)`",
+    "metadata": {
+      "tags": [
+        "contract-testing",
+        "problem"
+      ]
+    }
+  },
+  {
+    "title": "4. Test that error responses match the contract (error format, status code)",
+    "body": "**Pattern**: send invalid request, assert error status and error message format\n\n**Why**: Clients rely on error format and codes; contracts ensure consistency.\n\n**Python**: `pytest with assertions on response status and body`",
+    "metadata": {
+      "tags": [
+        "contract-testing",
+        "problem"
+      ]
+    }
+  },
+  {
+    "title": "5. Prevent API breaking changes in CI",
+    "body": "**Pattern**: run contract tests for main and PR; fail if contract is violated\n\n**Why**: Catching breaking changes before merge prevents integration failures and reduces incidents.\n\n**Python**: `CI integration with pytest`",
+    "metadata": {
+      "tags": [
+        "contract-testing",
+        "problem"
+      ]
+    }
+  },
+  {
+    "title": "Signal: API client and server agree on request/response format befor",
+    "body": "**Structure**: consumer-driven contract (Pact) or schema validation (JSON Schema, OpenAPI)\n\n**Requirement**: Prevent breaking changes; catch misalignment early\n\n**Python**: `jsonschema for schema validation; Pact for formal contracts`\n\n**Example**: verify that GET /api/health returns {status: 'ok'} and status 200",
+    "metadata": {
+      "tags": [
+        "contract-testing",
+        "signal"
+      ]
+    }
+  },
+  {
+    "title": "Signal: Prevent API breaking changes in CI before merging",
+    "body": "**Structure**: contract test in CI; run against main branch and PR branch\n\n**Requirement**: Fail the contract test if API changes incompatibly\n\n**Python**: `pytest with contract assertions; Pact broker for distributed contracts`\n\n**Example**: contract test fails if response schema changes",
+    "metadata": {
+      "tags": [
+        "contract-testing",
+        "signal"
+      ]
+    }
+  },
+  {
+    "title": "Signal: Validate that a request matches the API schema before sendin",
+    "body": "**Structure**: JSON Schema validation on request construction\n\n**Requirement**: O(1) per request; fail fast if schema is violated\n\n**Python**: `jsonschema.validate(request, request_schema)`\n\n**Example**: verify request body has required fields and correct types",
+    "metadata": {
+      "tags": [
+        "contract-testing",
+        "signal"
+      ]
+    }
+  },
+  {
+    "title": "Signal: Validate that a response matches the expected schema after r",
+    "body": "**Structure**: JSON Schema validation on response processing\n\n**Requirement**: O(1) per response; fail fast if schema is violated\n\n**Python**: `jsonschema.validate(response, response_schema)`\n\n**Example**: verify response has status, data, and optional error fields",
+    "metadata": {
+      "tags": [
+        "contract-testing",
+        "signal"
+      ]
+    }
+  },
+  {
+    "title": "Signal: Test error scenarios: client sends invalid input, server ret",
+    "body": "**Structure**: contract test with error scenarios\n\n**Requirement**: Both sides agree on error format and status codes\n\n**Python**: `pytest with error assertions; schema validation on error response`\n\n**Example**: verify that POST /api/item with missing 'name' returns 400 {error: 'name required'}",
+    "metadata": {
+      "tags": [
+        "contract-testing",
+        "signal"
+      ]
+    }
+  }
+]

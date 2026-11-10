@@ -1,0 +1,73 @@
+# Testing patterns: unit, integration, contract, and E2E test design & fixtures
+
+@help:
+    just --list
+
+# === Build & Generate ===
+
+# Regenerate all outputs from YAML sources
+@build:
+    echo "🔨 Regenerating testing patterns outputs..."
+    uv run python tools/build.py
+    echo "✅ Outputs regenerated"
+
+# View a generated topic
+@view topic:
+    if [ -f "{{topic}}/README.md" ]; then
+        cat "{{topic}}/README.md" | head -50
+    else
+        echo "Topic not found: {{topic}}. Available topics:"
+        ls -d */ 2>/dev/null || echo "No topic directories found"
+    fi
+
+# === Testing & Validation ===
+
+# Run tests for testing patterns
+@test:
+    echo "🧪 Running tests..."
+    uv run pytest tests/unit/test_testing_patterns.py -v
+    echo "✅ Tests passed"
+
+# Validate YAML content
+@validate:
+    echo "✔ Validating YAML..."
+    uv run python tools/build.py > /dev/null
+    echo "✅ YAML is valid"
+
+# === Development ===
+
+# Format and check code
+@fmt:
+    echo "🎨 Formatting..."
+    uv run ruff format tools/
+    uv run ruff check --fix tools/
+    echo "✅ Formatted"
+
+# Type check
+@check:
+    echo "🔍 Type checking..."
+    uv run pyright tools/build.py
+    echo "✅ Type check passed"
+
+# Run all checks
+@ci: validate fmt check test
+    echo "✅ All checks passed"
+
+# === Content Management ===
+
+# List all topics
+@list-topics:
+    echo "Testing patterns topics:"
+    ls content/*.yaml | xargs -I {} basename {} .yaml | sed 's/_/ /g'
+
+# Generate HTML for a single topic
+@html-topic topic:
+    echo "📄 Generating HTML for {{topic}}..."
+    uv run python -c "import yaml; exec('from tools.build import index_html; print(index_html(yaml.safe_load(open(\"content/{{topic}}.yaml\"))))')" > {{topic}}/index.html
+    echo "✅ HTML generated: {{topic}}/index.html"
+
+# Generate quiz guide for a single topic
+@quiz-topic topic:
+    echo "❓ Generating quiz for {{topic}}..."
+    uv run python -c "import yaml; exec('from tools.build import quiz_guide; print(quiz_guide(yaml.safe_load(open(\"content/{{topic}}.yaml\"))))')" > {{topic}}/quiz_guide.md
+    echo "✅ Quiz generated: {{topic}}/quiz_guide.md"
