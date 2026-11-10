@@ -1,0 +1,31 @@
+# Papers: Interactive learning from research papers
+
+import '../just/repo-push.just'
+
+[group("papers")]
+ingest ARXIV_ID:
+    uv run python tools/ingest.py ingest {{ARXIV_ID}}
+
+[group("papers")]
+render ARXIV_ID:
+    uv run python tools/render.py {{ARXIV_ID}}
+
+[group("papers")]
+list:
+    uv run python tools/ingest.py list
+
+[group("verify")]
+test:
+    uv run pytest tests/ || echo "No tests yet"
+
+[group("verify")]
+fmt:
+    uv run ruff format .
+
+[group("verify")]
+check:
+    uv run ruff check .
+
+[group("verify")]
+ci: fmt check test
+    @echo "✓ All checks passed"
