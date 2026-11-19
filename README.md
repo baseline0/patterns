@@ -7,7 +7,7 @@
 ## Role and boundary
 
 This repo is the **content and rendering layer**: teachable patterns, diagrams, scenarios, quizzes, and deterministic
-builders that turn committed YAML into committed Markdown, HTML, glossaries, and flashcards.
+builders that turn committed YAML into committed Markdown, HTML, glossaries, flashcards, and visual review pages.
 
 It does not acquire literature or index it:
 
@@ -31,6 +31,22 @@ The boundary is enforced by tests, not prose. These run in `just test-unit` (the
 | The importer refuses an unknown schema, an escaping PDF path, or a malformed checksum; a dry run writes nothing | `test_unknown_schema_is_refused`, `test_pdf_path_outside_the_folder_is_refused`, `test_dry_run_writes_nothing` |
 | Re-import refreshes `source` metadata but preserves authored concepts, equations, claims and citations | `test_reimport_preserves_authored_fields` |
 | Rendered output is derived only from committed YAML | `test_render_outputs_are_derived_from_committed_yaml` |
+
+The new review surfaces follow the same rule: `tests/unit/test_cards.py` and `tests/unit/test_visual.py` regenerate every
+checked-in output from committed glossaries, paper YAML, and diagram data, and refuse acquisition or sibling imports.
+
+### Interview review surfaces
+
+- `cards/` — one canonical deck from every committed `glossary.json`: `deck.json`, `anki.csv`, a local review page, and
+  a timed terminal drill with local scheduling state.
+- `visual/` — concept maps from paper YAML, an architecture diagram gallery, and proof-DAG rendering, all static and
+  self-contained.
+
+```bash
+just -f cards/justfile build && just -f visual/justfile build
+just -f cards/justfile review --minutes 30
+just -f visual/justfile serve   # http://localhost:8000/visual/index.html
+```
 
 This repository holds three pattern families:
 
@@ -206,6 +222,13 @@ export schema, a non-relative PDF path, or a malformed checksum. No network, no 
 The export schema is owned by `tool-lit-review`; this importer pins the version it accepts. Adding a field is a
 coordinated change: bump the producer's schema version, update both importer and guards, and keep both unit gates green.
 
+### **Part 9: Review Modules** (`cards/`, `visual/`)
+
+`cards/` consumes the glossaries that each family builder already emits. It assigns stable ids, records provenance, and
+regenerates a versioned deck, an Anki CSV, and an offline review page. `visual/` renders paper concept maps, the existing
+architecture SVGs, and optional `proofs/content/*.yaml` DAGs. Neither module downloads, indexes, or imports a sibling
+tool. See each module's README for the schemas and commands.
+
 ## 🚀 Quick Start
 
 ### **Option 1: Local Practice (Recommended)**
@@ -314,6 +337,8 @@ patterns/
 ├── papers/                        # imported paper metadata and local rendering
 │   ├── content/                   # committed arxiv-*.yaml (imported, then authored)
 │   └── tools/                     # import-export and render; no download or PDF parsing
+├── cards/                         # canonical deck, Anki CSV, local and terminal review
+├── visual/                        # concept maps, diagram gallery, proof DAG pages
 └── .github/workflows/
     └── validate.yml               # CI: Terraform validation
 ```

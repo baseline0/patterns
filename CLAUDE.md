@@ -17,6 +17,8 @@ For universal rules, see `~/.claude/CLAUDE.md`.
 
 **Key Modules**:
 - `patterns/*/` — Cloud architecture patterns (serverless, microservices, data lakes, etc.)
+- `cards/` — Canonical deck from committed glossaries; Anki CSV, local review page, timed terminal drill
+- `visual/` — Deterministic concept maps, architecture diagram gallery, and proof DAG pages
 - `terraform/{aws,azure,gcp}/` — Production-ready IaC for each pattern + provider
 - `docker-compose/` — Local emulator setup (Floci/LocalStack)
 - `diagrams/` — Architecture diagrams (Draw.io source)
@@ -42,6 +44,15 @@ For universal rules, see `~/.claude/CLAUDE.md`.
 - `localstack` — AWS emulator (Docker image: localstack/localstack, alternative)
 
 ## Quick Commands
+
+### Interview Review
+```bash
+just -f cards/justfile build          # regenerate deck.json, anki.csv, index.html
+just -f cards/justfile preview        # dry-run a session; writes nothing
+just -f cards/justfile review --minutes 30
+just -f visual/justfile build         # regenerate concept maps, diagrams, proof graphs
+just -f visual/justfile serve         # http://localhost:8000/visual/index.html
+```
 
 ### Start Emulators
 ```bash

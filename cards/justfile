@@ -1,0 +1,21 @@
+# Build and review the unified card deck. Paths are relative to this justfile's directory.
+
+# Regenerate deck.json, anki.csv, index.html and sources.json from committed glossaries.
+build:
+    uv run python tools/build.py
+
+# Fail when a checked-in card output differs from its glossary source.
+check:
+    uv run python tools/build.py --check
+
+# Preview a 30-minute session without writing review state.
+preview *ARGS:
+    uv run python tools/review.py --dry-run {{ARGS}}
+
+# Start a timed terminal review (add --minutes 15, --tag trees, etc.).
+review *ARGS:
+    uv run python tools/review.py {{ARGS}}
+
+# Serve the repository root locally (open http://localhost:8000/cards/index.html).
+serve:
+    python -m http.server 8000 --directory ..

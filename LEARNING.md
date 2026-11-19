@@ -309,6 +309,16 @@ For your pattern: Identify 5-10 failure modes, mitigation per each.
 - Practice architecture interviews
 - Get feedback on designs
 
+### Interview warm-up loop (30 min)
+
+Run this before each timed scenario; it mixes recall, spatial memory, and claim defence:
+
+1. **Visual recall (5 min)** — open `visual/index.html`, pick one concept map or architecture diagram, and say the
+   components and data flow aloud without reading the captions.
+2. **Cards (10 min)** — `just -f cards/justfile review --minutes 10`; answer before revealing, then grade honestly.
+3. **Proof drill (10 min)** — pick a `visual/proofs/` DAG and reconstruct why each step follows from its dependencies.
+4. **Claim defence (5 min)** — take one card tagged `claim`, state the condition under which it stops being true.
+
 ### Scenarios
 
 **Pick 3 of 5 scenarios** (30-45 mins each, timed):

@@ -1,0 +1,1192 @@
+Front,Back,Tags
+Claim: sliding-window-avoids-nesting,"Sliding window processes each element at most twice, keeping subarray problems O(n) instead of O(n^2).",arrays-and-2d-arrays claim
+Claim: prefix-sum-enables-constant-range-queries,A prefix sum array answers any subarray-sum query in O(1) after O(n) preprocessing.,arrays-and-2d-arrays claim
+Claim: two-pointers-solve-ksum-in-polynomial,Two pointers on a sorted array reduce k-sum from O(n^k) brute force to O(n^(k-1)) by solving one subproblem in linear time.,arrays-and-2d-arrays claim
+Claim: in-place-rotation-uses-constant-space,Rotating a matrix 90 degrees in place uses O(1) extra space; allocating a new matrix uses O(n^2).,arrays-and-2d-arrays claim
+Claim: product-except-self-without-division,Computing product of array except self is possible without division by combining left and right products.,arrays-and-2d-arrays claim
+"Complexity: subarray sum (all pairs, brute force)","**O(n^2)**
+
+nested loop over start and end indices",arrays-and-2d-arrays complexity
+Complexity: subarray sum (prefix sum query),"**O(n) setup, O(1) per query**
+
+cumulative total lookup",arrays-and-2d-arrays complexity
+"Complexity: sliding window (max in subarray, longest substring)","**O(n)**
+
+each element added and removed once",arrays-and-2d-arrays complexity
+Complexity: two sum (sorted array),"**O(n)**
+
+two pointers converge to target",arrays-and-2d-arrays complexity
+Complexity: three sum (brute force),"**O(n^3)**
+
+three nested loops",arrays-and-2d-arrays complexity
+Complexity: three sum (sorted + two pointers),"**O(n^2)**
+
+fix one element, use two pointers for complement",arrays-and-2d-arrays complexity
+Complexity: rotate matrix 90 degrees in place,"**O(n^2) and O(1) space**
+
+transpose and reverse, or rotate layers",arrays-and-2d-arrays complexity
+Complexity: spiral matrix traversal,"**O(n*m) and O(1) space**
+
+track four boundaries; visit each cell once",arrays-and-2d-arrays complexity
+Q1: In a sliding window for 'longest substring without repetitio,"A. Adds a new character to the window
+B. Removes a character from the window to eliminate a repetition
+C. Resets the window to start over
+D. Moves to the center of the string
+
+**B.** When a repeated character is found, the left pointer contracts to exclude the older occurrence and maintain the no-repeat property.",arrays-and-2d-arrays question
+Q2: A prefix sum array allows answering 'sum of elements from in,"A. O(n)
+B. O(j - i)
+C. O(1)
+D. O(log n)
+
+**C.** Prefix[j] - prefix[i-1] is a single array lookup. Preprocessing takes O(n); each query is O(1).",arrays-and-2d-arrays question
+"Q3: In 3Sum, after sorting the array, why do we use two pointers","A. Two pointers are always faster than nested loops in general
+B. Two pointers reduce the inner loop from O(n) to O(1), making 3Sum O(n^2) instead of O(n^3)
+C. Nested loops are not allowed on sorted arrays
+D. Two pointers find the exact center of the array
+
+**B.** Fixing one element and using two pointers to find the complementary pair is O(n) per element, so O(n^2) total with sorting.",arrays-and-2d-arrays question
+Q4: Why can product of array except self be computed without div,"A. Division would lose precision for floating-point numbers
+B. Left and right products multiply to give the product of all except element i
+C. All elements are guaranteed to be non-zero
+D. Multiplication is always faster than division
+
+**B.** Prefix products (left of i) and suffix products (right of i) are computed separately, then combined. This avoids division by zero and is general.",arrays-and-2d-arrays question
+Q5: What is the space complexity of rotating a 90-degree matrix ,"A. O(n)
+B. O(n^2)
+C. O(1)
+D. O(log n)
+
+**C.** In-place rotation using transpose and row reversal (or layer-by-layer swaps) uses only a constant number of temporary variables.",arrays-and-2d-arrays question
+LeetCode 1: Two Sum,"**Pattern**: complement lookup in one pass
+
+**Why**: Complement lookup is O(1), so one pass finds the pair without sorting. Hash table avoids O(n^2) nested loops.
+
+**Python**: `dict to store value-index pairs; check for target - current`",arrays-and-2d-arrays problem
+LeetCode 11: Container With Most Water,"**Pattern**: two pointers from ends moving inward
+
+**Why**: Area is limited by the shorter height. Moving from the widest pair inward, we skip impossible pairs in O(n) instead of O(n^2).
+
+**Python**: `list indexing; compute area = height * width`",arrays-and-2d-arrays problem
+LeetCode 15: 3Sum,"**Pattern**: fix one element, use two pointers for complement
+
+**Why**: Fixing each element and solving two-sum with two pointers reduces O(n^3) brute force to O(n^2) after sorting.
+
+**Python**: `sort once, then two pointers for each fixed element`",arrays-and-2d-arrays problem
+LeetCode 53: Maximum Subarray,"**Pattern**: Kadane's algorithm (track max ending here and global max)
+
+**Why**: At each position, choose: extend the previous subarray or start new. Tracking both maxima finds the best in O(n).
+
+**Python**: `single-pass loop with running sum`",arrays-and-2d-arrays problem
+LeetCode 238: Product of Array Except Self,"**Pattern**: left products, right products, combine
+
+**Why**: Division by zero is avoided. Left products (all before i) and right products (all after i) multiply to the result. O(n) without division.
+
+**Python**: `two passes over the array; no division`",arrays-and-2d-arrays problem
+LeetCode 48: Rotate Matrix,"**Pattern**: transpose then reverse rows, or rotate layer by layer
+
+**Why**: In-place rotation uses O(1) extra space by transforming indices and swapping. Allocating a new matrix would use O(n^2) space.
+
+**Python**: `nested loops with index algebra; swap elements in place`",arrays-and-2d-arrays problem
+LeetCode 54: Spiral Matrix,"**Pattern**: traverse in layers: top row, right column, bottom row, left column
+
+**Why**: Tracking boundaries and spiraling inward visits each element exactly once in O(n*m) with O(1) extra space.
+
+**Python**: `four boundaries (top, bottom, left, right) updated after each side`",arrays-and-2d-arrays problem
+"Signal: Find the subarray with max sum, longest run, or extreme prop","**Structure**: sliding window or dynamic programming
+
+**Requirement**: O(n) without nested loops
+
+**Python**: `list indexing and two pointers`
+
+**Example**: Maximum Subarray (LeetCode 53); Kadane's algorithm",arrays-and-2d-arrays signal
+Signal: Find all pairs or triplets that satisfy a constraint (sum to,"**Structure**: two pointers on sorted array; hash set for complements
+
+**Requirement**: O(n) or O(n^2) without O(n^3) brute force
+
+**Python**: `set or dict for Two Sum; sort then two pointers for k-sum`
+
+**Example**: Two Sum (LeetCode 1); 3Sum (LeetCode 15)",arrays-and-2d-arrays signal
+"Signal: Answer range queries on subarrays (sum, product, max, min, c","**Structure**: prefix or suffix array (cumulative aggregation)
+
+**Requirement**: O(1) per query after preprocessing
+
+**Python**: `list with cumulative values`
+
+**Example**: Product of Array Except Self (LeetCode 238); Range Sum Query",arrays-and-2d-arrays signal
+Signal: Manipulate a 2D matrix without allocating new space,"**Structure**: in-place index transformations and swaps
+
+**Requirement**: O(1) extra space, no new matrix allocation
+
+**Python**: `list of lists, index arithmetic`
+
+**Example**: Rotate Matrix (LeetCode 48); Spiral Matrix (LeetCode 54)",arrays-and-2d-arrays signal
+Signal: Maximize or minimize a value between two positions,"**Structure**: two pointers or one-pass greedy
+
+**Requirement**: O(n) without enumerating all pairs
+
+**Python**: `list indexing and comparison`
+
+**Example**: Container With Most Water (LeetCode 11); Trapping Rain Water",arrays-and-2d-arrays signal
+Claim: dict-keys-must-be-hashable,"A dict key must be hashable. A list is not hashable, so it cannot be a key.",hash-tables claim
+Claim: dict-preserves-insertion-order,dict iteration follows insertion order (a language guarantee since Python 3.7).,hash-tables claim
+Claim: set-membership-beats-list-search,Testing membership in a set is far faster than a linear search of a list of the same items.,hash-tables claim
+Claim: dict-lookup-is-constant-time,A dict lookup does not grow with the dict: a dict 1000 times larger costs far less than 1000 times more per lookup.,hash-tables claim
+Complexity: dict[key] / key in dict,"**O(1) average**
+
+worst case O(n) when hashes collide; rare with a good hash",hash-tables complexity
+Complexity: dict[key] = value,"**O(1) average**
+
+amortized, including the occasional resize",hash-tables complexity
+Complexity: set add / remove / in,"**O(1) average**
+
+a dict with no values",hash-tables complexity
+Complexity: list membership (x in list),"**O(n)**
+
+for comparison: a linear scan",hash-tables complexity
+Q1: Why can a tuple be a dict key but a list cannot?,"A. Tuples are faster to hash
+B. A tuple is immutable, so its hash cannot change; a list is mutable and not hashable
+C. Lists are too large to store
+D. Dicts only accept strings and tuples
+
+**B.** A key's hash must stay fixed while the key is stored. Only immutable values can guarantee that.",hash-tables question
+"Q2: On average, what does membership testing cost in a set of n ","A. O(1)
+B. O(log n)
+C. O(n)
+D. O(n log n)
+
+**A.** The hash picks a slot directly. Only collisions add probes, and those are rare.",hash-tables question
+"Q3: Since Python 3.7, what does iterating over a dict return?","A. Keys in sorted order
+B. Keys in insertion order
+C. Keys in random order
+D. Keys in order of their hash
+
+**B.** Insertion order is a language guarantee, because entries are stored in a dense array in that order.",hash-tables question
+Q4: Why is the 'group anagrams' problem a fit for defaultdict(li,"A. It sorts the words automatically
+B. Each new key gets an empty list on first use, so grouping needs no existence check
+C. It removes duplicate words
+D. It keeps the groups sorted
+
+**B.** defaultdict creates the missing list on access, so each word appends to its group in one step.",hash-tables question
+LeetCode 1: Two Sum,"**Pattern**: complement lookup
+
+**Why**: Looking up target minus the current value is O(1), so one pass finds the pair.
+
+**Python**: `dict: store each value's index, check for the complement`",hash-tables problem
+LeetCode 49: Group Anagrams,"**Pattern**: group by a canonical key
+
+**Why**: Anagrams share a key, so each word joins its group with one lookup.
+
+**Python**: `collections.defaultdict(list), keyed by the sorted letters`",hash-tables problem
+LeetCode 128: Longest Consecutive Sequence,"**Pattern**: start only at the beginning of a run
+
+**Why**: Checking a value's neighbours is O(1), and only run starts need extending, so the total stays O(n).
+
+**Python**: `set: membership checks`",hash-tables problem
+"Signal: Has this value been seen before, in one pass","**Structure**: hash set
+
+**Requirement**: O(1) per check
+
+**Python**: `set`
+
+**Example**: Two Sum (LeetCode 1): a dict of values already seen",hash-tables signal
+Signal: Group items that share a computed key,"**Structure**: hash table of lists
+
+**Requirement**: O(1) per item to find its group
+
+**Python**: `collections.defaultdict(list)`
+
+**Example**: Group Anagrams (LeetCode 49)",hash-tables signal
+Signal: Find the longest run of consecutive values without sorting,"**Structure**: hash set
+
+**Requirement**: O(n) total, each value checked in O(1)
+
+**Python**: `set`
+
+**Example**: Longest Consecutive Sequence (LeetCode 128)",hash-tables signal
+Claim: heap-root-is-minimum,"After heapq.heapify, the first element of the plain list is the minimum.",heaps claim
+Claim: heappop-yields-sorted-order,Repeated heappop returns the elements in ascending order.,heaps claim
+Claim: heapify-is-linear,"heapify on n items costs about n, not n log n: doubling n roughly doubles the time, not more.",heaps claim
+Claim: nlargest-beats-a-full-sort-for-small-k,"heapq.nlargest(k, data) for small k is faster than sorting all of data and slicing.",heaps claim
+Complexity: heap[0] (peek minimum),"**O(1)**
+
+the minimum is always at index 0",heaps complexity
+Complexity: heapq.heappush,"**O(log n)**
+
+sift up at most log n levels",heaps complexity
+Complexity: heapq.heappop,"**O(log n)**
+
+move the last item to the root, sift down",heaps complexity
+Complexity: heapq.heapify,"**O(n)**
+
+bottom-up, in place",heaps complexity
+"Complexity: heapq.nlargest(k, data)","**O(n log k)**
+
+keeps a heap of size k while scanning",heaps complexity
+Q1: Why does heapq store a heap in a plain list?,"A. Lists are the only mutable sequence in Python
+B. The children of index i are at 2i+1 and 2i+2, so no node objects are needed
+C. heapq only works on tuples
+D. A heap is faster to store as a list because it stays sorted
+
+**B.** The array layout gives the tree's parent and child positions by arithmetic, with no pointers to manage.",heaps question
+Q2: What is the cost of heapq.heappop on a heap of n items?,"A. O(1)
+B. O(log n)
+C. O(n)
+D. O(n log n)
+
+**B.** The last item moves to the root and sifts down at most one path, about log n levels.",heaps question
+Q3: heapq is a min-heap. How do you get the largest value first?,"A. Call heapq.heappop(max=True)
+B. Push the negated values and pop the smallest
+C. Sort the list first
+D. Use a deque instead
+
+**B.** The most negative number is the one with the largest magnitude, so negating turns max into min.",heaps question
+Q4: Why is building a heap from a list with heapify faster than ,"A. heapify skips the comparisons
+B. heapify is O(n) bottom-up, while n pushes cost O(n log n) in total
+C. heappush cannot be used on lists
+D. heapify sorts the list first
+
+**B.** Sifting down from the middle does less total work than sifting up each item as it arrives.",heaps question
+LeetCode 347: Top K Frequent Elements,"**Pattern**: top-k selection
+
+**Why**: Only the k most frequent matter, so a heap of size k beats sorting every distinct value.
+
+**Python**: `collections.Counter, then heapq.nlargest`",heaps problem
+LeetCode 215: Kth Largest Element in an Array,"**Pattern**: top-k selection
+
+**Why**: A min-heap of the k largest seen so far keeps its root as the answer.
+
+**Python**: `heapq: heappush, and heappop when the heap grows past k`",heaps problem
+LeetCode 23: Merge k Sorted Lists,"**Pattern**: k-way merge
+
+**Why**: One head per list in the heap gives the next smallest value across all lists in O(log k).
+
+**Python**: `heapq.heappush / heappop, or heapq.merge`",heaps problem
+Signal: Find the k largest or smallest elements in a stream or a lar,"**Structure**: binary heap of size k
+
+**Requirement**: O(n log k), with only k items held
+
+**Python**: `heapq (heappush / heappop) or heapq.nlargest`
+
+**Example**: Top K Frequent Elements (LeetCode 347)",heaps signal
+Signal: Repeatedly take the two smallest and combine them,"**Structure**: binary heap
+
+**Requirement**: O(log n) per step, the smallest always available
+
+**Python**: `heapq`
+
+**Example**: Minimum Cost to Connect Sticks (LeetCode 1167)",heaps signal
+Signal: Merge several sorted sequences in order,"**Structure**: heap of one head per source
+
+**Requirement**: O(N log k) for N items from k sources
+
+**Python**: `heapq.merge`
+
+**Example**: Merge k Sorted Lists (LeetCode 23)",heaps signal
+Claim: linked-list-no-random-access,"A linked list requires O(n) steps to reach a position, so binary search is impossible without modifying the structure.",linked-lists claim
+Claim: linked-list-insert-delete-constant,"Insertion and deletion at a known node (with a pointer to it) cost O(1), because no shifting is required.",linked-lists claim
+Claim: reversal-redirects-pointers-inplace,Reversing a linked list in-place by redirecting pointers uses O(1) extra space and O(n) time.,linked-lists claim
+Claim: cycle-detection-two-pointers,"A cycle in a linked list can be detected by advancing two pointers at different speeds; if they meet, a cycle exists.",linked-lists claim
+Claim: dummy-node-simplifies-head-cases,A dummy node pointing to the head eliminates special cases when modifying the head node.,linked-lists claim
+Complexity: Traverse the list (find a node),"**O(n)**
+
+must follow pointers from the head",linked-lists complexity
+Complexity: Insert at a known position (with a pointer to the previous node),"**O(1)**
+
+redirect two pointers, no shifting",linked-lists complexity
+Complexity: Delete at a known position (with a pointer to the previous node),"**O(1)**
+
+redirect one pointer, no shifting",linked-lists complexity
+Complexity: Reverse the entire list,"**O(n)**
+
+one pass, redirecting pointers; O(1) extra space",linked-lists complexity
+Complexity: Detect a cycle,"**O(n)**
+
+fast and slow pointers; they meet if a cycle exists",linked-lists complexity
+Complexity: Merge two sorted lists,"**O(n + m)**
+
+compare nodes from both lists, advance the smaller",linked-lists complexity
+Complexity: Merge k sorted lists (naive),"**O(n * k^2)**
+
+merge pairwise; improve with a heap or merge sort strategy",linked-lists complexity
+Q1: Why is reversal a natural fit for linked lists?,"A. Linked lists are smaller than arrays
+B. Pointers can be redirected in-place without allocating new nodes, using O(1) extra space
+C. Reversing arrays requires copying the entire array
+D. Linked lists are always bidirectional
+
+**B.** Reversing a linked list changes the direction of pointers, not the nodes themselves. This in-place redirection uses constant extra space.",linked-lists question
+Q2: How does the two-pointer cycle detection algorithm work?,"A. Mark visited nodes with a flag
+B. Use a set to track seen nodes
+C. Advance two pointers at different speeds; they meet if a cycle exists
+D. Count nodes and check if the count exceeds the list length
+
+**C.** A fast pointer (2 steps per iteration) and a slow pointer (1 step) eventually meet if a cycle exists. If the fast pointer reaches null, there is no cycle.",linked-lists question
+Q3: Why is a dummy node useful when merging linked lists?,"A. It makes the list shorter
+B. It holds the smaller of the two heads
+C. It eliminates special cases at the head by providing a node to attach to initially
+D. It is required by the algorithm
+
+**C.** A dummy node lets the merge code treat the head uniformly. Instead of checking 'is this the first node?', the code always attaches to the previous node.",linked-lists question
+"Q4: In the 'Merge K Sorted Lists' problem, why is a heap faster ","A. Heaps use less memory
+B. Heaps sort the lists automatically
+C. Finding the next smallest among k lists is O(log k) with a heap instead of O(k) with linear search
+D. Heaps eliminate the need for pointers
+
+**C.** A heap tracks the smallest head across k lists. Inserting and extracting takes O(log k) per step, making the total time O(n log k) instead of O(n * k).",linked-lists question
+Q5: What is the time complexity of traversing a linked list to f,"A. O(1)
+B. O(log n)
+C. O(n)
+D. O(n log n)
+
+**C.** A linked list has no random access. Reaching a node requires following pointers from the head, which takes O(n) in the worst case.",linked-lists question
+LeetCode 206: Reverse Linked List,"**Pattern**: iterative pointer reversal
+
+**Why**: Reversing requires redirecting each node's pointer from forward to backward. Tracking three pointers (prev, curr, next) allows safe redirection in one pass.
+
+**Python**: `manual pointer management; track previous, current, next`",linked-lists problem
+LeetCode 141: Linked List Cycle,"**Pattern**: tortoise and hare
+
+**Why**: If a cycle exists, two pointers at different speeds must meet. If the fast pointer reaches null, there is no cycle.
+
+**Python**: `two pointer variables advancing at different speeds`",linked-lists problem
+LeetCode 21: Merge Two Sorted Lists,"**Pattern**: two-pointer list merging
+
+**Why**: Merging compares heads and advances the smaller pointer. A dummy node avoids special-casing the new head.
+
+**Python**: `dummy node, manual pointer chaining`",linked-lists problem
+LeetCode 23: Merge K Sorted Lists,"**Pattern**: reduce k lists to 1 via pairwise merging
+
+**Why**: Naive pairwise merging is slow; a heap picks the next smallest in O(log k) time, making total time O(n log k).
+
+**Python**: `heapq.heappush for efficient next-smallest, or recursion`",linked-lists problem
+LeetCode 92: Reverse Linked List II,"**Pattern**: bounded reversal
+
+**Why**: Reversing only a section requires finding the start, reversing in place, then connecting back. Careful pointer tracking avoids breaking the chain.
+
+**Python**: `manual pointer management; track boundaries`",linked-lists problem
+LeetCode 2: Add Two Numbers,"**Pattern**: digit-by-digit addition
+
+**Why**: Addition processes digits in parallel, managing carry state. New nodes are created for the result; careful pointer management avoids leaks.
+
+**Python**: `manual pointer advancement, node creation`",linked-lists problem
+LeetCode 160: Intersection of Two Linked Lists,"**Pattern**: length-adjusted pointers
+
+**Why**: If two lists intersect, advancing through both at equal speed detects the intersection. Equal-length traversal aligns the pointers.
+
+**Python**: `manual pointer advancement; two passes to align`",linked-lists problem
+Signal: Reverse a sequence when you cannot use an array,"**Structure**: pointer redirection in a single pass
+
+**Requirement**: Change direction in-place; O(n) time
+
+**Python**: `manual pointer management`
+
+**Example**: Reverse Linked List (LeetCode 206)",linked-lists signal
+Signal: Detect or break a cycle in a chain,"**Structure**: two-pointer race: fast and slow
+
+**Requirement**: Identify loops without extra space or mutation
+
+**Python**: `two pointer variables`
+
+**Example**: Linked List Cycle (LeetCode 141)",linked-lists signal
+Signal: Merge multiple sequences while maintaining order,"**Structure**: pointer manipulation with a dummy node
+
+**Requirement**: Compare heads, advance the smaller, O(n + m) for two lists
+
+**Python**: `manual pointer chaining`
+
+**Example**: Merge Two Sorted Lists (LeetCode 21)",linked-lists signal
+Signal: Find the middle of a list or reverse a section,"**Structure**: two pointers: one moves 2 steps, one moves 1
+
+**Requirement**: Locate a position without knowing the length
+
+**Python**: `two pointer variables; count or fast/slow`
+
+**Example**: Reverse Linked List II (LeetCode 92)",linked-lists signal
+Signal: Simulate addition with numbers stored as linked list nodes,"**Structure**: traverse both lists in parallel, manage carry state
+
+**Requirement**: Process digit by digit with carry; may need to extend the list
+
+**Python**: `manual pointer advancement and node creation`
+
+**Example**: Add Two Numbers (LeetCode 2)",linked-lists signal
+Claim: list-append-is-amortized-constant,"List growth is geometric: capacity grows by a bounded fraction each time it is exceeded, so appends stay O(1) amortized.",lists-and-deques claim
+Claim: list-pop-zero-scales-linearly,"list.pop(0) cost grows with the list length, because every remaining pointer shifts.",lists-and-deques claim
+Claim: deque-popleft-is-constant,deque.popleft cost does not grow with the deque length.,lists-and-deques claim
+Claim: insort-shift-is-linear,"bisect.insort is a binary search plus a list shift, so insertion at the front is linear; the search alone is logarithmic.",lists-and-deques claim
+Complexity: list.append,"**O(1) amortized**
+
+geometric growth of spare capacity",lists-and-deques complexity
+Complexity: list.pop()  (end),"**O(1)**
+
+",lists-and-deques complexity
+"Complexity: list.pop(0) / insert(0, x)","**O(n)**
+
+every pointer shifts",lists-and-deques complexity
+Complexity: list[i],"**O(1)**
+
+direct offset into the array",lists-and-deques complexity
+Complexity: deque.appendleft / popleft,"**O(1)**
+
+touches only the end block",lists-and-deques complexity
+Complexity: deque[i] (middle),"**O(n)**
+
+walks blocks; not constant",lists-and-deques complexity
+Complexity: bisect.bisect_left (search),"**O(log n)**
+
+on a sorted list",lists-and-deques complexity
+Complexity: bisect.insort (insert),"**O(n)**
+
+the search is O(log n); the shift is linear",lists-and-deques complexity
+Q1: Why is list.pop(0) a poor choice for a BFS queue?,"A. It allocates a new list every time
+B. It shifts every remaining pointer, so each pop costs O(n)
+C. It is not allowed on lists
+D. It is only slow for strings
+
+**B.** A list is a contiguous array. Removing the first element moves each remaining pointer one slot left.",lists-and-deques question
+Q2: Which structure is the right queue for BFS in Python?,"A. list with pop(0)
+B. collections.deque with popleft
+C. dict with the smallest key
+D. set with pop()
+
+**B.** deque.popleft is O(1), because it touches only the block at the front.",lists-and-deques question
+Q3: Why are appends to a list amortized O(1)?,"A. Each append reserves exactly one slot
+B. Capacity grows by a fraction each time it is exceeded, so copies are rare
+C. Appends never copy
+D. CPython stores lists as linked nodes
+
+**B.** Spare capacity grows geometrically, so the cost of the occasional copy spreads across many appends.",lists-and-deques question
+Q4: bisect.insort on a sorted list is O(log n) per insert. True ,"A. True: the binary search dominates
+B. False: the search is O(log n) but the list shift makes insertion O(n)
+
+**B.** Finding the position is logarithmic. Inserting the value shifts the elements after it.",lists-and-deques question
+Q5: Why can a list not be a dict key?,"A. Lists are too large
+B. Lists are not hashable: their contents can change, so their hash would change too
+C. Dict keys must be strings
+D. Lists are stored out of order
+
+**B.** A key's hash must stay constant while it is in the table. A mutable list cannot guarantee that.",lists-and-deques question
+LeetCode 102: Binary Tree Level Order Traversal,"**Pattern**: breadth-first search
+
+**Why**: The frontier is a FIFO queue. list.pop(0) would shift the whole frontier on every step.
+
+**Python**: `collections.deque: append and popleft`",lists-and-deques problem
+LeetCode 739: Daily Temperatures,"**Pattern**: monotonic stack
+
+**Why**: The stack is used only at one end, so a plain list costs O(1) per push and pop.
+
+**Python**: `list: append and pop`",lists-and-deques problem
+LeetCode 11: Container With Most Water,"**Pattern**: two pointers
+
+**Why**: Random access by position is O(1), which the two pointers rely on.
+
+**Python**: `list indexing`",lists-and-deques problem
+"Signal: Process in first-in, first-out order, with work added and re","**Structure**: block list
+
+**Requirement**: O(1) at both ends
+
+**Python**: `collections.deque`
+
+**Example**: Binary Tree Level Order Traversal (LeetCode 102)",lists-and-deques signal
+"Signal: Last-in, first-out; nearest greater or smaller element in on","**Structure**: contiguous array used as a stack
+
+**Requirement**: O(1) push and pop at one end; O(n) total
+
+**Python**: `list (append / pop)`
+
+**Example**: Daily Temperatures (LeetCode 739)",lists-and-deques signal
+Signal: Maintain a sorted sequence while looking values up,"**Structure**: sorted contiguous array
+
+**Requirement**: O(log n) search; insertion dominated by the shift
+
+**Python**: `bisect`
+
+**Example**: Searching a sorted list; avoid repeated insort in hot loops",lists-and-deques signal
+Claim: two-pointers-check-palindrome,Two pointers from opposite ends can check a palindrome in O(n) time and O(1) space without reversing.,strings claim
+Claim: anagram-count-vs-sort,Anagrams have identical character counts. Comparing counts is O(n); sorting both strings is O(n log n).,strings claim
+Claim: sliding-window-is-linear,"A sliding window processes each character at most twice, keeping substring search O(n) instead of O(n^2).",strings claim
+Claim: in-place-reversal-no-allocation,Reversing a string in place by swapping characters uses O(1) space; building a reversed copy uses O(n).,strings claim
+Complexity: palindrome check (two pointers),"**O(n) time, O(1) space**
+
+move from ends inward; no allocation",strings complexity
+Complexity: reverse string in place (swap),"**O(n) time, O(1) space**
+
+swap characters with two pointers",strings complexity
+Complexity: anagram check (character count),"**O(n)**
+
+dict lookups are O(1); faster than sorting",strings complexity
+Complexity: anagram check (sort both),"**O(n log n)**
+
+for comparison; sorting is more overhead than needed",strings complexity
+Complexity: substring search (naive),"**O(n*m)**
+
+nested loop: for each position, match up to m chars",strings complexity
+Complexity: longest substring without repeats,"**O(n)**
+
+sliding window; each char seen at most twice",strings complexity
+"Q1: When two pointers check a palindrome from the ends inward, w","A. The left pointer reaches the right pointer
+B. Characters at the current positions do not match
+C. The string has an odd length
+D. The string contains a space
+
+**B.** Palindromes have matching characters at symmetric positions. Any mismatch means the string is not a palindrome.",strings question
+Q2: Why is checking if two strings are anagrams using Counter fa,"A. Counter is implemented in C and always faster
+B. Counter is O(n); sorting both is O(n log n)
+C. Counter eliminates duplicate characters
+D. Sorting cannot compare frequencies
+
+**B.** Counting characters is linear. Sorting is O(n log n), so dict lookup is more efficient for anagram detection.",strings question
+Q3: In the sliding-window approach to 'longest substring without,"A. Tracks the start of the current valid substring
+B. Points to the rightmost character
+C. Remains at the first character
+D. Skips whitespace
+
+**A.** The right pointer expands the window; the left retracts when a repeat is found. The distance between them is the substring length.",strings question
+Q4: Why does reversing a string with two pointers and swapping u,"A. Swapping modifies the original; slicing allocates a new string
+B. Two pointers are inherently more efficient
+C. Slicing only works on immutable strings
+D. Swapping runs in the CPU cache
+
+**A.** Strings in Python are immutable, so str[::-1] allocates a new string. In-place swaps work on lists or character arrays.",strings question
+"Q5: When comparing anagrams, why must we count all characters in","A. Duplicates are not relevant to anagrams
+B. We need to verify the same multiset of characters appears in both strings
+C. Counting is always faster than checking
+D. Anagrams only have unique characters
+
+**B.** Anagrams have the same characters with the same frequencies. Checking duplicates alone misses frequency differences.",strings question
+LeetCode 28: Implement strStr,"**Pattern**: substring search at each position
+
+**Why**: Comparing characters position by position finds the first match in O(n*m). Rolling hash improves to O(n) but naive is sufficient for moderate lengths.
+
+**Python**: `str.find or manual char-by-char comparison`",strings problem
+LeetCode 125: Valid Palindrome,"**Pattern**: two pointers ignoring non-alphanumeric
+
+**Why**: Two pointers from the ends check symmetry in O(n) without allocating a reversed or cleaned string.
+
+**Python**: `str.isalnum and lower for filtering; two pointers`",strings problem
+LeetCode 242: Valid Anagram,"**Pattern**: count and compare
+
+**Why**: Counting character frequencies is O(n). Sorting both strings is O(n log n). Counter is optimal for this check.
+
+**Python**: `collections.Counter`",strings problem
+LeetCode 58: Length of Last Word,"**Pattern**: reverse scan to skip trailing spaces
+
+**Why**: Scanning backward from the end finds the last word in one pass, avoiding the overhead of splitting and reversing.
+
+**Python**: `str.split or manual indexing from the end`",strings problem
+LeetCode 151: Reverse Words in a String,"**Pattern**: word-by-word reversal with space handling
+
+**Why**: Using split().reverse().join() is Pythonic and concise. Manual reversal in place avoids intermediate allocations.
+
+**Python**: `str.split and reverse and join, or two-pointer character swap`",strings problem
+LeetCode 680: Valid Palindrome II,"**Pattern**: two pointers with one skip allowed
+
+**Why**: When a mismatch is found, we must try skipping the left or right character. Backtracking checks both without full string duplication.
+
+**Python**: `two-pointer recursion or backtracking to check both skip cases`",strings problem
+Signal: Verify a string reads the same forward and backward,"**Structure**: two pointers from ends
+
+**Requirement**: O(n) time, O(1) space
+
+**Python**: `str indexing`
+
+**Example**: Valid Palindrome (LeetCode 125)",strings signal
+"Signal: Compare words by their letters, ignoring order","**Structure**: character frequency dict
+
+**Requirement**: O(n) without sorting
+
+**Python**: `collections.Counter`
+
+**Example**: Valid Anagram (LeetCode 242)",strings signal
+"Signal: Find longest substring with a property (no repeats, all vowe","**Structure**: sliding window with dict
+
+**Requirement**: O(n) in one pass
+
+**Python**: `dict or set to track character presence`
+
+**Example**: Longest Substring Without Repeating Characters (LeetCode 3)",strings signal
+Signal: Locate first occurrence of a pattern or substring,"**Structure**: rolling hash or KMP
+
+**Requirement**: O(n) or O(n+m) without O(n*m)
+
+**Python**: `str.find or manual index-by-index`
+
+**Example**: Implement strStr (LeetCode 28)",strings signal
+"Signal: Reverse, rotate, or rearrange words in a string","**Structure**: two-pointer reversal
+
+**Requirement**: O(n) time, O(1) space
+
+**Python**: `str.split and join, or manual swap`
+
+**Example**: Reverse Words in a String (LeetCode 151)",strings signal
+Claim: tree-is-recursive-structure,"A binary tree is defined recursively: a node with a left and right subtree, each of which is a binary tree (or empty).",trees claim
+Claim: bst-maintains-invariant,A binary search tree maintains the invariant that every left descendant is smaller and every right descendant is larger.,trees claim
+Claim: inorder-traversal-yields-sorted,In-order traversal of a BST visits nodes in sorted order.,trees claim
+Claim: tree-height-bounds-recursive-depth,The height of a tree bounds the recursion depth and the required stack space.,trees claim
+Claim: balanced-tree-search-is-logarithmic,Search in a balanced BST takes O(log n) time because each comparison eliminates about half the tree.,trees claim
+Complexity: BST search (balanced),"**O(log n)**
+
+each comparison halves the tree; unbalanced tree degrades to O(n)",trees complexity
+Complexity: BST insert (balanced),"**O(log n)**
+
+search for the position, then add a leaf",trees complexity
+Complexity: BST delete (balanced),"**O(log n)**
+
+search, then restructure; unbalanced tree O(n)",trees complexity
+Complexity: Tree traversal (DFS pre/in/post),"**O(n)**
+
+visit every node and edge once; recursive depth is O(h)",trees complexity
+Complexity: Tree traversal (BFS level-order),"**O(n)**
+
+deque maintains the frontier; space is O(w) where w is max width",trees complexity
+Complexity: Find LCA (lowest common ancestor),"**O(n)**
+
+search both subtrees to find the split point; O(h) on a balanced tree",trees complexity
+Complexity: Validate BST,"**O(n)**
+
+check every node's invariant and track bounds",trees complexity
+Q1: Why is recursion a natural fit for tree problems?,"A. Trees are always small, so recursion never overflows
+B. Each subtree is a smaller instance of the same problem, making induction natural
+C. Recursion is faster than iteration
+D. Trees require random access, which recursion provides
+
+**B.** The recursive structure of a tree (subtree is a tree) matches the recursive structure of the solution (solve left, right, combine).",trees question
+Q2: What does in-order traversal of a BST produce?,"A. Nodes in reverse sorted order
+B. Nodes sorted from smallest to largest
+C. Nodes in the order they were inserted
+D. Nodes in reverse insertion order
+
+**B.** In-order traversal visits left subtree, then node, then right subtree. In a BST, left nodes are smaller, so the result is sorted.",trees question
+Q3: Why does BST search run in O(log n) time on a balanced tree ,"A. Unbalanced trees store data differently
+B. Unbalanced trees require random access
+C. A balanced tree eliminates about half the tree per comparison; an unbalanced tree may eliminate only one node
+D. Unbalanced trees require more memory
+
+**C.** On a balanced tree, comparison with the root partitions the remaining nodes. On a chain (unbalanced), only one node is eliminated per step.",trees question
+Q4: Which traversal naturally uses a queue instead of recursion?,"A. Pre-order (depth-first)
+B. In-order (depth-first)
+C. Level-order (breadth-first)
+D. Post-order (depth-first)
+
+**C.** Level-order visits nodes by depth, layer by layer, which a queue enforces naturally. DFS traversals use recursion or a stack.",trees question
+Q5: What invariant must a BST maintain?,"A. Left children are smaller, right children are larger
+B. All nodes at each level are sorted
+C. The tree is always perfectly balanced
+D. Child values are the average of their parent and sibling
+
+**A.** In a BST, every node must have smaller values in its left subtree and larger values in its right subtree.",trees question
+LeetCode 100: Same Tree,"**Pattern**: structural equality check
+
+**Why**: Two trees are the same if their roots have equal values and both subtrees are identical. Recursion naturally expresses this.
+
+**Python**: `recursion; compare node values and recurse on subtrees`",trees problem
+LeetCode 104: Maximum Depth of Binary Tree,"**Pattern**: post-order traversal
+
+**Why**: Depth of a tree is one plus the maximum depth of its subtrees. Recursion unwraps this definition.
+
+**Python**: `recursion; max(depth(left), depth(right)) + 1`",trees problem
+LeetCode 98: Validate Binary Search Tree,"**Pattern**: constrained recursion
+
+**Why**: A BST must satisfy bounds at every node. Recursion tracks constraints: left subtree < node < right subtree.
+
+**Python**: `recursion; pass min and max bounds down the tree`",trees problem
+LeetCode 102: Binary Tree Level Order Traversal,"**Pattern**: level-order traversal
+
+**Why**: Level-order requires visiting all nodes at depth d before depth d+1, which a queue naturally provides.
+
+**Python**: `collections.deque; append children, popleft to process`",trees problem
+LeetCode 105: Construct Binary Tree from Preorder and Inorder Traversal,"**Pattern**: divideandconquer via traversal properties
+
+**Why**: Preorder starts with the root. Inorder shows which nodes are left and right. Recursion reconstructs subtrees.
+
+**Python**: `recursion; preorder gives root, inorder partitions left/right`",trees problem
+LeetCode 236: Lowest Common Ancestor of a Binary Tree,"**Pattern**: postorder traversal for result aggregation
+
+**Why**: The LCA is the deepest node that has both targets as descendants. Recursion finds it by returning the first non-null result.
+
+**Python**: `recursion; check left and right subtrees, return non-null result`",trees problem
+LeetCode 543: Diameter of Binary Tree,"**Pattern**: postorder traversal tracking global max
+
+**Why**: The diameter passes through some node as the longest path from left to right. Recursion computes heights and tracks the max sum.
+
+**Python**: `recursion; track height and update max diameter`",trees problem
+Signal: Check if two trees have the same structure and values,"**Structure**: recursive comparison
+
+**Requirement**: Compare recursively; O(n) in worst case
+
+**Python**: `recursion; compare left and right subtrees`
+
+**Example**: Same Tree (LeetCode 100)",trees signal
+Signal: Find maximum depth or path length from root,"**Structure**: post-order recursion
+
+**Requirement**: Recurse to each leaf and combine results
+
+**Python**: `recursion on left and right subtrees`
+
+**Example**: Maximum Depth of Binary Tree (LeetCode 104)",trees signal
+Signal: Verify that a tree satisfies BST properties at every node,"**Structure**: recursive validation with min/max bounds
+
+**Requirement**: Track bounds; no value escapes left < node < right
+
+**Python**: `recursion; pass down constraints`
+
+**Example**: Validate Binary Search Tree (LeetCode 98)",trees signal
+Signal: Collect results from each level of the tree,"**Structure**: breadth-first with a queue
+
+**Requirement**: Visit all nodes at depth d before depth d+1
+
+**Python**: `collections.deque; append and popleft`
+
+**Example**: Binary Tree Level Order Traversal (LeetCode 102)",trees signal
+Signal: Find paths or relationships between nodes in the tree,"**Structure**: recursive search with context
+
+**Requirement**: Locate common ancestor or nearest node in sorted order
+
+**Python**: `recursion; track path or constraint`
+
+**Example**: Lowest Common Ancestor (LeetCode 236)",trees signal
+Claim: contract-tests-prevent-api-misalignment,Contract tests verify that both client and server agree on API format before integration.,contract-testing claim
+Claim: consumer-driven-contracts-empower-clients,Consumer-driven contracts let clients define their needs; providers implement to meet them.,contract-testing claim
+Claim: contract-tests-are-faster-than-e2e-tests,Contract tests don't require full service startup; they're faster than end-to-end tests and provide quicker feedback.,contract-testing claim
+Claim: schema-validation-enforces-contracts-without-pact,"JSON Schema, OpenAPI, and GraphQL schemas enforce contracts; tests validate requests and responses.",contract-testing claim
+Claim: contract-tests-in-ci-prevent-breaking-changes,"Contract tests fail when an API change breaks compatibility, preventing merges and catching issues early.",contract-testing claim
+Complexity: consumer-driven contract test (client expectations),"**O(1) milliseconds**
+
+no service calls; validates against schema",contract-testing complexity
+Complexity: provider contract test (server behavior),"**O(n) where n is number of scenarios**
+
+server must respond to all expected requests",contract-testing complexity
+Complexity: schema validation (request or response),"**O(n) where n is schema depth**
+
+linear in schema complexity",contract-testing complexity
+Complexity: end-to-end test (full client + server interaction),"**O(n) seconds**
+
+slower than contract tests; full startup and teardown",contract-testing complexity
+Complexity: contract test in CI with multiple consumers,"**O(n*m) where n is consumers, m is scenarios per consumer**
+
+parallelizable; each consumer's tests run independently",contract-testing complexity
+Q1: What is a consumer-driven contract?,"A. A contract where the server defines all the rules and the client must obey
+B. A contract where the client defines expectations and the server implements to meet them
+C. A contract that is agreed upon after integration issues occur
+D. A contract that only applies to external APIs
+
+**B.** Consumer-driven contracts empower clients to define their needs; providers implement to satisfy the contract.",contract-testing question
+Q2: How do contract tests differ from end-to-end tests?,"A. Contract tests are slower because they test the entire system
+B. Contract tests are faster because they focus on API format, not full system behavior
+C. Contract tests require a running server; end-to-end tests do not
+D. Contract tests and end-to-end tests are the same thing
+
+**B.** Contract tests validate API format without requiring full service startup. They're faster than end-to-end tests and provide quicker feedback.",contract-testing question
+"Q3: What does jsonschema.validate(response, schema) do?","A. It sends a request to verify the server is running
+B. It checks that the response matches the expected schema (required fields, types)
+C. It converts the response to a different format
+D. It compresses the response for storage
+
+**B.** jsonschema.validate checks that the response conforms to the schema: required fields are present, types are correct, and no extra fields violate constraints.",contract-testing question
+Q4: Why should contract tests run in CI?,"A. To slow down the build and catch fewer bugs
+B. To catch breaking changes before merging, preventing integration failures
+C. To replace all unit and integration tests
+D. To verify that the code is fast enough
+
+**B.** Contract tests in CI fail when an API change breaks compatibility, preventing merges and catching issues early before they reach production.",contract-testing question
+Q5: What should happen if a provider contract test fails?,"A. Ignore the failure and merge anyway
+B. Fix the implementation to satisfy the contract, or update the contract if intentional
+C. Always update the contract to match the implementation
+D. Delete the contract test
+
+**B.** A failing provider contract means the implementation doesn't meet the contract. Either fix the implementation or intentionally update the contract (and notify clients).",contract-testing question
+1. Define API contract between client and server,"**Pattern**: consumer-driven contract: client defines expectations, server implements
+
+**Why**: Formal contracts prevent misalignment; both sides validate against the contract before integrating.
+
+**Python**: `Pact CLI or jsonschema`",contract-testing problem
+2. Validate API request against schema before sending,"**Pattern**: validate request before making HTTP call
+
+**Why**: Catching schema violations early saves time debugging invalid requests.
+
+**Python**: `jsonschema.validate(request, schema)`",contract-testing problem
+3. Validate API response against schema after receiving,"**Pattern**: validate response after receiving HTTP response
+
+**Why**: Mismatched responses are caught immediately, not silently processed as wrong data.
+
+**Python**: `jsonschema.validate(response, schema)`",contract-testing problem
+"4. Test that error responses match the contract (error format, status code)","**Pattern**: send invalid request, assert error status and error message format
+
+**Why**: Clients rely on error format and codes; contracts ensure consistency.
+
+**Python**: `pytest with assertions on response status and body`",contract-testing problem
+5. Prevent API breaking changes in CI,"**Pattern**: run contract tests for main and PR; fail if contract is violated
+
+**Why**: Catching breaking changes before merge prevents integration failures and reduces incidents.
+
+**Python**: `CI integration with pytest`",contract-testing problem
+Signal: API client and server agree on request/response format befor,"**Structure**: consumer-driven contract (Pact) or schema validation (JSON Schema, OpenAPI)
+
+**Requirement**: Prevent breaking changes; catch misalignment early
+
+**Python**: `jsonschema for schema validation; Pact for formal contracts`
+
+**Example**: verify that GET /api/health returns {status: 'ok'} and status 200",contract-testing signal
+Signal: Prevent API breaking changes in CI before merging,"**Structure**: contract test in CI; run against main branch and PR branch
+
+**Requirement**: Fail the contract test if API changes incompatibly
+
+**Python**: `pytest with contract assertions; Pact broker for distributed contracts`
+
+**Example**: contract test fails if response schema changes",contract-testing signal
+Signal: Validate that a request matches the API schema before sendin,"**Structure**: JSON Schema validation on request construction
+
+**Requirement**: O(1) per request; fail fast if schema is violated
+
+**Python**: `jsonschema.validate(request, request_schema)`
+
+**Example**: verify request body has required fields and correct types",contract-testing signal
+Signal: Validate that a response matches the expected schema after r,"**Structure**: JSON Schema validation on response processing
+
+**Requirement**: O(1) per response; fail fast if schema is violated
+
+**Python**: `jsonschema.validate(response, response_schema)`
+
+**Example**: verify response has status, data, and optional error fields",contract-testing signal
+"Signal: Test error scenarios: client sends invalid input, server ret","**Structure**: contract test with error scenarios
+
+**Requirement**: Both sides agree on error format and status codes
+
+**Python**: `pytest with error assertions; schema validation on error response`
+
+**Example**: verify that POST /api/item with missing 'name' returns 400 {error: 'name required'}",contract-testing signal
+Claim: integration-tests-verify-component-interactions,Integration tests verify that components work together correctly across service boundaries.,integration-testing claim
+Claim: integration-tests-are-slower-but-more-realistic,"Integration tests may hit real databases or local services, so they run slower than unit tests but catch more real-world issues.",integration-testing claim
+Claim: fixture-scope-balances-speed-and-isolation,Function-scoped fixtures ensure isolation; session-scoped fixtures reuse expensive setup. Choose the right scope for your trade-off.,integration-testing claim
+Claim: transaction-rollback-keeps-db-clean,"Tests that use a database can wrap in transactions that roll back, so the database is clean for the next test.",integration-testing claim
+Claim: contract-tests-prevent-api-misalignment,"Contract tests verify both client and server agree on request/response format, preventing integration breaks.",integration-testing claim
+"Complexity: integration test (real database, transaction rollback)","**O(n) milliseconds to seconds, depends on database operations**
+
+may hit real I/O; slower than unit tests",integration-testing complexity
+"Complexity: session-scoped fixture (database connection, expensive setup)","**O(1) setup per session; reused across all tests**
+
+amortizes expensive setup cost",integration-testing complexity
+Complexity: module-scoped fixture,"**O(1) setup per module**
+
+finer granularity than session, coarser than function",integration-testing complexity
+Complexity: function-scoped fixture (cleanup after each test),"**O(n) where n is number of tests**
+
+most isolation; all setup/teardown happens per-test",integration-testing complexity
+Complexity: contract test (verify request/response schemas),"**O(1) for each contract assertion**
+
+fast; no external service calls, just schema validation",integration-testing complexity
+Complexity: parallel integration tests (pytest-xdist with real database),"**O(n/p) but limited by database connection pool**
+
+parallelism may be bottlenecked by database access",integration-testing complexity
+Q1: What is the main difference between unit tests and integrati,"A. Unit tests are faster and test components in isolation; integration tests verify interactions between components
+B. Integration tests are always faster because they use mocking
+C. Unit tests require mocking; integration tests never use mocks
+D. Integration tests always use a real database
+
+**A.** Unit tests isolate components; integration tests verify cross-component interactions. Integration tests may use real databases or in-memory replicas.",integration-testing question
+Q2: What does a session-scoped fixture do?,"A. Runs setup before each test
+B. Runs setup once per test session and reuses it across all tests
+C. Runs setup once per test module
+D. Disables setup and teardown entirely
+
+**B.** Session-scoped fixtures run setup once and reuse the result across all tests in the session. This amortizes expensive setup cost but requires careful cleanup.",integration-testing question
+Q3: How does transaction rollback keep database tests isolated?,"A. It reverts all changes after each test, so the database is clean for the next test
+B. It prevents tests from writing to the database
+C. It duplicates the database for each test
+D. It disables database commits entirely
+
+**A.** A test's writes are wrapped in a transaction that rolls back, leaving the database clean. No explicit cleanup needed; the database is fresh for the next test.",integration-testing question
+Q4: What is a contract test?,"A. A test that verifies a service conforms to its API contract (request/response format)
+B. A test that always passes
+C. A test that uses mocking instead of real services
+D. A test that runs only on Sundays
+
+**A.** Contract tests verify that both client and server agree on API format (schema, status codes, error messages). Misalignment breaks the contract.",integration-testing question
+Q5: Why might you use a module-scoped fixture instead of a sessi,"A. Module scope runs faster because it reuses setup across more tests
+B. Module scope provides finer isolation granularity; setup is shared per module, not per session
+C. Module scope is always slower and should be avoided
+D. Module scope disables cleanup
+
+**B.** Module scope balances speed (reuse setup per module) and isolation (fresh setup for each new module). It's a middle ground between function and session scopes.",integration-testing question
+1. Test interaction between a service and a repository,"**Pattern**: integration fixture with session or module scope; verify service calls repository correctly
+
+**Why**: Unit tests alone don't catch bugs in cross-component interaction; integration tests verify the real integration.
+
+**Python**: `@pytest.fixture with SQLAlchemy or custom repository`",integration-testing problem
+2. Keep a database clean between tests without manual cleanup,"**Pattern**: session starts transaction before test, rolls back after
+
+**Why**: Explicit cleanup is error-prone; transaction rollback is automatic and keeps tests isolated.
+
+**Python**: `SQLAlchemy session with context manager`",integration-testing problem
+3. Verify that an API request/response matches a schema,"**Pattern**: contract test framework (Pact) or manual schema assertions
+
+**Why**: Schema misalignment causes silent failures at runtime; contract tests catch it before integration.
+
+**Python**: `jsonschema, Pact, or custom validation`",integration-testing problem
+"4. Reuse expensive setup (database connection, service startup) across tests","**Pattern**: fixture with scope='session' or scope='module' and cleanup in yield
+
+**Why**: Recreating expensive resources for each test slows down the test suite; reuse amortizes the cost.
+
+**Python**: `@pytest.fixture(scope='...')`",integration-testing problem
+5. Test a multi-step workflow involving multiple services,"**Pattern**: orchestrate service calls in test; verify final state and side effects
+
+**Why**: Unit tests of individual services don't catch orchestration bugs; integration tests verify the whole flow.
+
+**Python**: `pytest with integration fixtures`",integration-testing problem
+Signal: Test interaction between a service and a repository or exter,"**Structure**: real or in-memory database, service layer, integration fixture
+
+**Requirement**: Slower than unit tests, but still deterministic and repeatable
+
+**Python**: `@pytest.fixture(scope='module'), SQLAlchemy session, transaction rollback`
+
+**Example**: test_work_item_dispatch verifies fleet-ops service calls the work-item repository",integration-testing signal
+Signal: Test API contract between client and server (request/respons,"**Structure**: contract test framework (Pact) or manual schema validation
+
+**Requirement**: Both sides must agree on schema; misalignment is a contract violation
+
+**Python**: `pytest with custom assertions on request/response shape`
+
+**Example**: verify that a request to /api/health returns {status: 'ok'}",integration-testing signal
+Signal: Database tests that need clean state between tests,"**Structure**: transaction rollback fixture or database reset between tests
+
+**Requirement**: Each test sees a clean database; no test pollution
+
+**Python**: `@pytest.fixture with connection.rollback() or database reset`
+
+**Example**: test_insert_work_item; insert, query, verify, rollback",integration-testing signal
+Signal: Test a workflow across multiple components (end-to-end orche,"**Structure**: integration test with multiple components in-process or containerized
+
+**Requirement**: Slower but realistic; uses real components where possible
+
+**Python**: `pytest, docker-compose, or local service instances`
+
+**Example**: test_workflow_dispatch_and_queue verifies dispatch creates a queued job",integration-testing signal
+"Signal: Reuse expensive setup (database, service startup) across tes","**Structure**: session or module-scoped fixture with careful teardown
+
+**Requirement**: Balance speed and isolation; minimize setup/teardown overhead
+
+**Python**: `@pytest.fixture(scope='session' or 'module')`
+
+**Example**: session-scoped database connection shared across all integration tests",integration-testing signal
+Claim: fixtures-are-dependency-injection-for-tests,Fixtures inject dependencies into tests; this makes setup explicit and tests more readable.,test-fixtures claim
+Claim: conftest-py-shares-fixtures-across-tests,Fixtures in conftest.py are automatically discovered and available to all tests in that directory and subdirectories.,test-fixtures claim
+Claim: fixture-scope-balances-reuse-and-isolation,Function scope ensures isolation; module or session scope reuses setup. Choose the right scope for your trade-off.,test-fixtures claim
+Claim: fixtures-compose-building-complex-environments,One fixture can depend on another; Pytest resolves the chain and runs setup in order.,test-fixtures claim
+Claim: yield-in-fixtures-simplifies-cleanup,Using `yield` in a fixture separates setup and cleanup; code after yield runs after the test.,test-fixtures claim
+"Complexity: simple fixture (no dependencies, function scope)","**O(1) setup, O(1) cleanup per test**
+
+minimal overhead",test-fixtures complexity
+Complexity: session-scoped fixture (reused across all tests),"**O(1) setup once; O(1) cleanup at end**
+
+expensive setup amortized across all tests",test-fixtures complexity
+Complexity: fixture composition (fixture depends on another fixture),"**O(1) per dependency; resolved in order**
+
+dependency resolution is linear in dependency depth",test-fixtures complexity
+Complexity: fixture with monkeypatch (patching module globals),"**O(1) patch, O(1) restore**
+
+restores patches automatically after test",test-fixtures complexity
+Complexity: parameterized fixture (@pytest.fixture(params=[...])),"**O(n) where n is number of parameter values**
+
+test runs once per parameter value",test-fixtures complexity
+Q1: What is dependency injection in pytest?,"A. Tests directly instantiate objects and pass them to fixtures
+B. Tests declare parameters matching fixture names; pytest injects the fixtures
+C. Tests import fixtures explicitly from a fixtures module
+D. Tests call a setup function before each test
+
+**B.** Pytest uses the test function's parameter names to match fixtures. If a test has a parameter named 'tmp_path', Pytest injects the built-in tmp_path fixture.",test-fixtures question
+Q2: What is conftest.py?,"A. A configuration file for pytest settings
+B. A pytest file that defines shared fixtures available to all tests in that directory and subdirectories
+C. A test file that runs configuration checks
+D. A file that imports all test modules
+
+**B.** conftest.py is a pytest convention; fixtures defined there are automatically discovered and available to all tests in that directory and subdirectories.",test-fixtures question
+Q3: How does the `yield` keyword in a fixture work?,"A. It skips the test if the condition is false
+B. It returns a value from the fixture
+C. It separates setup (before yield) from cleanup (after yield)
+D. It makes the fixture run in parallel
+
+**C.** yield separates setup and cleanup in a fixture. Code before yield runs before the test; code after yield runs after the test, even if the test fails.",test-fixtures question
+Q4: What does fixture scope control?,"A. Whether the fixture is visible in other test files
+B. When setup runs and when cleanup happens (function, module, session)
+C. How many tests can use the fixture
+D. The order in which tests run
+
+**B.** Fixture scope determines: function-scoped fixtures run before each test; module-scoped fixtures run once per module; session-scoped fixtures run once per session.",test-fixtures question
+Q5: How can a fixture depend on another fixture?,"A. By importing it explicitly
+B. By calling it directly
+C. By declaring the other fixture as a parameter
+D. By registering it in conftest.py
+
+**C.** A fixture can take another fixture as a parameter. Pytest resolves the dependency chain and runs setup in order.",test-fixtures question
+1. Multiple tests need the same temporary directory,"**Pattern**: test declares tmp_path parameter; pytest injects it
+
+**Why**: Avoids manual tempdir cleanup; pytest manages it. Each test gets a fresh directory.
+
+**Python**: `@pytest.fixture (tmp_path is built-in)`",test-fixtures problem
+"2. Setup and cleanup must be coordinated (e.g., start/stop a server)","**Pattern**: setup before yield; cleanup after yield
+
+**Why**: Cleanup is guaranteed even if the test fails; no manual try/finally needed.
+
+**Python**: `@pytest.fixture with yield`",test-fixtures problem
+3. A fixture depends on another fixture (composition),"**Pattern**: fixture_a takes fixture_b as parameter
+
+**Why**: Avoids duplication; complex environments built from simple fixtures.
+
+**Python**: `@pytest.fixture, parameter passing`",test-fixtures problem
+4. Expensive setup (database) should be reused across tests,"**Pattern**: @pytest.fixture(scope='session' or 'module')
+
+**Why**: Amortizes expensive setup cost; tests run faster.
+
+**Python**: `@pytest.fixture(scope=...)`",test-fixtures problem
+5. Run the same test with 10 different inputs,"**Pattern**: @pytest.fixture(params=[...]) or @pytest.mark.parametrize(...)
+
+**Why**: DRY: avoid copy-pasting the test 10 times.
+
+**Python**: `@pytest.fixture(params=...) or @pytest.mark.parametrize(...)`",test-fixtures problem
+"Signal: Multiple tests need the same resource (database, temporary d","**Structure**: fixture with @pytest.fixture decorator, injected as test parameter
+
+**Requirement**: DRY: avoid duplicating setup logic in each test
+
+**Python**: `@pytest.fixture, yield for cleanup`
+
+**Example**: all tests need a temporary directory; define tmp_path fixture once",test-fixtures signal
+Signal: Setup and cleanup must happen in a specific order,"**Structure**: fixture with `yield` to separate setup and cleanup
+
+**Requirement**: Automatic teardown without explicit cleanup code
+
+**Python**: `def fixture(...): setup_code; yield; cleanup_code`
+
+**Example**: start a server, yield, then stop it",test-fixtures signal
+"Signal: A test depends on multiple resources (database, mock, config","**Structure**: fixture takes other fixtures as parameters
+
+**Requirement**: Compose fixtures; avoid deeply nested setup
+
+**Python**: `def fixture_a(fixture_b, fixture_c): ...`
+
+**Example**: a service fixture depends on a database fixture and a config fixture",test-fixtures signal
+Signal: Expensive setup should be reused across tests (avoid repeati,"**Structure**: session or module-scoped fixture
+
+**Requirement**: Balance speed (reuse) and isolation (fresh state)
+
+**Python**: `@pytest.fixture(scope='module' or 'session')`
+
+**Example**: database connection or service startup, reused across tests",test-fixtures signal
+Signal: Run the same test with different parameter values,"**Structure**: @pytest.fixture(params=[...]) or @pytest.mark.parametrize
+
+**Requirement**: DRY: avoid copy-pasting the test
+
+**Python**: `@pytest.fixture(params=...) or @pytest.mark.parametrize(...)`
+
+**Example**: test the same function with 5 different input values",test-fixtures signal
+Claim: unit-tests-run-fast,"Unit tests on isolated components run in milliseconds, not seconds, because they avoid I/O.",unit-testing claim
+Claim: hermetic-tests-never-touch-external-services,"Hermetic tests mock all external dependencies: databases, networks, file systems, caches.",unit-testing claim
+Claim: dependency-injection-enables-mocking,Functions that take dependencies as parameters (not globals) can be tested with mock objects.,unit-testing claim
+Claim: markers-enable-selective-execution,@pytest.mark.unit and @pytest.mark.integration allow running only a subset of tests before commit.,unit-testing claim
+Claim: mocking-is-for-external-io,"Mock external services (HTTP, database, file I/O); test real logic with real domain objects.",unit-testing claim
+Complexity: unit test (mock dependency),"**O(1) milliseconds**
+
+isolated component, no I/O",unit-testing complexity
+Complexity: unit test setup (fixture with monkeypatch),"**O(1) setup time**
+
+in-memory fixture; minimal allocation",unit-testing complexity
+"Complexity: mock assertion (verify call count, args)","**O(1)**
+
+recorded in-memory; no I/O",unit-testing complexity
+Complexity: unit test with parametrize (@pytest.mark.parametrize),"**O(n) for n inputs**
+
+same test run multiple times; linear in test count",unit-testing complexity
+Complexity: test collection (pytest discovery),"**O(n) where n is number of test files**
+
+imports all test modules; linear scan",unit-testing complexity
+"Complexity: parallel unit tests (pytest-xdist, -n auto)","**O(n/p) where p is number of processes**
+
+ideal speedup if tests are independent",unit-testing complexity
+Q1: Why should unit tests avoid calling external services like d,"A. External services are always slower, so tests must be fast
+B. Tests should be hermetic: deterministic, fast, and runnable in any order or location
+C. External services are not available in the test environment
+D. All of the above
+
+**B.** Hermetic tests are isolated and reproducible. They run in milliseconds, in any order, and don't depend on network or service availability.",unit-testing question
+"Q2: Which pytest marker should a fast, isolated test declare?","A. @pytest.mark.integration
+B. @pytest.mark.unit
+C. @pytest.mark.slow
+D. @pytest.mark.skip
+
+**B.** @pytest.mark.unit tags fast, isolated component tests. Markers allow running only unit tests before commit with `pytest -m unit`.",unit-testing question
+Q3: What does unittest.mock.MagicMock.side_effect do?,"A. Records how many times the mock was called
+B. Defines the return value of the mock
+C. Raises an exception or returns a value when the mock is called
+D. Prevents the mock from being called more than once
+
+**C.** side_effect can be an exception (raises it) or a callable (calls it). This lets tests trigger error paths without raising real errors.",unit-testing question
+"Q4: In dependency injection, what is passed to the function bein","A. The real external service
+B. A mock object that simulates the service
+C. A stub that returns a default value
+D. Both mock and stub objects
+
+**B.** Mocks replace real dependencies in tests, allowing control over inputs and verification of behavior without side effects.",unit-testing question
+Q5: What does @pytest.mark.parametrize do?,"A. Skips a test until it passes
+B. Runs a test multiple times with different inputs
+C. Marks a test as slow or expensive
+D. Enables parallel test execution
+
+**B.** Parametrize runs the same test function with different arguments, specified as a list of tuples. This keeps tests DRY.",unit-testing question
+1. Isolate a function from a database dependency,"**Pattern**: dependency injection (pass mock as parameter or fixture)
+
+**Why**: A function that queries a database cannot run fast or repeatably. Mock the database to return test data.
+
+**Python**: `unittest.mock.MagicMock or pytest-mock`",unit-testing problem
+2. Test error handling without triggering real errors,"**Pattern**: mock.side_effect = ExceptionType() to trigger error paths
+
+**Why**: Testing error paths without actually raising them lets tests run fast and verify both success and failure.
+
+**Python**: `unittest.mock.MagicMock.side_effect`",unit-testing problem
+3. Verify a function logs the correct message,"**Pattern**: pass mock logger to function; assert mock.assert_called_with(...)
+
+**Why**: Capturing logging without side effects; verify the function called log with the right args.
+
+**Python**: `unittest.mock.patch, pytest-mock, capsys`",unit-testing problem
+4. Test a class that depends on an external service,"**Pattern**: constructor injection (pass mock in __init__); mock returns test data
+
+**Why**: Classes that call external APIs must be testable without hitting the network; inject mocks.
+
+**Python**: `unittest.mock.MagicMock, @pytest.fixture`",unit-testing problem
+5. Run the same test on 10 different inputs,"**Pattern**: @pytest.mark.parametrize with list of (input, expected)
+
+**Why**: Avoids copy-pasting the same test 10 times; DRY principle for test cases.
+
+**Python**: `@pytest.mark.parametrize decorator`",unit-testing problem
+Signal: Verify a single function's behavior given various inputs,"**Structure**: function under test + mock dependencies + assertions
+
+**Requirement**: O(1) milliseconds, no external calls
+
+**Python**: `@pytest.fixture, unittest.mock.MagicMock, pytest-mock`
+
+**Example**: test_branch_from_result_whitespace_frozen; verify branch_from_result('   ') is None",unit-testing signal
+"Signal: Test a class constructor, field assignment, and simple metho","**Structure**: instantiate class, set fields, call methods, assert results
+
+**Requirement**: O(1), no I/O or network
+
+**Python**: `@pytest.fixture for object construction, capsys for stdout capture`
+
+**Example**: test_error_initialization; verify FleetError('msg').message == 'msg'",unit-testing signal
+Signal: Test error handling and exception messages,"**Structure**: pytest.raises(ExceptionType), assert error details
+
+**Requirement**: O(1), verify exception type and message text
+
+**Python**: `pytest.raises context manager`
+
+**Example**: test_policy_violation_includes_rule_id; verify PolicyViolation('X').rule_id == 'X'",unit-testing signal
+"Signal: Verify function calls to a mocked dependency (call count, ar","**Structure**: mock.assert_called_once_with(...) or mock.call_count assertions
+
+**Requirement**: O(1), inspect mock call history
+
+**Python**: `unittest.mock.MagicMock, pytest-mock`
+
+**Example**: verify a logger was called with the correct message",unit-testing signal
+Signal: Run the same test on multiple inputs (parametrize),"**Structure**: @pytest.mark.parametrize with list of (input, expected) tuples
+
+**Requirement**: O(n) where n is number of inputs, but DRY
+
+**Python**: `@pytest.mark.parametrize decorator`
+
+**Example**: test_json_parse with [('{""a"":1}', {'a': 1}), ('bad', ValueError)]",unit-testing signal

@@ -1,0 +1,50 @@
+{
+  "schema_version": 1,
+  "total": 276,
+  "sources": [
+    {
+      "path": "data-structures/arrays-and-2d-arrays/glossary.json",
+      "cards": 30
+    },
+    {
+      "path": "data-structures/hash-tables/glossary.json",
+      "cards": 18
+    },
+    {
+      "path": "data-structures/heaps/glossary.json",
+      "cards": 19
+    },
+    {
+      "path": "data-structures/linked-lists/glossary.json",
+      "cards": 29
+    },
+    {
+      "path": "data-structures/lists-and-deques/glossary.json",
+      "cards": 23
+    },
+    {
+      "path": "data-structures/strings/glossary.json",
+      "cards": 26
+    },
+    {
+      "path": "data-structures/trees/glossary.json",
+      "cards": 29
+    },
+    {
+      "path": "testing/contract-testing/glossary.json",
+      "cards": 25
+    },
+    {
+      "path": "testing/integration-testing/glossary.json",
+      "cards": 26
+    },
+    {
+      "path": "testing/test-fixtures/glossary.json",
+      "cards": 25
+    },
+    {
+      "path": "testing/unit-testing/glossary.json",
+      "cards": 26
+    }
+  ]
+}

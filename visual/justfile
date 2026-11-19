@@ -1,0 +1,13 @@
+# Deterministic visual review pages. Paths are relative to this justfile's directory.
+
+# Regenerate the hub, concept maps, diagram gallery, and proof graphs.
+build:
+    uv run python tools/build.py
+
+# Fail when a checked-in visual output differs from its committed source.
+check:
+    uv run python tools/build.py --check
+
+# Serve the repository root (open http://localhost:8000/visual/index.html).
+serve:
+    python -m http.server 8000 --directory ..
