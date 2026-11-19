@@ -1,10 +1,10 @@
-# Papers: Interactive learning from research papers
+# Papers: imported content and local rendering. Acquisition lives in tool-lit-review.
 
 import '../just/repo-push.just'
 
 [group("papers")]
-ingest ARXIV_ID:
-    uv run python tools/ingest.py ingest {{ARXIV_ID}}
+import-export EXPORT:
+    uv run python tools/ingest.py import-export --export {{EXPORT}}
 
 [group("papers")]
 render ARXIV_ID:

@@ -1,6 +1,36 @@
 # Patterns: Data Structures, Cloud Architecture, Game Theory
 
+<!-- repo-role: content-and-rendering -->
+
 **Reusable patterns for building and reasoning about systems.** Formerly `cloud-patterns`.
+
+## Role and boundary
+
+This repo is the **content and rendering layer**: teachable patterns, diagrams, scenarios, quizzes, and deterministic
+builders that turn committed YAML into committed Markdown, HTML, glossaries, and flashcards.
+
+It does not acquire literature or index it:
+
+- `tool-lit-review` searches, downloads, and analyses papers, then writes a schema-v1 `content-export`.
+- `papers/tools/ingest.py` only **imports** that local export into `content/`. It never downloads, parses a PDF, or
+  calls a sibling repo at runtime.
+- `tool-rag` owns embedding and retrieval over PDFs. This repo consumes retrieval results; it does not store vectors.
+
+The boundary in one line: **acquisition and analysis in `tool-lit-review`; content and presentation here; indexing and
+retrieval in `tool-rag`.** A content build must run from committed files and local exports, with no network access.
+
+### Design-intent guards
+
+The boundary is enforced by tests, not prose. These run in `just test-unit` (the CI and pre-push gate):
+
+| Invariant | Guard in `tests/unit/test_papers_content.py` |
+|---|---|
+| This repo declares the content role and names both neighbours | `test_readme_declares_the_content_role_and_neighbours` |
+| No Python here imports a sibling tool or an acquisition/indexing library | `test_papers_tools_import_no_acquisition_or_indexing_code`, `test_no_python_in_the_repo_imports_a_sibling_tool` |
+| PDFs stay in the producer's working folder, never in this repo | `test_papers_hold_no_pdf_files` |
+| The importer refuses an unknown schema, an escaping PDF path, or a malformed checksum; a dry run writes nothing | `test_unknown_schema_is_refused`, `test_pdf_path_outside_the_folder_is_refused`, `test_dry_run_writes_nothing` |
+| Re-import refreshes `source` metadata but preserves authored concepts, equations, claims and citations | `test_reimport_preserves_authored_fields` |
+| Rendered output is derived only from committed YAML | `test_render_outputs_are_derived_from_committed_yaml` |
 
 This repository holds three pattern families:
 
@@ -157,6 +187,25 @@ Best practices from each provider:
 - **GCP**: Architecture Framework, patterns & practices
 - **Cross-provider**: CQRS, event sourcing, microservices patterns
 
+### **Part 8: Paper Learning** (`papers/`)
+
+Committed paper content and rendering. Paper acquisition is not here.
+
+```bash
+# In tool-lit-review: fetch and export metadata (the only downloader)
+uv run tool-lit-review content-export --papers <working-folder> --output /tmp/papers.json
+
+# Here: import the local export, then render committed YAML
+just -f papers/justfile import-export /tmp/papers.json
+just -f papers/justfile render 2401.12345
+```
+
+`import-export` preserves authored concepts, equations, claims, and citations on re-import. It refuses an unknown
+export schema, a non-relative PDF path, or a malformed checksum. No network, no PDF parsing, no sibling import.
+
+The export schema is owned by `tool-lit-review`; this importer pins the version it accepts. Adding a field is a
+coordinated change: bump the producer's schema version, update both importer and guards, and keep both unit gates green.
+
 ## 🚀 Quick Start
 
 ### **Option 1: Local Practice (Recommended)**
@@ -259,6 +308,12 @@ patterns/
 │   ├── aws-waf/
 │   ├── azure-patterns/
 │   └── gcp-patterns/
+├── data-structures/               # YAML source -> generated write-ups, quizzes, glossaries
+├── testing/                       # YAML source -> generated testing-pattern content
+├── data-engineering/              # playbook, templates, and a case study
+├── papers/                        # imported paper metadata and local rendering
+│   ├── content/                   # committed arxiv-*.yaml (imported, then authored)
+│   └── tools/                     # import-export and render; no download or PDF parsing
 └── .github/workflows/
     └── validate.yml               # CI: Terraform validation
 ```
