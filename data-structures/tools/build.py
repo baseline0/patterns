@@ -204,6 +204,10 @@ def family_index(topics: list[dict]) -> str:
         lines.append(f"- [{topic['title']}]({topic['id']}/README.md): quiz in `{topic['id']}/quiz_guide.md`")
     lines += [
         "",
+        "## Explore",
+        "",
+        "- Searchable local catalogue: `just -f site/justfile serve` then open `site/index.html`.",
+        "",
         "## Use it",
         "",
         "- Regenerate every output: `uv run python data-structures/tools/build.py`",

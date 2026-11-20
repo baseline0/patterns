@@ -1,5 +1,7 @@
 # Architecture catalogue
 
+- **Explore in local catalogue:** run `just -f site/justfile serve` and open `site/index.html` (searchable, cross-linked).
+
 Canonical index for architecture styles, tactics, quality attributes, and scenario exercises. `content/catalogue.yaml`
 defines the scenario ladder; the YAML folders define patterns. `tools/build.py` renders `CATALOGUE.md`, `catalogue.json`,
 `graph.json`, `glossary.json`, and `index.html`.

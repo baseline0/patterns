@@ -1,5 +1,7 @@
 # Scenario drills
 
+- **Explore in local catalogue:** run `just -f site/justfile serve` and open `site/index.html` (searchable, cross-linked).
+
 `tools/drill.py` turns the committed scenario ladder into timed system-design practice. The canonical scenario list lives
 in `architecture/content/catalogue.yaml`; each entry must have a prompt, hints, model solution, and rubric.
 

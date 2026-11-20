@@ -9,6 +9,10 @@ Each topic has a write-up, a quiz, and an HTML page. The topics:
 - [Test fixtures: pytest conftest patterns, scope, and dependency injection](test-fixtures/README.md): quiz in `test-fixtures/quiz_guide.md`
 - [Unit testing: test isolation, hermetic tests, and mocking strategies](unit-testing/README.md): quiz in `unit-testing/quiz_guide.md`
 
+## Explore
+
+- Searchable local catalogue: `just -f site/justfile serve` then open `site/index.html`.
+
 ## Use it
 
 - Regenerate every output: `uv run python testing/tools/build.py`

@@ -12,6 +12,10 @@ Each topic has a write-up, a quiz, and an HTML page. The topics:
 - [Strings: pattern matching, substring search, and palindromes](strings/README.md): quiz in `strings/quiz_guide.md`
 - [Binary trees and BSTs: traversal, recursion, and tree properties](trees/README.md): quiz in `trees/quiz_guide.md`
 
+## Explore
+
+- Searchable local catalogue: `just -f site/justfile serve` then open `site/index.html`.
+
 ## Use it
 
 - Regenerate every output: `uv run python data-structures/tools/build.py`

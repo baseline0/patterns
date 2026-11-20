@@ -1,5 +1,7 @@
 # Visual review
 
+- **Explore in local catalogue:** run `just -f site/justfile serve` and open `site/index.html` (searchable, cross-linked).
+
 Static, deterministic pages that turn committed content into something you can look at and recall. Everything here is
 generated from this repository; there are no network requests, CDN scripts, or sibling-repo imports.
 

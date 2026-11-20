@@ -228,6 +228,10 @@ def family_readme(patterns: list[dict[str, Any]]) -> str:
         lines.append(f"- [{pattern['name']}]({pattern['id']}/README.md) — {pattern['category']}: {pattern['intent']}")
     lines += [
         "",
+        "## Explore",
+        "",
+        "- Searchable local catalogue: `just -f site/justfile serve` then open `site/index.html`.",
+        "",
         "## Use it",
         "",
         "- `just -f design-patterns/justfile build`",

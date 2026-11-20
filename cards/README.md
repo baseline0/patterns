@@ -1,5 +1,7 @@
 # Cards
 
+- **Explore in local catalogue:** run `just -f site/justfile serve` and open `site/index.html` (searchable, cross-linked).
+
 One deck for every pattern family. This module is a **consumer** of committed `glossary.json` files; the family builders
 (`data-structures/tools/build.py`, `testing/tools/build.py`, `papers/tools/render.py`, `proofs/tools/build.py`) remain the
 source of truth.

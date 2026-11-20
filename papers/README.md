@@ -1,5 +1,7 @@
 # Papers: Imported Content and Local Rendering
 
+- **Explore in local catalogue:** run `just -f site/justfile serve` and open `site/index.html` (searchable, cross-linked).
+
 Turn papers acquired by `tool-lit-review` into committed learning content.
 
 This folder is part of `patterns`, the content and rendering layer. It never downloads, fetches, parses, or indexes a

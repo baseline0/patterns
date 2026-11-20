@@ -31,6 +31,10 @@ Object and application patterns are the bridge between data-structure reasoning 
 - [Unit of Work](unit-of-work/README.md) — application: Track changes to objects during a business transaction and coordinate writing them out as a single unit.
 - [Visitor](visitor/README.md) — behavioral: Represent an operation to be performed on elements of an object structure without changing the element classes.
 
+## Explore
+
+- Searchable local catalogue: `just -f site/justfile serve` then open `site/index.html`.
+
 ## Use it
 
 - `just -f design-patterns/justfile build`

@@ -1,5 +1,7 @@
 # Proofs
 
+- **Explore in local catalogue:** run `just -f site/justfile serve` and open `site/index.html` (searchable, cross-linked).
+
 Interview-grade proof skeletons stored as small dependency DAGs. Each file in `content/` is the source of truth;
 `tools/build.py` renders notes and glossary cards, and `visual/tools/build.py` renders the DAG page.
 

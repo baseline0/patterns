@@ -1,5 +1,7 @@
 # Design patterns
 
+- **Explore in local catalogue:** run `just -f site/justfile serve` and open `site/index.html` (searchable, cross-linked).
+
 Object and application patterns that bridge data-structure reasoning and system architecture. Each file in `content/` is
 the source of truth; `tools/build.py` renders notes, quizzes, HTML, and a `glossary.json` that joins the canonical deck.
 The generated pattern list lives in `INDEX.md`.
