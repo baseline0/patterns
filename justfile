@@ -67,6 +67,12 @@ import 'just/fleet-test.just'
 @validate:
     python tests/validate_patterns.py
     just -f site/justfile check
+    just -f cards/justfile check
+    just -f visual/justfile check
+    just -f proofs/justfile check
+    just -f design-patterns/justfile check
+    just -f architecture/justfile check
+    just -f providers/justfile check
 
 # Run tests
 # Unit tests only, matching CI and the pre-push hook. Data validation is `just validate`.

@@ -185,11 +185,10 @@ def test_imported_papers_record_original_summary_rights() -> None:
 def test_committed_paper_outputs_have_no_drift() -> None:
     for path in sorted((PAPERS / "content").glob("arxiv-*.yaml")):
         paper = yaml.safe_load(path.read_text(encoding="utf-8"))
-        source = paper.get("source")
-        if not isinstance(source, dict) or not source.get("paper_id"):
-            continue
         arxiv_id = path.stem.removeprefix("arxiv-")
         target = PAPERS / arxiv_id
+        if not target.is_dir():
+            continue
         outputs = render.render_outputs(paper, arxiv_id)
         assert set(outputs) == {"README.md", "index.html", "concepts.json", "equations.md", "glossary.json"}
         for name, value in outputs.items():

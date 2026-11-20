@@ -50,9 +50,11 @@ def test_inventory_matches_committed_content():
     inventory = json.loads((ROOT / "sources.json").read_text(encoding="utf-8"))
     papers = sorted(path.stem.removeprefix("arxiv-") for path in (REPO_ROOT / "papers/content").glob("*.yaml"))
     patterns = json.loads((REPO_ROOT / "data/patterns.json").read_text(encoding="utf-8"))["patterns"]
+    architecture_graph = json.loads((REPO_ROOT / "architecture/graph.json").read_text(encoding="utf-8"))
     assert inventory["papers"] == papers
     assert inventory["patterns"] == [pattern["id"] for pattern in patterns]
     assert inventory["proofs"] == sorted(path.stem for path in (REPO_ROOT / "proofs/content").glob("*.yaml"))
+    assert inventory["architecture_nodes"] == [node["id"] for node in architecture_graph.get("nodes", [])]
 
 
 def test_concept_graph_resolves_related_ids_only():
