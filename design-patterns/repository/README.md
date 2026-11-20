@@ -2,6 +2,8 @@
 
 > Generated from `content/`. Edit the YAML, then run `tools/build.py`.
 
+- Explore in local catalogue: `just -f site/justfile serve` → `site/index.html`
+
 **Category**: application
 
 **Intent**: Mediate between domain and data mapping layers through a collection-like interface for aggregates.

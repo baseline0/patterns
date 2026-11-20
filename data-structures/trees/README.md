@@ -2,6 +2,8 @@
 
 > Generated from `content/`. Edit the YAML, then run `tools/build.py`.
 
+- Explore in local catalogue: `just -f site/justfile serve` → `site/index.html`
+
 A tree is a directed acyclic graph where each node (except the root) has one parent. A binary tree restricts each node to at most two children. A binary search tree adds the invariant that left descendants are smaller and right descendants are larger, making search and insertion natural recursive tasks. Tree problems are solved by recognizing that each subtree is a smaller instance of the same problem.
 
 ## recursive structure: each subtree is a tree

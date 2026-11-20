@@ -2,6 +2,8 @@
 
 > Generated from `content/`. Edit the YAML, then run `tools/build.py`.
 
+- Explore in local catalogue: `just -f site/justfile serve` → `site/index.html`
+
 Integration tests verify interactions between multiple components: a service calling a repository, a repository querying a database, or an API calling a downstream service. Unlike unit tests, integration tests may use real databases (or in-memory replicas), but they must still be hermetic and reproducible. Fixture scopes (function, session, module) manage expensive setup; transaction rollback keeps tests isolated. Contract tests define boundaries between services and verify both sides adhere to the contract.
 
 ## Define service boundaries and test across them

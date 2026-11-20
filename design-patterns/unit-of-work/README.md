@@ -2,6 +2,8 @@
 
 > Generated from `content/`. Edit the YAML, then run `tools/build.py`.
 
+- Explore in local catalogue: `just -f site/justfile serve` → `site/index.html`
+
 **Category**: application
 
 **Intent**: Track changes to objects during a business transaction and coordinate writing them out as a single unit.

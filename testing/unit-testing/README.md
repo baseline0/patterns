@@ -2,6 +2,8 @@
 
 > Generated from `content/`. Edit the YAML, then run `tools/build.py`.
 
+- Explore in local catalogue: `just -f site/justfile serve` → `site/index.html`
+
 Unit tests verify single functions or classes in isolation, fast and deterministically. Hermetic tests are self-contained: they never touch external services, file systems, or databases. Mocking replaces dependencies, allowing tests to control inputs and verify behavior. Pytest markers (@pytest.mark.unit) organize tests by scope. Fixtures manage setup and teardown, keeping tests DRY.
 
 ## Isolation through dependency injection

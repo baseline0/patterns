@@ -2,6 +2,8 @@
 
 > Generated from `content/`. Edit the YAML, then run `tools/build.py`.
 
+- Explore in local catalogue: `just -f site/justfile serve` → `site/index.html`
+
 **Category**: behavioral
 
 **Intent**: Define a one-to-many dependency so dependents are notified when a subject changes state.

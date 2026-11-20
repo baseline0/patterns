@@ -2,6 +2,8 @@
 
 > Generated from `content/`. Edit the YAML, then run `tools/build.py`.
 
+- Explore in local catalogue: `just -f site/justfile serve` → `site/index.html`
+
 A dict and a set find an item by hashing its key, so a lookup costs about the same whether the container holds ten items or a million. The price is that keys must be hashable and must not change while they are stored.
 
 ## hash, then probe

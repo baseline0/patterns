@@ -2,6 +2,8 @@
 
 > Generated from `content/`. Edit the YAML, then run `tools/build.py`.
 
+- Explore in local catalogue: `just -f site/justfile serve` → `site/index.html`
+
 **Category**: behavioral
 
 **Intent**: Allow an object to alter its behavior when its internal state changes by delegating to state objects.

@@ -56,7 +56,7 @@ def validate(topic: dict, source: str) -> None:
 
 
 def readme(topic: dict) -> str:
-    lines = [f"# {topic['title']}", "", "> Generated from `content/`. Edit the YAML, then run `tools/build.py`.", ""]
+    lines = [f"# {topic['title']}", "", "> Generated from `content/`. Edit the YAML, then run `tools/build.py`.", "", "- Explore in local catalogue: `just -f site/justfile serve` → `site/index.html`", ""]
     lines += [topic["summary"].strip(), ""]
     for part in topic["mechanics"]:
         lines += [f"## {part['heading']}", "", part["body"].strip(), ""]

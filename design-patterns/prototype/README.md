@@ -2,6 +2,8 @@
 
 > Generated from `content/`. Edit the YAML, then run `tools/build.py`.
 
+- Explore in local catalogue: `just -f site/justfile serve` → `site/index.html`
+
 **Category**: creational
 
 **Intent**: Create new objects by copying a prototypical instance instead of instantiating from scratch.

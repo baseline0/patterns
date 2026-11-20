@@ -2,6 +2,8 @@
 
 > Generated from `content/`. Edit the YAML, then run `tools/build.py`.
 
+- Explore in local catalogue: `just -f site/justfile serve` → `site/index.html`
+
 heapq keeps a binary heap inside an ordinary list. The smallest element is always at index 0, so reading it is O(1); insertion and removal are O(log n). It is the standard tool when a problem asks for the next smallest or largest element while the data keeps changing.
 
 ## a binary heap in a flat array

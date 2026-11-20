@@ -2,6 +2,8 @@
 
 > Generated from `content/`. Edit the YAML, then run `tools/build.py`.
 
+- Explore in local catalogue: `just -f site/justfile serve` → `site/index.html`
+
 Contract tests verify that a client and a server agree on the shape and behavior of their API: request format, response schema, status codes, and error handling. Consumer-driven contracts start with the client's expectations and verify the server meets them. Provider contracts test the server's behavior independently. Contract tests prevent integration breaks: when a contract test fails, the API has changed in a way that breaks the client. Contract tests are faster than end-to-end tests and catch misalignment early.
 
 ## Consumer-driven contracts: client defines expectations

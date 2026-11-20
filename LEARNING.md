@@ -8,6 +8,8 @@
 
 ---
 
+> **Canonical indexes:** use [`site/index.html`](site/index.html) (`just -f site/justfile serve`) for the searchable catalogue, [`SCENARIOS.md`](SCENARIOS.md)/[`architecture/CATALOGUE.md`](architecture/CATALOGUE.md) for scenarios, and generated module indexes (e.g. `patterns/PATTERNS_INDEX.md`, `design-patterns/INDEX.md`) instead of hand-maintained lists.
+
 ## Week 1-2: Foundations
 
 ### Learning Objectives
@@ -27,7 +29,7 @@
 
 **2. Architecture Diagramming** (2 hrs)
 - Install [Draw.io](https://draw.io) (or open online)
-- Open `diagrams/3-tier-web-app.drawio`
+- Open architecture visuals in [visual/diagrams/index.html](visual/diagrams/index.html) or the [site explorer](site/index.html) (edit source diagrams in `diagrams/` when present)
 - Study the components: Load Balancer, App Servers, Database, caching layer
 - Re-draw from memory in 15 minutes (time yourself)
 - Compare to original; identify gaps
@@ -104,14 +106,12 @@ aws --endpoint-url=http://localhost:4566 s3 ls
 
 **2. Serverless Event-Driven Pattern** (3 hrs)
 ```bash
-# Navigate to pattern
-cd patterns/serverless-event-driven
+# Navigate to a pattern or scenario from the canonical catalogue
+# Browse: site/index.html, patterns/PATTERNS_INDEX.md, SCENARIOS.md
 
-# Study the diagram
-open diagrams/serverless-event-driven.drawio
+# Study its diagram/artifacts (visual/, diagrams/, scenario folder as applicable)
 
-# Run local setup
-./local-setup.sh
+# Run local setup if provided by that scenario/pattern (see its README)
 
 # This creates:
 # - S3 bucket
@@ -130,8 +130,8 @@ aws --endpoint-url=http://localhost:4566 dynamodb scan --table-name events
 
 **3. Terraform Plan (No Deployment)** (2 hrs)
 ```bash
-# Navigate to Terraform example
-cd terraform/aws/serverless-event-driven
+# Navigate to a Terraform example/fixture from the catalogue (see providers/matrix.md, terraform/)
+cd terraform/<provider>/<pattern-or-fixture>
 
 # Initialize Terraform
 terraform init
@@ -150,10 +150,8 @@ tflint .
 
 **4. Multi-Provider Comparison** (2 hrs)
 ```bash
-# Compare same pattern across providers
-cat terraform/aws/serverless-event-driven/main.tf
-cat terraform/azure/serverless-event-driven/main.tf
-cat terraform/gcp/serverless-event-driven/main.tf
+# Compare the same pattern across providers (see providers/matrix.md and site/catalogue)
+# Example paths follow terraform/<provider>/<pattern-or-fixture>/ when present
 
 # Study differences:
 # - AWS Lambda vs Azure Functions vs Google Cloud Functions
@@ -322,32 +320,12 @@ Run this before each timed scenario; it mixes recall, spatial memory, and claim 
 
 ### Scenarios
 
-**Pick 3 of 5 scenarios** (30-45 mins each, timed):
+**Pick 3 scenarios from the canonical ladder** (30-45 mins each, timed). The authoritative list, prompts, hints, solutions, and rubrics are in [`SCENARIOS.md`](SCENARIOS.md), [`architecture/CATALOGUE.md`](architecture/CATALOGUE.md), and the [site explorer](site/index.html) (`scenarios/01-*` … `scenarios/10-*`). Use the drill tool:
 
-1. **E-commerce Platform**
-   - Requirements: 1M daily users, 99.99% uptime, PCI compliance, peak is 10x off-peak
-   - Constraints: $100k/month budget
-   - Questions: How do you scale checkout? Handle Black Friday? Ensure compliance?
-
-2. **Data Pipeline**
-   - Requirements: 1TB/day ingestion, real-time analytics, 7-year retention, compliance
-   - Constraints: $50k/month, latency < 5 mins
-   - Questions: Which storage tier for different ages? How do you query old data? Cost optimization?
-
-3. **Migration Strategy**
-   - Requirements: Move 500 on-prem VMs to cloud, zero downtime, optimize costs
-   - Constraints: 3-month timeline, existing licenses can be transferred
-   - Questions: Lift-and-shift vs. refactor? Hybrid connectivity? Rollback plan?
-
-4. **Cost Optimization**
-   - Requirements: Existing 3-tier web app, reduce costs by 40%, maintain performance
-   - Constraints: Can't change code, minimal downtime
-   - Questions: Reserved instances? Caching? Auto-scaling adjustments? Architecture changes?
-
-5. **Disaster Recovery**
-   - Requirements: RTO = 1 hour, RPO = 15 minutes, multi-region failover
-   - Constraints: Budget < 2x baseline costs
-   - Questions: Active-active vs. active-passive? Data replication strategy? Testing plan?
+```bash
+just -f scenarios/justfile list
+just -f scenarios/justfile drill <scenario-id> --minutes 45 --dry-run
+```
 
 ### Exercise Format
 
@@ -366,7 +344,7 @@ Run this before each timed scenario; it mixes recall, spatial memory, and claim 
    - Anticipate questions: "Why not X?" or "What if Y happens?"
 
 4. **Review model solution** (5 mins)
-   - Compare to `scenarios/<scenario>/SOLUTION.md`
+   - Compare to the scenario's `SOLUTION.md` / `RUBRIC.md` (see catalogue/SCENARIOS.md)
    - Note different approaches, trade-offs
    - Identify gaps in your design
 
@@ -451,4 +429,4 @@ Run this before each timed scenario; it mixes recall, spatial memory, and claim 
 
 ---
 
-**Ready to start?** Go to [Week 1](LEARNING.md#week-1-2-foundations) above, or jump straight to [patterns/](patterns/) if you prefer hands-on learning first.
+**Ready to start?** Go to [Week 1](#week-1-2-foundations), or browse the [site explorer](site/index.html) / [patterns index](patterns/PATTERNS_INDEX.md) / [architecture catalogue](architecture/CATALOGUE.md).

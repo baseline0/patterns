@@ -2,6 +2,8 @@
 
 > Generated from `content/`. Edit the YAML, then run `tools/build.py`.
 
+- Explore in local catalogue: `just -f site/justfile serve` → `site/index.html`
+
 **Category**: structural
 
 **Intent**: Compose objects into tree structures and let clients treat individual objects and compositions uniformly.

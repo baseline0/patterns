@@ -77,6 +77,8 @@ def readme(pattern: dict[str, Any]) -> str:
         "",
         "> Generated from `content/`. Edit the YAML, then run `tools/build.py`.",
         "",
+        "- Explore in local catalogue: `just -f site/justfile serve` → `site/index.html`",
+        "",
         f"**Category**: {pattern['category']}",
         "",
         f"**Intent**: {pattern['intent']}",
