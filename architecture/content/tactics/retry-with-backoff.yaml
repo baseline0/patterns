@@ -1,0 +1,60 @@
+id: retry-with-backoff
+name: Retry with Backoff
+summary: Repeat a failed transient operation after a delay that grows between attempts, often with jitter, so a struggling dependency is not overwhelmed.
+decision: Retry only failures that are likely transient, cap the attempt count, and use exponential delay with jitter to avoid synchronized retry storms.
+mechanism: On a transient error, wait for a delay that doubles per attempt up to a cap, add random jitter, and stop after a fixed maximum or a deadline.
+failure_modes:
+  - Retrying permanent errors such as validation failures or authorization denials.
+  - Retry storms when many clients back off in lockstep without jitter.
+  - Amplifying load on an already degraded dependency until it fails completely.
+  - Exceeding the caller deadline so the result arrives after the user gave up.
+use_when:
+  - Failures are transient, such as timeouts or brief network resets.
+  - The operation is safe to repeat or is idempotent.
+  - The caller can wait within an overall deadline.
+avoid_when:
+  - The error is deterministic and repeating it cannot succeed.
+  - The operation has non-idempotent side effects without a deduplication key.
+  - The dependency is down for an extended outage and a breaker should open instead.
+tradeoffs:
+  - benefit: Brief transient faults are hidden from users without operator action.
+    cost: Retries add tail latency and can multiply request volume on a sick dependency.
+  - benefit: Jitter spreads retries so recovery is not delayed by a thundering herd.
+    cost: More attempts consume worker capacity and can exhaust connection pools.
+quality_impacts:
+  - attribute: availability
+    effect: improves
+    note: Recovering from transient faults keeps request success above the target availability percentage during short disturbances.
+  - attribute: recoverability
+    effect: improves
+    note: Automatic repeat attempts let the system heal from brief dependency loss without manual intervention.
+  - attribute: performance
+    effect: degrades
+    note: Backoff delays increase p95 latency when attempts are exhausted under sustained failure.
+related_patterns:
+  - circuit-breaker
+  - idempotent-consumer
+  - bulkhead
+  - serverless
+  - 02-serverless-api
+  - 07-monitoring
+scenarios:
+  - 02-serverless-api
+  - 07-monitoring
+quiz:
+  - question: Why should exponential backoff include jitter?
+    choices:
+      - To make each retry succeed on the first attempt.
+      - To prevent many clients from retrying at the same instant.
+      - To remove the need for a maximum attempt count.
+      - To turn permanent errors into transient ones.
+    answer: 1
+    explanation: Random jitter desynchronizes clients so a recovering dependency is not hit by a synchronized retry storm.
+  - question: Which failure should not be retried?
+    choices:
+      - A brief connection reset
+      - A gateway timeout
+      - A validation error caused by malformed input
+      - A transient socket error
+    answer: 2
+    explanation: A validation error is deterministic, so repeating it only wastes capacity and adds latency.

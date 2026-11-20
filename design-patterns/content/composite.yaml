@@ -1,0 +1,64 @@
+id: composite
+name: Composite
+category: structural
+intent: Compose objects into tree structures and let clients treat individual objects and compositions
+  uniformly.
+problem: Client code must distinguish leaves from containers when operating over hierarchical structures,
+  leading to special-case logic.
+structure: 'Component.operation()
+
+  Leaf implements Component
+
+  Composite holds children: [Component]
+
+  Composite.operation() delegates to children'
+participants:
+- name: Component
+  role: Common interface for leaves and composites.
+- name: Leaf
+  role: Represents end objects with no children.
+- name: Composite
+  role: Stores children and implements operations by delegating to them.
+- name: Client
+  role: Manipulates the tree through the Component interface.
+forces:
+- Part-whole hierarchies must be represented.
+- Clients should ignore leaf vs container differences.
+- Operations should apply recursively over the structure.
+consequences:
+  benefit: Simplifies client code and makes it easy to add new component types.
+  cost: Can make it harder to restrict which children a composite may contain.
+smells_fixed:
+- Type checks and branching for leaf vs group handling
+- Duplicated tree traversal logic in clients
+smells_created:
+- Overly general component interfaces
+- Difficulty enforcing structural constraints
+python: "class Node:\n    def size(self) -> int:\n        raise NotImplementedError\n\nclass File(Node):\n\
+  \    def __init__(self, bytes_: int):\n        self.bytes_ = bytes_\n\n    def size(self) -> int:\n\
+  \        return self.bytes_\n\nclass Folder(Node):\n    def __init__(self, children):\n        self.children\
+  \ = children\n\n    def size(self) -> int:\n        return sum(c.size() for c in self.children)\n\n\
+  tree = Folder([File(10), Folder([File(5), File(3)])])\nprint(tree.size())"
+example: A static website asset pipeline (01-static-website) can treat files and directories uniformly
+  when computing deploy manifests or cache invalidation sets.
+related_architecture:
+- 01-static-website
+- pipe-and-filter
+- layered
+quiz:
+- question: 'Composite is most appropriate for:'
+  choices:
+  - Flat collections with no nesting
+  - Tree-like part-whole structures
+  - Request/response retries
+  - Two-phase commits
+  answer: 1
+  explanation: It models recursive hierarchies behind a uniform interface.
+- question: 'A trade-off of Composite is:'
+  choices:
+  - Clients must always know concrete types
+  - Constraining allowed child types can become harder
+  - It cannot support recursion
+  - It removes polymorphism
+  answer: 1
+  explanation: A uniform component interface can weaken compile-time/type-level constraints.

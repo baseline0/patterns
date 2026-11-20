@@ -1,0 +1,41 @@
+id: modifiability
+name: Modifiability
+definition: The ease with which a system can be changed to add a feature, replace a component, or adapt to a new requirement without unintended effects elsewhere.
+stimulus:
+  - A requirement changes, a datastore is swapped, a new read view is requested, or a library is upgraded.
+response:
+  - The change is contained in one module or service, verified quickly, and released without a coordinated multi-team deployment.
+measure:
+  - Change lead time under one working day for a localized feature.
+  - At least 90 percent of changes require no cross-team coordination.
+  - Time to add a new read projection under two days.
+  - Replacement of a persistence adapter touches one layer and no domain files.
+tactics:
+  - blue-green-deploy
+  - cache-aside
+  - saga
+  - bulkhead
+related_patterns:
+  - layered
+  - microservices
+  - cqrs
+  - repository
+  - dependency-injection
+  - 06-cicd-pipeline
+quiz:
+  - question: Which design most improves modifiability when the datastore may change?
+    choices:
+      - Business rules that import storage libraries directly
+      - A domain layer isolated behind interfaces from infrastructure
+      - Storing schema details in every screen
+      - One global module that all features edit
+    answer: 1
+    explanation: Inward dependencies let the persistence adapter be swapped without touching business rules, shortening change lead time.
+  - question: Why can independent services shorten change lead time?
+    choices:
+      - They remove the need for testing.
+      - They allow one team to release without a coordinated deploy.
+      - They eliminate all network calls.
+      - They share one database schema.
+    answer: 1
+    explanation: Independent deployment removes coordination overhead, so a single capability change can ship on its own schedule.

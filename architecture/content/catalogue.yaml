@@ -1,0 +1,104 @@
+version: 1
+title: Patterns canonical catalogue
+owners:
+  - repo: patterns
+  - source: README.md
+  - source: LEARNING.md
+  - source: SCENARIOS.md
+families:
+  - id: design-patterns
+    title: Design patterns
+    source: design-patterns/content
+  - id: architecture-styles
+    title: Architecture styles
+    source: architecture/content/styles
+  - id: architecture-tactics
+    title: Architecture tactics
+    source: architecture/content/tactics
+  - id: quality-attributes
+    title: Quality attributes
+    source: architecture/content/quality-attributes
+  - id: scenarios
+    title: Scenarios
+    source: architecture/content/catalogue.yaml
+scenarios:
+  - id: 01-static-website
+    title: Static website with CDN
+    status: implemented
+    path: scenarios/01-static-website/README.md
+    hints: scenarios/01-static-website/HINTS.md
+    solution: scenarios/01-static-website/SOLUTION.md
+    rubric: scenarios/01-static-website/RUBRIC.md
+    patterns: [layered, cache-aside]
+  - id: 02-serverless-api
+    title: Serverless URL shortener
+    status: implemented
+    path: scenarios/02-serverless-api/README.md
+    hints: scenarios/02-serverless-api/HINTS.md
+    solution: scenarios/02-serverless-api/SOLUTION.md
+    rubric: scenarios/02-serverless-api/RUBRIC.md
+    patterns: [serverless, idempotent-consumer, retry-with-backoff]
+  - id: 03-event-driven
+    title: Event-driven order ingress
+    status: implemented
+    path: scenarios/03-event-driven/README.md
+    hints: scenarios/03-event-driven/HINTS.md
+    solution: scenarios/03-event-driven/SOLUTION.md
+    rubric: scenarios/03-event-driven/RUBRIC.md
+    patterns: [event-driven, queue-based-load-leveling, idempotent-consumer]
+  - id: 04-crud-api
+    title: Serverless CRUD API
+    status: implemented
+    path: scenarios/04-crud-api/README.md
+    hints: scenarios/04-crud-api/HINTS.md
+    solution: scenarios/04-crud-api/SOLUTION.md
+    rubric: scenarios/04-crud-api/RUBRIC.md
+    patterns: [layered, repository, serverless]
+  - id: 05-3tier-web
+    title: Three-tier web application
+    status: implemented
+    path: scenarios/05-3tier-web/README.md
+    hints: scenarios/05-3tier-web/HINTS.md
+    solution: scenarios/05-3tier-web/SOLUTION.md
+    rubric: scenarios/05-3tier-web/RUBRIC.md
+    patterns: [layered, bulkhead, cache-aside]
+  - id: 06-cicd-pipeline
+    title: Safe multi-environment CI/CD pipeline
+    status: implemented
+    path: scenarios/06-cicd-pipeline/README.md
+    hints: scenarios/06-cicd-pipeline/HINTS.md
+    solution: scenarios/06-cicd-pipeline/SOLUTION.md
+    rubric: scenarios/06-cicd-pipeline/RUBRIC.md
+    patterns: [blue-green-deploy, circuit-breaker, modifiability]
+  - id: 07-monitoring
+    title: Observability and incident response
+    status: implemented
+    path: scenarios/07-monitoring/README.md
+    hints: scenarios/07-monitoring/HINTS.md
+    solution: scenarios/07-monitoring/SOLUTION.md
+    rubric: scenarios/07-monitoring/RUBRIC.md
+    patterns: [recoverability, observability, circuit-breaker]
+  - id: 08-streaming
+    title: Clickstream streaming pipeline
+    status: implemented
+    path: scenarios/08-streaming/README.md
+    hints: scenarios/08-streaming/HINTS.md
+    solution: scenarios/08-streaming/SOLUTION.md
+    rubric: scenarios/08-streaming/RUBRIC.md
+    patterns: [event-driven, pipe-and-filter, queue-based-load-leveling]
+  - id: 09-microservices
+    title: Microservices order system
+    status: implemented
+    path: scenarios/09-microservices/README.md
+    hints: scenarios/09-microservices/HINTS.md
+    solution: scenarios/09-microservices/SOLUTION.md
+    rubric: scenarios/09-microservices/RUBRIC.md
+    patterns: [microservices, saga, bulkhead, circuit-breaker]
+  - id: 10-disaster-recovery
+    title: Regional disaster recovery
+    status: implemented
+    path: scenarios/10-disaster-recovery/README.md
+    hints: scenarios/10-disaster-recovery/HINTS.md
+    solution: scenarios/10-disaster-recovery/SOLUTION.md
+    rubric: scenarios/10-disaster-recovery/RUBRIC.md
+    patterns: [availability, recoverability, blue-green-deploy]

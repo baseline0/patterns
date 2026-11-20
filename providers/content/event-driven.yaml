@@ -1,0 +1,39 @@
+id: event-driven
+name: Event-driven processing
+summary: >-
+  Producers publish events to a managed queue or topic; a consumer function processes them and moves
+  repeated failures to a dead-letter destination, with a managed store for processed-event state.
+  The pattern is provider-neutral and every fixture is plan-only and cost-free.
+providers:
+  aws:
+    services: SQS queue with dead-letter queue + AWS Lambda + DynamoDB
+    emulator: Floci for local AWS emulation; LocalStack is an alternative. Fixtures never deploy.
+    plan_fixture: terraform/aws/event-driven
+    watch_out: The event source mapping and redrive policy reference ARNs; verify both resolve in the plan without live state.
+  azure:
+    services: Azure Storage Queues with poison queue + Azure Functions + Table Storage
+    emulator: Floci for local Azure emulation. Fixtures are plan-only and require no live account.
+    plan_fixture: terraform/azure/event-driven
+    watch_out: Storage Queue and Table names must be lowercase, and Function App names are globally unique.
+  gcp:
+    services: Pub/Sub topic with dead-letter topic + Cloud Functions + Firestore
+    emulator: Floci for local GCP emulation. Fixtures use placeholder project and source values only.
+    plan_fixture: terraform/gcp/event-driven
+    watch_out: Dead-letter policies need a topic id and delivery attempt count; keep the trigger and subscription on the same project.
+quiz:
+  - question: What does a dead-letter destination provide in an event-driven design?
+    choices:
+      - It caches successful responses for faster reads
+      - It isolates messages that repeatedly fail processing
+      - It replaces the queue when traffic spikes
+      - It encrypts the topic at rest
+    answer: 1
+    explanation: A dead-letter queue or topic captures poison messages after a retry limit so the main stream keeps flowing.
+  - question: Which combination models the event-driven pattern across all three providers?
+    choices:
+      - Queue or topic, consumer function, and dead-letter or storage
+      - API gateway, function, and relational database
+      - Load balancer, virtual machine, and block storage
+      - CDN, static files, and DNS record
+    answer: 0
+    explanation: Each provider fixture names a queue or topic, a function to consume events, and a dead-letter destination plus state storage.

@@ -1,4 +1,427 @@
 Front,Back,Tags
+Command Query Responsibility Segregation: definition,"Use separate models to update state and to read state, so each side can be optimized, scaled, and evolved for its own workload.",architecture style cqrs 03-event-driven 08-streaming definition
+Command Query Responsibility Segregation: decision,"Route writes through a command model and maintain one or more read projections from the resulting events, accepting replication lag in return for independent read and write design.",architecture style cqrs 03-event-driven 08-streaming decision
+Trade-off: Command Query Responsibility Segregation,"**Benefit**: Read views can be denormalized for fast queries without constraining writes.
+
+**Cost**: Replication lag means a just-written value may be absent from a read view.",architecture style cqrs 03-event-driven 08-streaming tradeoff
+Trade-off: Command Query Responsibility Segregation,"**Benefit**: Read and write sides scale and deploy independently.
+
+**Cost**: Projections must be rebuilt on schema change, which costs time and operational care.",architecture style cqrs 03-event-driven 08-streaming tradeoff
+Quality impact: Command Query Responsibility Segregation / performance,**improves**: Purpose-built read views reduce query fan-out and can hold p95 latency flat as read volume grows.,architecture style cqrs 03-event-driven 08-streaming quality-attribute performance
+Quality impact: Command Query Responsibility Segregation / modifiability,"**improves**: Read models can be added without touching commands, shortening change lead time for new views.",architecture style cqrs 03-event-driven 08-streaming quality-attribute modifiability
+Quality impact: Command Query Responsibility Segregation / recoverability,**improves**: Projections can be rebuilt from the event log within a stated RTO after corruption or loss.,architecture style cqrs 03-event-driven 08-streaming quality-attribute recoverability
+Q1: What makes CQRS different from a simple read replica?,"A. It stores every write in a single table.
+B. It uses distinct write and read models that can evolve separately.
+C. It removes the need to store events.
+D. It guarantees zero replication lag.
+
+**B.** CQRS separates models and deployment paths, not just physical copies of the same schema.",architecture style cqrs 03-event-driven 08-streaming question
+Q2: Which consistency trade-off does CQRS require?,"A. Reads may lag behind writes until projections catch up.
+B. Writes are always rejected under load.
+C. There is no durable record of state changes.
+D. Queries must use distributed transactions.
+
+**A.** Projections are updated asynchronously, so the system must expose and monitor replication lag.",architecture style cqrs 03-event-driven 08-streaming question
+Event-Driven Architecture: definition,Components produce and consume immutable domain events so services react to facts that already happened without a synchronous caller waiting for the result.,architecture style event-driven 03-event-driven 08-streaming definition
+Event-Driven Architecture: decision,"Publish facts to a durable broker and let subscribers evolve independently, accepting eventual consistency in exchange for loose coupling and burst absorption.",architecture style event-driven 03-event-driven 08-streaming decision
+Trade-off: Event-Driven Architecture,"**Benefit**: Producers and consumers can be deployed and scaled independently.
+
+**Cost**: Eventual consistency forces the UI to handle stale reads and pending state.",architecture style event-driven 03-event-driven 08-streaming tradeoff
+Trade-off: Event-Driven Architecture,"**Benefit**: A durable log allows replay and new subscribers without backfilling live systems.
+
+**Cost**: Duplicate delivery requires idempotent handlers and careful ordering design.",architecture style event-driven 03-event-driven 08-streaming tradeoff
+Quality impact: Event-Driven Architecture / availability,"**improves**: A slow or down consumer does not fail the producer, so the ingress path stays available during bursts.",architecture style event-driven 03-event-driven 08-streaming quality-attribute availability
+Quality impact: Event-Driven Architecture / modifiability,"**improves**: Adding a subscriber is a local change that does not edit the producer, shortening change lead time.",architecture style event-driven 03-event-driven 08-streaming quality-attribute modifiability
+Quality impact: Event-Driven Architecture / recoverability,"**improves**: Replaying the log rebuilds projections after a failure, supporting a defined RTO without manual data repair.",architecture style event-driven 03-event-driven 08-streaming quality-attribute recoverability
+Q1: Why must an event consumer be idempotent?,"A. Events are always delivered in a single global order.
+B. At-least-once delivery can present the same fact more than once.
+C. Brokers encrypt payloads on every redelivery.
+D. Idempotence removes the need for a broker.
+
+**B.** At-least-once delivery means duplicates are expected, so consumers must produce the same result on repeated input.",architecture style event-driven 03-event-driven 08-streaming question
+Q2: What consistency model does an event-driven design normally ,"A. Strong consistency across all services
+B. Eventual consistency with observable lag
+C. No consistency guarantees at all
+D. Serialized writes through the user interface
+
+**B.** Decoupled services converge over time, so the UI must tolerate lag between a write and updated projections.",architecture style event-driven 03-event-driven 08-streaming question
+Layered Architecture: definition,"Organize code into horizontal layers where each layer depends only on the layer directly beneath it, separating presentation, application, domain, and persistence concerns.",architecture style layered 01-static-website 04-crud-api 05-3tier-web definition
+Layered Architecture: decision,"Split the system into presentation, application, domain, and infrastructure layers and enforce one-way dependencies so a storage change does not ripple into business rules.",architecture style layered 01-static-website 04-crud-api 05-3tier-web decision
+Trade-off: Layered Architecture,"**Benefit**: Changes to a single concern stay local when dependencies point inward.
+
+**Cost**: A request typically crosses every layer, adding indirection and call overhead.",architecture style layered 01-static-website 04-crud-api 05-3tier-web tradeoff
+Trade-off: Layered Architecture,"**Benefit**: New developers find a familiar and easy-to-explain structure.
+
+**Cost**: Rigid layering can encourage anemic domain models that only pass data through.",architecture style layered 01-static-website 04-crud-api 05-3tier-web tradeoff
+Quality impact: Layered Architecture / modifiability,"**improves**: Replacing a persistence adapter changes one layer and leaves domain rules untouched, cutting change lead time.",architecture style layered 01-static-website 04-crud-api 05-3tier-web quality-attribute modifiability
+Quality impact: Layered Architecture / testability,"**improves**: Domain and application layers can be tested without a database or UI, keeping unit test runtime under one minute.",architecture style layered 01-static-website 04-crud-api 05-3tier-web quality-attribute testability
+Quality impact: Layered Architecture / performance,**degrades**: Synchronous traversal of four layers adds hops that can raise p95 latency on read-heavy endpoints.,architecture style layered 01-static-website 04-crud-api 05-3tier-web quality-attribute performance
+Q1: Which dependency direction keeps a layered design modifiable,"A. Presentation imports infrastructure directly.
+B. Outer layers depend on abstractions defined by inner layers.
+C. The domain imports the web framework for its annotations.
+D. Every layer calls every other layer as needed.
+
+**B.** Inward dependencies keep inner layers free of delivery and storage details so those can change independently.",architecture style layered 01-static-website 04-crud-api 05-3tier-web question
+Q2: What is the main cost of strict layering on a read-heavy end,"A. It removes the need for any tests.
+B. It forces all data into a single table.
+C. Extra hops through each layer raise p95 latency.
+D. It prevents the use of dependency injection.
+
+**C.** Each synchronous layer crossing adds call overhead that is measurable as higher p95 latency.",architecture style layered 01-static-website 04-crud-api 05-3tier-web question
+Microservices Architecture: definition,"Decompose a system into small services aligned to business capabilities, each owning its data and exposing a network API so teams can deploy and scale independently.",architecture style microservices 09-microservices 05-3tier-web definition
+Microservices Architecture: decision,"Draw service boundaries around bounded contexts with separate datastores, and accept distributed-systems complexity in exchange for independent release cadence and fault isolation.",architecture style microservices 09-microservices 05-3tier-web decision
+Trade-off: Microservices Architecture,"**Benefit**: Teams can change and deploy their own service without a coordinated release.
+
+**Cost**: Network calls replace in-process calls, adding latency and partial failure modes.",architecture style microservices 09-microservices 05-3tier-web tradeoff
+Trade-off: Microservices Architecture,"**Benefit**: A failure in one service can be isolated with bulkheads and breakers.
+
+**Cost**: Distributed data requires sagas and eventual consistency instead of simple joins.",architecture style microservices 09-microservices 05-3tier-web tradeoff
+Quality impact: Microservices Architecture / modifiability,"**improves**: A capability change is contained in one service, reducing change lead time from weeks to days.",architecture style microservices 09-microservices 05-3tier-web quality-attribute modifiability
+Quality impact: Microservices Architecture / availability,**improves**: Independent deployment and bulkheads limit the blast radius of a bad release to one service.,architecture style microservices 09-microservices 05-3tier-web quality-attribute availability
+Quality impact: Microservices Architecture / performance,**degrades**: Chatty inter-service calls can lift p95 latency unless boundaries are coarse and caches are used.,architecture style microservices 09-microservices 05-3tier-web quality-attribute performance
+Q1: What is the strongest reason to choose microservices for a s,"A. It makes every operation a single database transaction.
+B. It removes the need for automated tests.
+C. Independent teams need independent deployment and scaling.
+D. It eliminates all network latency.
+
+**C.** Independent release cadence and scaling are the core benefits; transactions, latency, and testing get harder.",architecture style microservices 09-microservices 05-3tier-web question
+Q2: Which practice keeps services genuinely decoupled?,"A. Sharing a single writable database across services
+B. Giving each service private data and stable contracts
+C. Having services call each other's internal tables
+D. Deploying all services in one atomic release
+
+**B.** Private data and stable interfaces let one service change without forcing coordinated edits elsewhere.",architecture style microservices 09-microservices 05-3tier-web question
+Pipe and Filter: definition,Compose a stream of processing stages where each filter transforms data incrementally and passes results to the next stage through a buffer or pipe.,architecture style pipe-and-filter 08-streaming definition
+Pipe and Filter: decision,"Break a data workflow into small independent filters connected by bounded pipes so stages can be reused, reordered, and scaled without rewriting the whole pipeline.",architecture style pipe-and-filter 08-streaming decision
+Trade-off: Pipe and Filter,"**Benefit**: Filters are small, reusable, and easy to test in isolation.
+
+**Cost**: Serializing records between stages adds CPU and memory overhead.",architecture style pipe-and-filter 08-streaming tradeoff
+Trade-off: Pipe and Filter,"**Benefit**: Slow stages can be scaled independently behind bounded buffers.
+
+**Cost**: A failing stage can block or drop records unless dead-letter handling is designed in.",architecture style pipe-and-filter 08-streaming tradeoff
+Quality impact: Pipe and Filter / modifiability,"**improves**: Inserting or replacing one filter is a local change, shortening change lead time for new transformations.",architecture style pipe-and-filter 08-streaming quality-attribute modifiability
+Quality impact: Pipe and Filter / testability,"**improves**: Each filter can be verified with fixture input and output in isolation, keeping test runtime short.",architecture style pipe-and-filter 08-streaming quality-attribute testability
+Quality impact: Pipe and Filter / performance,"**improves**: Bounded pipes let stages run concurrently and absorb bursts, raising sustained throughput and steadying p95 latency.",architecture style pipe-and-filter 08-streaming quality-attribute performance
+Q1: What is the main benefit of bounded pipes between filters?,"A. They remove the need for any transformation logic.
+B. They let stages progress at different rates and absorb bursts.
+C. They guarantee exactly-once delivery without retries.
+D. They make all filters share one mutable state store.
+
+**B.** A bounded buffer decouples producer and consumer speeds while capping memory use.",architecture style pipe-and-filter 08-streaming question
+Q2: Which property should a filter have to stay reusable?,"A. It reads the global database directly.
+B. It knows the identity of the next filter.
+C. It performs one transformation with clear input and output.
+D. It writes to the final sink itself.
+
+**C.** Filters stay composable when they do one transformation and communicate only through their pipe.",architecture style pipe-and-filter 08-streaming question
+Serverless Architecture: definition,"Run application logic in short-lived managed functions triggered by events, with the platform handling capacity, scaling, and operational plumbing.",architecture style serverless 02-serverless-api 04-crud-api definition
+Serverless Architecture: decision,"Express behaviour as small functions behind managed triggers and pay for actual execution, accepting cold starts and statelessness in exchange for minimal idle cost and elastic scale.",architecture style serverless 02-serverless-api 04-crud-api decision
+Trade-off: Serverless Architecture,"**Benefit**: Capacity scales to zero and back without provisioning servers.
+
+**Cost**: Cold starts can add hundreds of milliseconds to p95 latency for infrequent paths.",architecture style serverless 02-serverless-api 04-crud-api tradeoff
+Trade-off: Serverless Architecture,"**Benefit**: The team stops managing operating systems and runtime patching.
+
+**Cost**: Stateless execution pushes all state to external services and complicates local testing.",architecture style serverless 02-serverless-api 04-crud-api tradeoff
+Quality impact: Serverless Architecture / performance,"**improves**: Horizontal scale follows demand automatically, keeping p95 latency stable under bursty load once functions are warm.",architecture style serverless 02-serverless-api 04-crud-api quality-attribute performance
+Quality impact: Serverless Architecture / availability,**improves**: Managed triggers and multi-zone execution remove single-server failure points from the request path.,architecture style serverless 02-serverless-api 04-crud-api quality-attribute availability
+Quality impact: Serverless Architecture / modifiability,"**improves**: Small functions with narrow triggers allow feature changes to ship in minutes, shortening change lead time.",architecture style serverless 02-serverless-api 04-crud-api quality-attribute modifiability
+Q1: What is the main latency risk of a serverless function?,"A. It always runs on a dedicated reserved host.
+B. A cold start delays an invocation that has no warm instance.
+C. Functions cannot be invoked concurrently.
+D. Managed datastores add no latency.
+
+**B.** A cold start initializes a new execution environment, which can add hundreds of milliseconds to p95 latency.",architecture style serverless 02-serverless-api 04-crud-api question
+Q2: Why should a function handler be idempotent?,"A. Triggers may redeliver the same event after a timeout.
+B. Functions keep in-memory state between invocations.
+C. Idempotence removes the need for a datastore.
+D. Triggers guarantee exactly-once execution.
+
+**A.** Managed triggers typically provide at-least-once delivery, so a retry must not duplicate side effects.",architecture style serverless 02-serverless-api 04-crud-api question
+Blue-Green Deploy: definition,Run two identical production environments and switch traffic from the current one to the prepared one only after the new version is verified.,architecture tactic blue-green-deploy 06-cicd-pipeline 10-disaster-recovery definition
+Blue-Green Deploy: decision,"Keep a stable blue environment serving users while green is deployed and tested, then flip the router or DNS so rollback is a fast switch back rather than a redeploy.",architecture tactic blue-green-deploy 06-cicd-pipeline 10-disaster-recovery decision
+Trade-off: Blue-Green Deploy,"**Benefit**: Rollback is a traffic switch, reducing recovery time after a bad release.
+
+**Cost**: Doubling capacity for the standby environment raises cost.",architecture tactic blue-green-deploy 06-cicd-pipeline 10-disaster-recovery tradeoff
+Trade-off: Blue-Green Deploy,"**Benefit**: Green can be validated with real traffic patterns before users see it.
+
+**Cost**: Database migrations must be backward compatible across both versions.",architecture tactic blue-green-deploy 06-cicd-pipeline 10-disaster-recovery tradeoff
+Quality impact: Blue-Green Deploy / availability,**improves**: Instant traffic switch and rollback protect the availability percentage during releases.,architecture tactic blue-green-deploy 06-cicd-pipeline 10-disaster-recovery quality-attribute availability
+Quality impact: Blue-Green Deploy / recoverability,"**improves**: A bad release is undone within seconds, well inside the RTO for a failed deployment.",architecture tactic blue-green-deploy 06-cicd-pipeline 10-disaster-recovery quality-attribute recoverability
+Quality impact: Blue-Green Deploy / modifiability,"**improves**: Isolated release environments let changes ship with less coordination, shortening change lead time.",architecture tactic blue-green-deploy 06-cicd-pipeline 10-disaster-recovery quality-attribute modifiability
+Q1: What makes rollback fast in a blue-green deploy?,"A. Rebuilding the old environment from scratch
+B. Switching traffic back to the still-running old environment
+C. Restoring a nightly backup
+D. Running the deployment script in reverse
+
+**B.** The previous environment stays warm, so rollback is a router change rather than a rebuild.",architecture tactic blue-green-deploy 06-cicd-pipeline 10-disaster-recovery question
+Q2: What database practice does blue-green require?,"A. Schema changes that both versions can tolerate
+B. Renaming tables on every release
+C. Taking the database offline during cutover
+D. Storing schema inside each application binary
+
+**A.** Both versions run at once, so migrations must be backward compatible until the old version is drained.",architecture tactic blue-green-deploy 06-cicd-pipeline 10-disaster-recovery question
+Bulkhead: definition,Partition capacity into isolated pools so a failure or traffic surge in one area cannot consume all resources and starve unrelated work.,architecture tactic bulkhead 05-3tier-web 09-microservices definition
+Bulkhead: decision,"Allocate separate thread pools, connection pools, queues, or compute quotas per workload and cap each pool so one caller cannot exhaust the whole system.",architecture tactic bulkhead 05-3tier-web 09-microservices decision
+Trade-off: Bulkhead,"**Benefit**: A stuck dependency is contained, keeping other request classes available.
+
+**Cost**: Static partitions waste idle capacity that another pool could use.",architecture tactic bulkhead 05-3tier-web 09-microservices tradeoff
+Trade-off: Bulkhead,"**Benefit**: Bounded queues give predictable memory use and p95 latency under load.
+
+**Cost**: Requests beyond a pool cap are rejected and need explicit fallback handling.",architecture tactic bulkhead 05-3tier-web 09-microservices tradeoff
+Quality impact: Bulkhead / availability,"**improves**: Isolated pools keep critical paths serving traffic when a noncritical path saturates, protecting the availability percentage.",architecture tactic bulkhead 05-3tier-web 09-microservices quality-attribute availability
+Quality impact: Bulkhead / performance,**improves**: Bounded queues prevent unbounded waits and keep p95 latency predictable during bursts.,architecture tactic bulkhead 05-3tier-web 09-microservices quality-attribute performance
+Quality impact: Bulkhead / security,**improves**: Per-tenant quotas limit how much capacity one noisy or hostile client can consume.,architecture tactic bulkhead 05-3tier-web 09-microservices quality-attribute security
+Q1: What does a bulkhead primarily protect?,"A. Data encryption at rest
+B. Capacity for unrelated workloads from one failing path
+C. The exact ordering of every message
+D. The source code from bugs
+
+**B.** Bulkheads isolate resource pools so one overloaded path cannot consume all capacity.",architecture tactic bulkhead 05-3tier-web 09-microservices question
+Q2: Why should bulkhead queues be bounded?,"A. Unbounded queues grow until memory runs out and latency spikes.
+B. Bounded queues remove the need for timeouts.
+C. Bounded queues make retries unnecessary.
+D. Unbounded queues improve p95 latency.
+
+**A.** Without a cap, queued work consumes memory and turns overload into a crash instead of a clean rejection.",architecture tactic bulkhead 05-3tier-web 09-microservices question
+Cache Aside: definition,"Load data into a cache on demand from the application, reading from the cache first and populating it from the source of truth on a miss.",architecture tactic cache-aside 01-static-website 05-3tier-web definition
+Cache Aside: decision,Treat the datastore as authoritative and let application code populate the cache lazily with a time to live and invalidation on writes.,architecture tactic cache-aside 01-static-website 05-3tier-web decision
+Trade-off: Cache Aside,"**Benefit**: Common reads avoid a datastore round trip and lower p95 latency.
+
+**Cost**: Invalidation logic adds application complexity and stale windows.",architecture tactic cache-aside 01-static-website 05-3tier-web tradeoff
+Trade-off: Cache Aside,"**Benefit**: Read load on the primary datastore drops, improving headroom and availability.
+
+**Cost**: A cold cache produces a latency spike and a burst of datastore traffic.",architecture tactic cache-aside 01-static-website 05-3tier-web tradeoff
+Quality impact: Cache Aside / performance,**improves**: Serving hot keys from cache reduces p95 latency and datastore load during peak traffic.,architecture tactic cache-aside 01-static-website 05-3tier-web quality-attribute performance
+Quality impact: Cache Aside / availability,**improves**: Cached reads remain answerable during a short datastore outage within the freshness window.,architecture tactic cache-aside 01-static-website 05-3tier-web quality-attribute availability
+Quality impact: Cache Aside / modifiability,"**improves**: Cache policy lives in application code and can be tuned without a datastore schema change, shortening change lead time.",architecture tactic cache-aside 01-static-website 05-3tier-web quality-attribute modifiability
+"Q1: In cache aside, what is the source of truth?","A. The cache, until it expires
+B. The application's local memory
+C. The underlying datastore
+D. The client browser
+
+**C.** The datastore remains authoritative; the cache is a disposable optimization populated on a miss.",architecture tactic cache-aside 01-static-website 05-3tier-web question
+Q2: What is the most common correctness bug with cache aside?,"A. Caching values that are read more than once
+B. Failing to invalidate a key after its source data changes
+C. Setting a time to live on cached entries
+D. Using a hit counter on the cache
+
+**B.** A missed invalidation leaves a stale value in the cache until expiry, producing incorrect reads.",architecture tactic cache-aside 01-static-website 05-3tier-web question
+Circuit Breaker: definition,"Stop sending requests to a failing dependency for a cooling-off period, then probe cautiously before restoring normal traffic.",architecture tactic circuit-breaker 06-cicd-pipeline 07-monitoring 09-microservices definition
+Circuit Breaker: decision,"Wrap calls in a breaker that trips after a failure threshold, fails fast while open, and moves through half-open probes to decide when to close.",architecture tactic circuit-breaker 06-cicd-pipeline 07-monitoring 09-microservices decision
+Trade-off: Circuit Breaker,"**Benefit**: Fast failure protects callers from p95 latency blowups and thread exhaustion.
+
+**Cost**: Requests are rejected even after the dependency begins to recover until a probe succeeds.",architecture tactic circuit-breaker 06-cicd-pipeline 07-monitoring 09-microservices tradeoff
+Trade-off: Circuit Breaker,"**Benefit**: A failing dependency gets time to recover without sustained load.
+
+**Cost**: Requires tuning thresholds, windows, and timeouts per dependency.",architecture tactic circuit-breaker 06-cicd-pipeline 07-monitoring 09-microservices tradeoff
+Quality impact: Circuit Breaker / availability,**improves**: Fail-fast behaviour keeps the caller available and preserves error budget when a downstream service degrades.,architecture tactic circuit-breaker 06-cicd-pipeline 07-monitoring 09-microservices quality-attribute availability
+Quality impact: Circuit Breaker / recoverability,"**improves**: Half-open probes detect recovery and restore traffic automatically, shortening recovery time within the RTO.",architecture tactic circuit-breaker 06-cicd-pipeline 07-monitoring 09-microservices quality-attribute recoverability
+Quality impact: Circuit Breaker / performance,**improves**: Rejecting calls without waiting on timeouts holds p95 latency steady during a downstream outage.,architecture tactic circuit-breaker 06-cicd-pipeline 07-monitoring 09-microservices quality-attribute performance
+Q1: What does a half-open circuit breaker do?,"A. Rejects every call permanently
+B. Allows a limited probe to test recovery
+C. Increases the timeout on every call
+D. Retries indefinitely until success
+
+**B.** A half-open state permits a small number of probe requests so the breaker can close only after real recovery.",architecture tactic circuit-breaker 06-cicd-pipeline 07-monitoring 09-microservices question
+Q2: Which condition should count toward opening a breaker?,"A. A malformed request rejected by input validation
+B. Repeated timeouts from the remote dependency
+C. A user choosing to cancel a request
+D. A successful cache hit
+
+**B.** Breakers should track dependency faults such as timeouts, not deterministic application-level rejections.",architecture tactic circuit-breaker 06-cicd-pipeline 07-monitoring 09-microservices question
+Idempotent Consumer: definition,Make message handling safe to repeat so redelivery of the same event produces exactly the same observable result as a single delivery.,architecture tactic idempotent-consumer 02-serverless-api 03-event-driven definition
+Idempotent Consumer: decision,Attach a stable identity to each message and record processed identities atomically with the resulting state change so duplicates are detected and skipped.,architecture tactic idempotent-consumer 02-serverless-api 03-event-driven decision
+Trade-off: Idempotent Consumer,"**Benefit**: Retries and replay become safe, improving recoverability after failures.
+
+**Cost**: A deduplication store adds a read or unique constraint on every message.",architecture tactic idempotent-consumer 02-serverless-api 03-event-driven tradeoff
+Trade-off: Idempotent Consumer,"**Benefit**: Duplicate events no longer corrupt counts or create repeated orders.
+
+**Cost**: Key retention must be designed so old duplicates cannot be accepted after cleanup.",architecture tactic idempotent-consumer 02-serverless-api 03-event-driven tradeoff
+Quality impact: Idempotent Consumer / recoverability,"**improves**: Replaying a log after a crash is safe because repeated events are skipped, supporting the RTO and RPO targets.",architecture tactic idempotent-consumer 02-serverless-api 03-event-driven quality-attribute recoverability
+Quality impact: Idempotent Consumer / availability,"**improves**: Consumers can acknowledge and retry freely without manual cleanup, keeping the pipeline available during faults.",architecture tactic idempotent-consumer 02-serverless-api 03-event-driven quality-attribute availability
+Quality impact: Idempotent Consumer / performance,"**degrades**: Deduplication lookups add a datastore operation per message, raising p95 latency for high-volume consumers.",architecture tactic idempotent-consumer 02-serverless-api 03-event-driven quality-attribute performance
+Q1: Where must a processed message key be recorded?,"A. In a separate log written after the state change
+B. In the same atomic transaction as the state change
+C. Only in the consumer's memory
+D. In the producer's configuration
+
+**B.** Atomic recording prevents a crash between the side effect and the deduplication record from causing a duplicate.",architecture tactic idempotent-consumer 02-serverless-api 03-event-driven question
+Q2: Why does at-least-once delivery require idempotent handlers?,"A. It never delivers a message more than once.
+B. It guarantees strict global ordering.
+C. It may redeliver the same message after a timeout.
+D. It encrypts every message differently.
+
+**C.** Redelivery after an unacknowledged timeout is normal, so handlers must tolerate repeated input.",architecture tactic idempotent-consumer 02-serverless-api 03-event-driven question
+Observability: definition,"Instrument the system so its internal state can be inferred from externally emitted logs, metrics, and traces without shipping new code during an incident.",architecture tactic observability 07-monitoring 06-cicd-pipeline definition
+Observability: decision,"Emit structured telemetry with correlation identifiers across every service boundary, define service level indicators up front, and build dashboards and alerts around user-visible symptoms.",architecture tactic observability 07-monitoring 06-cicd-pipeline decision
+Trade-off: Observability,"**Benefit**: Incidents are diagnosed faster because a request can be traced end to end.
+
+**Cost**: Telemetry storage and processing add ongoing cost and capacity planning.",architecture tactic observability 07-monitoring 06-cicd-pipeline tradeoff
+Trade-off: Observability,"**Benefit**: Symptom-based alerts reduce noise and focus responders on user impact.
+
+**Cost**: Good instrumentation must be designed into code, which lengthens initial development.",architecture tactic observability 07-monitoring 06-cicd-pipeline tradeoff
+Quality impact: Observability / availability,**improves**: Symptom-based alerts catch degradation early and protect the availability percentage before users report it.,architecture tactic observability 07-monitoring 06-cicd-pipeline quality-attribute availability
+Quality impact: Observability / recoverability,"**improves**: Traces and dashboards shorten mean time to diagnose, keeping incident recovery within the RTO.",architecture tactic observability 07-monitoring 06-cicd-pipeline quality-attribute recoverability
+Quality impact: Observability / security,**degrades**: Logs and traces expand the data surface and can leak secrets unless fields are scrubbed deliberately.,architecture tactic observability 07-monitoring 06-cicd-pipeline quality-attribute security
+Q1: Which signal best supports on-call alerting?,"A. CPU usage on one host
+B. A symptom-based service level indicator tied to user impact
+C. The number of lines of code deployed
+D. The count of log files on disk
+
+**B.** Symptom-based indicators reflect what users experience and reduce false alarms from harmless internal noise.",architecture tactic observability 07-monitoring 06-cicd-pipeline question
+Q2: What is the main privacy risk of observability data?,"A. Traces are always encrypted by default.
+B. Logs may capture tokens or personal data if fields are not scrubbed.
+C. Metrics cannot store numeric values.
+D. Correlation identifiers expose source code.
+
+**B.** Broad instrumentation can accidentally record secrets or personal data, so scrubbing must be explicit.",architecture tactic observability 07-monitoring 06-cicd-pipeline question
+Queue-Based Load Leveling: definition,"Place a durable queue between producers and workers so bursts are buffered and consumers process work at a steady, controlled rate.",architecture tactic queue-based-load-leveling 03-event-driven 08-streaming definition
+Queue-Based Load Leveling: decision,"Accept work into a bounded durable queue and let workers drain it at a sustainable pace, exposing backlog depth as a first-class operational signal.",architecture tactic queue-based-load-leveling 03-event-driven 08-streaming decision
+Trade-off: Queue-Based Load Leveling,"**Benefit**: Producers stay responsive and available during bursts instead of overload failing calls.
+
+**Cost**: Completion is delayed and users need a way to observe pending work.",architecture tactic queue-based-load-leveling 03-event-driven 08-streaming tradeoff
+Trade-off: Queue-Based Load Leveling,"**Benefit**: Workers can scale on backlog depth with predictable throughput.
+
+**Cost**: A queue adds delivery, deduplication, and dead-letter operational burden.",architecture tactic queue-based-load-leveling 03-event-driven 08-streaming tradeoff
+Quality impact: Queue-Based Load Leveling / availability,"**improves**: Buffering bursts prevents overload from rejecting requests, sustaining availability during spikes.",architecture tactic queue-based-load-leveling 03-event-driven 08-streaming quality-attribute availability
+Quality impact: Queue-Based Load Leveling / performance,**improves**: Workers run near optimal concurrency so p95 latency stays stable rather than spiking under burst load.,architecture tactic queue-based-load-leveling 03-event-driven 08-streaming quality-attribute performance
+Quality impact: Queue-Based Load Leveling / recoverability,"**improves**: Durable queued messages survive worker restarts, allowing replay within the RTO after a crash.",architecture tactic queue-based-load-leveling 03-event-driven 08-streaming quality-attribute recoverability
+Q1: What signal should drive worker autoscaling in load leveling,"A. The number of code files in the worker
+B. Backlog depth and message age
+C. The colour of the dashboard
+D. The total number of producers ever seen
+
+**B.** Backlog depth and age show real pending work, so scaling on them drains the queue within target time.",architecture tactic queue-based-load-leveling 03-event-driven 08-streaming question
+Q2: Why must the queue be bounded or paired with load shedding?,"A. Bounded queues improve encryption strength.
+B. An unbounded queue can grow until storage or memory fails.
+C. Bounded queues remove the need for workers.
+D. Unbounded queues guarantee faster processing.
+
+**B.** Without a cap or shedding policy, sustained overload turns a buffer into an outage.",architecture tactic queue-based-load-leveling 03-event-driven 08-streaming question
+Retry with Backoff: definition,"Repeat a failed transient operation after a delay that grows between attempts, often with jitter, so a struggling dependency is not overwhelmed.",architecture tactic retry-with-backoff 02-serverless-api 07-monitoring definition
+Retry with Backoff: decision,"Retry only failures that are likely transient, cap the attempt count, and use exponential delay with jitter to avoid synchronized retry storms.",architecture tactic retry-with-backoff 02-serverless-api 07-monitoring decision
+Trade-off: Retry with Backoff,"**Benefit**: Brief transient faults are hidden from users without operator action.
+
+**Cost**: Retries add tail latency and can multiply request volume on a sick dependency.",architecture tactic retry-with-backoff 02-serverless-api 07-monitoring tradeoff
+Trade-off: Retry with Backoff,"**Benefit**: Jitter spreads retries so recovery is not delayed by a thundering herd.
+
+**Cost**: More attempts consume worker capacity and can exhaust connection pools.",architecture tactic retry-with-backoff 02-serverless-api 07-monitoring tradeoff
+Quality impact: Retry with Backoff / availability,**improves**: Recovering from transient faults keeps request success above the target availability percentage during short disturbances.,architecture tactic retry-with-backoff 02-serverless-api 07-monitoring quality-attribute availability
+Quality impact: Retry with Backoff / recoverability,**improves**: Automatic repeat attempts let the system heal from brief dependency loss without manual intervention.,architecture tactic retry-with-backoff 02-serverless-api 07-monitoring quality-attribute recoverability
+Quality impact: Retry with Backoff / performance,**degrades**: Backoff delays increase p95 latency when attempts are exhausted under sustained failure.,architecture tactic retry-with-backoff 02-serverless-api 07-monitoring quality-attribute performance
+Q1: Why should exponential backoff include jitter?,"A. To make each retry succeed on the first attempt.
+B. To prevent many clients from retrying at the same instant.
+C. To remove the need for a maximum attempt count.
+D. To turn permanent errors into transient ones.
+
+**B.** Random jitter desynchronizes clients so a recovering dependency is not hit by a synchronized retry storm.",architecture tactic retry-with-backoff 02-serverless-api 07-monitoring question
+Q2: Which failure should not be retried?,"A. A brief connection reset
+B. A gateway timeout
+C. A validation error caused by malformed input
+D. A transient socket error
+
+**C.** A validation error is deterministic, so repeating it only wastes capacity and adds latency.",architecture tactic retry-with-backoff 02-serverless-api 07-monitoring question
+Saga: definition,Manage a long-running multi-service transaction as a sequence of local transactions with compensating actions that undo completed steps on failure.,architecture tactic saga 09-microservices definition
+Saga: decision,Replace a distributed transaction with an orchestrated or choreographed saga where each step commits locally and publishes the event that triggers the next step or a compensation.,architecture tactic saga 09-microservices decision
+Trade-off: Saga,"**Benefit**: Cross-service consistency is achieved without a two-phase commit.
+
+**Cost**: Intermediate states are visible to other observers until the saga finishes.",architecture tactic saga 09-microservices tradeoff
+Trade-off: Saga,"**Benefit**: Each service keeps private data and independent deployment.
+
+**Cost**: Every step needs a tested compensation, roughly doubling logic and test cases.",architecture tactic saga 09-microservices tradeoff
+Quality impact: Saga / recoverability,"**improves**: Compensations return the system to a consistent state after a failed step, limiting data repair within the RTO.",architecture tactic saga 09-microservices quality-attribute recoverability
+Quality impact: Saga / modifiability,"**improves**: Steps can be reordered or replaced in the saga definition without changing every service, shortening change lead time.",architecture tactic saga 09-microservices quality-attribute modifiability
+Quality impact: Saga / testability,"**degrades**: Each step and compensation pair needs failure-path tests, lengthening test runtime for the workflow.",architecture tactic saga 09-microservices quality-attribute testability
+Q1: What does a saga use when a step fails?,"A. A distributed rollback lock
+B. A compensating transaction for completed steps
+C. A full database restore
+D. A retry of all steps forever
+
+**B.** Sagas undo committed local transactions by running explicit compensations in reverse order.",architecture tactic saga 09-microservices question
+Q2: Which condition makes a saga risky to apply?,"A. Steps span services with separate databases
+B. A step has no meaningful way to undo its effects
+C. The process runs for several seconds
+D. Steps publish events
+
+**B.** Without a valid compensation, a failure cannot bring the system back to a consistent state.",architecture tactic saga 09-microservices question
+Availability: definition,"The proportion of time a system is able to serve valid requests, usually expressed as a percentage of uptime measured at the service level indicator.",architecture quality attribute availability definition
+Q1: How is availability normally expressed and measured?,"A. Total lines of code written per month
+B. Percentage of successful requests or uptime over a period
+C. The number of servers in the cluster
+D. The average size of a log file
+
+**B.** Availability is a ratio of successful service time or requests over a defined measurement window.",architecture quality attribute availability question
+Q2: Which tactic best limits the blast radius of a slow dependen,"A. Bulkhead
+B. Cache aside
+C. Blue-green deploy
+D. Idempotent consumer
+
+**A.** A bulkhead isolates resource pools so one slow dependency cannot starve unrelated request classes.",architecture quality attribute availability question
+Modifiability: definition,"The ease with which a system can be changed to add a feature, replace a component, or adapt to a new requirement without unintended effects elsewhere.",architecture quality attribute modifiability definition
+Q1: Which design most improves modifiability when the datastore ,"A. Business rules that import storage libraries directly
+B. A domain layer isolated behind interfaces from infrastructure
+C. Storing schema details in every screen
+D. One global module that all features edit
+
+**B.** Inward dependencies let the persistence adapter be swapped without touching business rules, shortening change lead time.",architecture quality attribute modifiability question
+Q2: Why can independent services shorten change lead time?,"A. They remove the need for testing.
+B. They allow one team to release without a coordinated deploy.
+C. They eliminate all network calls.
+D. They share one database schema.
+
+**B.** Independent deployment removes coordination overhead, so a single capability change can ship on its own schedule.",architecture quality attribute modifiability question
+Performance: definition,"The responsiveness and throughput of a system under a specified workload, commonly expressed as latency percentiles and requests handled per unit of time.",architecture quality attribute performance definition
+Q1: Why is p95 latency more informative than average latency?,"A. It is always lower than the average.
+B. It reflects the experience of the slowest 5 percent of requests.
+C. It ignores all slow requests.
+D. It measures only server CPU time.
+
+**B.** Tail percentiles expose slow requests that an average hides, which is where users usually feel degradation.",architecture quality attribute performance question
+Q2: How does a bounded queue help performance under a burst?,"A. It removes all processing work.
+B. It holds excess work while workers stay at steady concurrency, capping wait time.
+C. It guarantees zero latency.
+D. It disables autoscaling.
+
+**B.** A bounded buffer smooths bursts and keeps workers near optimal throughput instead of letting wait times grow without limit.",architecture quality attribute performance question
+Recoverability: definition,"The ability of a system to restore an acceptable state and resume service after a failure, measured by how quickly and completely normal operation returns.",architecture quality attribute recoverability definition
+Q1: What is the difference between RTO and RPO?,"A. RTO is downtime allowed, RPO is data loss allowed
+B. RTO is data loss allowed, RPO is downtime allowed
+C. Both describe the same recovery target
+D. RTO applies only to databases and RPO only to networks
+
+**A.** RTO bounds how long service may be down, while RPO bounds how much recent data may be lost.",architecture quality attribute recoverability question
+Q2: Why does replay require idempotent consumers?,"A. Replay delivers each event exactly once.
+B. Replay redelivers events, and repeated processing must not change the result.
+C. Replay disables the datastore.
+D. Replay removes the need for a recovery target.
+
+**B.** Replaying a log repeats facts, so handlers must be safe when the same input is applied more than once.",architecture quality attribute recoverability question
+Security: definition,The ability of a system to protect data and resources from unauthorized access and misuse while remaining usable for legitimate requests.,architecture quality attribute security definition
+Q1: How does a bulkhead contribute to security?,"A. It encrypts stored data.
+B. It caps the resources one tenant or caller can consume.
+C. It issues authentication tokens.
+D. It removes all logging.
+
+**B.** Per-tenant quotas and bounded pools limit how much capacity a noisy or hostile client can take.",architecture quality attribute security question
+Q2: What is the main observability risk to data protection?,"A. Metrics always contain personal data.
+B. Structured logs can capture tokens or personal fields that must be scrubbed.
+C. Traces cannot be stored anywhere.
+D. Correlation identifiers reveal passwords.
+
+**B.** Broad instrumentation can record sensitive values unless fields are deliberately filtered before emission.",architecture quality attribute security question
+Testability: definition,"The ease with which a system can be verified against its specification by isolating parts, controlling their inputs, and observing their outputs.",architecture quality attribute testability definition
+Q1: What makes a component easy to test in isolation?,"A. It reads global configuration at call time.
+B. It depends on concrete external services directly.
+C. It accepts dependencies and exposes observable outputs.
+D. It hides all of its state in static fields.
+
+**C.** Injectable dependencies and observable outputs let a test control inputs and assert results without live systems.",architecture quality attribute testability question
+Q2: Why do compensating sagas tend to increase test runtime?,"A. They remove all failure paths.
+B. Each step and compensation pair needs its own failure-path test.
+C. They run only in production.
+D. They cannot be tested at all.
+
+**B.** Every step needs a verified undo path, which multiplies the number of cases that a suite must exercise.",architecture quality attribute testability question
 Claim: sliding-window-avoids-nesting,"Sliding window processes each element at most twice, keeping subarray problems O(n) instead of O(n^2).",arrays-and-2d-arrays claim
 Claim: prefix-sum-enables-constant-range-queries,A prefix sum array answers any subarray-sum query in O(1) after O(n) preprocessing.,arrays-and-2d-arrays claim
 Claim: two-pointers-solve-ksum-in-polynomial,Two pointers on a sorted array reduce k-sum from O(n^k) brute force to O(n^(k-1)) by solving one subproblem in linear time.,arrays-and-2d-arrays claim
@@ -744,6 +1167,414 @@ Signal: Find paths or relationships between nodes in the tree,"**Structure**: re
 **Python**: `recursion; track path or constraint`
 
 **Example**: Lowest Common Ancestor (LeetCode 236)",trees signal
+Intent: Abstract Factory,Provide an interface for creating families of related objects without specifying concrete classes.,design-pattern creational abstract-factory intent
+Use Abstract Factory when,"A system must produce compatible sets of components (UI widgets, storage clients, drivers) that vary by environment but must work together.",design-pattern creational abstract-factory problem
+Trade-off: Abstract Factory,"**Benefit**: Enforces consistency among related products and centralizes family selection.
+
+**Cost**: Adding a new product kind requires changing every factory interface and implementation.",design-pattern creational abstract-factory tradeoff
+Q1: Abstract Factory differs from Factory Method because it:,"A. Creates one product via inheritance hook only
+B. Creates families of related products together
+C. Clones existing instances
+D. Builds objects step by step
+
+**B.** Its focus is consistent families (e.g., queue + storage + metrics) per environment.",design-pattern creational abstract-factory question
+"Q2: When adding a new product type to an Abstract Factory, you u","A. Change only one concrete class
+B. Update all factory interfaces and concrete factories
+C. Add a database migration
+D. Introduce an event bus
+
+**B.** The abstraction declares creation for every family member, so it widens across implementations.",design-pattern creational abstract-factory question
+Intent: Adapter,Convert the interface of a component into one clients expect so incompatible interfaces can collaborate.,design-pattern structural adapter intent
+Use Adapter when,Integrating third-party or legacy APIs requires changing client code or duplicating translation logic across the system.,design-pattern structural adapter problem
+Trade-off: Adapter,"**Benefit**: Enables reuse of existing components without polluting client code.
+
+**Cost**: Adds a translation layer that can hide impedance mismatches or performance costs.",design-pattern structural adapter tradeoff
+Q1: Adapter primarily addresses:,"A. Object creation complexity
+B. Interface incompatibility between components
+C. Concurrent access control
+D. State persistence
+
+**B.** It translates one interface into another expected by clients.",design-pattern structural adapter question
+"Q2: In a layered architecture, an adapter commonly lives at:","A. The domain core only
+B. An integration boundary such as infrastructure/ports
+C. The browser UI exclusively
+D. The database index layer
+
+**B.** Adapters bridge external or legacy systems to internal abstractions at boundaries.",design-pattern structural adapter question
+Intent: Bridge,Decouple an abstraction from its implementation so both can vary independently.,design-pattern structural bridge intent
+Use Bridge when,Combining multiple abstractions with multiple implementations via inheritance causes class explosion and tight coupling.,design-pattern structural bridge problem
+Trade-off: Bridge,"**Benefit**: Reduces subclass explosion and enables independent evolution of both hierarchies.
+
+**Cost**: Increases design complexity and requires up-front separation of concerns.",design-pattern structural bridge tradeoff
+Q1: Bridge is preferred over inheritance when:,"A. Only one implementation will ever exist
+B. Two orthogonal dimensions must vary independently
+C. Objects must be composed into trees
+D. You need to cache remote responses
+
+**B.** It splits abstraction and implementation into separate hierarchies.",design-pattern structural bridge question
+Q2: A sign Bridge may be missing is:,"A. Many subclasses named like FeatureXOnPlatformY
+B. Need for undo/redo
+C. Expensive object creation
+D. Tree traversal requirements
+
+**A.** Combinatorial subclasses indicate abstraction and implementation are tangled.",design-pattern structural bridge question
+Intent: Builder,Separate construction of a complex object from its representation so the same process can create different forms.,design-pattern creational builder intent
+Use Builder when,"Creating objects with many optional parts, validation rules, or assembly steps leads to telescoping constructors and fragile setup code.",design-pattern creational builder problem
+Trade-off: Builder,"**Benefit**: Improves readability and correctness for complex object assembly.
+
+**Cost**: Adds classes/objects and can be overkill for simple data structures.",design-pattern creational builder tradeoff
+Q1: Builder is a better fit than many constructor parameters whe,"A. Objects must be globally unique
+B. Construction is stepwise with optional parts and validation
+C. Behavior must be swapped at runtime
+D. Access to a remote service must be proxied
+
+**B.** It makes complex, ordered assembly explicit and safe.",design-pattern creational builder question
+Q2: What does a Director contribute?,"A. Stores the final product for all clients
+B. Encapsulates a reusable construction sequence
+C. Selects concrete classes by string name
+D. Handles persistence transactions
+
+**B.** The Director knows the order of steps; builders know how to perform each step.",design-pattern creational builder question
+Intent: Chain of Responsibility,Pass a request along a chain of handlers until one handles or processes it.,design-pattern behavioral chain-of-responsibility intent
+Use Chain of Responsibility when,Coupling senders to specific handlers or writing large conditional dispatch logic makes request processing rigid.,design-pattern behavioral chain-of-responsibility problem
+Trade-off: Chain of Responsibility,"**Benefit**: Decouples senders from receivers and makes pipelines of checks or transforms composable.
+
+**Cost**: A request may go unhandled and chains can be harder to trace.",design-pattern behavioral chain-of-responsibility tradeoff
+Q1: Chain of Responsibility lets you:,"A. Guarantee exactly one handler always runs
+B. Decouple sender from the concrete receiver by forwarding along handlers
+C. Replicate state across nodes
+D. Compile queries into SQL
+
+**B.** Handlers are linked and each decides whether to act or pass along.",design-pattern behavioral chain-of-responsibility question
+Q2: A risk to manage in handler chains is:,"A. Mandatory global locks
+B. Requests falling off the end unhandled
+C. Inability to add new handlers
+D. Loss of type safety in all languages
+
+**B.** Without a terminal handler or contract, some requests may not be processed.",design-pattern behavioral chain-of-responsibility question
+Intent: Command,"Encapsulate a request as an object, allowing parameterization, queuing, logging, and undo.",design-pattern behavioral command intent
+Use Command when,"Invokers are tightly coupled to concrete operations, making it hard to queue, audit, retry, or reverse actions.",design-pattern behavioral command problem
+Trade-off: Command,"**Benefit**: Decouples invocation from execution and enables scheduling, auditing, and reversal.
+
+**Cost**: Introduces many small command objects and lifecycle management concerns.",design-pattern behavioral command tradeoff
+Q1: Command turns a request into:,"A. A database schema
+B. A standalone object with execution context
+C. A shared mutable singleton
+D. A compile-time macro
+
+**B.** Encapsulation as an object enables queuing, logging, and undo.",design-pattern behavioral command question
+"Q2: In CQRS-style systems, commands are useful because:","A. They replace read models entirely
+B. They represent intentful writes that can be validated, queued, and audited
+C. They guarantee eventual consistency without design
+D. They eliminate domain logic
+
+**B.** Commands make write operations explicit and manageable.",design-pattern behavioral command question
+Intent: Composite,Compose objects into tree structures and let clients treat individual objects and compositions uniformly.,design-pattern structural composite intent
+Use Composite when,"Client code must distinguish leaves from containers when operating over hierarchical structures, leading to special-case logic.",design-pattern structural composite problem
+Trade-off: Composite,"**Benefit**: Simplifies client code and makes it easy to add new component types.
+
+**Cost**: Can make it harder to restrict which children a composite may contain.",design-pattern structural composite tradeoff
+Q1: Composite is most appropriate for:,"A. Flat collections with no nesting
+B. Tree-like part-whole structures
+C. Request/response retries
+D. Two-phase commits
+
+**B.** It models recursive hierarchies behind a uniform interface.",design-pattern structural composite question
+Q2: A trade-off of Composite is:,"A. Clients must always know concrete types
+B. Constraining allowed child types can become harder
+C. It cannot support recursion
+D. It removes polymorphism
+
+**B.** A uniform component interface can weaken compile-time/type-level constraints.",design-pattern structural composite question
+Intent: Decorator,Attach additional responsibilities to an object dynamically by wrapping it.,design-pattern structural decorator intent
+Use Decorator when,"Subclassing to add combinations of behaviors (logging, caching, auth, metrics) causes class explosion and rigid composition.",design-pattern structural decorator problem
+Trade-off: Decorator,"**Benefit**: Enables flexible, mix-and-match behavior without subclass explosions.
+
+**Cost**: Many small wrappers can complicate debugging and object identity.",design-pattern structural decorator tradeoff
+Q1: Decorator differs from inheritance by:,"A. Composing behavior at runtime via wrapping
+B. Requiring access to source code
+C. Only working for UI widgets
+D. Forcing a single global wrapper
+
+**A.** Decorators wrap objects dynamically, allowing flexible combinations.",design-pattern structural decorator question
+Q2: A common operational pitfall of decorators is:,"A. They cannot implement interfaces
+B. Wrapper order can change semantics and complicate tracing
+C. They require database locks
+D. They eliminate the need for testing
+
+**B.** Behavior like auth-before-cache vs cache-before-auth depends on composition order.",design-pattern structural decorator question
+Intent: Dependency Injection,Supply an object’s dependencies from the outside rather than having it construct or locate them internally.,design-pattern application dependency-injection intent
+Use Dependency Injection when,"Hard-coded dependencies make code difficult to test, configure, and extend across environments.",design-pattern application dependency-injection problem
+Trade-off: Dependency Injection,"**Benefit**: Improves testability, configurability, and adherence to dependency inversion.
+
+**Cost**: Can obscure object creation flow and introduce container/configuration complexity.",design-pattern application dependency-injection tradeoff
+Q1: Dependency Injection mainly improves:,"A. Network throughput
+B. Testability and flexibility by externalizing dependency creation
+C. Database normalization
+D. Binary size
+
+**B.** Clients receive collaborators, making substitution and configuration easier.",design-pattern application dependency-injection question
+Q2: A potential downside of DI containers is:,"A. They prevent interface use
+B. Wiring can become implicit and harder to trace
+C. They require no configuration ever
+D. They eliminate constructors
+
+**B.** Automated wiring may hide how objects are composed, so explicitness matters.",design-pattern application dependency-injection question
+Intent: Facade,Provide a simplified interface to a complex subsystem.,design-pattern structural facade intent
+Use Facade when,"Clients must orchestrate many subsystem classes and calls, increasing coupling and misuse risk.",design-pattern structural facade problem
+Trade-off: Facade,"**Benefit**: Reduces coupling and makes common use cases easier and safer.
+
+**Cost**: Can become a god object if it accumulates unrelated responsibilities.",design-pattern structural facade tradeoff
+Q1: Facade is primarily about:,"A. Enforcing one instance globally
+B. Simplifying access to a subsystem
+C. Sharing intrinsic state efficiently
+D. Deferring execution as commands
+
+**B.** It provides a higher-level interface over complex components.",design-pattern structural facade question
+Q2: When should clients bypass a facade?,"A. Never, facades must hide everything permanently
+B. When advanced or uncommon capabilities are legitimately needed
+C. Only during testing
+D. Whenever performance matters
+
+**B.** Facades simplify common paths but do not have to forbid direct subsystem access.",design-pattern structural facade question
+Intent: Factory Method,Let subclasses or hook implementations decide which concrete object to create.,design-pattern creational factory-method intent
+Use Factory Method when,A framework needs to create products while allowing extensions to choose concrete types without changing core workflow code.,design-pattern creational factory-method problem
+Trade-off: Factory Method,"**Benefit**: Decouples object creation from the high-level algorithm that uses it.
+
+**Cost**: Introduces subclassing or hook points that can proliferate.",design-pattern creational factory-method tradeoff
+Q1: Factory Method is most useful when:,"A. One global object must be shared
+B. Object creation must vary while the workflow stays fixed
+C. Multiple objects must be created as a family atomically
+D. An object graph is too expensive to copy
+
+**B.** It defers instantiation to an overridable hook so workflows can stay generic.",design-pattern creational factory-method question
+"Q2: Compared to putting `if type == ...` in the workflow, Factor","A. Removes all runtime polymorphism
+B. Moves variation to a dedicated creation point
+C. Requires distributed messaging
+D. Eliminates the need for interfaces
+
+**B.** Creation variability is isolated behind the factory method.",design-pattern creational factory-method question
+Intent: Flyweight,Share common intrinsic state across many fine-grained objects to reduce memory use.,design-pattern structural flyweight intent
+Use Flyweight when,"Large numbers of similar objects duplicate immutable data, causing high memory overhead.",design-pattern structural flyweight problem
+Trade-off: Flyweight,"**Benefit**: Reduces memory and allocation costs for large object populations.
+
+**Cost**: Adds complexity and may increase CPU cost to manage extrinsic state.",design-pattern structural flyweight tradeoff
+Q1: Flyweight saves memory by:,"A. Compressing objects on disk
+B. Sharing intrinsic state and externalizing extrinsic state
+C. Using lazy database queries
+D. Batching network calls
+
+**B.** Common immutable data is stored once and reused across many logical instances.",design-pattern structural flyweight question
+Q2: A precondition for safe Flyweight use is:,"A. Intrinsic state must be mutable by clients
+B. Clear separation between shared and per-use state
+C. All objects must live in one process globally
+D. No factory can be used
+
+**B.** Shared state must be immutable or carefully controlled; extrinsic state is supplied per operation.",design-pattern structural flyweight question
+Intent: Iterator,Provide a way to access elements of an aggregate sequentially without exposing its representation.,design-pattern behavioral iterator intent
+Use Iterator when,Clients need to traverse collections with different internal structures without depending on their concrete storage details.,design-pattern behavioral iterator problem
+Trade-off: Iterator,"**Benefit**: Simplifies client traversal logic and supports multiple simultaneous traversals.
+
+**Cost**: Adds objects and can be redundant in languages with rich built-in iteration.",design-pattern behavioral iterator tradeoff
+Q1: Iterator’s key benefit is:,"A. Faster sorting algorithms
+B. Traversal without exposing internal representation
+C. Automatic persistence
+D. Distributed consensus
+
+**B.** Clients consume elements through a standard interface regardless of storage layout.",design-pattern behavioral iterator question
+"Q2: In data pipeline code, iterators are useful because:","A. They eliminate backpressure
+B. They provide a uniform way to stream records from varied sources
+C. They replace message queues
+D. They guarantee exactly-once delivery
+
+**B.** Different sources can expose the same traversal contract to downstream stages.",design-pattern behavioral iterator question
+Intent: Mediator,Centralize complex interactions between related objects in a mediator to reduce direct dependencies.,design-pattern behavioral mediator intent
+Use Mediator when,"Many components reference each other directly, creating tangled communication and fragile change propagation.",design-pattern behavioral mediator problem
+Trade-off: Mediator,"**Benefit**: Reduces coupling between components and localizes collaboration logic.
+
+**Cost**: Mediator can grow into a complex central controller.",design-pattern behavioral mediator tradeoff
+Q1: Mediator reduces:,"A. The need for any interfaces
+B. Direct many-to-many dependencies between colleagues
+C. All runtime latency
+D. Storage requirements
+
+**B.** Peers communicate via a central coordinator rather than referencing each other.",design-pattern behavioral mediator question
+Q2: A warning sign when using Mediator is:,"A. Colleagues become too reusable
+B. The mediator accumulates most business rules and complexity
+C. Handlers become stateless
+D. Events become immutable
+
+**B.** Centralization helps decoupling but can create a god object if overused.",design-pattern behavioral mediator question
+Intent: Memento,Capture and externalize an object’s internal state so it can be restored later without violating encapsulation.,design-pattern behavioral memento intent
+Use Memento when,"Implementing undo, checkpoints, or rollback requires access to internal state that should remain private.",design-pattern behavioral memento problem
+Trade-off: Memento,"**Benefit**: Supports rollback and checkpoints while preserving encapsulation boundaries.
+
+**Cost**: Can consume significant memory or require careful snapshot sizing.",design-pattern behavioral memento tradeoff
+Q1: Memento preserves encapsulation by:,"A. Making all state public for caretakers
+B. Letting the originator create and consume opaque snapshots
+C. Storing state only in global variables
+D. Serializing directly in every client
+
+**B.** Caretakers hold snapshots without reading their internal structure.",design-pattern behavioral memento question
+"Q2: In event-driven systems, mementos are often used for:","A. Routing messages between brokers
+B. Checkpointing state for recovery/undo scenarios
+C. Load balancing HTTP traffic
+D. Schema migration
+
+**B.** Snapshots can complement event streams for rollback or fast restore points.",design-pattern behavioral memento question
+Intent: Observer,Define a one-to-many dependency so dependents are notified when a subject changes state.,design-pattern behavioral observer intent
+Use Observer when,Components need to react to state changes without hard-coded polling or tight coupling between publisher and subscribers.,design-pattern behavioral observer problem
+Trade-off: Observer,"**Benefit**: Enables loose coupling and dynamic subscription for change propagation.
+
+**Cost**: Notification order, storms, and debugging event flows can be challenging.",design-pattern behavioral observer tradeoff
+Q1: Observer is best characterized as:,"A. One-to-one synchronous call chains only
+B. A publish/subscribe dependency between subject and observers
+C. A data partitioning strategy
+D. A compile-time code generator
+
+**B.** Observers register interest and receive updates when the subject changes.",design-pattern behavioral observer question
+"Q2: In distributed event-driven systems, a common observer risk ","A. No way to add subscribers
+B. Uncontrolled cascades and unclear delivery/ordering semantics
+C. Guaranteed global transactions
+D. Static schemas only
+
+**B.** Loose coupling is powerful but requires attention to ordering, retries, and idempotency.",design-pattern behavioral observer question
+Intent: Prototype,Create new objects by copying a prototypical instance instead of instantiating from scratch.,design-pattern creational prototype intent
+Use Prototype when,"Object creation is expensive or configuration-heavy, and new instances should start from known templates with small variations.",design-pattern creational prototype problem
+Trade-off: Prototype,"**Benefit**: Speeds creation and centralizes default templates.
+
+**Cost**: Cloning graphs with shared references or cycles can be error-prone.",design-pattern creational prototype tradeoff
+Q1: Prototype is especially helpful when:,"A. You need one instance per process
+B. Creating from a configured template is cheaper than full construction
+C. Objects must never be copied
+D. You must enforce access control
+
+**B.** Cloning reuses an initialized template as the starting point.",design-pattern creational prototype question
+Q2: A key risk with Prototype is:,"A. Inability to support interfaces
+B. Incorrect deep vs shallow copying of mutable state
+C. Guaranteed memory leaks
+D. Mandatory network calls during clone
+
+**B.** Copy semantics determine whether clones share nested mutable objects.",design-pattern creational prototype question
+Intent: Proxy,Provide a surrogate or placeholder that controls access to another object.,design-pattern structural proxy intent
+Use Proxy when,"Direct access to an object is expensive, remote, unsafe, or needs cross-cutting controls like caching or lazy loading.",design-pattern structural proxy problem
+Trade-off: Proxy,"**Benefit**: Adds access control or optimization transparently to clients.
+
+**Cost**: Introduces latency/complexity and can obscure failure modes of the real subject.",design-pattern structural proxy tradeoff
+Q1: A proxy and the real subject typically:,"A. Expose unrelated interfaces
+B. Share the same subject interface so clients are unaware
+C. Must run in different processes
+D. Cannot be swapped at runtime
+
+**B.** Transparency to the client is a core property of Proxy.",design-pattern structural proxy question
+Q2: Which is a valid proxy use case?,"A. Defining algorithm families
+B. Lazy loading or access control around a real object
+C. Building objects stepwise
+D. Traversing tree structures uniformly
+
+**B.** Proxies control access for concerns like laziness, protection, remoting, or caching.",design-pattern structural proxy question
+Intent: Repository,Mediate between domain and data mapping layers through a collection-like interface for aggregates.,design-pattern application repository intent
+Use Repository when,"Domain logic becomes coupled to queries, ORM APIs, and persistence details, making it hard to test and evolve.",design-pattern application repository problem
+Trade-off: Repository,"**Benefit**: Improves separation of concerns and testability of domain logic.
+
+**Cost**: Can hide important query capabilities or add leaky abstractions if over-generalized.",design-pattern application repository tradeoff
+Q1: Repository aims to present persistence as:,"A. A set of HTTP endpoints
+B. A collection-like interface over domain aggregates
+C. A UI component tree
+D. A message broker topic
+
+**B.** It abstracts storage behind domain-oriented operations.",design-pattern application repository question
+Q2: A common repository anti-pattern is:,"A. Defining methods per aggregate use case
+B. A one-size-fits-all generic CRUD interface that hides important domain queries
+C. Using interfaces for testing
+D. Separating domain and infrastructure
+
+**B.** Overly generic repositories can leak persistence details or fail to express intent.",design-pattern application repository question
+Intent: State,Allow an object to alter its behavior when its internal state changes by delegating to state objects.,design-pattern behavioral state intent
+Use State when,Behavior that depends on lifecycle state leads to large conditional blocks and invalid transitions scattered through methods.,design-pattern behavioral state problem
+Trade-off: State,"**Benefit**: Localizes state-specific behavior and makes transitions explicit.
+
+**Cost**: Increases number of classes and requires careful transition ownership.",design-pattern behavioral state tradeoff
+Q1: State pattern is a strong fit when:,"A. Behavior is identical in all modes
+B. An object’s behavior and valid transitions depend on lifecycle phase
+C. You need to clone object graphs
+D. You need a simplified subsystem API
+
+**B.** It encapsulates per-state behavior and transitions.",design-pattern behavioral state question
+Q2: How does State differ from Strategy conceptually?,"A. State is chosen by client only; Strategy never is
+B. State transitions are typically driven by context lifecycle, Strategy by interchangeable policy choice
+C. State requires databases; Strategy does not
+D. They are identical patterns
+
+**B.** Both delegate behavior, but State models internal lifecycle transitions.",design-pattern behavioral state question
+Intent: Strategy,Define interchangeable algorithms behind a stable interface so behavior can vary at runtime.,design-pattern behavioral strategy intent
+Use Strategy when,"A service needs multiple pricing, routing, or ranking behaviors without scattering conditionals across callers.",design-pattern behavioral strategy problem
+Trade-off: Strategy,"**Benefit**: Replaces branching logic with composable, testable policies.
+
+**Cost**: Adds indirection and requires explicit strategy selection.",design-pattern behavioral strategy tradeoff
+Q1: What problem does Strategy primarily solve?,"A. Sharing mutable state across objects
+B. Selecting algorithms at runtime without caller conditionals
+C. Persisting objects to storage
+D. Coordinating distributed transactions
+
+**B.** Strategy encapsulates interchangeable behaviors behind a common interface.",design-pattern behavioral strategy question
+"Q2: In a microservices pricing service, where does Strategy fit ","A. As a network retry policy between services
+B. As pluggable domain policies inside one service
+C. As the service discovery mechanism
+D. As the database replication protocol
+
+**B.** It organizes internal behavior variants; cross-service concerns belong to architecture patterns.",design-pattern behavioral strategy question
+Intent: Template Method,"Define the skeleton of an algorithm in a base operation, deferring specific steps to subclasses or hooks.",design-pattern behavioral template-method intent
+Use Template Method when,Multiple implementations share the same overall process but duplicate its structure while varying a few steps.,design-pattern behavioral template-method problem
+Trade-off: Template Method,"**Benefit**: Reuses invariant workflow logic and enforces consistent sequencing.
+
+**Cost**: Relies on inheritance and can make flows harder to follow across class hierarchy.",design-pattern behavioral template-method tradeoff
+Q1: Template Method centralizes:,"A. Object construction of families
+B. The invariant sequence of an algorithm
+C. Network communication retries
+D. Persistent storage schemas
+
+**B.** The base class owns the skeleton; subclasses supply variable steps.",design-pattern behavioral template-method question
+Q2: A drawback compared to composition-based alternatives is:,"A. It cannot enforce ordering
+B. It depends on inheritance, limiting flexibility
+C. It prevents code reuse
+D. It only works in functional languages
+
+**B.** Behavior variation is expressed through subclassing rather than object composition.",design-pattern behavioral template-method question
+Intent: Unit of Work,Track changes to objects during a business transaction and coordinate writing them out as a single unit.,design-pattern application unit-of-work intent
+Use Unit of Work when,Multiple repository operations within one use case can become inconsistent without coordinated commit/rollback boundaries.,design-pattern application unit-of-work problem
+Trade-off: Unit of Work,"**Benefit**: Ensures consistency within a transaction and simplifies commit coordination.
+
+**Cost**: Adds complexity and can be awkward across distributed systems or microservice boundaries.",design-pattern application unit-of-work tradeoff
+Q1: Unit of Work primarily manages:,"A. UI rendering state
+B. A transactional boundary and tracked changes
+C. HTTP routing tables
+D. Container orchestration
+
+**B.** It coordinates what must be committed or rolled back as one unit.",design-pattern application unit-of-work question
+"Q2: Across microservices with separate databases, Unit of Work a","A. Provides global ACID transactions automatically
+B. Is limited to local boundaries; sagas/compensation are needed for cross-service consistency
+C. Replaces idempotent consumers
+D. Eliminates eventual consistency
+
+**B.** Distributed systems require additional coordination patterns beyond a local unit of work.",design-pattern application unit-of-work question
+Intent: Visitor,Represent an operation to be performed on elements of an object structure without changing the element classes.,design-pattern behavioral visitor intent
+Use Visitor when,Adding new operations across a stable set of element types leads to repeated edits and scattered logic in those classes.,design-pattern behavioral visitor problem
+Trade-off: Visitor,"**Benefit**: Makes adding new operations easy and keeps operation-specific logic cohesive.
+
+**Cost**: Adding new element types requires changing every visitor.",design-pattern behavioral visitor tradeoff
+Q1: Visitor is a good fit when:,"A. Element types change frequently but operations are fixed
+B. Element structure is stable and new operations are added often
+C. You need to share intrinsic state
+D. You need runtime service discovery
+
+**B.** It optimizes for adding operations across a stable set of elements.",design-pattern behavioral visitor question
+Q2: A major cost of Visitor is:,"A. No way to group operation logic
+B. Adding a new element type forces updates to all visitors
+C. It cannot traverse structures
+D. It requires global variables
+
+**B.** The visitor interface mirrors the element hierarchy.",design-pattern behavioral visitor question
 Concept: Halfway Escape Optimization,A quantum-inspired metaheuristic whose move rule lets candidates leave a local region before settling.,2405.02850v7 concept
 Concept: Tunnelling metaphor,The quantum-inspired escape idea that lets a candidate cross a barrier instead of only climbing downhill.,2405.02850v7 concept
 Concept: Benchmark suite,Fourteen general optimization functions evaluated at dimension thirty to compare search behaviour.,2405.02850v7 concept
@@ -800,6 +1631,66 @@ Depends on: init",data-structures proof sliding-window-linear step
 Proof step: Sum the pointer moves,"At most n expansions plus at most n shrink steps gives O(n) total work, with O(1) extra space.
 
 Depends on: expand, shrink",data-structures proof sliding-window-linear step
+Provider map: Event-driven processing,"**aws**: SQS queue with dead-letter queue + AWS Lambda + DynamoDB
+**azure**: Azure Storage Queues with poison queue + Azure Functions + Table Storage
+**gcp**: Pub/Sub topic with dead-letter topic + Cloud Functions + Firestore",provider event-driven mapping
+Event-driven processing on AWS,"SQS queue with dead-letter queue + AWS Lambda + DynamoDB
+
+**Plan only**: `terraform/aws/event-driven`
+
+**Watch out**: The event source mapping and redrive policy reference ARNs; verify both resolve in the plan without live state.",provider event-driven aws
+Event-driven processing on AZURE,"Azure Storage Queues with poison queue + Azure Functions + Table Storage
+
+**Plan only**: `terraform/azure/event-driven`
+
+**Watch out**: Storage Queue and Table names must be lowercase, and Function App names are globally unique.",provider event-driven azure
+Event-driven processing on GCP,"Pub/Sub topic with dead-letter topic + Cloud Functions + Firestore
+
+**Plan only**: `terraform/gcp/event-driven`
+
+**Watch out**: Dead-letter policies need a topic id and delivery attempt count; keep the trigger and subscription on the same project.",provider event-driven gcp
+Q1: What does a dead-letter destination provide in an event-driv,"A. It caches successful responses for faster reads
+B. It isolates messages that repeatedly fail processing
+C. It replaces the queue when traffic spikes
+D. It encrypts the topic at rest
+
+**B.** A dead-letter queue or topic captures poison messages after a retry limit so the main stream keeps flowing.",provider event-driven question
+Q2: Which combination models the event-driven pattern across all,"A. Queue or topic, consumer function, and dead-letter or storage
+B. API gateway, function, and relational database
+C. Load balancer, virtual machine, and block storage
+D. CDN, static files, and DNS record
+
+**A.** Each provider fixture names a queue or topic, a function to consume events, and a dead-letter destination plus state storage.",provider event-driven question
+Provider map: Serverless API,"**aws**: API Gateway HTTP API + AWS Lambda + DynamoDB
+**azure**: API Management + Azure Functions + Table Storage
+**gcp**: Cloud Run endpoint + Cloud Functions + Firestore",provider serverless-api mapping
+Serverless API on AWS,"API Gateway HTTP API + AWS Lambda + DynamoDB
+
+**Plan only**: `terraform/aws/serverless-api`
+
+**Watch out**: Lambda invoke permissions and integration URIs are easy to miswire; check the API Gateway source ARN in the plan.",provider serverless-api aws
+Serverless API on AZURE,"API Management + Azure Functions + Table Storage
+
+**Plan only**: `terraform/azure/serverless-api`
+
+**Watch out**: Function App and Storage Account names are globally unique, and API Management needs publisher details even in a plan.",provider serverless-api azure
+Serverless API on GCP,"Cloud Run endpoint + Cloud Functions + Firestore
+
+**Plan only**: `terraform/gcp/serverless-api`
+
+**Watch out**: Cloud Functions needs a runtime, entry point, and source location at plan time; supply placeholders, never credentials.",provider serverless-api gcp
+Q1: What is the provider-neutral core of the serverless API patt,"A. A long-running VM behind a load balancer
+B. An HTTP endpoint, a stateless function, and a managed store
+C. A message queue with a dead-letter queue
+D. A container orchestrator with persistent volumes
+
+**B.** The pattern is an endpoint that routes to a stateless handler which persists to a managed table or document store.",provider serverless-api question
+Q2: Why do the Terraform fixtures use placeholder project names ,"A. To make terraform apply succeed without a budget
+B. To satisfy emulator authentication
+C. To allow terraform plan without live state or credentials
+D. To enable automatic provider upgrades
+
+**C.** Placeholders keep the fixtures cost-free and offline; plan can resolve schema and references without contacting a provider.",provider serverless-api question
 Claim: contract-tests-prevent-api-misalignment,Contract tests verify that both client and server agree on API format before integration.,contract-testing claim
 Claim: consumer-driven-contracts-empower-clients,Consumer-driven contracts let clients define their needs; providers implement to meet them.,contract-testing claim
 Claim: contract-tests-are-faster-than-e2e-tests,Contract tests don't require full service startup; they're faster than end-to-end tests and provide quicker feedback.,contract-testing claim

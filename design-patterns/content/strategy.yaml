@@ -1,0 +1,60 @@
+id: strategy
+name: Strategy
+category: behavioral
+intent: Define interchangeable algorithms behind a stable interface so behavior can vary at runtime.
+problem: A service needs multiple pricing, routing, or ranking behaviors without scattering conditionals
+  across callers.
+structure: 'Client -> Context(strategy)
+
+  Context -> Strategy.execute()
+
+  ConcreteStrategyA / ConcreteStrategyB implement Strategy'
+participants:
+- name: Strategy
+  role: Declares the algorithm interface used by the context.
+- name: ConcreteStrategy
+  role: Implements one algorithm variant.
+- name: Context
+  role: Delegates work to the selected strategy and holds shared state.
+forces:
+- Behavior must change without modifying callers.
+- Variants share inputs but differ in policy.
+- Selection may happen per request or tenant.
+consequences:
+  benefit: Replaces branching logic with composable, testable policies.
+  cost: Adds indirection and requires explicit strategy selection.
+smells_fixed:
+- Long switch statements for behavior selection
+- Duplicated conditional policy logic
+smells_created:
+- Too many tiny strategy classes
+- Selection logic leaking into callers
+python: "from dataclasses import dataclass\nfrom typing import Protocol\n\nclass Shipping(Protocol):\n\
+  \    def cost(self, weight: float) -> float: ...\n\nclass Standard:\n    def cost(self, weight: float)\
+  \ -> float:\n        return 5 + weight * 1.2\n\nclass Express:\n    def cost(self, weight: float) ->\
+  \ float:\n        return 12 + weight * 2.0\n\n@dataclass\nclass QuoteService:\n    strategy: Shipping\n\
+  \n    def total(self, weight: float) -> float:\n        return self.strategy.cost(weight)\n\nprint(QuoteService(Express()).total(3.0))"
+example: In a serverless checkout API (02-serverless-api), a Lambda chooses tax or shipping strategies
+  per region while the handler and API contract stay stable.
+related_architecture:
+- 02-serverless-api
+- microservices
+- layered
+quiz:
+- question: What problem does Strategy primarily solve?
+  choices:
+  - Sharing mutable state across objects
+  - Selecting algorithms at runtime without caller conditionals
+  - Persisting objects to storage
+  - Coordinating distributed transactions
+  answer: 1
+  explanation: Strategy encapsulates interchangeable behaviors behind a common interface.
+- question: In a microservices pricing service, where does Strategy fit best?
+  choices:
+  - As a network retry policy between services
+  - As pluggable domain policies inside one service
+  - As the service discovery mechanism
+  - As the database replication protocol
+  answer: 1
+  explanation: It organizes internal behavior variants; cross-service concerns belong to architecture
+    patterns.

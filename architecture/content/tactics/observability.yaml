@@ -1,0 +1,60 @@
+id: observability
+name: Observability
+summary: Instrument the system so its internal state can be inferred from externally emitted logs, metrics, and traces without shipping new code during an incident.
+decision: Emit structured telemetry with correlation identifiers across every service boundary, define service level indicators up front, and build dashboards and alerts around user-visible symptoms.
+mechanism: Attach a correlation identifier to each request, emit structured logs, dimensional metrics, and distributed traces, then alert on symptom-based service level indicators with runbook links.
+failure_modes:
+  - Logging sensitive data such as tokens or personal information.
+  - Metrics with unbounded label cardinality that overwhelm the monitoring backend.
+  - Alerting on internal causes rather than user-visible symptoms.
+  - Missing correlation identifiers so a request cannot be followed across services.
+use_when:
+  - The system is distributed and failures cross service boundaries.
+  - Availability and latency targets must be measured, not guessed.
+  - On-call responders need fast triage with runbooks.
+avoid_when:
+  - The system is a single process with trivial behaviour and short lifetime.
+  - There is no capacity to store or respond to telemetry.
+  - Telemetry would capture regulated data that cannot be safely handled.
+tradeoffs:
+  - benefit: Incidents are diagnosed faster because a request can be traced end to end.
+    cost: Telemetry storage and processing add ongoing cost and capacity planning.
+  - benefit: Symptom-based alerts reduce noise and focus responders on user impact.
+    cost: Good instrumentation must be designed into code, which lengthens initial development.
+quality_impacts:
+  - attribute: availability
+    effect: improves
+    note: Symptom-based alerts catch degradation early and protect the availability percentage before users report it.
+  - attribute: recoverability
+    effect: improves
+    note: Traces and dashboards shorten mean time to diagnose, keeping incident recovery within the RTO.
+  - attribute: security
+    effect: degrades
+    note: Logs and traces expand the data surface and can leak secrets unless fields are scrubbed deliberately.
+related_patterns:
+  - circuit-breaker
+  - facade
+  - microservices
+  - decorator
+  - 07-monitoring
+  - 06-cicd-pipeline
+scenarios:
+  - 07-monitoring
+  - 06-cicd-pipeline
+quiz:
+  - question: Which signal best supports on-call alerting?
+    choices:
+      - CPU usage on one host
+      - A symptom-based service level indicator tied to user impact
+      - The number of lines of code deployed
+      - The count of log files on disk
+    answer: 1
+    explanation: Symptom-based indicators reflect what users experience and reduce false alarms from harmless internal noise.
+  - question: What is the main privacy risk of observability data?
+    choices:
+      - Traces are always encrypted by default.
+      - Logs may capture tokens or personal data if fields are not scrubbed.
+      - Metrics cannot store numeric values.
+      - Correlation identifiers expose source code.
+    answer: 1
+    explanation: Broad instrumentation can accidentally record secrets or personal data, so scrubbing must be explicit.

@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Dependency Injection</title>
+<style>body{font-family:system-ui,sans-serif;max-width:52rem;margin:2rem auto;padding:0 1rem;line-height:1.5}pre{background:#f3f3f3;padding:1rem;overflow-x:auto}code{background:#f3f3f3;padding:0 .2rem}</style>
+</head><body>
+<h1>Dependency Injection</h1>
+<p><strong>application</strong> — Supply an object’s dependencies from the outside rather than having it construct or locate them internally.</p>
+<h2>Problem</h2><p>Hard-coded dependencies make code difficult to test, configure, and extend across environments.</p>
+<h2>Structure</h2><pre>Assembler/Container -&gt; creates dependencies
+Assembler -&gt; injects into Client (constructor/setter)
+Client depends on abstractions, not concrete construction</pre>
+<h2>Participants</h2><ul>
+<li><strong>Client</strong>: Declares required dependencies through constructor, setter, or parameters.</li>
+<li><strong>Dependency (abstraction)</strong>: Contract the client relies on.</li>
+<li><strong>Assembler/Container</strong>: Constructs and wires concrete dependencies into clients.</li>
+</ul><h2>Forces</h2><ul
+><li>Implementations vary by environment or test context.</li>
+><li>Clients should follow inversion of control.</li>
+><li>Wiring logic should be centralized and explicit.</li>
+></ul>
+<h2>Consequences</h2><p><strong>Benefit:</strong> Improves testability, configurability, and adherence to dependency inversion.</p>
+<p><strong>Cost:</strong> Can obscure object creation flow and introduce container/configuration complexity.</p>
+<h2>Python sketch</h2><pre>class Clock:
+    def now(self) -&gt; str: return &quot;real&quot;
+
+class FixedClock:
+    def now(self) -&gt; str: return &quot;fixed&quot;
+
+class Service:
+    def __init__(self, clock):
+        self.clock = clock
+
+    def stamp(self) -&gt; str:
+        return self.clock.now()
+
+print(Service(FixedClock()).stamp())</pre>
+<h2>Interview example</h2><p>In a microservices codebase (09-microservices), dependency injection wires repositories, clients, and config per environment so services remain testable and deployable.</p>
+</body></html>

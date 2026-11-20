@@ -1,0 +1,60 @@
+id: queue-based-load-leveling
+name: Queue-Based Load Leveling
+summary: Place a durable queue between producers and workers so bursts are buffered and consumers process work at a steady, controlled rate.
+decision: Accept work into a bounded durable queue and let workers drain it at a sustainable pace, exposing backlog depth as a first-class operational signal.
+mechanism: Producers enqueue messages with a delivery guarantee, workers pull at a configured concurrency, and backlog depth drives autoscaling, throttling, or load shedding.
+failure_modes:
+  - An unbounded queue that grows until storage or memory is exhausted.
+  - Workers faster at enqueueing than processing, so backlog never drains.
+  - No dead-letter path for messages that repeatedly fail.
+  - Ignoring backlog age while watching only queue length.
+use_when:
+  - Incoming traffic is bursty but the backend has a steady capacity.
+  - Work can be processed asynchronously with eventual completion.
+  - Backlog depth can be monitored and acted on.
+avoid_when:
+  - The caller needs an immediate result before returning.
+  - Messages cannot tolerate any delay or reordering.
+  - There is no plan for overflow or poison messages.
+tradeoffs:
+  - benefit: Producers stay responsive and available during bursts instead of overload failing calls.
+    cost: Completion is delayed and users need a way to observe pending work.
+  - benefit: Workers can scale on backlog depth with predictable throughput.
+    cost: A queue adds delivery, deduplication, and dead-letter operational burden.
+quality_impacts:
+  - attribute: availability
+    effect: improves
+    note: Buffering bursts prevents overload from rejecting requests, sustaining availability during spikes.
+  - attribute: performance
+    effect: improves
+    note: Workers run near optimal concurrency so p95 latency stays stable rather than spiking under burst load.
+  - attribute: recoverability
+    effect: improves
+    note: Durable queued messages survive worker restarts, allowing replay within the RTO after a crash.
+related_patterns:
+  - event-driven
+  - idempotent-consumer
+  - bulkhead
+  - pipe-and-filter
+  - 03-event-driven
+  - 08-streaming
+scenarios:
+  - 03-event-driven
+  - 08-streaming
+quiz:
+  - question: What signal should drive worker autoscaling in load leveling?
+    choices:
+      - The number of code files in the worker
+      - Backlog depth and message age
+      - The colour of the dashboard
+      - The total number of producers ever seen
+    answer: 1
+    explanation: Backlog depth and age show real pending work, so scaling on them drains the queue within target time.
+  - question: Why must the queue be bounded or paired with load shedding?
+    choices:
+      - Bounded queues improve encryption strength.
+      - An unbounded queue can grow until storage or memory fails.
+      - Bounded queues remove the need for workers.
+      - Unbounded queues guarantee faster processing.
+    answer: 1
+    explanation: Without a cap or shedding policy, sustained overload turns a buffer into an outage.

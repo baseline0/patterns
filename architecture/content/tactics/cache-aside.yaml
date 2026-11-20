@@ -1,0 +1,60 @@
+id: cache-aside
+name: Cache Aside
+summary: Load data into a cache on demand from the application, reading from the cache first and populating it from the source of truth on a miss.
+decision: Treat the datastore as authoritative and let application code populate the cache lazily with a time to live and invalidation on writes.
+mechanism: On read, check the cache, return a hit, or read the datastore, write the result to the cache with an expiry, then return it; on write, update the datastore and invalidate or refresh the cached key.
+failure_modes:
+  - Stale reads when writes update the datastore but forget to invalidate the cache.
+  - Cache stampede when many callers miss the same hot key at once.
+  - Caching unbounded key variants that crowd out useful entries.
+  - Treating the cache as the source of truth and losing data on eviction.
+use_when:
+  - Reads greatly outnumber writes and data is reused.
+  - Some staleness within a defined freshness window is acceptable.
+  - The source datastore cannot sustain peak read load alone.
+avoid_when:
+  - Every read must see the latest committed write.
+  - Data is write-heavy or almost never reused.
+  - The value is large relative to the cache and churns constantly.
+tradeoffs:
+  - benefit: Common reads avoid a datastore round trip and lower p95 latency.
+    cost: Invalidation logic adds application complexity and stale windows.
+  - benefit: Read load on the primary datastore drops, improving headroom and availability.
+    cost: A cold cache produces a latency spike and a burst of datastore traffic.
+quality_impacts:
+  - attribute: performance
+    effect: improves
+    note: Serving hot keys from cache reduces p95 latency and datastore load during peak traffic.
+  - attribute: availability
+    effect: improves
+    note: Cached reads remain answerable during a short datastore outage within the freshness window.
+  - attribute: modifiability
+    effect: improves
+    note: Cache policy lives in application code and can be tuned without a datastore schema change, shortening change lead time.
+related_patterns:
+  - proxy
+  - repository
+  - layered
+  - serverless
+  - 01-static-website
+  - 05-3tier-web
+scenarios:
+  - 01-static-website
+  - 05-3tier-web
+quiz:
+  - question: In cache aside, what is the source of truth?
+    choices:
+      - The cache, until it expires
+      - The application's local memory
+      - The underlying datastore
+      - The client browser
+    answer: 2
+    explanation: The datastore remains authoritative; the cache is a disposable optimization populated on a miss.
+  - question: What is the most common correctness bug with cache aside?
+    choices:
+      - Caching values that are read more than once
+      - Failing to invalidate a key after its source data changes
+      - Setting a time to live on cached entries
+      - Using a hit counter on the cache
+    answer: 1
+    explanation: A missed invalidation leaves a stale value in the cache until expiry, producing incorrect reads.

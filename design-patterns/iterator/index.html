@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Iterator</title>
+<style>body{font-family:system-ui,sans-serif;max-width:52rem;margin:2rem auto;padding:0 1rem;line-height:1.5}pre{background:#f3f3f3;padding:1rem;overflow-x:auto}code{background:#f3f3f3;padding:0 .2rem}</style>
+</head><body>
+<h1>Iterator</h1>
+<p><strong>behavioral</strong> — Provide a way to access elements of an aggregate sequentially without exposing its representation.</p>
+<h2>Problem</h2><p>Clients need to traverse collections with different internal structures without depending on their concrete storage details.</p>
+<h2>Structure</h2><pre>Client -&gt; Iterator.next()/has_next()
+Aggregate.create_iterator() -&gt; Iterator
+ConcreteIterator walks ConcreteAggregate</pre>
+<h2>Participants</h2><ul>
+<li><strong>Iterator</strong>: Defines traversal operations such as next and completion checks.</li>
+<li><strong>ConcreteIterator</strong>: Maintains traversal state over a specific aggregate.</li>
+<li><strong>Aggregate</strong>: Declares an operation to create an iterator.</li>
+<li><strong>ConcreteAggregate</strong>: Returns an iterator over its internal collection.</li>
+</ul><h2>Forces</h2><ul
+><li>Multiple traversal strategies may be needed.</li>
+><li>Internal representation should remain encapsulated.</li>
+><li>Clients want a uniform traversal interface.</li>
+></ul>
+<h2>Consequences</h2><p><strong>Benefit:</strong> Simplifies client traversal logic and supports multiple simultaneous traversals.</p>
+<p><strong>Cost:</strong> Adds objects and can be redundant in languages with rich built-in iteration.</p>
+<h2>Python sketch</h2><pre>class Range:
+    def __init__(self, start: int, end: int):
+        self.start = start
+        self.end = end
+
+    def __iter__(self):
+        cur = self.start
+        while cur &lt; self.end:
+            yield cur
+            cur += 1
+
+for n in Range(3, 6):
+    print(n)</pre>
+<h2>Interview example</h2><p>A streaming ingestion job (08-streaming) can iterate partition offsets through a uniform cursor interface without exposing broker-specific storage details.</p>
+</body></html>

@@ -1,0 +1,13 @@
+# ADR writing drills. Paths are relative to this justfile's directory.
+
+# List committed ADRs.
+list:
+    uv run python tools/adr_coach.py list
+
+# Run an interactive ADR drill; optionally pass a filename stem.
+drill *ARGS:
+    uv run python tools/adr_coach.py drill {{ARGS}}
+
+# Print non-interactive writing prompts.
+prompts:
+    uv run python tools/adr_coach.py prompts

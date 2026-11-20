@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>State</title>
+<style>body{font-family:system-ui,sans-serif;max-width:52rem;margin:2rem auto;padding:0 1rem;line-height:1.5}pre{background:#f3f3f3;padding:1rem;overflow-x:auto}code{background:#f3f3f3;padding:0 .2rem}</style>
+</head><body>
+<h1>State</h1>
+<p><strong>behavioral</strong> — Allow an object to alter its behavior when its internal state changes by delegating to state objects.</p>
+<h2>Problem</h2><p>Behavior that depends on lifecycle state leads to large conditional blocks and invalid transitions scattered through methods.</p>
+<h2>Structure</h2><pre>Context(state) -&gt; state.handle(context)
+State defines behavior per state
+ConcreteStateA/B implement transitions and actions</pre>
+<h2>Participants</h2><ul>
+<li><strong>Context</strong>: Maintains current state and delegates behavior to it.</li>
+<li><strong>State</strong>: Defines the interface for state-specific behavior.</li>
+<li><strong>ConcreteState</strong>: Implements behavior and transitions for a particular state.</li>
+</ul><h2>Forces</h2><ul
+><li>Object behavior varies by explicit lifecycle state.</li>
+><li>Transitions must be controlled and understandable.</li>
+><li>Conditionals on state flags are proliferating.</li>
+></ul>
+<h2>Consequences</h2><p><strong>Benefit:</strong> Localizes state-specific behavior and makes transitions explicit.</p>
+<p><strong>Cost:</strong> Increases number of classes and requires careful transition ownership.</p>
+<h2>Python sketch</h2><pre>class Draft:
+    def publish(self, doc):
+        doc.state = Published()
+        return &quot;published&quot;
+
+class Published:
+    def publish(self, doc):
+        return &quot;already-published&quot;
+
+class Document:
+    def __init__(self):
+        self.state = Draft()
+
+    def publish(self):
+        return self.state.publish(self)
+
+d = Document(); print(d.publish()); print(d.publish())</pre>
+<h2>Interview example</h2><p>In a CI/CD pipeline (06-cicd-pipeline), a deployment object can move through queued, running, succeeded, and failed states with state-specific transition rules.</p>
+</body></html>

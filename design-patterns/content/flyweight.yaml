@@ -1,0 +1,59 @@
+id: flyweight
+name: Flyweight
+category: structural
+intent: Share common intrinsic state across many fine-grained objects to reduce memory use.
+problem: Large numbers of similar objects duplicate immutable data, causing high memory overhead.
+structure: 'Client -> FlyweightFactory.get(key)
+
+  Factory returns shared Flyweight(intrinsic)
+
+  Client supplies extrinsic state at use time'
+participants:
+- name: Flyweight
+  role: Stores shared intrinsic state and operates on extrinsic state.
+- name: FlyweightFactory
+  role: Creates and caches flyweights by intrinsic key.
+- name: Client
+  role: Maintains or computes extrinsic state passed to flyweights.
+forces:
+- Many objects share immutable data.
+- Memory footprint is a bottleneck.
+- Intrinsic and extrinsic state can be separated clearly.
+consequences:
+  benefit: Reduces memory and allocation costs for large object populations.
+  cost: Adds complexity and may increase CPU cost to manage extrinsic state.
+smells_fixed:
+- Millions of objects duplicating the same immutable fields
+- High memory churn from identical configuration/state blobs
+smells_created:
+- Harder-to-follow code due to split state
+- Shared mutable state bugs if intrinsic data is not truly immutable
+python: "class Icon:\n    def __init__(self, name: str):\n        self.name = name\n\n    def render(self,\
+  \ x: int, y: int) -> str:\n        return f\"{self.name}@{x},{y}\"\n\nclass IconFactory:\n    def __init__(self):\n\
+  \        self._pool = {}\n\n    def get(self, name: str) -> Icon:\n        if name not in self._pool:\n\
+  \            self._pool[name] = Icon(name)\n        return self._pool[name]\n\nfactory = IconFactory()\n\
+  print(factory.get(\"pin\").render(1, 2), factory.get(\"pin\") is factory.get(\"pin\"))"
+example: A monitoring UI (07-monitoring) can share icon/glyph flyweights across thousands of chart points
+  while passing per-point coordinates as extrinsic state.
+related_architecture:
+- 07-monitoring
+- cache-aside
+- 01-static-website
+quiz:
+- question: 'Flyweight saves memory by:'
+  choices:
+  - Compressing objects on disk
+  - Sharing intrinsic state and externalizing extrinsic state
+  - Using lazy database queries
+  - Batching network calls
+  answer: 1
+  explanation: Common immutable data is stored once and reused across many logical instances.
+- question: 'A precondition for safe Flyweight use is:'
+  choices:
+  - Intrinsic state must be mutable by clients
+  - Clear separation between shared and per-use state
+  - All objects must live in one process globally
+  - No factory can be used
+  answer: 1
+  explanation: Shared state must be immutable or carefully controlled; extrinsic state is supplied per
+    operation.

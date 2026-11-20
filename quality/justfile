@@ -1,0 +1,13 @@
+# ATAM-lite quality-attribute drills. Paths are relative to this justfile's directory.
+
+# List committed quality attributes.
+list:
+    uv run python tools/atam.py list
+
+# Run an interactive drill; optionally pass an attribute id.
+drill *ARGS:
+    uv run python tools/atam.py drill {{ARGS}}
+
+# Print all prompts without interaction.
+prompts:
+    uv run python tools/atam.py prompts

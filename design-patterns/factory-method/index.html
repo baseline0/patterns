@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Factory Method</title>
+<style>body{font-family:system-ui,sans-serif;max-width:52rem;margin:2rem auto;padding:0 1rem;line-height:1.5}pre{background:#f3f3f3;padding:1rem;overflow-x:auto}code{background:#f3f3f3;padding:0 .2rem}</style>
+</head><body>
+<h1>Factory Method</h1>
+<p><strong>creational</strong> — Let subclasses or hook implementations decide which concrete object to create.</p>
+<h2>Problem</h2><p>A framework needs to create products while allowing extensions to choose concrete types without changing core workflow code.</p>
+<h2>Structure</h2><pre>Creator.operation() -&gt; calls factory_method()
+Creator.factory_method() -&gt; Product
+ConcreteCreator overrides factory_method() -&gt; ConcreteProduct</pre>
+<h2>Participants</h2><ul>
+<li><strong>Product</strong>: Defines the interface of objects the creator produces.</li>
+<li><strong>Creator</strong>: Declares the factory method and uses products in its workflow.</li>
+<li><strong>ConcreteCreator</strong>: Overrides creation to return a specific concrete product.</li>
+</ul><h2>Forces</h2><ul
+><li>Creation varies by environment or extension point.</li>
+><li>Core workflow must remain stable.</li>
+><li>Callers should depend on abstractions, not concrete classes.</li>
+></ul>
+<h2>Consequences</h2><p><strong>Benefit:</strong> Decouples object creation from the high-level algorithm that uses it.</p>
+<p><strong>Cost:</strong> Introduces subclassing or hook points that can proliferate.</p>
+<h2>Python sketch</h2><pre>from abc import ABC, abstractmethod
+
+class Notifier(ABC):
+    @abstractmethod
+    def send(self, msg: str) -&gt; str: ...
+
+class Email(Notifier):
+    def send(self, msg: str) -&gt; str:
+        return f&quot;email:{msg}&quot;
+
+class Service(ABC):
+    def alert(self, msg: str) -&gt; str:
+        return self.create_notifier().send(msg)
+
+    @abstractmethod
+    def create_notifier(self) -&gt; Notifier: ...
+
+class EmailService(Service):
+    def create_notifier(self) -&gt; Notifier:
+        return Email()
+
+print(EmailService().alert(&quot;build failed&quot;))</pre>
+<h2>Interview example</h2><p>A CI/CD pipeline template (06-cicd-pipeline) can define a job workflow while letting each project supply the factory method that creates its deployer implementation.</p>
+</body></html>

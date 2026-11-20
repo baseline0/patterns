@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Template Method</title>
+<style>body{font-family:system-ui,sans-serif;max-width:52rem;margin:2rem auto;padding:0 1rem;line-height:1.5}pre{background:#f3f3f3;padding:1rem;overflow-x:auto}code{background:#f3f3f3;padding:0 .2rem}</style>
+</head><body>
+<h1>Template Method</h1>
+<p><strong>behavioral</strong> — Define the skeleton of an algorithm in a base operation, deferring specific steps to subclasses or hooks.</p>
+<h2>Problem</h2><p>Multiple implementations share the same overall process but duplicate its structure while varying a few steps.</p>
+<h2>Structure</h2><pre>AbstractClass.template() calls step1(), step2(), hook()
+ConcreteClass overrides variable steps
+Invariant sequence stays in base class</pre>
+<h2>Participants</h2><ul>
+<li><strong>AbstractClass</strong>: Defines the template method and invariant algorithm structure.</li>
+<li><strong>ConcreteClass</strong>: Implements or overrides variable steps of the algorithm.</li>
+</ul><h2>Forces</h2><ul
+><li>Algorithm structure is stable but some steps vary.</li>
+><li>Code duplication appears across similar workflows.</li>
+><li>Control over step order must remain centralized.</li>
+></ul>
+<h2>Consequences</h2><p><strong>Benefit:</strong> Reuses invariant workflow logic and enforces consistent sequencing.</p>
+<p><strong>Cost:</strong> Relies on inheritance and can make flows harder to follow across class hierarchy.</p>
+<h2>Python sketch</h2><pre>class ImportJob:
+    def run(self, source: str) -&gt; dict:
+        data = self.extract(source)
+        rows = self.transform(data)
+        return self.load(rows)
+
+    def extract(self, source: str):
+        raise NotImplementedError
+
+    def transform(self, data):
+        return [x.strip() for x in data]
+
+    def load(self, rows):
+        return {&quot;count&quot;: len(rows)}
+
+class CsvImport(ImportJob):
+    def extract(self, source: str):
+        return source.split(&quot;,&quot;)
+
+print(CsvImport().run(&quot;a, b, c&quot;))</pre>
+<h2>Interview example</h2><p>A pipe-and-filter data pipeline (pipe-and-filter) can define a fixed ingest-transform-load skeleton while subclasses customize extraction per source.</p>
+</body></html>

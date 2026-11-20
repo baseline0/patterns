@@ -1,0 +1,59 @@
+id: template-method
+name: Template Method
+category: behavioral
+intent: Define the skeleton of an algorithm in a base operation, deferring specific steps to subclasses
+  or hooks.
+problem: Multiple implementations share the same overall process but duplicate its structure while varying
+  a few steps.
+structure: 'AbstractClass.template() calls step1(), step2(), hook()
+
+  ConcreteClass overrides variable steps
+
+  Invariant sequence stays in base class'
+participants:
+- name: AbstractClass
+  role: Defines the template method and invariant algorithm structure.
+- name: ConcreteClass
+  role: Implements or overrides variable steps of the algorithm.
+forces:
+- Algorithm structure is stable but some steps vary.
+- Code duplication appears across similar workflows.
+- Control over step order must remain centralized.
+consequences:
+  benefit: Reuses invariant workflow logic and enforces consistent sequencing.
+  cost: Relies on inheritance and can make flows harder to follow across class hierarchy.
+smells_fixed:
+- Copied-pasted workflow methods with minor variations
+- Inconsistent step ordering across implementations
+smells_created:
+- Fragile base class hierarchies
+- Subclasses constrained by inheritance-based extension
+python: "class ImportJob:\n    def run(self, source: str) -> dict:\n        data = self.extract(source)\n\
+  \        rows = self.transform(data)\n        return self.load(rows)\n\n    def extract(self, source:\
+  \ str):\n        raise NotImplementedError\n\n    def transform(self, data):\n        return [x.strip()\
+  \ for x in data]\n\n    def load(self, rows):\n        return {\"count\": len(rows)}\n\nclass CsvImport(ImportJob):\n\
+  \    def extract(self, source: str):\n        return source.split(\",\")\n\nprint(CsvImport().run(\"\
+  a, b, c\"))"
+example: A pipe-and-filter data pipeline (pipe-and-filter) can define a fixed ingest-transform-load skeleton
+  while subclasses customize extraction per source.
+related_architecture:
+- pipe-and-filter
+- 08-streaming
+- layered
+quiz:
+- question: 'Template Method centralizes:'
+  choices:
+  - Object construction of families
+  - The invariant sequence of an algorithm
+  - Network communication retries
+  - Persistent storage schemas
+  answer: 1
+  explanation: The base class owns the skeleton; subclasses supply variable steps.
+- question: 'A drawback compared to composition-based alternatives is:'
+  choices:
+  - It cannot enforce ordering
+  - It depends on inheritance, limiting flexibility
+  - It prevents code reuse
+  - It only works in functional languages
+  answer: 1
+  explanation: Behavior variation is expressed through subclassing rather than object composition.

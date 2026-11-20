@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Decorator</title>
+<style>body{font-family:system-ui,sans-serif;max-width:52rem;margin:2rem auto;padding:0 1rem;line-height:1.5}pre{background:#f3f3f3;padding:1rem;overflow-x:auto}code{background:#f3f3f3;padding:0 .2rem}</style>
+</head><body>
+<h1>Decorator</h1>
+<p><strong>structural</strong> — Attach additional responsibilities to an object dynamically by wrapping it.</p>
+<h2>Problem</h2><p>Subclassing to add combinations of behaviors (logging, caching, auth, metrics) causes class explosion and rigid composition.</p>
+<h2>Structure</h2><pre>Client -&gt; Component
+Decorator wraps Component and implements Component
+ConcreteDecorator adds behavior before/after delegate call</pre>
+<h2>Participants</h2><ul>
+<li><strong>Component</strong>: Common interface for core objects and decorators.</li>
+<li><strong>ConcreteComponent</strong>: The original object receiving added behavior.</li>
+<li><strong>Decorator</strong>: Base wrapper that forwards to a component.</li>
+<li><strong>ConcreteDecorator</strong>: Adds specific behavior around delegation.</li>
+</ul><h2>Forces</h2><ul
+><li>Behavior combinations should be composed at runtime.</li>
+><li>Core class should remain closed to modification.</li>
+><li>Wrappers must preserve the component interface.</li>
+></ul>
+<h2>Consequences</h2><p><strong>Benefit:</strong> Enables flexible, mix-and-match behavior without subclass explosions.</p>
+<p><strong>Cost:</strong> Many small wrappers can complicate debugging and object identity.</p>
+<h2>Python sketch</h2><pre>class Handler:
+    def handle(self, req: dict) -&gt; dict:
+        raise NotImplementedError
+
+class Core(Handler):
+    def handle(self, req: dict) -&gt; dict:
+        return {&quot;ok&quot;: True, &quot;id&quot;: req[&quot;id&quot;]}
+
+class Logging(Handler):
+    def __init__(self, inner: Handler):
+        self.inner = inner
+
+    def handle(self, req: dict) -&gt; dict:
+        res = self.inner.handle(req)
+        return {**res, &quot;logged&quot;: True}
+
+print(Logging(Core()).handle({&quot;id&quot;: 7}))</pre>
+<h2>Interview example</h2><p>In a CRUD API (04-crud-api), decorators can add auth, metrics, and caching around handlers without changing business logic, aligning with layered boundaries.</p>
+</body></html>

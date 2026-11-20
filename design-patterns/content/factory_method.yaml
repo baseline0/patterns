@@ -1,0 +1,60 @@
+id: factory-method
+name: Factory Method
+category: creational
+intent: Let subclasses or hook implementations decide which concrete object to create.
+problem: A framework needs to create products while allowing extensions to choose concrete types without
+  changing core workflow code.
+structure: 'Creator.operation() -> calls factory_method()
+
+  Creator.factory_method() -> Product
+
+  ConcreteCreator overrides factory_method() -> ConcreteProduct'
+participants:
+- name: Product
+  role: Defines the interface of objects the creator produces.
+- name: Creator
+  role: Declares the factory method and uses products in its workflow.
+- name: ConcreteCreator
+  role: Overrides creation to return a specific concrete product.
+forces:
+- Creation varies by environment or extension point.
+- Core workflow must remain stable.
+- Callers should depend on abstractions, not concrete classes.
+consequences:
+  benefit: Decouples object creation from the high-level algorithm that uses it.
+  cost: Introduces subclassing or hook points that can proliferate.
+smells_fixed:
+- Hard-coded constructors inside business workflows
+- Repeated type selection logic scattered in callers
+smells_created:
+- Parallel creator hierarchies
+- Over-abstraction for simple instantiation
+python: "from abc import ABC, abstractmethod\n\nclass Notifier(ABC):\n    @abstractmethod\n    def send(self,\
+  \ msg: str) -> str: ...\n\nclass Email(Notifier):\n    def send(self, msg: str) -> str:\n        return\
+  \ f\"email:{msg}\"\n\nclass Service(ABC):\n    def alert(self, msg: str) -> str:\n        return self.create_notifier().send(msg)\n\
+  \n    @abstractmethod\n    def create_notifier(self) -> Notifier: ...\n\nclass EmailService(Service):\n\
+  \    def create_notifier(self) -> Notifier:\n        return Email()\n\nprint(EmailService().alert(\"\
+  build failed\"))"
+example: A CI/CD pipeline template (06-cicd-pipeline) can define a job workflow while letting each project
+  supply the factory method that creates its deployer implementation.
+related_architecture:
+- 06-cicd-pipeline
+- layered
+- microservices
+quiz:
+- question: 'Factory Method is most useful when:'
+  choices:
+  - One global object must be shared
+  - Object creation must vary while the workflow stays fixed
+  - Multiple objects must be created as a family atomically
+  - An object graph is too expensive to copy
+  answer: 1
+  explanation: It defers instantiation to an overridable hook so workflows can stay generic.
+- question: 'Compared to putting `if type == ...` in the workflow, Factory Method:'
+  choices:
+  - Removes all runtime polymorphism
+  - Moves variation to a dedicated creation point
+  - Requires distributed messaging
+  - Eliminates the need for interfaces
+  answer: 1
+  explanation: Creation variability is isolated behind the factory method.

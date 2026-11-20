@@ -1,0 +1,40 @@
+id: security
+name: Security
+definition: The ability of a system to protect data and resources from unauthorized access and misuse while remaining usable for legitimate requests.
+stimulus:
+  - An unauthenticated caller, a hostile tenant, a leaked credential, or an attempt to flood shared capacity occurs.
+response:
+  - Requests are authenticated and authorized, sensitive fields are protected, abusive capacity use is capped, and telemetry supports audit without exposing secrets.
+measure:
+  - 100 percent of external endpoints enforce authentication and authorization.
+  - Zero critical or high findings in dependency and configuration scans.
+  - Zero recorded secret or personal data leaks in application logs over each audit period.
+  - Compromised credential revoked in 5 minutes or less.
+  - Audit logs retained for 365 days.
+tactics:
+  - bulkhead
+  - observability
+  - blue-green-deploy
+related_patterns:
+  - proxy
+  - facade
+  - microservices
+  - layered
+  - 07-monitoring
+quiz:
+  - question: How does a bulkhead contribute to security?
+    choices:
+      - It encrypts stored data.
+      - It caps the resources one tenant or caller can consume.
+      - It issues authentication tokens.
+      - It removes all logging.
+    answer: 1
+    explanation: Per-tenant quotas and bounded pools limit how much capacity a noisy or hostile client can take.
+  - question: What is the main observability risk to data protection?
+    choices:
+      - Metrics always contain personal data.
+      - Structured logs can capture tokens or personal fields that must be scrubbed.
+      - Traces cannot be stored anywhere.
+      - Correlation identifiers reveal passwords.
+    answer: 1
+    explanation: Broad instrumentation can record sensitive values unless fields are deliberately filtered before emission.

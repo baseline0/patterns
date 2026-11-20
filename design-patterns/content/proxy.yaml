@@ -1,0 +1,58 @@
+id: proxy
+name: Proxy
+category: structural
+intent: Provide a surrogate or placeholder that controls access to another object.
+problem: Direct access to an object is expensive, remote, unsafe, or needs cross-cutting controls like
+  caching or lazy loading.
+structure: 'Client -> Subject interface
+
+  Proxy implements Subject and references RealSubject
+
+  Proxy may add control before/after forwarding'
+participants:
+- name: Subject
+  role: Common interface implemented by proxy and real subject.
+- name: RealSubject
+  role: The actual object providing core functionality.
+- name: Proxy
+  role: Controls access to the real subject and may add behavior.
+forces:
+- Access requires indirection (lazy init, remote, protection, caching).
+- Clients should use the same interface as the real object.
+- Control logic must be centralized.
+consequences:
+  benefit: Adds access control or optimization transparently to clients.
+  cost: Introduces latency/complexity and can obscure failure modes of the real subject.
+smells_fixed:
+- Clients handling lazy loading or remote access details directly
+- Scattered authorization or caching checks around a service
+smells_created:
+- Hidden network hops or staleness
+- Debugging confusion between proxy and real object behavior
+python: "class Api:\n    def fetch(self, key: str) -> str:\n        return f\"value:{key}\"\n\nclass CachedApi:\n\
+  \    def __init__(self, inner: Api):\n        self.inner = inner\n        self.cache = {}\n\n    def\
+  \ fetch(self, key: str) -> str:\n        if key not in self.cache:\n            self.cache[key] = self.inner.fetch(key)\n\
+  \        return self.cache[key]\n\napi = CachedApi(Api())\nprint(api.fetch(\"a\"), api.fetch(\"a\"))"
+example: A CRUD service (04-crud-api) can use a proxy in front of a repository or remote client to add
+  caching and auth checks, aligning with cache-aside strategies.
+related_architecture:
+- 04-crud-api
+- cache-aside
+- microservices
+quiz:
+- question: 'A proxy and the real subject typically:'
+  choices:
+  - Expose unrelated interfaces
+  - Share the same subject interface so clients are unaware
+  - Must run in different processes
+  - Cannot be swapped at runtime
+  answer: 1
+  explanation: Transparency to the client is a core property of Proxy.
+- question: Which is a valid proxy use case?
+  choices:
+  - Defining algorithm families
+  - Lazy loading or access control around a real object
+  - Building objects stepwise
+  - Traversing tree structures uniformly
+  answer: 1
+  explanation: Proxies control access for concerns like laziness, protection, remoting, or caching.

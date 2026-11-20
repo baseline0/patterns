@@ -1,0 +1,57 @@
+id: dependency-injection
+name: Dependency Injection
+category: application
+intent: Supply an object’s dependencies from the outside rather than having it construct or locate them
+  internally.
+problem: Hard-coded dependencies make code difficult to test, configure, and extend across environments.
+structure: 'Assembler/Container -> creates dependencies
+
+  Assembler -> injects into Client (constructor/setter)
+
+  Client depends on abstractions, not concrete construction'
+participants:
+- name: Client
+  role: Declares required dependencies through constructor, setter, or parameters.
+- name: Dependency (abstraction)
+  role: Contract the client relies on.
+- name: Assembler/Container
+  role: Constructs and wires concrete dependencies into clients.
+forces:
+- Implementations vary by environment or test context.
+- Clients should follow inversion of control.
+- Wiring logic should be centralized and explicit.
+consequences:
+  benefit: Improves testability, configurability, and adherence to dependency inversion.
+  cost: Can obscure object creation flow and introduce container/configuration complexity.
+smells_fixed:
+- Hard-coded `new` calls deep in business logic
+- Difficult unit tests requiring heavy patching of internals
+smells_created:
+- Overly magical containers and hidden wiring
+- Configuration complexity for simple applications
+python: "class Clock:\n    def now(self) -> str: return \"real\"\n\nclass FixedClock:\n    def now(self)\
+  \ -> str: return \"fixed\"\n\nclass Service:\n    def __init__(self, clock):\n        self.clock = clock\n\
+  \n    def stamp(self) -> str:\n        return self.clock.now()\n\nprint(Service(FixedClock()).stamp())"
+example: In a microservices codebase (09-microservices), dependency injection wires repositories, clients,
+  and config per environment so services remain testable and deployable.
+related_architecture:
+- 09-microservices
+- layered
+- 04-crud-api
+quiz:
+- question: 'Dependency Injection mainly improves:'
+  choices:
+  - Network throughput
+  - Testability and flexibility by externalizing dependency creation
+  - Database normalization
+  - Binary size
+  answer: 1
+  explanation: Clients receive collaborators, making substitution and configuration easier.
+- question: 'A potential downside of DI containers is:'
+  choices:
+  - They prevent interface use
+  - Wiring can become implicit and harder to trace
+  - They require no configuration ever
+  - They eliminate constructors
+  answer: 1
+  explanation: Automated wiring may hide how objects are composed, so explicitness matters.

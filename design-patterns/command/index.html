@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Command</title>
+<style>body{font-family:system-ui,sans-serif;max-width:52rem;margin:2rem auto;padding:0 1rem;line-height:1.5}pre{background:#f3f3f3;padding:1rem;overflow-x:auto}code{background:#f3f3f3;padding:0 .2rem}</style>
+</head><body>
+<h1>Command</h1>
+<p><strong>behavioral</strong> — Encapsulate a request as an object, allowing parameterization, queuing, logging, and undo.</p>
+<h2>Problem</h2><p>Invokers are tightly coupled to concrete operations, making it hard to queue, audit, retry, or reverse actions.</p>
+<h2>Structure</h2><pre>Invoker -&gt; Command.execute()
+ConcreteCommand holds Receiver and parameters
+Receiver performs the actual work</pre>
+<h2>Participants</h2><ul>
+<li><strong>Command</strong>: Declares an execution interface for an action.</li>
+<li><strong>ConcreteCommand</strong>: Binds a receiver and parameters to implement the action.</li>
+<li><strong>Invoker</strong>: Triggers commands without knowing operation details.</li>
+<li><strong>Receiver</strong>: Contains the business logic needed to fulfill the request.</li>
+</ul><h2>Forces</h2><ul
+><li>Actions must be queued, logged, or retried.</li>
+><li>Invoker should be decoupled from operation details.</li>
+><li>Undo/redo or audit trails may be required.</li>
+></ul>
+<h2>Consequences</h2><p><strong>Benefit:</strong> Decouples invocation from execution and enables scheduling, auditing, and reversal.</p>
+<p><strong>Cost:</strong> Introduces many small command objects and lifecycle management concerns.</p>
+<h2>Python sketch</h2><pre>class Light:
+    def on(self): return &quot;on&quot;
+
+class SwitchOn:
+    def __init__(self, light: Light):
+        self.light = light
+
+    def execute(self):
+        return self.light.on()
+
+queue = [SwitchOn(Light())]
+for cmd in queue:
+    print(cmd.execute())</pre>
+<h2>Interview example</h2><p>In an event-driven system (03-event-driven), commands can be serialized to a queue for asynchronous processing with retries and audit logs, complementing queue-based-load-leveling.</p>
+</body></html>

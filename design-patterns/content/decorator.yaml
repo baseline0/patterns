@@ -1,0 +1,61 @@
+id: decorator
+name: Decorator
+category: structural
+intent: Attach additional responsibilities to an object dynamically by wrapping it.
+problem: Subclassing to add combinations of behaviors (logging, caching, auth, metrics) causes class explosion
+  and rigid composition.
+structure: 'Client -> Component
+
+  Decorator wraps Component and implements Component
+
+  ConcreteDecorator adds behavior before/after delegate call'
+participants:
+- name: Component
+  role: Common interface for core objects and decorators.
+- name: ConcreteComponent
+  role: The original object receiving added behavior.
+- name: Decorator
+  role: Base wrapper that forwards to a component.
+- name: ConcreteDecorator
+  role: Adds specific behavior around delegation.
+forces:
+- Behavior combinations should be composed at runtime.
+- Core class should remain closed to modification.
+- Wrappers must preserve the component interface.
+consequences:
+  benefit: Enables flexible, mix-and-match behavior without subclass explosions.
+  cost: Many small wrappers can complicate debugging and object identity.
+smells_fixed:
+- Subclass explosion for feature combinations
+- Core classes cluttered with orthogonal concerns
+smells_created:
+- Deep wrapper chains that are hard to trace
+- Order-dependent decorator behavior
+python: "class Handler:\n    def handle(self, req: dict) -> dict:\n        raise NotImplementedError\n\
+  \nclass Core(Handler):\n    def handle(self, req: dict) -> dict:\n        return {\"ok\": True, \"id\"\
+  : req[\"id\"]}\n\nclass Logging(Handler):\n    def __init__(self, inner: Handler):\n        self.inner\
+  \ = inner\n\n    def handle(self, req: dict) -> dict:\n        res = self.inner.handle(req)\n      \
+  \  return {**res, \"logged\": True}\n\nprint(Logging(Core()).handle({\"id\": 7}))"
+example: In a CRUD API (04-crud-api), decorators can add auth, metrics, and caching around handlers without
+  changing business logic, aligning with layered boundaries.
+related_architecture:
+- 04-crud-api
+- layered
+- cache-aside
+quiz:
+- question: 'Decorator differs from inheritance by:'
+  choices:
+  - Composing behavior at runtime via wrapping
+  - Requiring access to source code
+  - Only working for UI widgets
+  - Forcing a single global wrapper
+  answer: 0
+  explanation: Decorators wrap objects dynamically, allowing flexible combinations.
+- question: 'A common operational pitfall of decorators is:'
+  choices:
+  - They cannot implement interfaces
+  - Wrapper order can change semantics and complicate tracing
+  - They require database locks
+  - They eliminate the need for testing
+  answer: 1
+  explanation: Behavior like auth-before-cache vs cache-before-auth depends on composition order.

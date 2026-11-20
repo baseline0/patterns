@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Provider mappings</title>
+<style>body{font-family:system-ui,sans-serif;max-width:60rem;margin:2rem auto;padding:0 1rem;line-height:1.5}table{border-collapse:collapse;width:100%}td,th{border:1px solid #ccc;padding:.4rem;text-align:left;vertical-align:top}</style>
+</head><body>
+<h1>Provider mappings</h1>
+<h2>Event-driven processing</h2>
+<p>Producers publish events to a managed queue or topic; a consumer function processes them and moves repeated failures to a dead-letter destination, with a managed store for processed-event state. The pattern is provider-neutral and every fixture is plan-only and cost-free.</p>
+<table><tr>
+<th>AWS</th>
+<th>AZURE</th>
+<th>GCP</th>
+</tr><tr>
+<td>SQS queue with dead-letter queue + AWS Lambda + DynamoDB</td>
+<td>Azure Storage Queues with poison queue + Azure Functions + Table Storage</td>
+<td>Pub/Sub topic with dead-letter topic + Cloud Functions + Firestore</td>
+</tr></table>
+<h2>Serverless API</h2>
+<p>A managed HTTP endpoint fronts a short-lived, stateless function that reads and writes a managed table or document store. The pattern is provider-neutral: route the request, run the handler, persist the result. Every fixture is plan-only and cost-free.</p>
+<table><tr>
+<th>AWS</th>
+<th>AZURE</th>
+<th>GCP</th>
+</tr><tr>
+<td>API Gateway HTTP API + AWS Lambda + DynamoDB</td>
+<td>API Management + Azure Functions + Table Storage</td>
+<td>Cloud Run endpoint + Cloud Functions + Firestore</td>
+</tr></table>
+</body></html>

@@ -1,0 +1,61 @@
+id: pipe-and-filter
+name: Pipe and Filter
+summary: Compose a stream of processing stages where each filter transforms data incrementally and passes results to the next stage through a buffer or pipe.
+decision: Break a data workflow into small independent filters connected by bounded pipes so stages can be reused, reordered, and scaled without rewriting the whole pipeline.
+use_when:
+  - Data can be processed incrementally as a stream.
+  - Stages are reusable and can be recombined for different jobs.
+  - Throughput matters more than single-record round-trip latency.
+avoid_when:
+  - Each record needs a long interactive transaction across stages.
+  - Stages must share large mutable state.
+  - Strict end-to-end ordering with no buffering is required.
+components:
+  - name: Source
+    role: Emits raw records into the first pipe from a file, stream, or message topic.
+  - name: Filter
+    role: Performs one focused transformation and emits output without knowing upstream or downstream stages.
+  - name: Pipe
+    role: Buffers and transports records between filters, decoupling their processing rates.
+  - name: Sink
+    role: Persists or forwards the final transformed records to their destination.
+tradeoffs:
+  - benefit: Filters are small, reusable, and easy to test in isolation.
+    cost: Serializing records between stages adds CPU and memory overhead.
+  - benefit: Slow stages can be scaled independently behind bounded buffers.
+    cost: A failing stage can block or drop records unless dead-letter handling is designed in.
+quality_impacts:
+  - attribute: modifiability
+    effect: improves
+    note: Inserting or replacing one filter is a local change, shortening change lead time for new transformations.
+  - attribute: testability
+    effect: improves
+    note: Each filter can be verified with fixture input and output in isolation, keeping test runtime short.
+  - attribute: performance
+    effect: improves
+    note: Bounded pipes let stages run concurrently and absorb bursts, raising sustained throughput and steadying p95 latency.
+related_patterns:
+  - event-driven
+  - chain-of-responsibility
+  - queue-based-load-leveling
+  - idempotent-consumer
+  - 08-streaming
+scenarios:
+  - 08-streaming
+quiz:
+  - question: What is the main benefit of bounded pipes between filters?
+    choices:
+      - They remove the need for any transformation logic.
+      - They let stages progress at different rates and absorb bursts.
+      - They guarantee exactly-once delivery without retries.
+      - They make all filters share one mutable state store.
+    answer: 1
+    explanation: A bounded buffer decouples producer and consumer speeds while capping memory use.
+  - question: Which property should a filter have to stay reusable?
+    choices:
+      - It reads the global database directly.
+      - It knows the identity of the next filter.
+      - It performs one transformation with clear input and output.
+      - It writes to the final sink itself.
+    answer: 2
+    explanation: Filters stay composable when they do one transformation and communicate only through their pipe.

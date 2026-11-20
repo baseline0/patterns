@@ -1,0 +1,63 @@
+id: layered
+name: Layered Architecture
+summary: Organize code into horizontal layers where each layer depends only on the layer directly beneath it, separating presentation, application, domain, and persistence concerns.
+decision: Split the system into presentation, application, domain, and infrastructure layers and enforce one-way dependencies so a storage change does not ripple into business rules.
+use_when:
+  - The domain is stable and the user interface or data store is likely to change.
+  - A team wants a low-complexity default with clear separation of concerns.
+  - Requirements map to CRUD screens over a relational model.
+avoid_when:
+  - Read and write paths need independent scaling under very different load.
+  - Deep synchronous call chains make latency budgets hard to meet.
+  - Domain logic is thin and layering adds ceremony without benefit.
+components:
+  - name: Presentation
+    role: Renders user-facing screens or public HTTP responses and translates input into application calls.
+  - name: Application
+    role: Coordinates use cases and orchestrates domain objects without holding business rules.
+  - name: Domain
+    role: Holds entities, value objects, and business invariants independent of delivery and storage.
+  - name: Infrastructure
+    role: Implements persistence, messaging, and external adapters behind interfaces defined by inner layers.
+tradeoffs:
+  - benefit: Changes to a single concern stay local when dependencies point inward.
+    cost: A request typically crosses every layer, adding indirection and call overhead.
+  - benefit: New developers find a familiar and easy-to-explain structure.
+    cost: Rigid layering can encourage anemic domain models that only pass data through.
+quality_impacts:
+  - attribute: modifiability
+    effect: improves
+    note: Replacing a persistence adapter changes one layer and leaves domain rules untouched, cutting change lead time.
+  - attribute: testability
+    effect: improves
+    note: Domain and application layers can be tested without a database or UI, keeping unit test runtime under one minute.
+  - attribute: performance
+    effect: degrades
+    note: Synchronous traversal of four layers adds hops that can raise p95 latency on read-heavy endpoints.
+related_patterns:
+  - repository
+  - dependency-injection
+  - 01-static-website
+  - 04-crud-api
+  - 05-3tier-web
+scenarios:
+  - 01-static-website
+  - 04-crud-api
+  - 05-3tier-web
+quiz:
+  - question: Which dependency direction keeps a layered design modifiable?
+    choices:
+      - Presentation imports infrastructure directly.
+      - Outer layers depend on abstractions defined by inner layers.
+      - The domain imports the web framework for its annotations.
+      - Every layer calls every other layer as needed.
+    answer: 1
+    explanation: Inward dependencies keep inner layers free of delivery and storage details so those can change independently.
+  - question: What is the main cost of strict layering on a read-heavy endpoint?
+    choices:
+      - It removes the need for any tests.
+      - It forces all data into a single table.
+      - Extra hops through each layer raise p95 latency.
+      - It prevents the use of dependency injection.
+    answer: 2
+    explanation: Each synchronous layer crossing adds call overhead that is measurable as higher p95 latency.

@@ -1,0 +1,60 @@
+id: mediator
+name: Mediator
+category: behavioral
+intent: Centralize complex interactions between related objects in a mediator to reduce direct dependencies.
+problem: Many components reference each other directly, creating tangled communication and fragile change
+  propagation.
+structure: 'ColleagueA <-> Mediator <-> ColleagueB
+
+  Colleagues notify mediator instead of peers
+
+  Mediator coordinates responses'
+participants:
+- name: Mediator
+  role: Defines coordination interface for colleagues.
+- name: ConcreteMediator
+  role: Encapsulates interaction rules between colleagues.
+- name: Colleague
+  role: Communicates through the mediator rather than directly with peers.
+forces:
+- Object interactions are many-to-many and hard to reason about.
+- Reuse of components is limited by peer coupling.
+- Interaction rules change frequently.
+consequences:
+  benefit: Reduces coupling between components and localizes collaboration logic.
+  cost: Mediator can grow into a complex central controller.
+smells_fixed:
+- Spaghetti references between peer components
+- Change ripple effects across tightly coupled objects
+smells_created:
+- God-mediator with excessive knowledge
+- Hidden workflows centralized in one place
+python: "class ChatRoom:\n    def __init__(self):\n        self.users = []\n\n    def register(self, user):\n\
+  \        self.users.append(user)\n        user.room = self\n\n    def send(self, sender, msg: str):\n\
+  \        for u in self.users:\n            if u is not sender:\n                u.receive(msg)\n\nclass\
+  \ User:\n    def __init__(self, name):\n        self.name = name\n        self.room = None\n\n    def\
+  \ say(self, msg: str):\n        self.room.send(self, msg)\n\n    def receive(self, msg: str):\n    \
+  \    pass"
+example: A microservices orchestration layer (09-microservices) can act as a mediator for UI workflows,
+  coordinating service calls instead of letting clients chat with every service directly.
+related_architecture:
+- 09-microservices
+- layered
+- saga
+quiz:
+- question: 'Mediator reduces:'
+  choices:
+  - The need for any interfaces
+  - Direct many-to-many dependencies between colleagues
+  - All runtime latency
+  - Storage requirements
+  answer: 1
+  explanation: Peers communicate via a central coordinator rather than referencing each other.
+- question: 'A warning sign when using Mediator is:'
+  choices:
+  - Colleagues become too reusable
+  - The mediator accumulates most business rules and complexity
+  - Handlers become stateless
+  - Events become immutable
+  answer: 1
+  explanation: Centralization helps decoupling but can create a god object if overused.

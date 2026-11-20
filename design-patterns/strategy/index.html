@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Strategy</title>
+<style>body{font-family:system-ui,sans-serif;max-width:52rem;margin:2rem auto;padding:0 1rem;line-height:1.5}pre{background:#f3f3f3;padding:1rem;overflow-x:auto}code{background:#f3f3f3;padding:0 .2rem}</style>
+</head><body>
+<h1>Strategy</h1>
+<p><strong>behavioral</strong> — Define interchangeable algorithms behind a stable interface so behavior can vary at runtime.</p>
+<h2>Problem</h2><p>A service needs multiple pricing, routing, or ranking behaviors without scattering conditionals across callers.</p>
+<h2>Structure</h2><pre>Client -&gt; Context(strategy)
+Context -&gt; Strategy.execute()
+ConcreteStrategyA / ConcreteStrategyB implement Strategy</pre>
+<h2>Participants</h2><ul>
+<li><strong>Strategy</strong>: Declares the algorithm interface used by the context.</li>
+<li><strong>ConcreteStrategy</strong>: Implements one algorithm variant.</li>
+<li><strong>Context</strong>: Delegates work to the selected strategy and holds shared state.</li>
+</ul><h2>Forces</h2><ul
+><li>Behavior must change without modifying callers.</li>
+><li>Variants share inputs but differ in policy.</li>
+><li>Selection may happen per request or tenant.</li>
+></ul>
+<h2>Consequences</h2><p><strong>Benefit:</strong> Replaces branching logic with composable, testable policies.</p>
+<p><strong>Cost:</strong> Adds indirection and requires explicit strategy selection.</p>
+<h2>Python sketch</h2><pre>from dataclasses import dataclass
+from typing import Protocol
+
+class Shipping(Protocol):
+    def cost(self, weight: float) -&gt; float: ...
+
+class Standard:
+    def cost(self, weight: float) -&gt; float:
+        return 5 + weight * 1.2
+
+class Express:
+    def cost(self, weight: float) -&gt; float:
+        return 12 + weight * 2.0
+
+@dataclass
+class QuoteService:
+    strategy: Shipping
+
+    def total(self, weight: float) -&gt; float:
+        return self.strategy.cost(weight)
+
+print(QuoteService(Express()).total(3.0))</pre>
+<h2>Interview example</h2><p>In a serverless checkout API (02-serverless-api), a Lambda chooses tax or shipping strategies per region while the handler and API contract stay stable.</p>
+</body></html>

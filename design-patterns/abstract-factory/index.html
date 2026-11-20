@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Abstract Factory</title>
+<style>body{font-family:system-ui,sans-serif;max-width:52rem;margin:2rem auto;padding:0 1rem;line-height:1.5}pre{background:#f3f3f3;padding:1rem;overflow-x:auto}code{background:#f3f3f3;padding:0 .2rem}</style>
+</head><body>
+<h1>Abstract Factory</h1>
+<p><strong>creational</strong> — Provide an interface for creating families of related objects without specifying concrete classes.</p>
+<h2>Problem</h2><p>A system must produce compatible sets of components (UI widgets, storage clients, drivers) that vary by environment but must work together.</p>
+<h2>Structure</h2><pre>Client -&gt; AbstractFactory
+AbstractFactory -&gt; createA()/createB()
+ConcreteFactory1/2 create ProductA1/B1 and ProductA2/B2 families</pre>
+<h2>Participants</h2><ul>
+<li><strong>AbstractFactory</strong>: Declares creation operations for each product in the family.</li>
+<li><strong>ConcreteFactory</strong>: Creates a consistent family of concrete products.</li>
+<li><strong>AbstractProduct</strong>: Defines interfaces for each kind of product.</li>
+<li><strong>Client</strong>: Uses only abstract interfaces to assemble behavior.</li>
+</ul><h2>Forces</h2><ul
+><li>Products must be used in compatible families.</li>
+><li>Environment or vendor changes should not leak into clients.</li>
+><li>Switching families should be a single decision.</li>
+></ul>
+<h2>Consequences</h2><p><strong>Benefit:</strong> Enforces consistency among related products and centralizes family selection.</p>
+<p><strong>Cost:</strong> Adding a new product kind requires changing every factory interface and implementation.</p>
+<h2>Python sketch</h2><pre>from abc import ABC, abstractmethod
+
+class Queue(ABC):
+    @abstractmethod
+    def publish(self, msg: str) -&gt; str: ...
+
+class Blob(ABC):
+    @abstractmethod
+    def put(self, name: str) -&gt; str: ...
+
+class AwsQueue(Queue):
+    def publish(self, msg: str) -&gt; str: return f&quot;sqs:{msg}&quot;
+
+class AwsBlob(Blob):
+    def put(self, name: str) -&gt; str: return f&quot;s3:{name}&quot;
+
+class CloudFactory(ABC):
+    @abstractmethod
+    def queue(self) -&gt; Queue: ...
+    @abstractmethod
+    def blob(self) -&gt; Blob: ...
+
+class AwsFactory(CloudFactory):
+    def queue(self) -&gt; Queue: return AwsQueue()
+    def blob(self) -&gt; Blob: return AwsBlob()</pre>
+<h2>Interview example</h2><p>A portable event-driven app (03-event-driven) can swap an AWS or Azure factory so queue and blob clients come from the same compatible provider family.</p>
+</body></html>

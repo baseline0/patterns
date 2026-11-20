@@ -1,0 +1,60 @@
+id: facade
+name: Facade
+category: structural
+intent: Provide a simplified interface to a complex subsystem.
+problem: Clients must orchestrate many subsystem classes and calls, increasing coupling and misuse risk.
+structure: 'Client -> Facade.simple_op()
+
+  Facade -> SubsystemA / SubsystemB / SubsystemC
+
+  Subsystem classes remain available for advanced use'
+participants:
+- name: Facade
+  role: Offers coarse-grained operations that coordinate subsystem work.
+- name: Subsystem classes
+  role: Implement detailed functionality behind the facade.
+- name: Client
+  role: Uses the facade for common cases instead of subsystem internals.
+forces:
+- Subsystem APIs are complex or unstable.
+- Most clients need a narrow, common workflow.
+- Direct access may still be required for advanced cases.
+consequences:
+  benefit: Reduces coupling and makes common use cases easier and safer.
+  cost: Can become a god object if it accumulates unrelated responsibilities.
+smells_fixed:
+- Clients orchestrating many low-level calls in sequence
+- Duplicated subsystem wiring across callers
+smells_created:
+- Overgrown facade with too many responsibilities
+- Hidden subsystem capabilities needed by advanced clients
+python: "class Encoder:\n    def encode(self, data: bytes) -> bytes: return data[::-1]\n\nclass Storage:\n\
+  \    def save(self, name: str, data: bytes) -> str: return f\"stored:{name}:{len(data)}\"\n\nclass Notifier:\n\
+  \    def notify(self, name: str) -> str: return f\"notified:{name}\"\n\nclass MediaFacade:\n    def\
+  \ __init__(self):\n        self.encoder = Encoder()\n        self.storage = Storage()\n        self.notifier\
+  \ = Notifier()\n\n    def publish(self, name: str, data: bytes) -> dict:\n        blob = self.encoder.encode(data)\n\
+  \        loc = self.storage.save(name, blob)\n        msg = self.notifier.notify(name)\n        return\
+  \ {\"location\": loc, \"message\": msg}\n\nprint(MediaFacade().publish(\"a.txt\", b\"hi\"))"
+example: A serverless API (02-serverless-api) can expose a facade over auth, storage, and queue clients
+  so handlers invoke one workflow instead of managing each SDK call.
+related_architecture:
+- 02-serverless-api
+- layered
+- microservices
+quiz:
+- question: 'Facade is primarily about:'
+  choices:
+  - Enforcing one instance globally
+  - Simplifying access to a subsystem
+  - Sharing intrinsic state efficiently
+  - Deferring execution as commands
+  answer: 1
+  explanation: It provides a higher-level interface over complex components.
+- question: When should clients bypass a facade?
+  choices:
+  - Never, facades must hide everything permanently
+  - When advanced or uncommon capabilities are legitimately needed
+  - Only during testing
+  - Whenever performance matters
+  answer: 1
+  explanation: Facades simplify common paths but do not have to forbid direct subsystem access.

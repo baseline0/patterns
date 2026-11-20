@@ -44,3 +44,6 @@ TODO.md
 
 # Local card review state (per-browser CLI progress)
 cards/.review-state.json
+
+# Local scenario drill notes
+scenarios/.drill-state.json

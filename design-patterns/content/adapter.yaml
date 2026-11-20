@@ -1,0 +1,61 @@
+id: adapter
+name: Adapter
+category: structural
+intent: Convert the interface of a component into one clients expect so incompatible interfaces can collaborate.
+problem: Integrating third-party or legacy APIs requires changing client code or duplicating translation
+  logic across the system.
+structure: 'Client -> Target interface
+
+  Adapter implements Target and wraps Adaptee
+
+  Adapter -> Adaptee.specific_request()'
+participants:
+- name: Target
+  role: Interface expected by the client.
+- name: Adapter
+  role: Translates Target calls to the adaptee interface.
+- name: Adaptee
+  role: Existing component with an incompatible interface.
+- name: Client
+  role: Works against the Target abstraction.
+forces:
+- Existing interfaces cannot be changed easily.
+- Integration logic should be isolated.
+- Multiple clients need a uniform API.
+consequences:
+  benefit: Enables reuse of existing components without polluting client code.
+  cost: Adds a translation layer that can hide impedance mismatches or performance costs.
+smells_fixed:
+- Scattered vendor-specific translation code
+- Clients tightly coupled to legacy APIs
+smells_created:
+- Leaky adapters that expose adaptee quirks
+- Extra mapping overhead in hot paths
+python: "class LegacyPayments:\n    def make_payment(self, cents: int) -> str:\n        return f\"paid:{cents}\"\
+  \n\nclass PaymentPort:\n    def charge(self, amount: float) -> str:\n        raise NotImplementedError\n\
+  \nclass LegacyPaymentsAdapter(PaymentPort):\n    def __init__(self, legacy: LegacyPayments):\n     \
+  \   self.legacy = legacy\n\n    def charge(self, amount: float) -> str:\n        return self.legacy.make_payment(int(amount\
+  \ * 100))\n\nsvc = LegacyPaymentsAdapter(LegacyPayments())\nprint(svc.charge(12.34))"
+example: A CRUD API (04-crud-api) can adapt a legacy billing SDK to the application port so controllers
+  depend on a stable interface, easing later migration.
+related_architecture:
+- 04-crud-api
+- layered
+- microservices
+quiz:
+- question: 'Adapter primarily addresses:'
+  choices:
+  - Object creation complexity
+  - Interface incompatibility between components
+  - Concurrent access control
+  - State persistence
+  answer: 1
+  explanation: It translates one interface into another expected by clients.
+- question: 'In a layered architecture, an adapter commonly lives at:'
+  choices:
+  - The domain core only
+  - An integration boundary such as infrastructure/ports
+  - The browser UI exclusively
+  - The database index layer
+  answer: 1
+  explanation: Adapters bridge external or legacy systems to internal abstractions at boundaries.

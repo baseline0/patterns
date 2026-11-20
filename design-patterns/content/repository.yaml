@@ -1,0 +1,57 @@
+id: repository
+name: Repository
+category: application
+intent: Mediate between domain and data mapping layers through a collection-like interface for aggregates.
+problem: Domain logic becomes coupled to queries, ORM APIs, and persistence details, making it hard to
+  test and evolve.
+structure: 'Domain/Service -> Repository interface
+
+  Repository -> Data Mapper/ORM/DB
+
+  Repository returns domain aggregates, not rows/clients'
+participants:
+- name: Repository interface
+  role: Declares collection-oriented access methods for aggregates.
+- name: ConcreteRepository
+  role: Implements persistence using a data store or ORM.
+- name: Domain aggregate
+  role: Business object managed and returned by the repository.
+forces:
+- Domain model should be persistence-ignorant.
+- Query and storage technologies may change.
+- Testing needs in-memory substitutes.
+consequences:
+  benefit: Improves separation of concerns and testability of domain logic.
+  cost: Can hide important query capabilities or add leaky abstractions if over-generalized.
+smells_fixed:
+- Domain services issuing raw SQL/ORM calls directly
+- Duplicated query construction across use cases
+smells_created:
+- Generic repositories that obscure intentful queries
+- Anemic interfaces that leak persistence concerns
+python: "class UserRepo:\n    def __init__(self):\n        self._db = {}\n\n    def add(self, user: dict):\n\
+  \        self._db[user[\"id\"]] = user\n\n    def get(self, user_id: int):\n        return self._db.get(user_id)\n\
+  \nrepo = UserRepo()\nrepo.add({\"id\": 1, \"name\": \"A\"})\nprint(repo.get(1))"
+example: A layered CRUD API (04-crud-api) uses repositories so handlers and domain services depend on
+  aggregate operations rather than database clients.
+related_architecture:
+- 04-crud-api
+- layered
+- cqrs
+quiz:
+- question: 'Repository aims to present persistence as:'
+  choices:
+  - A set of HTTP endpoints
+  - A collection-like interface over domain aggregates
+  - A UI component tree
+  - A message broker topic
+  answer: 1
+  explanation: It abstracts storage behind domain-oriented operations.
+- question: 'A common repository anti-pattern is:'
+  choices:
+  - Defining methods per aggregate use case
+  - A one-size-fits-all generic CRUD interface that hides important domain queries
+  - Using interfaces for testing
+  - Separating domain and infrastructure
+  answer: 1
+  explanation: Overly generic repositories can leak persistence details or fail to express intent.

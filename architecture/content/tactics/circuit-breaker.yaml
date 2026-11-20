@@ -1,0 +1,62 @@
+id: circuit-breaker
+name: Circuit Breaker
+summary: Stop sending requests to a failing dependency for a cooling-off period, then probe cautiously before restoring normal traffic.
+decision: Wrap calls in a breaker that trips after a failure threshold, fails fast while open, and moves through half-open probes to decide when to close.
+mechanism: Count failures in a rolling window, open the circuit when the threshold is crossed, reject calls immediately while open, and allow a limited probe after a timeout.
+failure_modes:
+  - Tripping on a slow but healthy dependency because timeouts are set too tightly.
+  - Flapping when thresholds are too sensitive to brief noise.
+  - Sharing one breaker across unrelated dependencies so one fault blocks all.
+  - Treating business errors as dependency failures and opening incorrectly.
+use_when:
+  - A remote dependency can degrade or fail for a sustained period.
+  - Failing fast is better than queueing calls that will time out.
+  - A fallback response or degraded mode exists.
+avoid_when:
+  - The dependency is in-process with no independent failure mode.
+  - No acceptable degraded response exists and every call must be attempted.
+  - Call volume is so low that a failure threshold is rarely reached.
+tradeoffs:
+  - benefit: Fast failure protects callers from p95 latency blowups and thread exhaustion.
+    cost: Requests are rejected even after the dependency begins to recover until a probe succeeds.
+  - benefit: A failing dependency gets time to recover without sustained load.
+    cost: Requires tuning thresholds, windows, and timeouts per dependency.
+quality_impacts:
+  - attribute: availability
+    effect: improves
+    note: Fail-fast behaviour keeps the caller available and preserves error budget when a downstream service degrades.
+  - attribute: recoverability
+    effect: improves
+    note: Half-open probes detect recovery and restore traffic automatically, shortening recovery time within the RTO.
+  - attribute: performance
+    effect: improves
+    note: Rejecting calls without waiting on timeouts holds p95 latency steady during a downstream outage.
+related_patterns:
+  - retry-with-backoff
+  - bulkhead
+  - facade
+  - microservices
+  - 06-cicd-pipeline
+  - 07-monitoring
+  - 09-microservices
+scenarios:
+  - 06-cicd-pipeline
+  - 07-monitoring
+  - 09-microservices
+quiz:
+  - question: What does a half-open circuit breaker do?
+    choices:
+      - Rejects every call permanently
+      - Allows a limited probe to test recovery
+      - Increases the timeout on every call
+      - Retries indefinitely until success
+    answer: 1
+    explanation: A half-open state permits a small number of probe requests so the breaker can close only after real recovery.
+  - question: Which condition should count toward opening a breaker?
+    choices:
+      - A malformed request rejected by input validation
+      - Repeated timeouts from the remote dependency
+      - A user choosing to cancel a request
+      - A successful cache hit
+    answer: 1
+    explanation: Breakers should track dependency faults such as timeouts, not deterministic application-level rejections.

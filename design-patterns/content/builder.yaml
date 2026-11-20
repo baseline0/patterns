@@ -1,0 +1,63 @@
+id: builder
+name: Builder
+category: creational
+intent: Separate construction of a complex object from its representation so the same process can create
+  different forms.
+problem: Creating objects with many optional parts, validation rules, or assembly steps leads to telescoping
+  constructors and fragile setup code.
+structure: 'Director -> Builder.build_part()
+
+  Builder -> assembles Product
+
+  ConcreteBuilder returns specific Product representation'
+participants:
+- name: Builder
+  role: Declares steps for constructing parts of the product.
+- name: ConcreteBuilder
+  role: Implements steps and keeps the product being assembled.
+- name: Director
+  role: Orchestrates construction steps in a particular order.
+- name: Product
+  role: The complex object produced by the builder.
+forces:
+- Construction requires multiple ordered steps or validation.
+- Different representations share a construction process.
+- Clients should not manage partial, invalid states.
+consequences:
+  benefit: Improves readability and correctness for complex object assembly.
+  cost: Adds classes/objects and can be overkill for simple data structures.
+smells_fixed:
+- Telescoping constructors with many optional parameters
+- Ad hoc assembly code repeated across call sites
+smells_created:
+- Boilerplate builder classes
+- Stale directors when construction steps diverge
+python: "class RequestBuilder:\n    def __init__(self):\n        self._headers = {}\n        self._timeout\
+  \ = 30\n\n    def header(self, k: str, v: str):\n        self._headers[k] = v\n        return self\n\
+  \n    def timeout(self, seconds: int):\n        self._timeout = seconds\n        return self\n\n   \
+  \ def build(self) -> dict:\n        if self._timeout <= 0:\n            raise ValueError(\"timeout\"\
+  )\n        return {\"headers\": dict(self._headers), \"timeout\": self._timeout}\n\nreq = RequestBuilder().header(\"\
+  x-trace\", \"1\").timeout(10).build()\nprint(req)"
+example: A CI/CD deployment definition (06-cicd-pipeline) can use a builder to assemble validated pipeline
+  specs (stages, retries, artifacts) before submitting to the platform.
+related_architecture:
+- 06-cicd-pipeline
+- layered
+- cqrs
+quiz:
+- question: 'Builder is a better fit than many constructor parameters when:'
+  choices:
+  - Objects must be globally unique
+  - Construction is stepwise with optional parts and validation
+  - Behavior must be swapped at runtime
+  - Access to a remote service must be proxied
+  answer: 1
+  explanation: It makes complex, ordered assembly explicit and safe.
+- question: What does a Director contribute?
+  choices:
+  - Stores the final product for all clients
+  - Encapsulates a reusable construction sequence
+  - Selects concrete classes by string name
+  - Handles persistence transactions
+  answer: 1
+  explanation: The Director knows the order of steps; builders know how to perform each step.

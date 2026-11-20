@@ -1,0 +1,61 @@
+id: prototype
+name: Prototype
+category: creational
+intent: Create new objects by copying a prototypical instance instead of instantiating from scratch.
+problem: Object creation is expensive or configuration-heavy, and new instances should start from known
+  templates with small variations.
+structure: 'Client -> Prototype.clone()
+
+  ConcretePrototype implements clone() -> returns copy
+
+  Registry may store named prototypes'
+participants:
+- name: Prototype
+  role: Declares a cloning operation.
+- name: ConcretePrototype
+  role: Implements cloning, including deep-copy decisions.
+- name: Client
+  role: Requests new objects by cloning prototypes.
+- name: PrototypeRegistry
+  role: Optionally stores and retrieves canonical prototypes by key.
+forces:
+- Initialization cost or complexity is high.
+- Instances share a baseline configuration.
+- Copies must define clear deep vs shallow semantics.
+consequences:
+  benefit: Speeds creation and centralizes default templates.
+  cost: Cloning graphs with shared references or cycles can be error-prone.
+smells_fixed:
+- Repeated expensive setup code for similar objects
+- Large configuration blocks duplicated across constructors
+smells_created:
+- Accidental sharing of mutable nested state
+- Hidden copy semantics
+python: "import copy\nfrom dataclasses import dataclass, field\n\n@dataclass\nclass JobTemplate:\n   \
+  \ image: str\n    env: dict = field(default_factory=dict)\n\n    def clone(self, **overrides):\n   \
+  \     new = copy.deepcopy(self)\n        for k, v in overrides.items():\n            setattr(new, k,\
+  \ v)\n        return new\n\nbase = JobTemplate(\"python:3.12\", {\"REGION\": \"us-east-1\"})\ncanary\
+  \ = base.clone(env={\"REGION\": \"us-east-1\", \"CANARY\": \"1\"})\nprint(base.env, canary.env)"
+example: In a CI/CD system (06-cicd-pipeline), pipeline job templates can be cloned per environment so
+  baseline steps stay consistent while overrides remain explicit.
+related_architecture:
+- 06-cicd-pipeline
+- serverless
+- layered
+quiz:
+- question: 'Prototype is especially helpful when:'
+  choices:
+  - You need one instance per process
+  - Creating from a configured template is cheaper than full construction
+  - Objects must never be copied
+  - You must enforce access control
+  answer: 1
+  explanation: Cloning reuses an initialized template as the starting point.
+- question: 'A key risk with Prototype is:'
+  choices:
+  - Inability to support interfaces
+  - Incorrect deep vs shallow copying of mutable state
+  - Guaranteed memory leaks
+  - Mandatory network calls during clone
+  answer: 1
+  explanation: Copy semantics determine whether clones share nested mutable objects.

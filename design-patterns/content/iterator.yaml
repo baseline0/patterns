@@ -1,0 +1,59 @@
+id: iterator
+name: Iterator
+category: behavioral
+intent: Provide a way to access elements of an aggregate sequentially without exposing its representation.
+problem: Clients need to traverse collections with different internal structures without depending on
+  their concrete storage details.
+structure: 'Client -> Iterator.next()/has_next()
+
+  Aggregate.create_iterator() -> Iterator
+
+  ConcreteIterator walks ConcreteAggregate'
+participants:
+- name: Iterator
+  role: Defines traversal operations such as next and completion checks.
+- name: ConcreteIterator
+  role: Maintains traversal state over a specific aggregate.
+- name: Aggregate
+  role: Declares an operation to create an iterator.
+- name: ConcreteAggregate
+  role: Returns an iterator over its internal collection.
+forces:
+- Multiple traversal strategies may be needed.
+- Internal representation should remain encapsulated.
+- Clients want a uniform traversal interface.
+consequences:
+  benefit: Simplifies client traversal logic and supports multiple simultaneous traversals.
+  cost: Adds objects and can be redundant in languages with rich built-in iteration.
+smells_fixed:
+- Clients coupled to internal indexes or node structures
+- Duplicated traversal code across collection types
+smells_created:
+- Iterator invalidation complexity on concurrent mutation
+- Extra abstraction for trivial collections
+python: "class Range:\n    def __init__(self, start: int, end: int):\n        self.start = start\n   \
+  \     self.end = end\n\n    def __iter__(self):\n        cur = self.start\n        while cur < self.end:\n\
+  \            yield cur\n            cur += 1\n\nfor n in Range(3, 6):\n    print(n)"
+example: A streaming ingestion job (08-streaming) can iterate partition offsets through a uniform cursor
+  interface without exposing broker-specific storage details.
+related_architecture:
+- 08-streaming
+- pipe-and-filter
+- layered
+quiz:
+- question: 'Iterator’s key benefit is:'
+  choices:
+  - Faster sorting algorithms
+  - Traversal without exposing internal representation
+  - Automatic persistence
+  - Distributed consensus
+  answer: 1
+  explanation: Clients consume elements through a standard interface regardless of storage layout.
+- question: 'In data pipeline code, iterators are useful because:'
+  choices:
+  - They eliminate backpressure
+  - They provide a uniform way to stream records from varied sources
+  - They replace message queues
+  - They guarantee exactly-once delivery
+  answer: 1
+  explanation: Different sources can expose the same traversal contract to downstream stages.

@@ -1,0 +1,9 @@
+# Provider mappings. Paths are relative to this justfile's directory.
+
+# Regenerate the provider matrix, HTML page, and glossary from committed YAML.
+build:
+    uv run python tools/build.py
+
+# Fail when a checked-in provider output differs from its YAML source.
+check:
+    uv run python tools/build.py --check

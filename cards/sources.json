@@ -1,7 +1,11 @@
 {
   "schema_version": 1,
-  "total": 308,
+  "total": 593,
   "sources": [
+    {
+      "path": "architecture/glossary.json",
+      "cards": 153
+    },
     {
       "path": "data-structures/arrays-and-2d-arrays/glossary.json",
       "cards": 30
@@ -31,6 +35,10 @@
       "cards": 29
     },
     {
+      "path": "design-patterns/glossary.json",
+      "cards": 120
+    },
+    {
       "path": "papers/2405.02850v7/glossary.json",
       "cards": 7
     },
@@ -49,6 +57,10 @@
     {
       "path": "proofs/sliding-window-linear/glossary.json",
       "cards": 6
+    },
+    {
+      "path": "providers/glossary.json",
+      "cards": 12
     },
     {
       "path": "testing/contract-testing/glossary.json",

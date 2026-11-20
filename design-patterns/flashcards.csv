@@ -1,0 +1,48 @@
+Abstract Factory differs from Factory Method because it:,"Creates families of related products together. Its focus is consistent families (e.g., queue + storage + metrics) per environment.",design-pattern abstract-factory
+"When adding a new product type to an Abstract Factory, you usually must:","Update all factory interfaces and concrete factories. The abstraction declares creation for every family member, so it widens across implementations.",design-pattern abstract-factory
+Adapter primarily addresses:,Interface incompatibility between components. It translates one interface into another expected by clients.,design-pattern adapter
+"In a layered architecture, an adapter commonly lives at:",An integration boundary such as infrastructure/ports. Adapters bridge external or legacy systems to internal abstractions at boundaries.,design-pattern adapter
+Bridge is preferred over inheritance when:,Two orthogonal dimensions must vary independently. It splits abstraction and implementation into separate hierarchies.,design-pattern bridge
+A sign Bridge may be missing is:,Many subclasses named like FeatureXOnPlatformY. Combinatorial subclasses indicate abstraction and implementation are tangled.,design-pattern bridge
+Builder is a better fit than many constructor parameters when:,"Construction is stepwise with optional parts and validation. It makes complex, ordered assembly explicit and safe.",design-pattern builder
+What does a Director contribute?,Encapsulates a reusable construction sequence. The Director knows the order of steps; builders know how to perform each step.,design-pattern builder
+Chain of Responsibility lets you:,Decouple sender from the concrete receiver by forwarding along handlers. Handlers are linked and each decides whether to act or pass along.,design-pattern chain-of-responsibility
+A risk to manage in handler chains is:,"Requests falling off the end unhandled. Without a terminal handler or contract, some requests may not be processed.",design-pattern chain-of-responsibility
+Command turns a request into:,"A standalone object with execution context. Encapsulation as an object enables queuing, logging, and undo.",design-pattern command
+"In CQRS-style systems, commands are useful because:","They represent intentful writes that can be validated, queued, and audited. Commands make write operations explicit and manageable.",design-pattern command
+Composite is most appropriate for:,Tree-like part-whole structures. It models recursive hierarchies behind a uniform interface.,design-pattern composite
+A trade-off of Composite is:,Constraining allowed child types can become harder. A uniform component interface can weaken compile-time/type-level constraints.,design-pattern composite
+Decorator differs from inheritance by:,"Composing behavior at runtime via wrapping. Decorators wrap objects dynamically, allowing flexible combinations.",design-pattern decorator
+A common operational pitfall of decorators is:,Wrapper order can change semantics and complicate tracing. Behavior like auth-before-cache vs cache-before-auth depends on composition order.,design-pattern decorator
+Dependency Injection mainly improves:,"Testability and flexibility by externalizing dependency creation. Clients receive collaborators, making substitution and configuration easier.",design-pattern dependency-injection
+A potential downside of DI containers is:,"Wiring can become implicit and harder to trace. Automated wiring may hide how objects are composed, so explicitness matters.",design-pattern dependency-injection
+Facade is primarily about:,Simplifying access to a subsystem. It provides a higher-level interface over complex components.,design-pattern facade
+When should clients bypass a facade?,When advanced or uncommon capabilities are legitimately needed. Facades simplify common paths but do not have to forbid direct subsystem access.,design-pattern facade
+Factory Method is most useful when:,Object creation must vary while the workflow stays fixed. It defers instantiation to an overridable hook so workflows can stay generic.,design-pattern factory-method
+"Compared to putting `if type == ...` in the workflow, Factory Method:",Moves variation to a dedicated creation point. Creation variability is isolated behind the factory method.,design-pattern factory-method
+Flyweight saves memory by:,Sharing intrinsic state and externalizing extrinsic state. Common immutable data is stored once and reused across many logical instances.,design-pattern flyweight
+A precondition for safe Flyweight use is:,Clear separation between shared and per-use state. Shared state must be immutable or carefully controlled; extrinsic state is supplied per operation.,design-pattern flyweight
+Iterator’s key benefit is:,Traversal without exposing internal representation. Clients consume elements through a standard interface regardless of storage layout.,design-pattern iterator
+"In data pipeline code, iterators are useful because:",They provide a uniform way to stream records from varied sources. Different sources can expose the same traversal contract to downstream stages.,design-pattern iterator
+Mediator reduces:,Direct many-to-many dependencies between colleagues. Peers communicate via a central coordinator rather than referencing each other.,design-pattern mediator
+A warning sign when using Mediator is:,The mediator accumulates most business rules and complexity. Centralization helps decoupling but can create a god object if overused.,design-pattern mediator
+Memento preserves encapsulation by:,Letting the originator create and consume opaque snapshots. Caretakers hold snapshots without reading their internal structure.,design-pattern memento
+"In event-driven systems, mementos are often used for:",Checkpointing state for recovery/undo scenarios. Snapshots can complement event streams for rollback or fast restore points.,design-pattern memento
+Observer is best characterized as:,A publish/subscribe dependency between subject and observers. Observers register interest and receive updates when the subject changes.,design-pattern observer
+"In distributed event-driven systems, a common observer risk is:","Uncontrolled cascades and unclear delivery/ordering semantics. Loose coupling is powerful but requires attention to ordering, retries, and idempotency.",design-pattern observer
+Prototype is especially helpful when:,Creating from a configured template is cheaper than full construction. Cloning reuses an initialized template as the starting point.,design-pattern prototype
+A key risk with Prototype is:,Incorrect deep vs shallow copying of mutable state. Copy semantics determine whether clones share nested mutable objects.,design-pattern prototype
+A proxy and the real subject typically:,Share the same subject interface so clients are unaware. Transparency to the client is a core property of Proxy.,design-pattern proxy
+Which is a valid proxy use case?,"Lazy loading or access control around a real object. Proxies control access for concerns like laziness, protection, remoting, or caching.",design-pattern proxy
+Repository aims to present persistence as:,A collection-like interface over domain aggregates. It abstracts storage behind domain-oriented operations.,design-pattern repository
+A common repository anti-pattern is:,A one-size-fits-all generic CRUD interface that hides important domain queries. Overly generic repositories can leak persistence details or fail to express intent.,design-pattern repository
+State pattern is a strong fit when:,An object’s behavior and valid transitions depend on lifecycle phase. It encapsulates per-state behavior and transitions.,design-pattern state
+How does State differ from Strategy conceptually?,"State transitions are typically driven by context lifecycle, Strategy by interchangeable policy choice. Both delegate behavior, but State models internal lifecycle transitions.",design-pattern state
+What problem does Strategy primarily solve?,Selecting algorithms at runtime without caller conditionals. Strategy encapsulates interchangeable behaviors behind a common interface.,design-pattern strategy
+"In a microservices pricing service, where does Strategy fit best?",As pluggable domain policies inside one service. It organizes internal behavior variants; cross-service concerns belong to architecture patterns.,design-pattern strategy
+Template Method centralizes:,The invariant sequence of an algorithm. The base class owns the skeleton; subclasses supply variable steps.,design-pattern template-method
+A drawback compared to composition-based alternatives is:,"It depends on inheritance, limiting flexibility. Behavior variation is expressed through subclassing rather than object composition.",design-pattern template-method
+Unit of Work primarily manages:,A transactional boundary and tracked changes. It coordinates what must be committed or rolled back as one unit.,design-pattern unit-of-work
+"Across microservices with separate databases, Unit of Work alone:",Is limited to local boundaries; sagas/compensation are needed for cross-service consistency. Distributed systems require additional coordination patterns beyond a local unit of work.,design-pattern unit-of-work
+Visitor is a good fit when:,Element structure is stable and new operations are added often. It optimizes for adding operations across a stable set of elements.,design-pattern visitor
+A major cost of Visitor is:,Adding a new element type forces updates to all visitors. The visitor interface mirrors the element hierarchy.,design-pattern visitor

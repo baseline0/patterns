@@ -1,0 +1,58 @@
+id: state
+name: State
+category: behavioral
+intent: Allow an object to alter its behavior when its internal state changes by delegating to state objects.
+problem: Behavior that depends on lifecycle state leads to large conditional blocks and invalid transitions
+  scattered through methods.
+structure: 'Context(state) -> state.handle(context)
+
+  State defines behavior per state
+
+  ConcreteStateA/B implement transitions and actions'
+participants:
+- name: Context
+  role: Maintains current state and delegates behavior to it.
+- name: State
+  role: Defines the interface for state-specific behavior.
+- name: ConcreteState
+  role: Implements behavior and transitions for a particular state.
+forces:
+- Object behavior varies by explicit lifecycle state.
+- Transitions must be controlled and understandable.
+- Conditionals on state flags are proliferating.
+consequences:
+  benefit: Localizes state-specific behavior and makes transitions explicit.
+  cost: Increases number of classes and requires careful transition ownership.
+smells_fixed:
+- Large switch/if blocks keyed by status flags
+- Invalid or duplicated transition logic
+smells_created:
+- State class proliferation
+- Fragmented view of overall lifecycle
+python: "class Draft:\n    def publish(self, doc):\n        doc.state = Published()\n        return \"\
+  published\"\n\nclass Published:\n    def publish(self, doc):\n        return \"already-published\"\n\
+  \nclass Document:\n    def __init__(self):\n        self.state = Draft()\n\n    def publish(self):\n\
+  \        return self.state.publish(self)\n\nd = Document(); print(d.publish()); print(d.publish())"
+example: In a CI/CD pipeline (06-cicd-pipeline), a deployment object can move through queued, running,
+  succeeded, and failed states with state-specific transition rules.
+related_architecture:
+- 06-cicd-pipeline
+- saga
+- event-driven
+quiz:
+- question: 'State pattern is a strong fit when:'
+  choices:
+  - Behavior is identical in all modes
+  - An object’s behavior and valid transitions depend on lifecycle phase
+  - You need to clone object graphs
+  - You need a simplified subsystem API
+  answer: 1
+  explanation: It encapsulates per-state behavior and transitions.
+- question: How does State differ from Strategy conceptually?
+  choices:
+  - State is chosen by client only; Strategy never is
+  - State transitions are typically driven by context lifecycle, Strategy by interchangeable policy choice
+  - State requires databases; Strategy does not
+  - They are identical patterns
+  answer: 1
+  explanation: Both delegate behavior, but State models internal lifecycle transitions.

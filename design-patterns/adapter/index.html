@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Adapter</title>
+<style>body{font-family:system-ui,sans-serif;max-width:52rem;margin:2rem auto;padding:0 1rem;line-height:1.5}pre{background:#f3f3f3;padding:1rem;overflow-x:auto}code{background:#f3f3f3;padding:0 .2rem}</style>
+</head><body>
+<h1>Adapter</h1>
+<p><strong>structural</strong> — Convert the interface of a component into one clients expect so incompatible interfaces can collaborate.</p>
+<h2>Problem</h2><p>Integrating third-party or legacy APIs requires changing client code or duplicating translation logic across the system.</p>
+<h2>Structure</h2><pre>Client -&gt; Target interface
+Adapter implements Target and wraps Adaptee
+Adapter -&gt; Adaptee.specific_request()</pre>
+<h2>Participants</h2><ul>
+<li><strong>Target</strong>: Interface expected by the client.</li>
+<li><strong>Adapter</strong>: Translates Target calls to the adaptee interface.</li>
+<li><strong>Adaptee</strong>: Existing component with an incompatible interface.</li>
+<li><strong>Client</strong>: Works against the Target abstraction.</li>
+</ul><h2>Forces</h2><ul
+><li>Existing interfaces cannot be changed easily.</li>
+><li>Integration logic should be isolated.</li>
+><li>Multiple clients need a uniform API.</li>
+></ul>
+<h2>Consequences</h2><p><strong>Benefit:</strong> Enables reuse of existing components without polluting client code.</p>
+<p><strong>Cost:</strong> Adds a translation layer that can hide impedance mismatches or performance costs.</p>
+<h2>Python sketch</h2><pre>class LegacyPayments:
+    def make_payment(self, cents: int) -&gt; str:
+        return f&quot;paid:{cents}&quot;
+
+class PaymentPort:
+    def charge(self, amount: float) -&gt; str:
+        raise NotImplementedError
+
+class LegacyPaymentsAdapter(PaymentPort):
+    def __init__(self, legacy: LegacyPayments):
+        self.legacy = legacy
+
+    def charge(self, amount: float) -&gt; str:
+        return self.legacy.make_payment(int(amount * 100))
+
+svc = LegacyPaymentsAdapter(LegacyPayments())
+print(svc.charge(12.34))</pre>
+<h2>Interview example</h2><p>A CRUD API (04-crud-api) can adapt a legacy billing SDK to the application port so controllers depend on a stable interface, easing later migration.</p>
+</body></html>

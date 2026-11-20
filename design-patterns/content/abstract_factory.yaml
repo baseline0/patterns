@@ -1,0 +1,63 @@
+id: abstract-factory
+name: Abstract Factory
+category: creational
+intent: Provide an interface for creating families of related objects without specifying concrete classes.
+problem: A system must produce compatible sets of components (UI widgets, storage clients, drivers) that
+  vary by environment but must work together.
+structure: 'Client -> AbstractFactory
+
+  AbstractFactory -> createA()/createB()
+
+  ConcreteFactory1/2 create ProductA1/B1 and ProductA2/B2 families'
+participants:
+- name: AbstractFactory
+  role: Declares creation operations for each product in the family.
+- name: ConcreteFactory
+  role: Creates a consistent family of concrete products.
+- name: AbstractProduct
+  role: Defines interfaces for each kind of product.
+- name: Client
+  role: Uses only abstract interfaces to assemble behavior.
+forces:
+- Products must be used in compatible families.
+- Environment or vendor changes should not leak into clients.
+- Switching families should be a single decision.
+consequences:
+  benefit: Enforces consistency among related products and centralizes family selection.
+  cost: Adding a new product kind requires changing every factory interface and implementation.
+smells_fixed:
+- Mismatched component combinations across environments
+- Vendor-specific conditionals spread through client code
+smells_created:
+- Factory interface explosion as product kinds grow
+- Rigid hierarchies for simple cases
+python: "from abc import ABC, abstractmethod\n\nclass Queue(ABC):\n    @abstractmethod\n    def publish(self,\
+  \ msg: str) -> str: ...\n\nclass Blob(ABC):\n    @abstractmethod\n    def put(self, name: str) -> str:\
+  \ ...\n\nclass AwsQueue(Queue):\n    def publish(self, msg: str) -> str: return f\"sqs:{msg}\"\n\nclass\
+  \ AwsBlob(Blob):\n    def put(self, name: str) -> str: return f\"s3:{name}\"\n\nclass CloudFactory(ABC):\n\
+  \    @abstractmethod\n    def queue(self) -> Queue: ...\n    @abstractmethod\n    def blob(self) ->\
+  \ Blob: ...\n\nclass AwsFactory(CloudFactory):\n    def queue(self) -> Queue: return AwsQueue()\n  \
+  \  def blob(self) -> Blob: return AwsBlob()"
+example: A portable event-driven app (03-event-driven) can swap an AWS or Azure factory so queue and blob
+  clients come from the same compatible provider family.
+related_architecture:
+- 03-event-driven
+- microservices
+- layered
+quiz:
+- question: 'Abstract Factory differs from Factory Method because it:'
+  choices:
+  - Creates one product via inheritance hook only
+  - Creates families of related products together
+  - Clones existing instances
+  - Builds objects step by step
+  answer: 1
+  explanation: Its focus is consistent families (e.g., queue + storage + metrics) per environment.
+- question: 'When adding a new product type to an Abstract Factory, you usually must:'
+  choices:
+  - Change only one concrete class
+  - Update all factory interfaces and concrete factories
+  - Add a database migration
+  - Introduce an event bus
+  answer: 1
+  explanation: The abstraction declares creation for every family member, so it widens across implementations.

@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Builder</title>
+<style>body{font-family:system-ui,sans-serif;max-width:52rem;margin:2rem auto;padding:0 1rem;line-height:1.5}pre{background:#f3f3f3;padding:1rem;overflow-x:auto}code{background:#f3f3f3;padding:0 .2rem}</style>
+</head><body>
+<h1>Builder</h1>
+<p><strong>creational</strong> — Separate construction of a complex object from its representation so the same process can create different forms.</p>
+<h2>Problem</h2><p>Creating objects with many optional parts, validation rules, or assembly steps leads to telescoping constructors and fragile setup code.</p>
+<h2>Structure</h2><pre>Director -&gt; Builder.build_part()
+Builder -&gt; assembles Product
+ConcreteBuilder returns specific Product representation</pre>
+<h2>Participants</h2><ul>
+<li><strong>Builder</strong>: Declares steps for constructing parts of the product.</li>
+<li><strong>ConcreteBuilder</strong>: Implements steps and keeps the product being assembled.</li>
+<li><strong>Director</strong>: Orchestrates construction steps in a particular order.</li>
+<li><strong>Product</strong>: The complex object produced by the builder.</li>
+</ul><h2>Forces</h2><ul
+><li>Construction requires multiple ordered steps or validation.</li>
+><li>Different representations share a construction process.</li>
+><li>Clients should not manage partial, invalid states.</li>
+></ul>
+<h2>Consequences</h2><p><strong>Benefit:</strong> Improves readability and correctness for complex object assembly.</p>
+<p><strong>Cost:</strong> Adds classes/objects and can be overkill for simple data structures.</p>
+<h2>Python sketch</h2><pre>class RequestBuilder:
+    def __init__(self):
+        self._headers = {}
+        self._timeout = 30
+
+    def header(self, k: str, v: str):
+        self._headers[k] = v
+        return self
+
+    def timeout(self, seconds: int):
+        self._timeout = seconds
+        return self
+
+    def build(self) -&gt; dict:
+        if self._timeout &lt;= 0:
+            raise ValueError(&quot;timeout&quot;)
+        return {&quot;headers&quot;: dict(self._headers), &quot;timeout&quot;: self._timeout}
+
+req = RequestBuilder().header(&quot;x-trace&quot;, &quot;1&quot;).timeout(10).build()
+print(req)</pre>
+<h2>Interview example</h2><p>A CI/CD deployment definition (06-cicd-pipeline) can use a builder to assemble validated pipeline specs (stages, retries, artifacts) before submitting to the platform.</p>
+</body></html>

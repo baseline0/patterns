@@ -1,0 +1,39 @@
+id: serverless-api
+name: Serverless API
+summary: >-
+  A managed HTTP endpoint fronts a short-lived, stateless function that reads and writes a managed
+  table or document store. The pattern is provider-neutral: route the request, run the handler,
+  persist the result. Every fixture is plan-only and cost-free.
+providers:
+  aws:
+    services: API Gateway HTTP API + AWS Lambda + DynamoDB
+    emulator: Floci for local AWS API emulation; LocalStack is an alternative. Fixtures never deploy.
+    plan_fixture: terraform/aws/serverless-api
+    watch_out: Lambda invoke permissions and integration URIs are easy to miswire; check the API Gateway source ARN in the plan.
+  azure:
+    services: API Management + Azure Functions + Table Storage
+    emulator: Floci for local Azure emulation. Fixtures are plan-only and require no live account.
+    plan_fixture: terraform/azure/serverless-api
+    watch_out: Function App and Storage Account names are globally unique, and API Management needs publisher details even in a plan.
+  gcp:
+    services: Cloud Run endpoint + Cloud Functions + Firestore
+    emulator: Floci for local GCP emulation. Fixtures use placeholder project and source values only.
+    plan_fixture: terraform/gcp/serverless-api
+    watch_out: Cloud Functions needs a runtime, entry point, and source location at plan time; supply placeholders, never credentials.
+quiz:
+  - question: What is the provider-neutral core of the serverless API pattern?
+    choices:
+      - A long-running VM behind a load balancer
+      - An HTTP endpoint, a stateless function, and a managed store
+      - A message queue with a dead-letter queue
+      - A container orchestrator with persistent volumes
+    answer: 1
+    explanation: The pattern is an endpoint that routes to a stateless handler which persists to a managed table or document store.
+  - question: Why do the Terraform fixtures use placeholder project names and image or archive values?
+    choices:
+      - To make terraform apply succeed without a budget
+      - To satisfy emulator authentication
+      - To allow terraform plan without live state or credentials
+      - To enable automatic provider upgrades
+    answer: 2
+    explanation: Placeholders keep the fixtures cost-free and offline; plan can resolve schema and references without contacting a provider.

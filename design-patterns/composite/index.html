@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Composite</title>
+<style>body{font-family:system-ui,sans-serif;max-width:52rem;margin:2rem auto;padding:0 1rem;line-height:1.5}pre{background:#f3f3f3;padding:1rem;overflow-x:auto}code{background:#f3f3f3;padding:0 .2rem}</style>
+</head><body>
+<h1>Composite</h1>
+<p><strong>structural</strong> — Compose objects into tree structures and let clients treat individual objects and compositions uniformly.</p>
+<h2>Problem</h2><p>Client code must distinguish leaves from containers when operating over hierarchical structures, leading to special-case logic.</p>
+<h2>Structure</h2><pre>Component.operation()
+Leaf implements Component
+Composite holds children: [Component]
+Composite.operation() delegates to children</pre>
+<h2>Participants</h2><ul>
+<li><strong>Component</strong>: Common interface for leaves and composites.</li>
+<li><strong>Leaf</strong>: Represents end objects with no children.</li>
+<li><strong>Composite</strong>: Stores children and implements operations by delegating to them.</li>
+<li><strong>Client</strong>: Manipulates the tree through the Component interface.</li>
+</ul><h2>Forces</h2><ul
+><li>Part-whole hierarchies must be represented.</li>
+><li>Clients should ignore leaf vs container differences.</li>
+><li>Operations should apply recursively over the structure.</li>
+></ul>
+<h2>Consequences</h2><p><strong>Benefit:</strong> Simplifies client code and makes it easy to add new component types.</p>
+<p><strong>Cost:</strong> Can make it harder to restrict which children a composite may contain.</p>
+<h2>Python sketch</h2><pre>class Node:
+    def size(self) -&gt; int:
+        raise NotImplementedError
+
+class File(Node):
+    def __init__(self, bytes_: int):
+        self.bytes_ = bytes_
+
+    def size(self) -&gt; int:
+        return self.bytes_
+
+class Folder(Node):
+    def __init__(self, children):
+        self.children = children
+
+    def size(self) -&gt; int:
+        return sum(c.size() for c in self.children)
+
+tree = Folder([File(10), Folder([File(5), File(3)])])
+print(tree.size())</pre>
+<h2>Interview example</h2><p>A static website asset pipeline (01-static-website) can treat files and directories uniformly when computing deploy manifests or cache invalidation sets.</p>
+</body></html>

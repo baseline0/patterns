@@ -1,0 +1,59 @@
+id: unit-of-work
+name: Unit of Work
+category: application
+intent: Track changes to objects during a business transaction and coordinate writing them out as a single
+  unit.
+problem: Multiple repository operations within one use case can become inconsistent without coordinated
+  commit/rollback boundaries.
+structure: 'UnitOfWork -> tracks new/dirty/removed aggregates
+
+  UnitOfWork -> commit()/rollback()
+
+  Repositories register changes with the UnitOfWork'
+participants:
+- name: UnitOfWork
+  role: Maintains change tracking and transaction boundary.
+- name: Repository
+  role: Registers object changes with the unit of work.
+- name: Data mapper/session
+  role: Flushes coordinated changes to the persistence store.
+forces:
+- A use case spans multiple aggregates or repositories.
+- Atomic commit or rollback semantics are required.
+- Change tracking should be centralized.
+consequences:
+  benefit: Ensures consistency within a transaction and simplifies commit coordination.
+  cost: Adds complexity and can be awkward across distributed systems or microservice boundaries.
+smells_fixed:
+- Manual commit/rollback orchestration in every service method
+- Partial writes when one of several updates fails
+smells_created:
+- Bloated transaction scopes
+- Misuse in distributed workflows where local transactions do not apply
+python: "class UnitOfWork:\n    def __init__(self):\n        self.new = []\n        self.committed = False\n\
+  \n    def register(self, obj):\n        self.new.append(obj)\n\n    def commit(self):\n        self.committed\
+  \ = True\n\n    def rollback(self):\n        self.new.clear()\n\nuow = UnitOfWork()\nuow.register({\"\
+  id\": 1})\nuow.commit()\nprint(uow.committed, len(uow.new))"
+example: In a 3-tier web app (05-3tier-web), a service-layer unit of work coordinates repository updates
+  so an order and its lines commit or roll back together.
+related_architecture:
+- 05-3tier-web
+- layered
+- saga
+quiz:
+- question: 'Unit of Work primarily manages:'
+  choices:
+  - UI rendering state
+  - A transactional boundary and tracked changes
+  - HTTP routing tables
+  - Container orchestration
+  answer: 1
+  explanation: It coordinates what must be committed or rolled back as one unit.
+- question: 'Across microservices with separate databases, Unit of Work alone:'
+  choices:
+  - Provides global ACID transactions automatically
+  - Is limited to local boundaries; sagas/compensation are needed for cross-service consistency
+  - Replaces idempotent consumers
+  - Eliminates eventual consistency
+  answer: 1
+  explanation: Distributed systems require additional coordination patterns beyond a local unit of work.

@@ -1,0 +1,59 @@
+id: saga
+name: Saga
+summary: Manage a long-running multi-service transaction as a sequence of local transactions with compensating actions that undo completed steps on failure.
+decision: Replace a distributed transaction with an orchestrated or choreographed saga where each step commits locally and publishes the event that triggers the next step or a compensation.
+mechanism: Define an ordered set of local transactions and matching compensations, track saga state, and on failure run compensations in reverse until the system returns to a consistent state.
+failure_modes:
+  - A compensation that cannot fully undo a step with external side effects.
+  - Missing compensation for a step that already committed.
+  - Duplicate step execution after a retry without idempotent handlers.
+  - Lost saga state that prevents knowing which compensations to run.
+use_when:
+  - A business process spans several services with separate databases.
+  - The process is long-running and cannot hold a distributed lock.
+  - Each step has a meaningful compensating action.
+avoid_when:
+  - All steps can share one database transaction.
+  - No reliable compensation exists for a committed step.
+  - The process is short and a simple synchronous call suffices.
+tradeoffs:
+  - benefit: Cross-service consistency is achieved without a two-phase commit.
+    cost: Intermediate states are visible to other observers until the saga finishes.
+  - benefit: Each service keeps private data and independent deployment.
+    cost: Every step needs a tested compensation, roughly doubling logic and test cases.
+quality_impacts:
+  - attribute: recoverability
+    effect: improves
+    note: Compensations return the system to a consistent state after a failed step, limiting data repair within the RTO.
+  - attribute: modifiability
+    effect: improves
+    note: Steps can be reordered or replaced in the saga definition without changing every service, shortening change lead time.
+  - attribute: testability
+    effect: degrades
+    note: Each step and compensation pair needs failure-path tests, lengthening test runtime for the workflow.
+related_patterns:
+  - microservices
+  - event-driven
+  - command
+  - idempotent-consumer
+  - observer
+  - 09-microservices
+scenarios:
+  - 09-microservices
+quiz:
+  - question: What does a saga use when a step fails?
+    choices:
+      - A distributed rollback lock
+      - A compensating transaction for completed steps
+      - A full database restore
+      - A retry of all steps forever
+    answer: 1
+    explanation: Sagas undo committed local transactions by running explicit compensations in reverse order.
+  - question: Which condition makes a saga risky to apply?
+    choices:
+      - Steps span services with separate databases
+      - A step has no meaningful way to undo its effects
+      - The process runs for several seconds
+      - Steps publish events
+    answer: 1
+    explanation: Without a valid compensation, a failure cannot bring the system back to a consistent state.

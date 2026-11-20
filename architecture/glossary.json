@@ -1,0 +1,2306 @@
+[
+  {
+    "title": "Command Query Responsibility Segregation: definition",
+    "body": "Use separate models to update state and to read state, so each side can be optimized, scaled, and evolved for its own workload.",
+    "metadata": {
+      "tags": [
+        "architecture",
+        "style",
+        "cqrs",
+        "03-event-driven",
+        "08-streaming",
+        "definition"
+      ],
+      "source": "architecture/glossary.json"
+    }
+  },
+  {
+    "title": "Command Query Responsibility Segregation: decision",
+    "body": "Route writes through a command model and maintain one or more read projections from the resulting events, accepting replication lag in return for independent read and write design.",
+    "metadata": {
+      "tags": [
+        "architecture",
+        "style",
+        "cqrs",
+        "03-event-driven",
+        "08-streaming",
+        "decision"
+      ],
+      "source": "architecture/glossary.json"
+    }
+  },
+  {
+    "title": "Trade-off: Command Query Responsibility Segregation",
+    "body": "**Benefit**: Read views can be denormalized for fast queries without constraining writes.\n\n**Cost**: Replication lag means a just-written value may be absent from a read view.",
+    "metadata": {
+      "tags": [
+        "architecture",
+        "style",
+        "cqrs",
+        "03-event-driven",
+        "08-streaming",
+        "tradeoff"
+      ],
+      "source": "architecture/glossary.json"
+    }
+  },
+  {
+    "title": "Trade-off: Command Query Responsibility Segregation",
+    "body": "**Benefit**: Read and write sides scale and deploy independently.\n\n**Cost**: Projections must be rebuilt on schema change, which costs time and operational care.",
+    "metadata": {
+      "tags": [
+        "architecture",
+        "style",
+        "cqrs",
+        "03-event-driven",
+        "08-streaming",
+        "tradeoff"
+      ],
+      "source": "architecture/glossary.json"
+    }
+  },
+  {
+    "title": "Quality impact: Command Query Responsibility Segregation / performance",
+    "body": "**improves**: Purpose-built read views reduce query fan-out and can hold p95 latency flat as read volume grows.",
+    "metadata": {
+      "tags": [
+        "architecture",
+        "style",
+        "cqrs",
+        "03-event-driven",
+        "08-streaming",
+        "quality-attribute",
+        "performance"
+      ],
+      "source": "architecture/glossary.json"
+    }
+  },
+  {
+    "title": "Quality impact: Command Query Responsibility Segregation / modifiability",
+    "body": "**improves**: Read models can be added without touching commands, shortening change lead time for new views.",
+    "metadata": {
+      "tags": [
+        "architecture",
+        "style",
+        "cqrs",
+        "03-event-driven",
+        "08-streaming",
+        "quality-attribute",
+        "modifiability"
+      ],
+      "source": "architecture/glossary.json"
+    }
+  },
+  {
+    "title": "Quality impact: Command Query Responsibility Segregation / recoverability",
+    "body": "**improves**: Projections can be rebuilt from the event log within a stated RTO after corruption or loss.",
+    "metadata": {
+      "tags": [
+        "architecture",
+        "style",
+        "cqrs",
+        "03-event-driven",
+        "08-streaming",
+        "quality-attribute",
+        "recoverability"
+      ],
+      "source": "architecture/glossary.json"
+    }
+  },
+  {
+    "title": "Q1: What makes CQRS different from a simple read replica?",
+    "body": "A. It stores every write in a single table.\nB. It uses distinct write and read models that can evolve separately.\nC. It removes the need to store events.\nD. It guarantees zero replication lag.\n\n**B.** CQRS separates models and deployment paths, not just physical copies of the same schema.",
+    "metadata": {
+      "tags": [
+        "architecture",
+        "style",
+        "cqrs",
+        "03-event-driven",
+        "08-streaming",
+        "question"
+      ],
+      "source": "architecture/glossary.json"
+    }
+  },
+  {
+    "title": "Q2: Which consistency trade-off does CQRS require?",
+    "body": "A. Reads may lag behind writes until projections catch up.\nB. Writes are always rejected under load.\nC. There is no durable record of state changes.\nD. Queries must use distributed transactions.\n\n**A.** Projections are updated asynchronously, so the system must expose and monitor replication lag.",
+    "metadata": {
+      "tags": [
+        "architecture",
+        "style",
+        "cqrs",
+        "03-event-driven",
+        "08-streaming",
+        "question"
+      ],
+      "source": "architecture/glossary.json"
+    }
+  },
+  {
+    "title": "Event-Driven Architecture: definition",
+    "body": "Components produce and consume immutable domain events so services react to facts that already happened without a synchronous caller waiting for the result.",
+    "metadata": {
+      "tags": [
+        "architecture",
+        "style",
+        "event-driven",
+        "03-event-driven",
+        "08-streaming",
+        "definition"
+      ],
+      "source": "architecture/glossary.json"
+    }
+  },
+  {
+    "title": "Event-Driven Architecture: decision",
+    "body": "Publish facts to a durable broker and let subscribers evolve independently, accepting eventual consistency in exchange for loose coupling and burst absorption.",
+    "metadata": {
+      "tags": [
+        "architecture",
+        "style",
+        "event-driven",
+        "03-event-driven",
+        "08-streaming",
+        "decision"
+      ],
+      "source": "architecture/glossary.json"
+    }
+  },
+  {
+    "title": "Trade-off: Event-Driven Architecture",
+    "body": "**Benefit**: Producers and consumers can be deployed and scaled independently.\n\n**Cost**: Eventual consistency forces the UI to handle stale reads and pending state.",
+    "metadata": {
+      "tags": [
+        "architecture",
+        "style",
+        "event-driven",
+        "03-event-driven",
+        "08-streaming",
+        "tradeoff"
+      ],
+      "source": "architecture/glossary.json"
+    }
+  },
+  {
+    "title": "Trade-off: Event-Driven Architecture",
+    "body": "**Benefit**: A durable log allows replay and new subscribers without backfilling live systems.\n\n**Cost**: Duplicate delivery requires idempotent handlers and careful ordering design.",
+    "metadata": {
+      "tags": [
+        "architecture",
+        "style",
+        "event-driven",
+        "03-event-driven",
+        "08-streaming",
+        "tradeoff"
+      ],
+      "source": "architecture/glossary.json"
+    }
+  },
+  {
+    "title": "Quality impact: Event-Driven Architecture / availability",
+    "body": "**improves**: A slow or down consumer does not fail the producer, so the ingress path stays available during bursts.",
+    "metadata": {
+      "tags": [
+        "architecture",
+        "style",
+        "event-driven",
+        "03-event-driven",
+        "08-streaming",
+        "quality-attribute",
+        "availability"
+      ],
+      "source": "architecture/glossary.json"
+    }
+  },
+  {
+    "title": "Quality impact: Event-Driven Architecture / modifiability",
+    "body": "**improves**: Adding a subscriber is a local change that does not edit the producer, shortening change lead time.",
+    "metadata": {
+      "tags": [
+        "architecture",
+        "style",
+        "event-driven",
+        "03-event-driven",
+        "08-streaming",
+        "quality-attribute",
+        "modifiability"
+      ],
+      "source": "architecture/glossary.json"
+    }
+  },
+  {
+    "title": "Quality impact: Event-Driven Architecture / recoverability",
+    "body": "**improves**: Replaying the log rebuilds projections after a failure, supporting a defined RTO without manual data repair.",
+    "metadata": {
+      "tags": [
+        "architecture",
+        "style",
+        "event-driven",
+        "03-event-driven",
+        "08-streaming",
+        "quality-attribute",
+        "recoverability"
+      ],
+      "source": "architecture/glossary.json"
+    }
+  },
+  {
+    "title": "Q1: Why must an event consumer be idempotent?",
+    "body": "A. Events are always delivered in a single global order.\nB. At-least-once delivery can present the same fact more than once.\nC. Brokers encrypt payloads on every redelivery.\nD. Idempotence removes the need for a broker.\n\n**B.** At-least-once delivery means duplicates are expected, so consumers must produce the same result on repeated input.",
+    "metadata": {
+      "tags": [
+        "architecture",
+        "style",
+        "event-driven",
+        "03-event-driven",
+        "08-streaming",
+        "question"
+      ],
+      "source": "architecture/glossary.json"
+    }
+  },
+  {
+    "title": "Q2: What consistency model does an event-driven design normally ",
+    "body": "A. Strong consistency across all services\nB. Eventual consistency with observable lag\nC. No consistency guarantees at all\nD. Serialized writes through the user interface\n\n**B.** Decoupled services converge over time, so the UI must tolerate lag between a write and updated projections.",
+    "metadata": {
+      "tags": [
+        "architecture",
+        "style",
+        "event-driven",
+        "03-event-driven",
+        "08-streaming",
+        "question"
+      ],
+      "source": "architecture/glossary.json"
+    }
+  },
+  {
+    "title": "Layered Architecture: definition",
+    "body": "Organize code into horizontal layers where each layer depends only on the layer directly beneath it, separating presentation, application, domain, and persistence concerns.",
+    "metadata": {
+      "tags": [
+        "architecture",
+        "style",
+        "layered",
+        "01-static-website",
+        "04-crud-api",
+        "05-3tier-web",
+        "definition"
+      ],
+      "source": "architecture/glossary.json"
+    }
+  },
+  {
+    "title": "Layered Architecture: decision",
+    "body": "Split the system into presentation, application, domain, and infrastructure layers and enforce one-way dependencies so a storage change does not ripple into business rules.",
+    "metadata": {
+      "tags": [
+        "architecture",
+        "style",
+        "layered",
+        "01-static-website",
+        "04-crud-api",
+        "05-3tier-web",
+        "decision"
+      ],
+      "source": "architecture/glossary.json"
+    }
+  },
+  {
+    "title": "Trade-off: Layered Architecture",
+    "body": "**Benefit**: Changes to a single concern stay local when dependencies point inward.\n\n**Cost**: A request typically crosses every layer, adding indirection and call overhead.",
+    "metadata": {
+      "tags": [
+        "architecture",
+        "style",
+        "layered",
+        "01-static-website",
+        "04-crud-api",
+        "05-3tier-web",
+        "tradeoff"
+      ],
+      "source": "architecture/glossary.json"
+    }
+  },
+  {
+    "title": "Trade-off: Layered Architecture",
+    "body": "**Benefit**: New developers find a familiar and easy-to-explain structure.\n\n**Cost**: Rigid layering can encourage anemic domain models that only pass data through.",
+    "metadata": {
+      "tags": [
+        "architecture",
+        "style",
+        "layered",
+        "01-static-website",
+        "04-crud-api",
+        "05-3tier-web",
+        "tradeoff"
+      ],
+      "source": "architecture/glossary.json"
+    }
+  },
+  {
+    "title": "Quality impact: Layered Architecture / modifiability",
+    "body": "**improves**: Replacing a persistence adapter changes one layer and leaves domain rules untouched, cutting change lead time.",
+    "metadata": {
+      "tags": [
+        "architecture",
+        "style",
+        "layered",
+        "01-static-website",
+        "04-crud-api",
+        "05-3tier-web",
+        "quality-attribute",
+        "modifiability"
+      ],
+      "source": "architecture/glossary.json"
+    }
+  },
+  {
+    "title": "Quality impact: Layered Architecture / testability",
+    "body": "**improves**: Domain and application layers can be tested without a database or UI, keeping unit test runtime under one minute.",
+    "metadata": {
+      "tags": [
+        "architecture",
+        "style",
+        "layered",
+        "01-static-website",
+        "04-crud-api",
+        "05-3tier-web",
+        "quality-attribute",
+        "testability"
+      ],
+      "source": "architecture/glossary.json"
+    }
+  },
+  {
+    "title": "Quality impact: Layered Architecture / performance",
+    "body": "**degrades**: Synchronous traversal of four layers adds hops that can raise p95 latency on read-heavy endpoints.",
+    "metadata": {
+      "tags": [
+        "architecture",
+        "style",
+        "layered",
+        "01-static-website",
+        "04-crud-api",
+        "05-3tier-web",
+        "quality-attribute",
+        "performance"
+      ],
+      "source": "architecture/glossary.json"
+    }
+  },
+  {
+    "title": "Q1: Which dependency direction keeps a layered design modifiable",
+    "body": "A. Presentation imports infrastructure directly.\nB. Outer layers depend on abstractions defined by inner layers.\nC. The domain imports the web framework for its annotations.\nD. Every layer calls every other layer as needed.\n\n**B.** Inward dependencies keep inner layers free of delivery and storage details so those can change independently.",
+    "metadata": {
+      "tags": [
+        "architecture",
+        "style",
+        "layered",
+        "01-static-website",
+        "04-crud-api",
+        "05-3tier-web",
+        "question"
+      ],
+      "source": "architecture/glossary.json"
+    }
+  },
+  {
+    "title": "Q2: What is the main cost of strict layering on a read-heavy end",
+    "body": "A. It removes the need for any tests.\nB. It forces all data into a single table.\nC. Extra hops through each layer raise p95 latency.\nD. It prevents the use of dependency injection.\n\n**C.** Each synchronous layer crossing adds call overhead that is measurable as higher p95 latency.",
+    "metadata": {
+      "tags": [
+        "architecture",
+        "style",
+        "layered",
+        "01-static-website",
+        "04-crud-api",
+        "05-3tier-web",
+        "question"
+      ],
+      "source": "architecture/glossary.json"
+    }
+  },
+  {
+    "title": "Microservices Architecture: definition",
+    "body": "Decompose a system into small services aligned to business capabilities, each owning its data and exposing a network API so teams can deploy and scale independently.",
+    "metadata": {
+      "tags": [
+        "architecture",
+        "style",
+        "microservices",
+        "09-microservices",
+        "05-3tier-web",
+        "definition"
+      ],
+      "source": "architecture/glossary.json"
+    }
+  },
+  {
+    "title": "Microservices Architecture: decision",
+    "body": "Draw service boundaries around bounded contexts with separate datastores, and accept distributed-systems complexity in exchange for independent release cadence and fault isolation.",
+    "metadata": {
+      "tags": [
+        "architecture",
+        "style",
+        "microservices",
+        "09-microservices",
+        "05-3tier-web",
+        "decision"
+      ],
+      "source": "architecture/glossary.json"
+    }
+  },
+  {
+    "title": "Trade-off: Microservices Architecture",
+    "body": "**Benefit**: Teams can change and deploy their own service without a coordinated release.\n\n**Cost**: Network calls replace in-process calls, adding latency and partial failure modes.",
+    "metadata": {
+      "tags": [
+        "architecture",
+        "style",
+        "microservices",
+        "09-microservices",
+        "05-3tier-web",
+        "tradeoff"
+      ],
+      "source": "architecture/glossary.json"
+    }
+  },
+  {
+    "title": "Trade-off: Microservices Architecture",
+    "body": "**Benefit**: A failure in one service can be isolated with bulkheads and breakers.\n\n**Cost**: Distributed data requires sagas and eventual consistency instead of simple joins.",
+    "metadata": {
+      "tags": [
+        "architecture",
+        "style",
+        "microservices",
+        "09-microservices",
+        "05-3tier-web",
+        "tradeoff"
+      ],
+      "source": "architecture/glossary.json"
+    }
+  },
+  {
+    "title": "Quality impact: Microservices Architecture / modifiability",
+    "body": "**improves**: A capability change is contained in one service, reducing change lead time from weeks to days.",
+    "metadata": {
+      "tags": [
+        "architecture",
+        "style",
+        "microservices",
+        "09-microservices",
+        "05-3tier-web",
+        "quality-attribute",
+        "modifiability"
+      ],
+      "source": "architecture/glossary.json"
+    }
+  },
+  {
+    "title": "Quality impact: Microservices Architecture / availability",
+    "body": "**improves**: Independent deployment and bulkheads limit the blast radius of a bad release to one service.",
+    "metadata": {
+      "tags": [
+        "architecture",
+        "style",
+        "microservices",
+        "09-microservices",
+        "05-3tier-web",
+        "quality-attribute",
+        "availability"
+      ],
+      "source": "architecture/glossary.json"
+    }
+  },
+  {
+    "title": "Quality impact: Microservices Architecture / performance",
+    "body": "**degrades**: Chatty inter-service calls can lift p95 latency unless boundaries are coarse and caches are used.",
+    "metadata": {
+      "tags": [
+        "architecture",
+        "style",
+        "microservices",
+        "09-microservices",
+        "05-3tier-web",
+        "quality-attribute",
+        "performance"
+      ],
+      "source": "architecture/glossary.json"
+    }
+  },
+  {
+    "title": "Q1: What is the strongest reason to choose microservices for a s",
+    "body": "A. It makes every operation a single database transaction.\nB. It removes the need for automated tests.\nC. Independent teams need independent deployment and scaling.\nD. It eliminates all network latency.\n\n**C.** Independent release cadence and scaling are the core benefits; transactions, latency, and testing get harder.",
+    "metadata": {
+      "tags": [
+        "architecture",
+        "style",
+        "microservices",
+        "09-microservices",
+        "05-3tier-web",
+        "question"
+      ],
+      "source": "architecture/glossary.json"
+    }
+  },
+  {
+    "title": "Q2: Which practice keeps services genuinely decoupled?",
+    "body": "A. Sharing a single writable database across services\nB. Giving each service private data and stable contracts\nC. Having services call each other's internal tables\nD. Deploying all services in one atomic release\n\n**B.** Private data and stable interfaces let one service change without forcing coordinated edits elsewhere.",
+    "metadata": {
+      "tags": [
+        "architecture",
+        "style",
+        "microservices",
+        "09-microservices",
+        "05-3tier-web",
+        "question"
+      ],
+      "source": "architecture/glossary.json"
+    }
+  },
+  {
+    "title": "Pipe and Filter: definition",
+    "body": "Compose a stream of processing stages where each filter transforms data incrementally and passes results to the next stage through a buffer or pipe.",
+    "metadata": {
+      "tags": [
+        "architecture",
+        "style",
+        "pipe-and-filter",
+        "08-streaming",
+        "definition"
+      ],
+      "source": "architecture/glossary.json"
+    }
+  },
+  {
+    "title": "Pipe and Filter: decision",
+    "body": "Break a data workflow into small independent filters connected by bounded pipes so stages can be reused, reordered, and scaled without rewriting the whole pipeline.",
+    "metadata": {
+      "tags": [
+        "architecture",
+        "style",
+        "pipe-and-filter",
+        "08-streaming",
+        "decision"
+      ],
+      "source": "architecture/glossary.json"
+    }
+  },
+  {
+    "title": "Trade-off: Pipe and Filter",
+    "body": "**Benefit**: Filters are small, reusable, and easy to test in isolation.\n\n**Cost**: Serializing records between stages adds CPU and memory overhead.",
+    "metadata": {
+      "tags": [
+        "architecture",
+        "style",
+        "pipe-and-filter",
+        "08-streaming",
+        "tradeoff"
+      ],
+      "source": "architecture/glossary.json"
+    }
+  },
+  {
+    "title": "Trade-off: Pipe and Filter",
+    "body": "**Benefit**: Slow stages can be scaled independently behind bounded buffers.\n\n**Cost**: A failing stage can block or drop records unless dead-letter handling is designed in.",
+    "metadata": {
+      "tags": [
+        "architecture",
+        "style",
+        "pipe-and-filter",
+        "08-streaming",
+        "tradeoff"
+      ],
+      "source": "architecture/glossary.json"
+    }
+  },
+  {
+    "title": "Quality impact: Pipe and Filter / modifiability",
+    "body": "**improves**: Inserting or replacing one filter is a local change, shortening change lead time for new transformations.",
+    "metadata": {
+      "tags": [
+        "architecture",
+        "style",
+        "pipe-and-filter",
+        "08-streaming",
+        "quality-attribute",
+        "modifiability"
+      ],
+      "source": "architecture/glossary.json"
+    }
+  },
+  {
+    "title": "Quality impact: Pipe and Filter / testability",
+    "body": "**improves**: Each filter can be verified with fixture input and output in isolation, keeping test runtime short.",
+    "metadata": {
+      "tags": [
+        "architecture",
+        "style",
+        "pipe-and-filter",
+        "08-streaming",
+        "quality-attribute",
+        "testability"
+      ],
+      "source": "architecture/glossary.json"
+    }
+  },
+  {
+    "title": "Quality impact: Pipe and Filter / performance",
+    "body": "**improves**: Bounded pipes let stages run concurrently and absorb bursts, raising sustained throughput and steadying p95 latency.",
+    "metadata": {
+      "tags": [
+        "architecture",
+        "style",
+        "pipe-and-filter",
+        "08-streaming",
+        "quality-attribute",
+        "performance"
+      ],
+      "source": "architecture/glossary.json"
+    }
+  },
+  {
+    "title": "Q1: What is the main benefit of bounded pipes between filters?",
+    "body": "A. They remove the need for any transformation logic.\nB. They let stages progress at different rates and absorb bursts.\nC. They guarantee exactly-once delivery without retries.\nD. They make all filters share one mutable state store.\n\n**B.** A bounded buffer decouples producer and consumer speeds while capping memory use.",
+    "metadata": {
+      "tags": [
+        "architecture",
+        "style",
+        "pipe-and-filter",
+        "08-streaming",
+        "question"
+      ],
+      "source": "architecture/glossary.json"
+    }
+  },
+  {
+    "title": "Q2: Which property should a filter have to stay reusable?",
+    "body": "A. It reads the global database directly.\nB. It knows the identity of the next filter.\nC. It performs one transformation with clear input and output.\nD. It writes to the final sink itself.\n\n**C.** Filters stay composable when they do one transformation and communicate only through their pipe.",
+    "metadata": {
+      "tags": [
+        "architecture",
+        "style",
+        "pipe-and-filter",
+        "08-streaming",
+        "question"
+      ],
+      "source": "architecture/glossary.json"
+    }
+  },
+  {
+    "title": "Serverless Architecture: definition",
+    "body": "Run application logic in short-lived managed functions triggered by events, with the platform handling capacity, scaling, and operational plumbing.",
+    "metadata": {
+      "tags": [
+        "architecture",
+        "style",
+        "serverless",
+        "02-serverless-api",
+        "04-crud-api",
+        "definition"
+      ],
+      "source": "architecture/glossary.json"
+    }
+  },
+  {
+    "title": "Serverless Architecture: decision",
+    "body": "Express behaviour as small functions behind managed triggers and pay for actual execution, accepting cold starts and statelessness in exchange for minimal idle cost and elastic scale.",
+    "metadata": {
+      "tags": [
+        "architecture",
+        "style",
+        "serverless",
+        "02-serverless-api",
+        "04-crud-api",
+        "decision"
+      ],
+      "source": "architecture/glossary.json"
+    }
+  },
+  {
+    "title": "Trade-off: Serverless Architecture",
+    "body": "**Benefit**: Capacity scales to zero and back without provisioning servers.\n\n**Cost**: Cold starts can add hundreds of milliseconds to p95 latency for infrequent paths.",
+    "metadata": {
+      "tags": [
+        "architecture",
+        "style",
+        "serverless",
+        "02-serverless-api",
+        "04-crud-api",
+        "tradeoff"
+      ],
+      "source": "architecture/glossary.json"
+    }
+  },
+  {
+    "title": "Trade-off: Serverless Architecture",
+    "body": "**Benefit**: The team stops managing operating systems and runtime patching.\n\n**Cost**: Stateless execution pushes all state to external services and complicates local testing.",
+    "metadata": {
+      "tags": [
+        "architecture",
+        "style",
+        "serverless",
+        "02-serverless-api",
+        "04-crud-api",
+        "tradeoff"
+      ],
+      "source": "architecture/glossary.json"
+    }
+  },
+  {
+    "title": "Quality impact: Serverless Architecture / performance",
+    "body": "**improves**: Horizontal scale follows demand automatically, keeping p95 latency stable under bursty load once functions are warm.",
+    "metadata": {
+      "tags": [
+        "architecture",
+        "style",
+        "serverless",
+        "02-serverless-api",
+        "04-crud-api",
+        "quality-attribute",
+        "performance"
+      ],
+      "source": "architecture/glossary.json"
+    }
+  },
+  {
+    "title": "Quality impact: Serverless Architecture / availability",
+    "body": "**improves**: Managed triggers and multi-zone execution remove single-server failure points from the request path.",
+    "metadata": {
+      "tags": [
+        "architecture",
+        "style",
+        "serverless",
+        "02-serverless-api",
+        "04-crud-api",
+        "quality-attribute",
+        "availability"
+      ],
+      "source": "architecture/glossary.json"
+    }
+  },
+  {
+    "title": "Quality impact: Serverless Architecture / modifiability",
+    "body": "**improves**: Small functions with narrow triggers allow feature changes to ship in minutes, shortening change lead time.",
+    "metadata": {
+      "tags": [
+        "architecture",
+        "style",
+        "serverless",
+        "02-serverless-api",
+        "04-crud-api",
+        "quality-attribute",
+        "modifiability"
+      ],
+      "source": "architecture/glossary.json"
+    }
+  },
+  {
+    "title": "Q1: What is the main latency risk of a serverless function?",
+    "body": "A. It always runs on a dedicated reserved host.\nB. A cold start delays an invocation that has no warm instance.\nC. Functions cannot be invoked concurrently.\nD. Managed datastores add no latency.\n\n**B.** A cold start initializes a new execution environment, which can add hundreds of milliseconds to p95 latency.",
+    "metadata": {
+      "tags": [
+        "architecture",
+        "style",
+        "serverless",
+        "02-serverless-api",
+        "04-crud-api",
+        "question"
+      ],
+      "source": "architecture/glossary.json"
+    }
+  },
+  {
+    "title": "Q2: Why should a function handler be idempotent?",
+    "body": "A. Triggers may redeliver the same event after a timeout.\nB. Functions keep in-memory state between invocations.\nC. Idempotence removes the need for a datastore.\nD. Triggers guarantee exactly-once execution.\n\n**A.** Managed triggers typically provide at-least-once delivery, so a retry must not duplicate side effects.",
+    "metadata": {
+      "tags": [
+        "architecture",
+        "style",
+        "serverless",
+        "02-serverless-api",
+        "04-crud-api",
+        "question"
+      ],
+      "source": "architecture/glossary.json"
+    }
+  },
+  {
+    "title": "Blue-Green Deploy: definition",
+    "body": "Run two identical production environments and switch traffic from the current one to the prepared one only after the new version is verified.",
+    "metadata": {
+      "tags": [
+        "architecture",
+        "tactic",
+        "blue-green-deploy",
+        "06-cicd-pipeline",
+        "10-disaster-recovery",
+        "definition"
+      ],
+      "source": "architecture/glossary.json"
+    }
+  },
+  {
+    "title": "Blue-Green Deploy: decision",
+    "body": "Keep a stable blue environment serving users while green is deployed and tested, then flip the router or DNS so rollback is a fast switch back rather than a redeploy.",
+    "metadata": {
+      "tags": [
+        "architecture",
+        "tactic",
+        "blue-green-deploy",
+        "06-cicd-pipeline",
+        "10-disaster-recovery",
+        "decision"
+      ],
+      "source": "architecture/glossary.json"
+    }
+  },
+  {
+    "title": "Trade-off: Blue-Green Deploy",
+    "body": "**Benefit**: Rollback is a traffic switch, reducing recovery time after a bad release.\n\n**Cost**: Doubling capacity for the standby environment raises cost.",
+    "metadata": {
+      "tags": [
+        "architecture",
+        "tactic",
+        "blue-green-deploy",
+        "06-cicd-pipeline",
+        "10-disaster-recovery",
+        "tradeoff"
+      ],
+      "source": "architecture/glossary.json"
+    }
+  },
+  {
+    "title": "Trade-off: Blue-Green Deploy",
+    "body": "**Benefit**: Green can be validated with real traffic patterns before users see it.\n\n**Cost**: Database migrations must be backward compatible across both versions.",
+    "metadata": {
+      "tags": [
+        "architecture",
+        "tactic",
+        "blue-green-deploy",
+        "06-cicd-pipeline",
+        "10-disaster-recovery",
+        "tradeoff"
+      ],
+      "source": "architecture/glossary.json"
+    }
+  },
+  {
+    "title": "Quality impact: Blue-Green Deploy / availability",
+    "body": "**improves**: Instant traffic switch and rollback protect the availability percentage during releases.",
+    "metadata": {
+      "tags": [
+        "architecture",
+        "tactic",
+        "blue-green-deploy",
+        "06-cicd-pipeline",
+        "10-disaster-recovery",
+        "quality-attribute",
+        "availability"
+      ],
+      "source": "architecture/glossary.json"
+    }
+  },
+  {
+    "title": "Quality impact: Blue-Green Deploy / recoverability",
+    "body": "**improves**: A bad release is undone within seconds, well inside the RTO for a failed deployment.",
+    "metadata": {
+      "tags": [
+        "architecture",
+        "tactic",
+        "blue-green-deploy",
+        "06-cicd-pipeline",
+        "10-disaster-recovery",
+        "quality-attribute",
+        "recoverability"
+      ],
+      "source": "architecture/glossary.json"
+    }
+  },
+  {
+    "title": "Quality impact: Blue-Green Deploy / modifiability",
+    "body": "**improves**: Isolated release environments let changes ship with less coordination, shortening change lead time.",
+    "metadata": {
+      "tags": [
+        "architecture",
+        "tactic",
+        "blue-green-deploy",
+        "06-cicd-pipeline",
+        "10-disaster-recovery",
+        "quality-attribute",
+        "modifiability"
+      ],
+      "source": "architecture/glossary.json"
+    }
+  },
+  {
+    "title": "Q1: What makes rollback fast in a blue-green deploy?",
+    "body": "A. Rebuilding the old environment from scratch\nB. Switching traffic back to the still-running old environment\nC. Restoring a nightly backup\nD. Running the deployment script in reverse\n\n**B.** The previous environment stays warm, so rollback is a router change rather than a rebuild.",
+    "metadata": {
+      "tags": [
+        "architecture",
+        "tactic",
+        "blue-green-deploy",
+        "06-cicd-pipeline",
+        "10-disaster-recovery",
+        "question"
+      ],
+      "source": "architecture/glossary.json"
+    }
+  },
+  {
+    "title": "Q2: What database practice does blue-green require?",
+    "body": "A. Schema changes that both versions can tolerate\nB. Renaming tables on every release\nC. Taking the database offline during cutover\nD. Storing schema inside each application binary\n\n**A.** Both versions run at once, so migrations must be backward compatible until the old version is drained.",
+    "metadata": {
+      "tags": [
+        "architecture",
+        "tactic",
+        "blue-green-deploy",
+        "06-cicd-pipeline",
+        "10-disaster-recovery",
+        "question"
+      ],
+      "source": "architecture/glossary.json"
+    }
+  },
+  {
+    "title": "Bulkhead: definition",
+    "body": "Partition capacity into isolated pools so a failure or traffic surge in one area cannot consume all resources and starve unrelated work.",
+    "metadata": {
+      "tags": [
+        "architecture",
+        "tactic",
+        "bulkhead",
+        "05-3tier-web",
+        "09-microservices",
+        "definition"
+      ],
+      "source": "architecture/glossary.json"
+    }
+  },
+  {
+    "title": "Bulkhead: decision",
+    "body": "Allocate separate thread pools, connection pools, queues, or compute quotas per workload and cap each pool so one caller cannot exhaust the whole system.",
+    "metadata": {
+      "tags": [
+        "architecture",
+        "tactic",
+        "bulkhead",
+        "05-3tier-web",
+        "09-microservices",
+        "decision"
+      ],
+      "source": "architecture/glossary.json"
+    }
+  },
+  {
+    "title": "Trade-off: Bulkhead",
+    "body": "**Benefit**: A stuck dependency is contained, keeping other request classes available.\n\n**Cost**: Static partitions waste idle capacity that another pool could use.",
+    "metadata": {
+      "tags": [
+        "architecture",
+        "tactic",
+        "bulkhead",
+        "05-3tier-web",
+        "09-microservices",
+        "tradeoff"
+      ],
+      "source": "architecture/glossary.json"
+    }
+  },
+  {
+    "title": "Trade-off: Bulkhead",
+    "body": "**Benefit**: Bounded queues give predictable memory use and p95 latency under load.\n\n**Cost**: Requests beyond a pool cap are rejected and need explicit fallback handling.",
+    "metadata": {
+      "tags": [
+        "architecture",
+        "tactic",
+        "bulkhead",
+        "05-3tier-web",
+        "09-microservices",
+        "tradeoff"
+      ],
+      "source": "architecture/glossary.json"
+    }
+  },
+  {
+    "title": "Quality impact: Bulkhead / availability",
+    "body": "**improves**: Isolated pools keep critical paths serving traffic when a noncritical path saturates, protecting the availability percentage.",
+    "metadata": {
+      "tags": [
+        "architecture",
+        "tactic",
+        "bulkhead",
+        "05-3tier-web",
+        "09-microservices",
+        "quality-attribute",
+        "availability"
+      ],
+      "source": "architecture/glossary.json"
+    }
+  },
+  {
+    "title": "Quality impact: Bulkhead / performance",
+    "body": "**improves**: Bounded queues prevent unbounded waits and keep p95 latency predictable during bursts.",
+    "metadata": {
+      "tags": [
+        "architecture",
+        "tactic",
+        "bulkhead",
+        "05-3tier-web",
+        "09-microservices",
+        "quality-attribute",
+        "performance"
+      ],
+      "source": "architecture/glossary.json"
+    }
+  },
+  {
+    "title": "Quality impact: Bulkhead / security",
+    "body": "**improves**: Per-tenant quotas limit how much capacity one noisy or hostile client can consume.",
+    "metadata": {
+      "tags": [
+        "architecture",
+        "tactic",
+        "bulkhead",
+        "05-3tier-web",
+        "09-microservices",
+        "quality-attribute",
+        "security"
+      ],
+      "source": "architecture/glossary.json"
+    }
+  },
+  {
+    "title": "Q1: What does a bulkhead primarily protect?",
+    "body": "A. Data encryption at rest\nB. Capacity for unrelated workloads from one failing path\nC. The exact ordering of every message\nD. The source code from bugs\n\n**B.** Bulkheads isolate resource pools so one overloaded path cannot consume all capacity.",
+    "metadata": {
+      "tags": [
+        "architecture",
+        "tactic",
+        "bulkhead",
+        "05-3tier-web",
+        "09-microservices",
+        "question"
+      ],
+      "source": "architecture/glossary.json"
+    }
+  },
+  {
+    "title": "Q2: Why should bulkhead queues be bounded?",
+    "body": "A. Unbounded queues grow until memory runs out and latency spikes.\nB. Bounded queues remove the need for timeouts.\nC. Bounded queues make retries unnecessary.\nD. Unbounded queues improve p95 latency.\n\n**A.** Without a cap, queued work consumes memory and turns overload into a crash instead of a clean rejection.",
+    "metadata": {
+      "tags": [
+        "architecture",
+        "tactic",
+        "bulkhead",
+        "05-3tier-web",
+        "09-microservices",
+        "question"
+      ],
+      "source": "architecture/glossary.json"
+    }
+  },
+  {
+    "title": "Cache Aside: definition",
+    "body": "Load data into a cache on demand from the application, reading from the cache first and populating it from the source of truth on a miss.",
+    "metadata": {
+      "tags": [
+        "architecture",
+        "tactic",
+        "cache-aside",
+        "01-static-website",
+        "05-3tier-web",
+        "definition"
+      ],
+      "source": "architecture/glossary.json"
+    }
+  },
+  {
+    "title": "Cache Aside: decision",
+    "body": "Treat the datastore as authoritative and let application code populate the cache lazily with a time to live and invalidation on writes.",
+    "metadata": {
+      "tags": [
+        "architecture",
+        "tactic",
+        "cache-aside",
+        "01-static-website",
+        "05-3tier-web",
+        "decision"
+      ],
+      "source": "architecture/glossary.json"
+    }
+  },
+  {
+    "title": "Trade-off: Cache Aside",
+    "body": "**Benefit**: Common reads avoid a datastore round trip and lower p95 latency.\n\n**Cost**: Invalidation logic adds application complexity and stale windows.",
+    "metadata": {
+      "tags": [
+        "architecture",
+        "tactic",
+        "cache-aside",
+        "01-static-website",
+        "05-3tier-web",
+        "tradeoff"
+      ],
+      "source": "architecture/glossary.json"
+    }
+  },
+  {
+    "title": "Trade-off: Cache Aside",
+    "body": "**Benefit**: Read load on the primary datastore drops, improving headroom and availability.\n\n**Cost**: A cold cache produces a latency spike and a burst of datastore traffic.",
+    "metadata": {
+      "tags": [
+        "architecture",
+        "tactic",
+        "cache-aside",
+        "01-static-website",
+        "05-3tier-web",
+        "tradeoff"
+      ],
+      "source": "architecture/glossary.json"
+    }
+  },
+  {
+    "title": "Quality impact: Cache Aside / performance",
+    "body": "**improves**: Serving hot keys from cache reduces p95 latency and datastore load during peak traffic.",
+    "metadata": {
+      "tags": [
+        "architecture",
+        "tactic",
+        "cache-aside",
+        "01-static-website",
+        "05-3tier-web",
+        "quality-attribute",
+        "performance"
+      ],
+      "source": "architecture/glossary.json"
+    }
+  },
+  {
+    "title": "Quality impact: Cache Aside / availability",
+    "body": "**improves**: Cached reads remain answerable during a short datastore outage within the freshness window.",
+    "metadata": {
+      "tags": [
+        "architecture",
+        "tactic",
+        "cache-aside",
+        "01-static-website",
+        "05-3tier-web",
+        "quality-attribute",
+        "availability"
+      ],
+      "source": "architecture/glossary.json"
+    }
+  },
+  {
+    "title": "Quality impact: Cache Aside / modifiability",
+    "body": "**improves**: Cache policy lives in application code and can be tuned without a datastore schema change, shortening change lead time.",
+    "metadata": {
+      "tags": [
+        "architecture",
+        "tactic",
+        "cache-aside",
+        "01-static-website",
+        "05-3tier-web",
+        "quality-attribute",
+        "modifiability"
+      ],
+      "source": "architecture/glossary.json"
+    }
+  },
+  {
+    "title": "Q1: In cache aside, what is the source of truth?",
+    "body": "A. The cache, until it expires\nB. The application's local memory\nC. The underlying datastore\nD. The client browser\n\n**C.** The datastore remains authoritative; the cache is a disposable optimization populated on a miss.",
+    "metadata": {
+      "tags": [
+        "architecture",
+        "tactic",
+        "cache-aside",
+        "01-static-website",
+        "05-3tier-web",
+        "question"
+      ],
+      "source": "architecture/glossary.json"
+    }
+  },
+  {
+    "title": "Q2: What is the most common correctness bug with cache aside?",
+    "body": "A. Caching values that are read more than once\nB. Failing to invalidate a key after its source data changes\nC. Setting a time to live on cached entries\nD. Using a hit counter on the cache\n\n**B.** A missed invalidation leaves a stale value in the cache until expiry, producing incorrect reads.",
+    "metadata": {
+      "tags": [
+        "architecture",
+        "tactic",
+        "cache-aside",
+        "01-static-website",
+        "05-3tier-web",
+        "question"
+      ],
+      "source": "architecture/glossary.json"
+    }
+  },
+  {
+    "title": "Circuit Breaker: definition",
+    "body": "Stop sending requests to a failing dependency for a cooling-off period, then probe cautiously before restoring normal traffic.",
+    "metadata": {
+      "tags": [
+        "architecture",
+        "tactic",
+        "circuit-breaker",
+        "06-cicd-pipeline",
+        "07-monitoring",
+        "09-microservices",
+        "definition"
+      ],
+      "source": "architecture/glossary.json"
+    }
+  },
+  {
+    "title": "Circuit Breaker: decision",
+    "body": "Wrap calls in a breaker that trips after a failure threshold, fails fast while open, and moves through half-open probes to decide when to close.",
+    "metadata": {
+      "tags": [
+        "architecture",
+        "tactic",
+        "circuit-breaker",
+        "06-cicd-pipeline",
+        "07-monitoring",
+        "09-microservices",
+        "decision"
+      ],
+      "source": "architecture/glossary.json"
+    }
+  },
+  {
+    "title": "Trade-off: Circuit Breaker",
+    "body": "**Benefit**: Fast failure protects callers from p95 latency blowups and thread exhaustion.\n\n**Cost**: Requests are rejected even after the dependency begins to recover until a probe succeeds.",
+    "metadata": {
+      "tags": [
+        "architecture",
+        "tactic",
+        "circuit-breaker",
+        "06-cicd-pipeline",
+        "07-monitoring",
+        "09-microservices",
+        "tradeoff"
+      ],
+      "source": "architecture/glossary.json"
+    }
+  },
+  {
+    "title": "Trade-off: Circuit Breaker",
+    "body": "**Benefit**: A failing dependency gets time to recover without sustained load.\n\n**Cost**: Requires tuning thresholds, windows, and timeouts per dependency.",
+    "metadata": {
+      "tags": [
+        "architecture",
+        "tactic",
+        "circuit-breaker",
+        "06-cicd-pipeline",
+        "07-monitoring",
+        "09-microservices",
+        "tradeoff"
+      ],
+      "source": "architecture/glossary.json"
+    }
+  },
+  {
+    "title": "Quality impact: Circuit Breaker / availability",
+    "body": "**improves**: Fail-fast behaviour keeps the caller available and preserves error budget when a downstream service degrades.",
+    "metadata": {
+      "tags": [
+        "architecture",
+        "tactic",
+        "circuit-breaker",
+        "06-cicd-pipeline",
+        "07-monitoring",
+        "09-microservices",
+        "quality-attribute",
+        "availability"
+      ],
+      "source": "architecture/glossary.json"
+    }
+  },
+  {
+    "title": "Quality impact: Circuit Breaker / recoverability",
+    "body": "**improves**: Half-open probes detect recovery and restore traffic automatically, shortening recovery time within the RTO.",
+    "metadata": {
+      "tags": [
+        "architecture",
+        "tactic",
+        "circuit-breaker",
+        "06-cicd-pipeline",
+        "07-monitoring",
+        "09-microservices",
+        "quality-attribute",
+        "recoverability"
+      ],
+      "source": "architecture/glossary.json"
+    }
+  },
+  {
+    "title": "Quality impact: Circuit Breaker / performance",
+    "body": "**improves**: Rejecting calls without waiting on timeouts holds p95 latency steady during a downstream outage.",
+    "metadata": {
+      "tags": [
+        "architecture",
+        "tactic",
+        "circuit-breaker",
+        "06-cicd-pipeline",
+        "07-monitoring",
+        "09-microservices",
+        "quality-attribute",
+        "performance"
+      ],
+      "source": "architecture/glossary.json"
+    }
+  },
+  {
+    "title": "Q1: What does a half-open circuit breaker do?",
+    "body": "A. Rejects every call permanently\nB. Allows a limited probe to test recovery\nC. Increases the timeout on every call\nD. Retries indefinitely until success\n\n**B.** A half-open state permits a small number of probe requests so the breaker can close only after real recovery.",
+    "metadata": {
+      "tags": [
+        "architecture",
+        "tactic",
+        "circuit-breaker",
+        "06-cicd-pipeline",
+        "07-monitoring",
+        "09-microservices",
+        "question"
+      ],
+      "source": "architecture/glossary.json"
+    }
+  },
+  {
+    "title": "Q2: Which condition should count toward opening a breaker?",
+    "body": "A. A malformed request rejected by input validation\nB. Repeated timeouts from the remote dependency\nC. A user choosing to cancel a request\nD. A successful cache hit\n\n**B.** Breakers should track dependency faults such as timeouts, not deterministic application-level rejections.",
+    "metadata": {
+      "tags": [
+        "architecture",
+        "tactic",
+        "circuit-breaker",
+        "06-cicd-pipeline",
+        "07-monitoring",
+        "09-microservices",
+        "question"
+      ],
+      "source": "architecture/glossary.json"
+    }
+  },
+  {
+    "title": "Idempotent Consumer: definition",
+    "body": "Make message handling safe to repeat so redelivery of the same event produces exactly the same observable result as a single delivery.",
+    "metadata": {
+      "tags": [
+        "architecture",
+        "tactic",
+        "idempotent-consumer",
+        "02-serverless-api",
+        "03-event-driven",
+        "definition"
+      ],
+      "source": "architecture/glossary.json"
+    }
+  },
+  {
+    "title": "Idempotent Consumer: decision",
+    "body": "Attach a stable identity to each message and record processed identities atomically with the resulting state change so duplicates are detected and skipped.",
+    "metadata": {
+      "tags": [
+        "architecture",
+        "tactic",
+        "idempotent-consumer",
+        "02-serverless-api",
+        "03-event-driven",
+        "decision"
+      ],
+      "source": "architecture/glossary.json"
+    }
+  },
+  {
+    "title": "Trade-off: Idempotent Consumer",
+    "body": "**Benefit**: Retries and replay become safe, improving recoverability after failures.\n\n**Cost**: A deduplication store adds a read or unique constraint on every message.",
+    "metadata": {
+      "tags": [
+        "architecture",
+        "tactic",
+        "idempotent-consumer",
+        "02-serverless-api",
+        "03-event-driven",
+        "tradeoff"
+      ],
+      "source": "architecture/glossary.json"
+    }
+  },
+  {
+    "title": "Trade-off: Idempotent Consumer",
+    "body": "**Benefit**: Duplicate events no longer corrupt counts or create repeated orders.\n\n**Cost**: Key retention must be designed so old duplicates cannot be accepted after cleanup.",
+    "metadata": {
+      "tags": [
+        "architecture",
+        "tactic",
+        "idempotent-consumer",
+        "02-serverless-api",
+        "03-event-driven",
+        "tradeoff"
+      ],
+      "source": "architecture/glossary.json"
+    }
+  },
+  {
+    "title": "Quality impact: Idempotent Consumer / recoverability",
+    "body": "**improves**: Replaying a log after a crash is safe because repeated events are skipped, supporting the RTO and RPO targets.",
+    "metadata": {
+      "tags": [
+        "architecture",
+        "tactic",
+        "idempotent-consumer",
+        "02-serverless-api",
+        "03-event-driven",
+        "quality-attribute",
+        "recoverability"
+      ],
+      "source": "architecture/glossary.json"
+    }
+  },
+  {
+    "title": "Quality impact: Idempotent Consumer / availability",
+    "body": "**improves**: Consumers can acknowledge and retry freely without manual cleanup, keeping the pipeline available during faults.",
+    "metadata": {
+      "tags": [
+        "architecture",
+        "tactic",
+        "idempotent-consumer",
+        "02-serverless-api",
+        "03-event-driven",
+        "quality-attribute",
+        "availability"
+      ],
+      "source": "architecture/glossary.json"
+    }
+  },
+  {
+    "title": "Quality impact: Idempotent Consumer / performance",
+    "body": "**degrades**: Deduplication lookups add a datastore operation per message, raising p95 latency for high-volume consumers.",
+    "metadata": {
+      "tags": [
+        "architecture",
+        "tactic",
+        "idempotent-consumer",
+        "02-serverless-api",
+        "03-event-driven",
+        "quality-attribute",
+        "performance"
+      ],
+      "source": "architecture/glossary.json"
+    }
+  },
+  {
+    "title": "Q1: Where must a processed message key be recorded?",
+    "body": "A. In a separate log written after the state change\nB. In the same atomic transaction as the state change\nC. Only in the consumer's memory\nD. In the producer's configuration\n\n**B.** Atomic recording prevents a crash between the side effect and the deduplication record from causing a duplicate.",
+    "metadata": {
+      "tags": [
+        "architecture",
+        "tactic",
+        "idempotent-consumer",
+        "02-serverless-api",
+        "03-event-driven",
+        "question"
+      ],
+      "source": "architecture/glossary.json"
+    }
+  },
+  {
+    "title": "Q2: Why does at-least-once delivery require idempotent handlers?",
+    "body": "A. It never delivers a message more than once.\nB. It guarantees strict global ordering.\nC. It may redeliver the same message after a timeout.\nD. It encrypts every message differently.\n\n**C.** Redelivery after an unacknowledged timeout is normal, so handlers must tolerate repeated input.",
+    "metadata": {
+      "tags": [
+        "architecture",
+        "tactic",
+        "idempotent-consumer",
+        "02-serverless-api",
+        "03-event-driven",
+        "question"
+      ],
+      "source": "architecture/glossary.json"
+    }
+  },
+  {
+    "title": "Observability: definition",
+    "body": "Instrument the system so its internal state can be inferred from externally emitted logs, metrics, and traces without shipping new code during an incident.",
+    "metadata": {
+      "tags": [
+        "architecture",
+        "tactic",
+        "observability",
+        "07-monitoring",
+        "06-cicd-pipeline",
+        "definition"
+      ],
+      "source": "architecture/glossary.json"
+    }
+  },
+  {
+    "title": "Observability: decision",
+    "body": "Emit structured telemetry with correlation identifiers across every service boundary, define service level indicators up front, and build dashboards and alerts around user-visible symptoms.",
+    "metadata": {
+      "tags": [
+        "architecture",
+        "tactic",
+        "observability",
+        "07-monitoring",
+        "06-cicd-pipeline",
+        "decision"
+      ],
+      "source": "architecture/glossary.json"
+    }
+  },
+  {
+    "title": "Trade-off: Observability",
+    "body": "**Benefit**: Incidents are diagnosed faster because a request can be traced end to end.\n\n**Cost**: Telemetry storage and processing add ongoing cost and capacity planning.",
+    "metadata": {
+      "tags": [
+        "architecture",
+        "tactic",
+        "observability",
+        "07-monitoring",
+        "06-cicd-pipeline",
+        "tradeoff"
+      ],
+      "source": "architecture/glossary.json"
+    }
+  },
+  {
+    "title": "Trade-off: Observability",
+    "body": "**Benefit**: Symptom-based alerts reduce noise and focus responders on user impact.\n\n**Cost**: Good instrumentation must be designed into code, which lengthens initial development.",
+    "metadata": {
+      "tags": [
+        "architecture",
+        "tactic",
+        "observability",
+        "07-monitoring",
+        "06-cicd-pipeline",
+        "tradeoff"
+      ],
+      "source": "architecture/glossary.json"
+    }
+  },
+  {
+    "title": "Quality impact: Observability / availability",
+    "body": "**improves**: Symptom-based alerts catch degradation early and protect the availability percentage before users report it.",
+    "metadata": {
+      "tags": [
+        "architecture",
+        "tactic",
+        "observability",
+        "07-monitoring",
+        "06-cicd-pipeline",
+        "quality-attribute",
+        "availability"
+      ],
+      "source": "architecture/glossary.json"
+    }
+  },
+  {
+    "title": "Quality impact: Observability / recoverability",
+    "body": "**improves**: Traces and dashboards shorten mean time to diagnose, keeping incident recovery within the RTO.",
+    "metadata": {
+      "tags": [
+        "architecture",
+        "tactic",
+        "observability",
+        "07-monitoring",
+        "06-cicd-pipeline",
+        "quality-attribute",
+        "recoverability"
+      ],
+      "source": "architecture/glossary.json"
+    }
+  },
+  {
+    "title": "Quality impact: Observability / security",
+    "body": "**degrades**: Logs and traces expand the data surface and can leak secrets unless fields are scrubbed deliberately.",
+    "metadata": {
+      "tags": [
+        "architecture",
+        "tactic",
+        "observability",
+        "07-monitoring",
+        "06-cicd-pipeline",
+        "quality-attribute",
+        "security"
+      ],
+      "source": "architecture/glossary.json"
+    }
+  },
+  {
+    "title": "Q1: Which signal best supports on-call alerting?",
+    "body": "A. CPU usage on one host\nB. A symptom-based service level indicator tied to user impact\nC. The number of lines of code deployed\nD. The count of log files on disk\n\n**B.** Symptom-based indicators reflect what users experience and reduce false alarms from harmless internal noise.",
+    "metadata": {
+      "tags": [
+        "architecture",
+        "tactic",
+        "observability",
+        "07-monitoring",
+        "06-cicd-pipeline",
+        "question"
+      ],
+      "source": "architecture/glossary.json"
+    }
+  },
+  {
+    "title": "Q2: What is the main privacy risk of observability data?",
+    "body": "A. Traces are always encrypted by default.\nB. Logs may capture tokens or personal data if fields are not scrubbed.\nC. Metrics cannot store numeric values.\nD. Correlation identifiers expose source code.\n\n**B.** Broad instrumentation can accidentally record secrets or personal data, so scrubbing must be explicit.",
+    "metadata": {
+      "tags": [
+        "architecture",
+        "tactic",
+        "observability",
+        "07-monitoring",
+        "06-cicd-pipeline",
+        "question"
+      ],
+      "source": "architecture/glossary.json"
+    }
+  },
+  {
+    "title": "Queue-Based Load Leveling: definition",
+    "body": "Place a durable queue between producers and workers so bursts are buffered and consumers process work at a steady, controlled rate.",
+    "metadata": {
+      "tags": [
+        "architecture",
+        "tactic",
+        "queue-based-load-leveling",
+        "03-event-driven",
+        "08-streaming",
+        "definition"
+      ],
+      "source": "architecture/glossary.json"
+    }
+  },
+  {
+    "title": "Queue-Based Load Leveling: decision",
+    "body": "Accept work into a bounded durable queue and let workers drain it at a sustainable pace, exposing backlog depth as a first-class operational signal.",
+    "metadata": {
+      "tags": [
+        "architecture",
+        "tactic",
+        "queue-based-load-leveling",
+        "03-event-driven",
+        "08-streaming",
+        "decision"
+      ],
+      "source": "architecture/glossary.json"
+    }
+  },
+  {
+    "title": "Trade-off: Queue-Based Load Leveling",
+    "body": "**Benefit**: Producers stay responsive and available during bursts instead of overload failing calls.\n\n**Cost**: Completion is delayed and users need a way to observe pending work.",
+    "metadata": {
+      "tags": [
+        "architecture",
+        "tactic",
+        "queue-based-load-leveling",
+        "03-event-driven",
+        "08-streaming",
+        "tradeoff"
+      ],
+      "source": "architecture/glossary.json"
+    }
+  },
+  {
+    "title": "Trade-off: Queue-Based Load Leveling",
+    "body": "**Benefit**: Workers can scale on backlog depth with predictable throughput.\n\n**Cost**: A queue adds delivery, deduplication, and dead-letter operational burden.",
+    "metadata": {
+      "tags": [
+        "architecture",
+        "tactic",
+        "queue-based-load-leveling",
+        "03-event-driven",
+        "08-streaming",
+        "tradeoff"
+      ],
+      "source": "architecture/glossary.json"
+    }
+  },
+  {
+    "title": "Quality impact: Queue-Based Load Leveling / availability",
+    "body": "**improves**: Buffering bursts prevents overload from rejecting requests, sustaining availability during spikes.",
+    "metadata": {
+      "tags": [
+        "architecture",
+        "tactic",
+        "queue-based-load-leveling",
+        "03-event-driven",
+        "08-streaming",
+        "quality-attribute",
+        "availability"
+      ],
+      "source": "architecture/glossary.json"
+    }
+  },
+  {
+    "title": "Quality impact: Queue-Based Load Leveling / performance",
+    "body": "**improves**: Workers run near optimal concurrency so p95 latency stays stable rather than spiking under burst load.",
+    "metadata": {
+      "tags": [
+        "architecture",
+        "tactic",
+        "queue-based-load-leveling",
+        "03-event-driven",
+        "08-streaming",
+        "quality-attribute",
+        "performance"
+      ],
+      "source": "architecture/glossary.json"
+    }
+  },
+  {
+    "title": "Quality impact: Queue-Based Load Leveling / recoverability",
+    "body": "**improves**: Durable queued messages survive worker restarts, allowing replay within the RTO after a crash.",
+    "metadata": {
+      "tags": [
+        "architecture",
+        "tactic",
+        "queue-based-load-leveling",
+        "03-event-driven",
+        "08-streaming",
+        "quality-attribute",
+        "recoverability"
+      ],
+      "source": "architecture/glossary.json"
+    }
+  },
+  {
+    "title": "Q1: What signal should drive worker autoscaling in load leveling",
+    "body": "A. The number of code files in the worker\nB. Backlog depth and message age\nC. The colour of the dashboard\nD. The total number of producers ever seen\n\n**B.** Backlog depth and age show real pending work, so scaling on them drains the queue within target time.",
+    "metadata": {
+      "tags": [
+        "architecture",
+        "tactic",
+        "queue-based-load-leveling",
+        "03-event-driven",
+        "08-streaming",
+        "question"
+      ],
+      "source": "architecture/glossary.json"
+    }
+  },
+  {
+    "title": "Q2: Why must the queue be bounded or paired with load shedding?",
+    "body": "A. Bounded queues improve encryption strength.\nB. An unbounded queue can grow until storage or memory fails.\nC. Bounded queues remove the need for workers.\nD. Unbounded queues guarantee faster processing.\n\n**B.** Without a cap or shedding policy, sustained overload turns a buffer into an outage.",
+    "metadata": {
+      "tags": [
+        "architecture",
+        "tactic",
+        "queue-based-load-leveling",
+        "03-event-driven",
+        "08-streaming",
+        "question"
+      ],
+      "source": "architecture/glossary.json"
+    }
+  },
+  {
+    "title": "Retry with Backoff: definition",
+    "body": "Repeat a failed transient operation after a delay that grows between attempts, often with jitter, so a struggling dependency is not overwhelmed.",
+    "metadata": {
+      "tags": [
+        "architecture",
+        "tactic",
+        "retry-with-backoff",
+        "02-serverless-api",
+        "07-monitoring",
+        "definition"
+      ],
+      "source": "architecture/glossary.json"
+    }
+  },
+  {
+    "title": "Retry with Backoff: decision",
+    "body": "Retry only failures that are likely transient, cap the attempt count, and use exponential delay with jitter to avoid synchronized retry storms.",
+    "metadata": {
+      "tags": [
+        "architecture",
+        "tactic",
+        "retry-with-backoff",
+        "02-serverless-api",
+        "07-monitoring",
+        "decision"
+      ],
+      "source": "architecture/glossary.json"
+    }
+  },
+  {
+    "title": "Trade-off: Retry with Backoff",
+    "body": "**Benefit**: Brief transient faults are hidden from users without operator action.\n\n**Cost**: Retries add tail latency and can multiply request volume on a sick dependency.",
+    "metadata": {
+      "tags": [
+        "architecture",
+        "tactic",
+        "retry-with-backoff",
+        "02-serverless-api",
+        "07-monitoring",
+        "tradeoff"
+      ],
+      "source": "architecture/glossary.json"
+    }
+  },
+  {
+    "title": "Trade-off: Retry with Backoff",
+    "body": "**Benefit**: Jitter spreads retries so recovery is not delayed by a thundering herd.\n\n**Cost**: More attempts consume worker capacity and can exhaust connection pools.",
+    "metadata": {
+      "tags": [
+        "architecture",
+        "tactic",
+        "retry-with-backoff",
+        "02-serverless-api",
+        "07-monitoring",
+        "tradeoff"
+      ],
+      "source": "architecture/glossary.json"
+    }
+  },
+  {
+    "title": "Quality impact: Retry with Backoff / availability",
+    "body": "**improves**: Recovering from transient faults keeps request success above the target availability percentage during short disturbances.",
+    "metadata": {
+      "tags": [
+        "architecture",
+        "tactic",
+        "retry-with-backoff",
+        "02-serverless-api",
+        "07-monitoring",
+        "quality-attribute",
+        "availability"
+      ],
+      "source": "architecture/glossary.json"
+    }
+  },
+  {
+    "title": "Quality impact: Retry with Backoff / recoverability",
+    "body": "**improves**: Automatic repeat attempts let the system heal from brief dependency loss without manual intervention.",
+    "metadata": {
+      "tags": [
+        "architecture",
+        "tactic",
+        "retry-with-backoff",
+        "02-serverless-api",
+        "07-monitoring",
+        "quality-attribute",
+        "recoverability"
+      ],
+      "source": "architecture/glossary.json"
+    }
+  },
+  {
+    "title": "Quality impact: Retry with Backoff / performance",
+    "body": "**degrades**: Backoff delays increase p95 latency when attempts are exhausted under sustained failure.",
+    "metadata": {
+      "tags": [
+        "architecture",
+        "tactic",
+        "retry-with-backoff",
+        "02-serverless-api",
+        "07-monitoring",
+        "quality-attribute",
+        "performance"
+      ],
+      "source": "architecture/glossary.json"
+    }
+  },
+  {
+    "title": "Q1: Why should exponential backoff include jitter?",
+    "body": "A. To make each retry succeed on the first attempt.\nB. To prevent many clients from retrying at the same instant.\nC. To remove the need for a maximum attempt count.\nD. To turn permanent errors into transient ones.\n\n**B.** Random jitter desynchronizes clients so a recovering dependency is not hit by a synchronized retry storm.",
+    "metadata": {
+      "tags": [
+        "architecture",
+        "tactic",
+        "retry-with-backoff",
+        "02-serverless-api",
+        "07-monitoring",
+        "question"
+      ],
+      "source": "architecture/glossary.json"
+    }
+  },
+  {
+    "title": "Q2: Which failure should not be retried?",
+    "body": "A. A brief connection reset\nB. A gateway timeout\nC. A validation error caused by malformed input\nD. A transient socket error\n\n**C.** A validation error is deterministic, so repeating it only wastes capacity and adds latency.",
+    "metadata": {
+      "tags": [
+        "architecture",
+        "tactic",
+        "retry-with-backoff",
+        "02-serverless-api",
+        "07-monitoring",
+        "question"
+      ],
+      "source": "architecture/glossary.json"
+    }
+  },
+  {
+    "title": "Saga: definition",
+    "body": "Manage a long-running multi-service transaction as a sequence of local transactions with compensating actions that undo completed steps on failure.",
+    "metadata": {
+      "tags": [
+        "architecture",
+        "tactic",
+        "saga",
+        "09-microservices",
+        "definition"
+      ],
+      "source": "architecture/glossary.json"
+    }
+  },
+  {
+    "title": "Saga: decision",
+    "body": "Replace a distributed transaction with an orchestrated or choreographed saga where each step commits locally and publishes the event that triggers the next step or a compensation.",
+    "metadata": {
+      "tags": [
+        "architecture",
+        "tactic",
+        "saga",
+        "09-microservices",
+        "decision"
+      ],
+      "source": "architecture/glossary.json"
+    }
+  },
+  {
+    "title": "Trade-off: Saga",
+    "body": "**Benefit**: Cross-service consistency is achieved without a two-phase commit.\n\n**Cost**: Intermediate states are visible to other observers until the saga finishes.",
+    "metadata": {
+      "tags": [
+        "architecture",
+        "tactic",
+        "saga",
+        "09-microservices",
+        "tradeoff"
+      ],
+      "source": "architecture/glossary.json"
+    }
+  },
+  {
+    "title": "Trade-off: Saga",
+    "body": "**Benefit**: Each service keeps private data and independent deployment.\n\n**Cost**: Every step needs a tested compensation, roughly doubling logic and test cases.",
+    "metadata": {
+      "tags": [
+        "architecture",
+        "tactic",
+        "saga",
+        "09-microservices",
+        "tradeoff"
+      ],
+      "source": "architecture/glossary.json"
+    }
+  },
+  {
+    "title": "Quality impact: Saga / recoverability",
+    "body": "**improves**: Compensations return the system to a consistent state after a failed step, limiting data repair within the RTO.",
+    "metadata": {
+      "tags": [
+        "architecture",
+        "tactic",
+        "saga",
+        "09-microservices",
+        "quality-attribute",
+        "recoverability"
+      ],
+      "source": "architecture/glossary.json"
+    }
+  },
+  {
+    "title": "Quality impact: Saga / modifiability",
+    "body": "**improves**: Steps can be reordered or replaced in the saga definition without changing every service, shortening change lead time.",
+    "metadata": {
+      "tags": [
+        "architecture",
+        "tactic",
+        "saga",
+        "09-microservices",
+        "quality-attribute",
+        "modifiability"
+      ],
+      "source": "architecture/glossary.json"
+    }
+  },
+  {
+    "title": "Quality impact: Saga / testability",
+    "body": "**degrades**: Each step and compensation pair needs failure-path tests, lengthening test runtime for the workflow.",
+    "metadata": {
+      "tags": [
+        "architecture",
+        "tactic",
+        "saga",
+        "09-microservices",
+        "quality-attribute",
+        "testability"
+      ],
+      "source": "architecture/glossary.json"
+    }
+  },
+  {
+    "title": "Q1: What does a saga use when a step fails?",
+    "body": "A. A distributed rollback lock\nB. A compensating transaction for completed steps\nC. A full database restore\nD. A retry of all steps forever\n\n**B.** Sagas undo committed local transactions by running explicit compensations in reverse order.",
+    "metadata": {
+      "tags": [
+        "architecture",
+        "tactic",
+        "saga",
+        "09-microservices",
+        "question"
+      ],
+      "source": "architecture/glossary.json"
+    }
+  },
+  {
+    "title": "Q2: Which condition makes a saga risky to apply?",
+    "body": "A. Steps span services with separate databases\nB. A step has no meaningful way to undo its effects\nC. The process runs for several seconds\nD. Steps publish events\n\n**B.** Without a valid compensation, a failure cannot bring the system back to a consistent state.",
+    "metadata": {
+      "tags": [
+        "architecture",
+        "tactic",
+        "saga",
+        "09-microservices",
+        "question"
+      ],
+      "source": "architecture/glossary.json"
+    }
+  },
+  {
+    "title": "Availability: definition",
+    "body": "The proportion of time a system is able to serve valid requests, usually expressed as a percentage of uptime measured at the service level indicator.",
+    "metadata": {
+      "tags": [
+        "architecture",
+        "quality attribute",
+        "availability",
+        "definition"
+      ],
+      "source": "architecture/glossary.json"
+    }
+  },
+  {
+    "title": "Q1: How is availability normally expressed and measured?",
+    "body": "A. Total lines of code written per month\nB. Percentage of successful requests or uptime over a period\nC. The number of servers in the cluster\nD. The average size of a log file\n\n**B.** Availability is a ratio of successful service time or requests over a defined measurement window.",
+    "metadata": {
+      "tags": [
+        "architecture",
+        "quality attribute",
+        "availability",
+        "question"
+      ],
+      "source": "architecture/glossary.json"
+    }
+  },
+  {
+    "title": "Q2: Which tactic best limits the blast radius of a slow dependen",
+    "body": "A. Bulkhead\nB. Cache aside\nC. Blue-green deploy\nD. Idempotent consumer\n\n**A.** A bulkhead isolates resource pools so one slow dependency cannot starve unrelated request classes.",
+    "metadata": {
+      "tags": [
+        "architecture",
+        "quality attribute",
+        "availability",
+        "question"
+      ],
+      "source": "architecture/glossary.json"
+    }
+  },
+  {
+    "title": "Modifiability: definition",
+    "body": "The ease with which a system can be changed to add a feature, replace a component, or adapt to a new requirement without unintended effects elsewhere.",
+    "metadata": {
+      "tags": [
+        "architecture",
+        "quality attribute",
+        "modifiability",
+        "definition"
+      ],
+      "source": "architecture/glossary.json"
+    }
+  },
+  {
+    "title": "Q1: Which design most improves modifiability when the datastore ",
+    "body": "A. Business rules that import storage libraries directly\nB. A domain layer isolated behind interfaces from infrastructure\nC. Storing schema details in every screen\nD. One global module that all features edit\n\n**B.** Inward dependencies let the persistence adapter be swapped without touching business rules, shortening change lead time.",
+    "metadata": {
+      "tags": [
+        "architecture",
+        "quality attribute",
+        "modifiability",
+        "question"
+      ],
+      "source": "architecture/glossary.json"
+    }
+  },
+  {
+    "title": "Q2: Why can independent services shorten change lead time?",
+    "body": "A. They remove the need for testing.\nB. They allow one team to release without a coordinated deploy.\nC. They eliminate all network calls.\nD. They share one database schema.\n\n**B.** Independent deployment removes coordination overhead, so a single capability change can ship on its own schedule.",
+    "metadata": {
+      "tags": [
+        "architecture",
+        "quality attribute",
+        "modifiability",
+        "question"
+      ],
+      "source": "architecture/glossary.json"
+    }
+  },
+  {
+    "title": "Performance: definition",
+    "body": "The responsiveness and throughput of a system under a specified workload, commonly expressed as latency percentiles and requests handled per unit of time.",
+    "metadata": {
+      "tags": [
+        "architecture",
+        "quality attribute",
+        "performance",
+        "definition"
+      ],
+      "source": "architecture/glossary.json"
+    }
+  },
+  {
+    "title": "Q1: Why is p95 latency more informative than average latency?",
+    "body": "A. It is always lower than the average.\nB. It reflects the experience of the slowest 5 percent of requests.\nC. It ignores all slow requests.\nD. It measures only server CPU time.\n\n**B.** Tail percentiles expose slow requests that an average hides, which is where users usually feel degradation.",
+    "metadata": {
+      "tags": [
+        "architecture",
+        "quality attribute",
+        "performance",
+        "question"
+      ],
+      "source": "architecture/glossary.json"
+    }
+  },
+  {
+    "title": "Q2: How does a bounded queue help performance under a burst?",
+    "body": "A. It removes all processing work.\nB. It holds excess work while workers stay at steady concurrency, capping wait time.\nC. It guarantees zero latency.\nD. It disables autoscaling.\n\n**B.** A bounded buffer smooths bursts and keeps workers near optimal throughput instead of letting wait times grow without limit.",
+    "metadata": {
+      "tags": [
+        "architecture",
+        "quality attribute",
+        "performance",
+        "question"
+      ],
+      "source": "architecture/glossary.json"
+    }
+  },
+  {
+    "title": "Recoverability: definition",
+    "body": "The ability of a system to restore an acceptable state and resume service after a failure, measured by how quickly and completely normal operation returns.",
+    "metadata": {
+      "tags": [
+        "architecture",
+        "quality attribute",
+        "recoverability",
+        "definition"
+      ],
+      "source": "architecture/glossary.json"
+    }
+  },
+  {
+    "title": "Q1: What is the difference between RTO and RPO?",
+    "body": "A. RTO is downtime allowed, RPO is data loss allowed\nB. RTO is data loss allowed, RPO is downtime allowed\nC. Both describe the same recovery target\nD. RTO applies only to databases and RPO only to networks\n\n**A.** RTO bounds how long service may be down, while RPO bounds how much recent data may be lost.",
+    "metadata": {
+      "tags": [
+        "architecture",
+        "quality attribute",
+        "recoverability",
+        "question"
+      ],
+      "source": "architecture/glossary.json"
+    }
+  },
+  {
+    "title": "Q2: Why does replay require idempotent consumers?",
+    "body": "A. Replay delivers each event exactly once.\nB. Replay redelivers events, and repeated processing must not change the result.\nC. Replay disables the datastore.\nD. Replay removes the need for a recovery target.\n\n**B.** Replaying a log repeats facts, so handlers must be safe when the same input is applied more than once.",
+    "metadata": {
+      "tags": [
+        "architecture",
+        "quality attribute",
+        "recoverability",
+        "question"
+      ],
+      "source": "architecture/glossary.json"
+    }
+  },
+  {
+    "title": "Security: definition",
+    "body": "The ability of a system to protect data and resources from unauthorized access and misuse while remaining usable for legitimate requests.",
+    "metadata": {
+      "tags": [
+        "architecture",
+        "quality attribute",
+        "security",
+        "definition"
+      ],
+      "source": "architecture/glossary.json"
+    }
+  },
+  {
+    "title": "Q1: How does a bulkhead contribute to security?",
+    "body": "A. It encrypts stored data.\nB. It caps the resources one tenant or caller can consume.\nC. It issues authentication tokens.\nD. It removes all logging.\n\n**B.** Per-tenant quotas and bounded pools limit how much capacity a noisy or hostile client can take.",
+    "metadata": {
+      "tags": [
+        "architecture",
+        "quality attribute",
+        "security",
+        "question"
+      ],
+      "source": "architecture/glossary.json"
+    }
+  },
+  {
+    "title": "Q2: What is the main observability risk to data protection?",
+    "body": "A. Metrics always contain personal data.\nB. Structured logs can capture tokens or personal fields that must be scrubbed.\nC. Traces cannot be stored anywhere.\nD. Correlation identifiers reveal passwords.\n\n**B.** Broad instrumentation can record sensitive values unless fields are deliberately filtered before emission.",
+    "metadata": {
+      "tags": [
+        "architecture",
+        "quality attribute",
+        "security",
+        "question"
+      ],
+      "source": "architecture/glossary.json"
+    }
+  },
+  {
+    "title": "Testability: definition",
+    "body": "The ease with which a system can be verified against its specification by isolating parts, controlling their inputs, and observing their outputs.",
+    "metadata": {
+      "tags": [
+        "architecture",
+        "quality attribute",
+        "testability",
+        "definition"
+      ],
+      "source": "architecture/glossary.json"
+    }
+  },
+  {
+    "title": "Q1: What makes a component easy to test in isolation?",
+    "body": "A. It reads global configuration at call time.\nB. It depends on concrete external services directly.\nC. It accepts dependencies and exposes observable outputs.\nD. It hides all of its state in static fields.\n\n**C.** Injectable dependencies and observable outputs let a test control inputs and assert results without live systems.",
+    "metadata": {
+      "tags": [
+        "architecture",
+        "quality attribute",
+        "testability",
+        "question"
+      ],
+      "source": "architecture/glossary.json"
+    }
+  },
+  {
+    "title": "Q2: Why do compensating sagas tend to increase test runtime?",
+    "body": "A. They remove all failure paths.\nB. Each step and compensation pair needs its own failure-path test.\nC. They run only in production.\nD. They cannot be tested at all.\n\n**B.** Every step needs a verified undo path, which multiplies the number of cases that a suite must exercise.",
+    "metadata": {
+      "tags": [
+        "architecture",
+        "quality attribute",
+        "testability",
+        "question"
+      ],
+      "source": "architecture/glossary.json"
+    }
+  }
+]

@@ -1,0 +1,45 @@
+id: availability
+name: Availability
+definition: The proportion of time a system is able to serve valid requests, usually expressed as a percentage of uptime measured at the service level indicator.
+stimulus:
+  - A dependency degrades, a host fails, or traffic suddenly spikes beyond the normal peak.
+  - A new release is deployed to production.
+response:
+  - The system continues to answer valid requests, possibly in a degraded mode, and rejects excess load cleanly.
+  - Failures are detected through symptom-based alerts and the blast radius stays confined.
+measure:
+  - Monthly successful request ratio at or above 99.95 percent.
+  - p95 request latency at or below 300 ms during normal operation.
+  - Mean time to detect a user-visible failure under 5 minutes.
+  - No single dependency fault reduces successful requests below 99 percent for more than 10 minutes.
+tactics:
+  - circuit-breaker
+  - bulkhead
+  - retry-with-backoff
+  - cache-aside
+  - blue-green-deploy
+  - queue-based-load-leveling
+  - observability
+related_patterns:
+  - microservices
+  - serverless
+  - layered
+  - 07-monitoring
+  - 10-disaster-recovery
+quiz:
+  - question: How is availability normally expressed and measured?
+    choices:
+      - Total lines of code written per month
+      - Percentage of successful requests or uptime over a period
+      - The number of servers in the cluster
+      - The average size of a log file
+    answer: 1
+    explanation: Availability is a ratio of successful service time or requests over a defined measurement window.
+  - question: Which tactic best limits the blast radius of a slow dependency?
+    choices:
+      - Bulkhead
+      - Cache aside
+      - Blue-green deploy
+      - Idempotent consumer
+    answer: 0
+    explanation: A bulkhead isolates resource pools so one slow dependency cannot starve unrelated request classes.

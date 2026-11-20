@@ -1,0 +1,13 @@
+# Scenario drills. Paths are relative to this justfile's directory.
+
+# List catalogued scenarios.
+list:
+    uv run python tools/drill.py list
+
+# Run a timed drill; add --minutes 45 --dry-run as needed.
+drill SCENARIO *ARGS:
+    uv run python tools/drill.py drill {{SCENARIO}} {{ARGS}}
+
+# Reveal one committed artifact: solution, hints, or rubric.
+reveal SCENARIO *ARGS:
+    uv run python tools/drill.py reveal {{SCENARIO}} {{ARGS}}

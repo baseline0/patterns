@@ -1,0 +1,63 @@
+id: microservices
+name: Microservices Architecture
+summary: Decompose a system into small services aligned to business capabilities, each owning its data and exposing a network API so teams can deploy and scale independently.
+decision: Draw service boundaries around bounded contexts with separate datastores, and accept distributed-systems complexity in exchange for independent release cadence and fault isolation.
+use_when:
+  - Multiple teams need to release features on different schedules.
+  - Subdomains have sharply different scaling or availability needs.
+  - Clear bounded contexts with stable interfaces can be identified.
+avoid_when:
+  - The product is early and domain boundaries are still uncertain.
+  - The team lacks tooling for deployment, tracing, and incident response.
+  - A single database transaction must span most operations.
+components:
+  - name: Service
+    role: Owns one business capability, its data, and its own deployment lifecycle.
+  - name: API gateway
+    role: Provides a single entry point for clients and handles routing, authentication, and rate limits.
+  - name: Service datastore
+    role: Persists state private to one service so schemas cannot be coupled across teams.
+  - name: Messaging backbone
+    role: Carries asynchronous events and commands between services without direct coupling.
+tradeoffs:
+  - benefit: Teams can change and deploy their own service without a coordinated release.
+    cost: Network calls replace in-process calls, adding latency and partial failure modes.
+  - benefit: A failure in one service can be isolated with bulkheads and breakers.
+    cost: Distributed data requires sagas and eventual consistency instead of simple joins.
+quality_impacts:
+  - attribute: modifiability
+    effect: improves
+    note: A capability change is contained in one service, reducing change lead time from weeks to days.
+  - attribute: availability
+    effect: improves
+    note: Independent deployment and bulkheads limit the blast radius of a bad release to one service.
+  - attribute: performance
+    effect: degrades
+    note: Chatty inter-service calls can lift p95 latency unless boundaries are coarse and caches are used.
+related_patterns:
+  - facade
+  - saga
+  - bulkhead
+  - circuit-breaker
+  - dependency-injection
+  - 09-microservices
+scenarios:
+  - 09-microservices
+  - 05-3tier-web
+quiz:
+  - question: What is the strongest reason to choose microservices for a system?
+    choices:
+      - It makes every operation a single database transaction.
+      - It removes the need for automated tests.
+      - Independent teams need independent deployment and scaling.
+      - It eliminates all network latency.
+    answer: 2
+    explanation: Independent release cadence and scaling are the core benefits; transactions, latency, and testing get harder.
+  - question: Which practice keeps services genuinely decoupled?
+    choices:
+      - Sharing a single writable database across services
+      - Giving each service private data and stable contracts
+      - Having services call each other's internal tables
+      - Deploying all services in one atomic release
+    answer: 1
+    explanation: Private data and stable interfaces let one service change without forcing coordinated edits elsewhere.

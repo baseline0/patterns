@@ -293,10 +293,34 @@ def diagrams_html(patterns: list[dict[str, Any]], root: Path = REPO_ROOT) -> str
     return page("Architecture diagrams", "\n".join(parts), section=True)
 
 
+def architecture_page(root: Path = REPO_ROOT) -> str:
+    source = json.loads((root / "architecture" / "graph.json").read_text(encoding="utf-8"))
+    nodes = [
+        {"id": node["id"], "label": node["label"], "definition": node.get("kind", ""), "mentions": 0, "related": []}
+        for node in source["nodes"]
+    ]
+    graph = {"nodes": nodes, "links": source["links"]}
+    groups: dict[str, list[dict[str, Any]]] = {}
+    for node in source["nodes"]:
+        groups.setdefault(node["kind"], []).append(node)
+    parts = [
+        "<h1>Architecture graph</h1>",
+        '<p class="meta">Generated from architecture/graph.json; source YAML lives in design-patterns/content and architecture/content.</p>',
+        "<h2>Families</h2>",
+        "<table><tr><th>Family</th><th>Nodes</th></tr>",
+    ]
+    for kind, members in sorted(groups.items()):
+        parts.append(f"<tr><td>{esc(kind)}</td><td>{len(members)}</td></tr>")
+    parts.append("</table>")
+    parts += ["<h2>Graph</h2>", concept_svg(graph)]
+    return page("Architecture graph", "\n".join(parts), section=True)
+
+
 def render_all(root: Path = REPO_ROOT) -> dict[Path, str]:
     papers = load_papers(root)
     patterns = load_patterns(root)
     proofs = load_proofs(root)
+    architecture_graph = json.loads((root / "architecture" / "graph.json").read_text(encoding="utf-8"))
     outputs: dict[Path, str] = {}
     for topic, paper in papers:
         outputs[Path(f"concepts/arxiv-{topic}.html")] = concept_page(topic, paper)
@@ -312,6 +336,7 @@ def render_all(root: Path = REPO_ROOT) -> dict[Path, str]:
         section=True,
     )
     outputs[Path("diagrams/index.html")] = diagrams_html(patterns, root)
+    outputs[Path("architecture/index.html")] = architecture_page(root)
     proof_links = []
     for topic, proof in proofs:
         outputs[Path(f"proofs/{topic}.html")] = proof_page(topic, proof)
@@ -337,6 +362,7 @@ def render_all(root: Path = REPO_ROOT) -> dict[Path, str]:
                 '<div><h2><a href="../cards/index.html">Cards</a></h2><p>Timed mixed review with local scheduling.</p></div>',
                 f'<div><h2><a href="concepts/index.html">Concept maps</a></h2><p>{len(papers)} paper map(s).</p></div>',
                 f'<div><h2><a href="diagrams/index.html">Diagrams</a></h2><p>{len(patterns)} architecture diagram(s).</p></div>',
+                f'<div><h2><a href="architecture/index.html">Architecture</a></h2><p>{len(architecture_graph.get("nodes", []))} catalogue node(s).</p></div>',
                 f'<div><h2><a href="proofs/index.html">Proof graphs</a></h2><p>{len(proofs)} proof DAG(s).</p></div>',
                 "</div>",
             ]
@@ -348,6 +374,7 @@ def render_all(root: Path = REPO_ROOT) -> dict[Path, str]:
                 "papers": [topic for topic, _ in papers],
                 "patterns": [text(pattern.get("id")) for pattern in patterns],
                 "proofs": [topic for topic, _ in proofs],
+                "architecture_nodes": [text(node.get("id")) for node in architecture_graph.get("nodes", [])],
             },
             indent=2,
         )

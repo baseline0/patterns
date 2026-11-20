@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Prototype</title>
+<style>body{font-family:system-ui,sans-serif;max-width:52rem;margin:2rem auto;padding:0 1rem;line-height:1.5}pre{background:#f3f3f3;padding:1rem;overflow-x:auto}code{background:#f3f3f3;padding:0 .2rem}</style>
+</head><body>
+<h1>Prototype</h1>
+<p><strong>creational</strong> — Create new objects by copying a prototypical instance instead of instantiating from scratch.</p>
+<h2>Problem</h2><p>Object creation is expensive or configuration-heavy, and new instances should start from known templates with small variations.</p>
+<h2>Structure</h2><pre>Client -&gt; Prototype.clone()
+ConcretePrototype implements clone() -&gt; returns copy
+Registry may store named prototypes</pre>
+<h2>Participants</h2><ul>
+<li><strong>Prototype</strong>: Declares a cloning operation.</li>
+<li><strong>ConcretePrototype</strong>: Implements cloning, including deep-copy decisions.</li>
+<li><strong>Client</strong>: Requests new objects by cloning prototypes.</li>
+<li><strong>PrototypeRegistry</strong>: Optionally stores and retrieves canonical prototypes by key.</li>
+</ul><h2>Forces</h2><ul
+><li>Initialization cost or complexity is high.</li>
+><li>Instances share a baseline configuration.</li>
+><li>Copies must define clear deep vs shallow semantics.</li>
+></ul>
+<h2>Consequences</h2><p><strong>Benefit:</strong> Speeds creation and centralizes default templates.</p>
+<p><strong>Cost:</strong> Cloning graphs with shared references or cycles can be error-prone.</p>
+<h2>Python sketch</h2><pre>import copy
+from dataclasses import dataclass, field
+
+@dataclass
+class JobTemplate:
+    image: str
+    env: dict = field(default_factory=dict)
+
+    def clone(self, **overrides):
+        new = copy.deepcopy(self)
+        for k, v in overrides.items():
+            setattr(new, k, v)
+        return new
+
+base = JobTemplate(&quot;python:3.12&quot;, {&quot;REGION&quot;: &quot;us-east-1&quot;})
+canary = base.clone(env={&quot;REGION&quot;: &quot;us-east-1&quot;, &quot;CANARY&quot;: &quot;1&quot;})
+print(base.env, canary.env)</pre>
+<h2>Interview example</h2><p>In a CI/CD system (06-cicd-pipeline), pipeline job templates can be cloned per environment so baseline steps stay consistent while overrides remain explicit.</p>
+</body></html>

@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bridge</title>
+<style>body{font-family:system-ui,sans-serif;max-width:52rem;margin:2rem auto;padding:0 1rem;line-height:1.5}pre{background:#f3f3f3;padding:1rem;overflow-x:auto}code{background:#f3f3f3;padding:0 .2rem}</style>
+</head><body>
+<h1>Bridge</h1>
+<p><strong>structural</strong> — Decouple an abstraction from its implementation so both can vary independently.</p>
+<h2>Problem</h2><p>Combining multiple abstractions with multiple implementations via inheritance causes class explosion and tight coupling.</p>
+<h2>Structure</h2><pre>Abstraction -&gt; Implementor.operation_impl()
+RefinedAbstraction extends Abstraction
+ConcreteImplementorA/B implement Implementor</pre>
+<h2>Participants</h2><ul>
+<li><strong>Abstraction</strong>: Defines high-level control logic and holds a reference to an implementor.</li>
+<li><strong>RefinedAbstraction</strong>: Extends the abstraction without changing implementors.</li>
+<li><strong>Implementor</strong>: Declares low-level operations used by the abstraction.</li>
+<li><strong>ConcreteImplementor</strong>: Provides a specific implementation of the low-level operations.</li>
+</ul><h2>Forces</h2><ul
+><li>Abstraction and implementation dimensions vary independently.</li>
+><li>Inheritance combinations are multiplying.</li>
+><li>Runtime selection of implementation is needed.</li>
+></ul>
+<h2>Consequences</h2><p><strong>Benefit:</strong> Reduces subclass explosion and enables independent evolution of both hierarchies.</p>
+<p><strong>Cost:</strong> Increases design complexity and requires up-front separation of concerns.</p>
+<h2>Python sketch</h2><pre>class Renderer:
+    def draw(self, text: str) -&gt; str:
+        raise NotImplementedError
+
+class Html(Renderer):
+    def draw(self, text: str) -&gt; str:
+        return f&quot;&lt;p&gt;{text}&lt;/p&gt;&quot;
+
+class Plain(Renderer):
+    def draw(self, text: str) -&gt; str:
+        return text
+
+class Notification:
+    def __init__(self, renderer: Renderer):
+        self.renderer = renderer
+
+    def send(self, text: str) -&gt; str:
+        return self.renderer.draw(text)
+
+print(Notification(Html()).send(&quot;deploy ok&quot;))</pre>
+<h2>Interview example</h2><p>A monitoring dashboard (07-monitoring) can separate alert abstractions from delivery implementations (email, chat, pager) so new channels do not require new alert subclasses.</p>
+</body></html>

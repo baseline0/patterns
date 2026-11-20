@@ -1,0 +1,43 @@
+id: performance
+name: Performance
+definition: The responsiveness and throughput of a system under a specified workload, commonly expressed as latency percentiles and requests handled per unit of time.
+stimulus:
+  - A burst of concurrent requests, a large stream of records, or a peak traffic window arrives.
+response:
+  - The system processes the load within its latency budget without unbounded queueing or resource exhaustion.
+measure:
+  - p95 request latency at or below 300 ms and p99 at or below 1000 ms.
+  - Sustained throughput of at least 5000 requests per second.
+  - Cache hit ratio above 80 percent for read-heavy endpoints.
+  - Backlog drains within 5 minutes after a traffic burst ends.
+tactics:
+  - cache-aside
+  - queue-based-load-leveling
+  - bulkhead
+  - circuit-breaker
+  - retry-with-backoff
+  - observability
+related_patterns:
+  - cqrs
+  - serverless
+  - pipe-and-filter
+  - proxy
+  - 08-streaming
+  - 05-3tier-web
+quiz:
+  - question: Why is p95 latency more informative than average latency?
+    choices:
+      - It is always lower than the average.
+      - It reflects the experience of the slowest 5 percent of requests.
+      - It ignores all slow requests.
+      - It measures only server CPU time.
+    answer: 1
+    explanation: Tail percentiles expose slow requests that an average hides, which is where users usually feel degradation.
+  - question: How does a bounded queue help performance under a burst?
+    choices:
+      - It removes all processing work.
+      - It holds excess work while workers stay at steady concurrency, capping wait time.
+      - It guarantees zero latency.
+      - It disables autoscaling.
+    answer: 1
+    explanation: A bounded buffer smooths bursts and keeps workers near optimal throughput instead of letting wait times grow without limit.

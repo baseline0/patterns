@@ -1,0 +1,60 @@
+id: chain-of-responsibility
+name: Chain of Responsibility
+category: behavioral
+intent: Pass a request along a chain of handlers until one handles or processes it.
+problem: Coupling senders to specific handlers or writing large conditional dispatch logic makes request
+  processing rigid.
+structure: 'Client -> Handler.handle(req)
+
+  Handler -> next.handle(req) (optional)
+
+  ConcreteHandlerA/B decide to handle or forward'
+participants:
+- name: Handler
+  role: Declares handling interface and reference to the next handler.
+- name: ConcreteHandler
+  role: Handles requests it is responsible for or forwards them.
+- name: Client
+  role: Submits requests to the chain entry point.
+forces:
+- More than one object may handle a request.
+- Handler set or order may vary.
+- Sender should not know the concrete handler.
+consequences:
+  benefit: Decouples senders from receivers and makes pipelines of checks or transforms composable.
+  cost: A request may go unhandled and chains can be harder to trace.
+smells_fixed:
+- Large conditional dispatch blocks
+- Tight coupling between request emitters and processors
+smells_created:
+- Unclear ownership when no handler acts
+- Debug difficulty across long chains
+python: "class Handler:\n    def __init__(self, nxt=None):\n        self.nxt = nxt\n\n    def handle(self,\
+  \ req: dict):\n        if self.nxt:\n            return self.nxt.handle(req)\n        return None\n\n\
+  class Auth(Handler):\n    def handle(self, req: dict):\n        if not req.get(\"user\"):\n        \
+  \    return \"401\"\n        return super().handle(req)\n\nclass RateLimit(Handler):\n    def handle(self,\
+  \ req: dict):\n        if req.get(\"burst\"):\n            return \"429\"\n        return \"200\"\n\n\
+  chain = Auth(RateLimit())\nprint(chain.handle({\"user\": \"a\", \"burst\": False}))"
+example: An API gateway in front of microservices (09-microservices) can run auth, rate-limit, and validation
+  handlers in sequence before forwarding requests.
+related_architecture:
+- 09-microservices
+- layered
+- 02-serverless-api
+quiz:
+- question: 'Chain of Responsibility lets you:'
+  choices:
+  - Guarantee exactly one handler always runs
+  - Decouple sender from the concrete receiver by forwarding along handlers
+  - Replicate state across nodes
+  - Compile queries into SQL
+  answer: 1
+  explanation: Handlers are linked and each decides whether to act or pass along.
+- question: 'A risk to manage in handler chains is:'
+  choices:
+  - Mandatory global locks
+  - Requests falling off the end unhandled
+  - Inability to add new handlers
+  - Loss of type safety in all languages
+  answer: 1
+  explanation: Without a terminal handler or contract, some requests may not be processed.

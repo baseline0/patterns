@@ -1,0 +1,58 @@
+id: observer
+name: Observer
+category: behavioral
+intent: Define a one-to-many dependency so dependents are notified when a subject changes state.
+problem: Components need to react to state changes without hard-coded polling or tight coupling between
+  publisher and subscribers.
+structure: 'Subject.attach(observer)
+
+  Subject.notify() -> Observer.update(event)
+
+  ConcreteObservers react independently'
+participants:
+- name: Subject
+  role: Maintains observer list and emits notifications on change.
+- name: Observer
+  role: Declares the update interface for receiving events.
+- name: ConcreteObserver
+  role: Reacts to notifications with specific behavior.
+forces:
+- Multiple consumers react to the same state change.
+- Publisher should not know concrete subscribers.
+- Subscription set can change at runtime.
+consequences:
+  benefit: Enables loose coupling and dynamic subscription for change propagation.
+  cost: Notification order, storms, and debugging event flows can be challenging.
+smells_fixed:
+- Manual polling loops for state changes
+- Publishers tightly coupled to specific downstream actions
+smells_created:
+- Hidden cascading updates
+- Hard-to-trace event chains
+python: "class Subject:\n    def __init__(self):\n        self._subs = []\n\n    def subscribe(self, fn):\n\
+  \        self._subs.append(fn)\n\n    def publish(self, value):\n        for fn in self._subs:\n   \
+  \         fn(value)\n\nbus = Subject()\nbus.subscribe(lambda v: print(\"audit\", v))\nbus.subscribe(lambda\
+  \ v: print(\"metrics\", v))\nbus.publish(\"order-created\")"
+example: An event-driven architecture (03-event-driven) uses observer-like subscriptions so independent
+  consumers react to domain events without coupling to the producer.
+related_architecture:
+- 03-event-driven
+- event-driven
+- 08-streaming
+quiz:
+- question: 'Observer is best characterized as:'
+  choices:
+  - One-to-one synchronous call chains only
+  - A publish/subscribe dependency between subject and observers
+  - A data partitioning strategy
+  - A compile-time code generator
+  answer: 1
+  explanation: Observers register interest and receive updates when the subject changes.
+- question: 'In distributed event-driven systems, a common observer risk is:'
+  choices:
+  - No way to add subscribers
+  - Uncontrolled cascades and unclear delivery/ordering semantics
+  - Guaranteed global transactions
+  - Static schemas only
+  answer: 1
+  explanation: Loose coupling is powerful but requires attention to ordering, retries, and idempotency.

@@ -1,0 +1,17 @@
+# Design-pattern study artifacts. Paths are relative to this justfile's directory.
+
+# Regenerate per-pattern notes, quizzes, HTML, glossary, and Anki CSV.
+build:
+    uv run python tools/build.py build
+
+# Fail when a checked-in design-pattern output differs from its YAML source.
+check:
+    uv run python tools/build.py build --check
+
+# Run the terminal quiz; add --category creational|structural|behavioral|application.
+quiz *ARGS:
+    uv run python tools/build.py quiz {{ARGS}}
+
+# List committed design patterns.
+list:
+    uv run python tools/build.py list

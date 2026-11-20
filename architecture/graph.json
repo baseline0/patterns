@@ -1,0 +1,1776 @@
+{
+  "nodes": [
+    {
+      "id": "cqrs",
+      "kind": "styles",
+      "label": "Command Query Responsibility Segregation"
+    },
+    {
+      "id": "event-driven",
+      "kind": "styles",
+      "label": "Event-Driven Architecture"
+    },
+    {
+      "id": "layered",
+      "kind": "styles",
+      "label": "Layered Architecture"
+    },
+    {
+      "id": "microservices",
+      "kind": "styles",
+      "label": "Microservices Architecture"
+    },
+    {
+      "id": "pipe-and-filter",
+      "kind": "styles",
+      "label": "Pipe and Filter"
+    },
+    {
+      "id": "serverless",
+      "kind": "styles",
+      "label": "Serverless Architecture"
+    },
+    {
+      "id": "blue-green-deploy",
+      "kind": "tactics",
+      "label": "Blue-Green Deploy"
+    },
+    {
+      "id": "bulkhead",
+      "kind": "tactics",
+      "label": "Bulkhead"
+    },
+    {
+      "id": "cache-aside",
+      "kind": "tactics",
+      "label": "Cache Aside"
+    },
+    {
+      "id": "circuit-breaker",
+      "kind": "tactics",
+      "label": "Circuit Breaker"
+    },
+    {
+      "id": "idempotent-consumer",
+      "kind": "tactics",
+      "label": "Idempotent Consumer"
+    },
+    {
+      "id": "observability",
+      "kind": "tactics",
+      "label": "Observability"
+    },
+    {
+      "id": "queue-based-load-leveling",
+      "kind": "tactics",
+      "label": "Queue-Based Load Leveling"
+    },
+    {
+      "id": "retry-with-backoff",
+      "kind": "tactics",
+      "label": "Retry with Backoff"
+    },
+    {
+      "id": "saga",
+      "kind": "tactics",
+      "label": "Saga"
+    },
+    {
+      "id": "availability",
+      "kind": "quality-attributes",
+      "label": "Availability"
+    },
+    {
+      "id": "modifiability",
+      "kind": "quality-attributes",
+      "label": "Modifiability"
+    },
+    {
+      "id": "performance",
+      "kind": "quality-attributes",
+      "label": "Performance"
+    },
+    {
+      "id": "recoverability",
+      "kind": "quality-attributes",
+      "label": "Recoverability"
+    },
+    {
+      "id": "security",
+      "kind": "quality-attributes",
+      "label": "Security"
+    },
+    {
+      "id": "testability",
+      "kind": "quality-attributes",
+      "label": "Testability"
+    },
+    {
+      "id": "abstract-factory",
+      "kind": "design-pattern",
+      "label": "Abstract Factory"
+    },
+    {
+      "id": "adapter",
+      "kind": "design-pattern",
+      "label": "Adapter"
+    },
+    {
+      "id": "bridge",
+      "kind": "design-pattern",
+      "label": "Bridge"
+    },
+    {
+      "id": "builder",
+      "kind": "design-pattern",
+      "label": "Builder"
+    },
+    {
+      "id": "chain-of-responsibility",
+      "kind": "design-pattern",
+      "label": "Chain of Responsibility"
+    },
+    {
+      "id": "command",
+      "kind": "design-pattern",
+      "label": "Command"
+    },
+    {
+      "id": "composite",
+      "kind": "design-pattern",
+      "label": "Composite"
+    },
+    {
+      "id": "decorator",
+      "kind": "design-pattern",
+      "label": "Decorator"
+    },
+    {
+      "id": "dependency-injection",
+      "kind": "design-pattern",
+      "label": "Dependency Injection"
+    },
+    {
+      "id": "facade",
+      "kind": "design-pattern",
+      "label": "Facade"
+    },
+    {
+      "id": "factory-method",
+      "kind": "design-pattern",
+      "label": "Factory Method"
+    },
+    {
+      "id": "flyweight",
+      "kind": "design-pattern",
+      "label": "Flyweight"
+    },
+    {
+      "id": "iterator",
+      "kind": "design-pattern",
+      "label": "Iterator"
+    },
+    {
+      "id": "mediator",
+      "kind": "design-pattern",
+      "label": "Mediator"
+    },
+    {
+      "id": "memento",
+      "kind": "design-pattern",
+      "label": "Memento"
+    },
+    {
+      "id": "observer",
+      "kind": "design-pattern",
+      "label": "Observer"
+    },
+    {
+      "id": "prototype",
+      "kind": "design-pattern",
+      "label": "Prototype"
+    },
+    {
+      "id": "proxy",
+      "kind": "design-pattern",
+      "label": "Proxy"
+    },
+    {
+      "id": "repository",
+      "kind": "design-pattern",
+      "label": "Repository"
+    },
+    {
+      "id": "state",
+      "kind": "design-pattern",
+      "label": "State"
+    },
+    {
+      "id": "strategy",
+      "kind": "design-pattern",
+      "label": "Strategy"
+    },
+    {
+      "id": "template-method",
+      "kind": "design-pattern",
+      "label": "Template Method"
+    },
+    {
+      "id": "unit-of-work",
+      "kind": "design-pattern",
+      "label": "Unit of Work"
+    },
+    {
+      "id": "visitor",
+      "kind": "design-pattern",
+      "label": "Visitor"
+    },
+    {
+      "id": "01-static-website",
+      "kind": "scenario",
+      "label": "Static website with CDN"
+    },
+    {
+      "id": "02-serverless-api",
+      "kind": "scenario",
+      "label": "Serverless URL shortener"
+    },
+    {
+      "id": "03-event-driven",
+      "kind": "scenario",
+      "label": "Event-driven order ingress"
+    },
+    {
+      "id": "04-crud-api",
+      "kind": "scenario",
+      "label": "Serverless CRUD API"
+    },
+    {
+      "id": "05-3tier-web",
+      "kind": "scenario",
+      "label": "Three-tier web application"
+    },
+    {
+      "id": "06-cicd-pipeline",
+      "kind": "scenario",
+      "label": "Safe multi-environment CI/CD pipeline"
+    },
+    {
+      "id": "07-monitoring",
+      "kind": "scenario",
+      "label": "Observability and incident response"
+    },
+    {
+      "id": "08-streaming",
+      "kind": "scenario",
+      "label": "Clickstream streaming pipeline"
+    },
+    {
+      "id": "09-microservices",
+      "kind": "scenario",
+      "label": "Microservices order system"
+    },
+    {
+      "id": "10-disaster-recovery",
+      "kind": "scenario",
+      "label": "Regional disaster recovery"
+    }
+  ],
+  "links": [
+    {
+      "source": "cqrs",
+      "target": "event-driven",
+      "kind": "related"
+    },
+    {
+      "source": "cqrs",
+      "target": "observer",
+      "kind": "related"
+    },
+    {
+      "source": "cqrs",
+      "target": "repository",
+      "kind": "related"
+    },
+    {
+      "source": "cqrs",
+      "target": "idempotent-consumer",
+      "kind": "related"
+    },
+    {
+      "source": "cqrs",
+      "target": "03-event-driven",
+      "kind": "related"
+    },
+    {
+      "source": "cqrs",
+      "target": "08-streaming",
+      "kind": "related"
+    },
+    {
+      "source": "cqrs",
+      "target": "03-event-driven",
+      "kind": "scenario"
+    },
+    {
+      "source": "cqrs",
+      "target": "08-streaming",
+      "kind": "scenario"
+    },
+    {
+      "source": "cqrs",
+      "target": "performance",
+      "kind": "improves"
+    },
+    {
+      "source": "cqrs",
+      "target": "modifiability",
+      "kind": "improves"
+    },
+    {
+      "source": "cqrs",
+      "target": "recoverability",
+      "kind": "improves"
+    },
+    {
+      "source": "event-driven",
+      "target": "observer",
+      "kind": "related"
+    },
+    {
+      "source": "event-driven",
+      "target": "cqrs",
+      "kind": "related"
+    },
+    {
+      "source": "event-driven",
+      "target": "queue-based-load-leveling",
+      "kind": "related"
+    },
+    {
+      "source": "event-driven",
+      "target": "idempotent-consumer",
+      "kind": "related"
+    },
+    {
+      "source": "event-driven",
+      "target": "03-event-driven",
+      "kind": "related"
+    },
+    {
+      "source": "event-driven",
+      "target": "08-streaming",
+      "kind": "related"
+    },
+    {
+      "source": "event-driven",
+      "target": "03-event-driven",
+      "kind": "scenario"
+    },
+    {
+      "source": "event-driven",
+      "target": "08-streaming",
+      "kind": "scenario"
+    },
+    {
+      "source": "event-driven",
+      "target": "availability",
+      "kind": "improves"
+    },
+    {
+      "source": "event-driven",
+      "target": "modifiability",
+      "kind": "improves"
+    },
+    {
+      "source": "event-driven",
+      "target": "recoverability",
+      "kind": "improves"
+    },
+    {
+      "source": "layered",
+      "target": "repository",
+      "kind": "related"
+    },
+    {
+      "source": "layered",
+      "target": "dependency-injection",
+      "kind": "related"
+    },
+    {
+      "source": "layered",
+      "target": "01-static-website",
+      "kind": "related"
+    },
+    {
+      "source": "layered",
+      "target": "04-crud-api",
+      "kind": "related"
+    },
+    {
+      "source": "layered",
+      "target": "05-3tier-web",
+      "kind": "related"
+    },
+    {
+      "source": "layered",
+      "target": "01-static-website",
+      "kind": "scenario"
+    },
+    {
+      "source": "layered",
+      "target": "04-crud-api",
+      "kind": "scenario"
+    },
+    {
+      "source": "layered",
+      "target": "05-3tier-web",
+      "kind": "scenario"
+    },
+    {
+      "source": "layered",
+      "target": "modifiability",
+      "kind": "improves"
+    },
+    {
+      "source": "layered",
+      "target": "testability",
+      "kind": "improves"
+    },
+    {
+      "source": "layered",
+      "target": "performance",
+      "kind": "degrades"
+    },
+    {
+      "source": "microservices",
+      "target": "facade",
+      "kind": "related"
+    },
+    {
+      "source": "microservices",
+      "target": "saga",
+      "kind": "related"
+    },
+    {
+      "source": "microservices",
+      "target": "bulkhead",
+      "kind": "related"
+    },
+    {
+      "source": "microservices",
+      "target": "circuit-breaker",
+      "kind": "related"
+    },
+    {
+      "source": "microservices",
+      "target": "dependency-injection",
+      "kind": "related"
+    },
+    {
+      "source": "microservices",
+      "target": "09-microservices",
+      "kind": "related"
+    },
+    {
+      "source": "microservices",
+      "target": "09-microservices",
+      "kind": "scenario"
+    },
+    {
+      "source": "microservices",
+      "target": "05-3tier-web",
+      "kind": "scenario"
+    },
+    {
+      "source": "microservices",
+      "target": "modifiability",
+      "kind": "improves"
+    },
+    {
+      "source": "microservices",
+      "target": "availability",
+      "kind": "improves"
+    },
+    {
+      "source": "microservices",
+      "target": "performance",
+      "kind": "degrades"
+    },
+    {
+      "source": "pipe-and-filter",
+      "target": "event-driven",
+      "kind": "related"
+    },
+    {
+      "source": "pipe-and-filter",
+      "target": "chain-of-responsibility",
+      "kind": "related"
+    },
+    {
+      "source": "pipe-and-filter",
+      "target": "queue-based-load-leveling",
+      "kind": "related"
+    },
+    {
+      "source": "pipe-and-filter",
+      "target": "idempotent-consumer",
+      "kind": "related"
+    },
+    {
+      "source": "pipe-and-filter",
+      "target": "08-streaming",
+      "kind": "related"
+    },
+    {
+      "source": "pipe-and-filter",
+      "target": "08-streaming",
+      "kind": "scenario"
+    },
+    {
+      "source": "pipe-and-filter",
+      "target": "modifiability",
+      "kind": "improves"
+    },
+    {
+      "source": "pipe-and-filter",
+      "target": "testability",
+      "kind": "improves"
+    },
+    {
+      "source": "pipe-and-filter",
+      "target": "performance",
+      "kind": "improves"
+    },
+    {
+      "source": "serverless",
+      "target": "idempotent-consumer",
+      "kind": "related"
+    },
+    {
+      "source": "serverless",
+      "target": "retry-with-backoff",
+      "kind": "related"
+    },
+    {
+      "source": "serverless",
+      "target": "cache-aside",
+      "kind": "related"
+    },
+    {
+      "source": "serverless",
+      "target": "facade",
+      "kind": "related"
+    },
+    {
+      "source": "serverless",
+      "target": "02-serverless-api",
+      "kind": "related"
+    },
+    {
+      "source": "serverless",
+      "target": "04-crud-api",
+      "kind": "related"
+    },
+    {
+      "source": "serverless",
+      "target": "02-serverless-api",
+      "kind": "scenario"
+    },
+    {
+      "source": "serverless",
+      "target": "04-crud-api",
+      "kind": "scenario"
+    },
+    {
+      "source": "serverless",
+      "target": "performance",
+      "kind": "improves"
+    },
+    {
+      "source": "serverless",
+      "target": "availability",
+      "kind": "improves"
+    },
+    {
+      "source": "serverless",
+      "target": "modifiability",
+      "kind": "improves"
+    },
+    {
+      "source": "blue-green-deploy",
+      "target": "proxy",
+      "kind": "related"
+    },
+    {
+      "source": "blue-green-deploy",
+      "target": "circuit-breaker",
+      "kind": "related"
+    },
+    {
+      "source": "blue-green-deploy",
+      "target": "facade",
+      "kind": "related"
+    },
+    {
+      "source": "blue-green-deploy",
+      "target": "microservices",
+      "kind": "related"
+    },
+    {
+      "source": "blue-green-deploy",
+      "target": "06-cicd-pipeline",
+      "kind": "related"
+    },
+    {
+      "source": "blue-green-deploy",
+      "target": "10-disaster-recovery",
+      "kind": "related"
+    },
+    {
+      "source": "blue-green-deploy",
+      "target": "06-cicd-pipeline",
+      "kind": "scenario"
+    },
+    {
+      "source": "blue-green-deploy",
+      "target": "10-disaster-recovery",
+      "kind": "scenario"
+    },
+    {
+      "source": "blue-green-deploy",
+      "target": "availability",
+      "kind": "improves"
+    },
+    {
+      "source": "blue-green-deploy",
+      "target": "recoverability",
+      "kind": "improves"
+    },
+    {
+      "source": "blue-green-deploy",
+      "target": "modifiability",
+      "kind": "improves"
+    },
+    {
+      "source": "bulkhead",
+      "target": "circuit-breaker",
+      "kind": "related"
+    },
+    {
+      "source": "bulkhead",
+      "target": "queue-based-load-leveling",
+      "kind": "related"
+    },
+    {
+      "source": "bulkhead",
+      "target": "microservices",
+      "kind": "related"
+    },
+    {
+      "source": "bulkhead",
+      "target": "proxy",
+      "kind": "related"
+    },
+    {
+      "source": "bulkhead",
+      "target": "05-3tier-web",
+      "kind": "related"
+    },
+    {
+      "source": "bulkhead",
+      "target": "09-microservices",
+      "kind": "related"
+    },
+    {
+      "source": "bulkhead",
+      "target": "05-3tier-web",
+      "kind": "scenario"
+    },
+    {
+      "source": "bulkhead",
+      "target": "09-microservices",
+      "kind": "scenario"
+    },
+    {
+      "source": "bulkhead",
+      "target": "availability",
+      "kind": "improves"
+    },
+    {
+      "source": "bulkhead",
+      "target": "performance",
+      "kind": "improves"
+    },
+    {
+      "source": "bulkhead",
+      "target": "security",
+      "kind": "improves"
+    },
+    {
+      "source": "cache-aside",
+      "target": "proxy",
+      "kind": "related"
+    },
+    {
+      "source": "cache-aside",
+      "target": "repository",
+      "kind": "related"
+    },
+    {
+      "source": "cache-aside",
+      "target": "layered",
+      "kind": "related"
+    },
+    {
+      "source": "cache-aside",
+      "target": "serverless",
+      "kind": "related"
+    },
+    {
+      "source": "cache-aside",
+      "target": "01-static-website",
+      "kind": "related"
+    },
+    {
+      "source": "cache-aside",
+      "target": "05-3tier-web",
+      "kind": "related"
+    },
+    {
+      "source": "cache-aside",
+      "target": "01-static-website",
+      "kind": "scenario"
+    },
+    {
+      "source": "cache-aside",
+      "target": "05-3tier-web",
+      "kind": "scenario"
+    },
+    {
+      "source": "cache-aside",
+      "target": "performance",
+      "kind": "improves"
+    },
+    {
+      "source": "cache-aside",
+      "target": "availability",
+      "kind": "improves"
+    },
+    {
+      "source": "cache-aside",
+      "target": "modifiability",
+      "kind": "improves"
+    },
+    {
+      "source": "circuit-breaker",
+      "target": "retry-with-backoff",
+      "kind": "related"
+    },
+    {
+      "source": "circuit-breaker",
+      "target": "bulkhead",
+      "kind": "related"
+    },
+    {
+      "source": "circuit-breaker",
+      "target": "facade",
+      "kind": "related"
+    },
+    {
+      "source": "circuit-breaker",
+      "target": "microservices",
+      "kind": "related"
+    },
+    {
+      "source": "circuit-breaker",
+      "target": "06-cicd-pipeline",
+      "kind": "related"
+    },
+    {
+      "source": "circuit-breaker",
+      "target": "07-monitoring",
+      "kind": "related"
+    },
+    {
+      "source": "circuit-breaker",
+      "target": "09-microservices",
+      "kind": "related"
+    },
+    {
+      "source": "circuit-breaker",
+      "target": "06-cicd-pipeline",
+      "kind": "scenario"
+    },
+    {
+      "source": "circuit-breaker",
+      "target": "07-monitoring",
+      "kind": "scenario"
+    },
+    {
+      "source": "circuit-breaker",
+      "target": "09-microservices",
+      "kind": "scenario"
+    },
+    {
+      "source": "circuit-breaker",
+      "target": "availability",
+      "kind": "improves"
+    },
+    {
+      "source": "circuit-breaker",
+      "target": "recoverability",
+      "kind": "improves"
+    },
+    {
+      "source": "circuit-breaker",
+      "target": "performance",
+      "kind": "improves"
+    },
+    {
+      "source": "idempotent-consumer",
+      "target": "event-driven",
+      "kind": "related"
+    },
+    {
+      "source": "idempotent-consumer",
+      "target": "queue-based-load-leveling",
+      "kind": "related"
+    },
+    {
+      "source": "idempotent-consumer",
+      "target": "retry-with-backoff",
+      "kind": "related"
+    },
+    {
+      "source": "idempotent-consumer",
+      "target": "serverless",
+      "kind": "related"
+    },
+    {
+      "source": "idempotent-consumer",
+      "target": "unit-of-work",
+      "kind": "related"
+    },
+    {
+      "source": "idempotent-consumer",
+      "target": "02-serverless-api",
+      "kind": "related"
+    },
+    {
+      "source": "idempotent-consumer",
+      "target": "03-event-driven",
+      "kind": "related"
+    },
+    {
+      "source": "idempotent-consumer",
+      "target": "02-serverless-api",
+      "kind": "scenario"
+    },
+    {
+      "source": "idempotent-consumer",
+      "target": "03-event-driven",
+      "kind": "scenario"
+    },
+    {
+      "source": "idempotent-consumer",
+      "target": "recoverability",
+      "kind": "improves"
+    },
+    {
+      "source": "idempotent-consumer",
+      "target": "availability",
+      "kind": "improves"
+    },
+    {
+      "source": "idempotent-consumer",
+      "target": "performance",
+      "kind": "degrades"
+    },
+    {
+      "source": "observability",
+      "target": "circuit-breaker",
+      "kind": "related"
+    },
+    {
+      "source": "observability",
+      "target": "facade",
+      "kind": "related"
+    },
+    {
+      "source": "observability",
+      "target": "microservices",
+      "kind": "related"
+    },
+    {
+      "source": "observability",
+      "target": "decorator",
+      "kind": "related"
+    },
+    {
+      "source": "observability",
+      "target": "07-monitoring",
+      "kind": "related"
+    },
+    {
+      "source": "observability",
+      "target": "06-cicd-pipeline",
+      "kind": "related"
+    },
+    {
+      "source": "observability",
+      "target": "07-monitoring",
+      "kind": "scenario"
+    },
+    {
+      "source": "observability",
+      "target": "06-cicd-pipeline",
+      "kind": "scenario"
+    },
+    {
+      "source": "observability",
+      "target": "availability",
+      "kind": "improves"
+    },
+    {
+      "source": "observability",
+      "target": "recoverability",
+      "kind": "improves"
+    },
+    {
+      "source": "observability",
+      "target": "security",
+      "kind": "degrades"
+    },
+    {
+      "source": "queue-based-load-leveling",
+      "target": "event-driven",
+      "kind": "related"
+    },
+    {
+      "source": "queue-based-load-leveling",
+      "target": "idempotent-consumer",
+      "kind": "related"
+    },
+    {
+      "source": "queue-based-load-leveling",
+      "target": "bulkhead",
+      "kind": "related"
+    },
+    {
+      "source": "queue-based-load-leveling",
+      "target": "pipe-and-filter",
+      "kind": "related"
+    },
+    {
+      "source": "queue-based-load-leveling",
+      "target": "03-event-driven",
+      "kind": "related"
+    },
+    {
+      "source": "queue-based-load-leveling",
+      "target": "08-streaming",
+      "kind": "related"
+    },
+    {
+      "source": "queue-based-load-leveling",
+      "target": "03-event-driven",
+      "kind": "scenario"
+    },
+    {
+      "source": "queue-based-load-leveling",
+      "target": "08-streaming",
+      "kind": "scenario"
+    },
+    {
+      "source": "queue-based-load-leveling",
+      "target": "availability",
+      "kind": "improves"
+    },
+    {
+      "source": "queue-based-load-leveling",
+      "target": "performance",
+      "kind": "improves"
+    },
+    {
+      "source": "queue-based-load-leveling",
+      "target": "recoverability",
+      "kind": "improves"
+    },
+    {
+      "source": "retry-with-backoff",
+      "target": "circuit-breaker",
+      "kind": "related"
+    },
+    {
+      "source": "retry-with-backoff",
+      "target": "idempotent-consumer",
+      "kind": "related"
+    },
+    {
+      "source": "retry-with-backoff",
+      "target": "bulkhead",
+      "kind": "related"
+    },
+    {
+      "source": "retry-with-backoff",
+      "target": "serverless",
+      "kind": "related"
+    },
+    {
+      "source": "retry-with-backoff",
+      "target": "02-serverless-api",
+      "kind": "related"
+    },
+    {
+      "source": "retry-with-backoff",
+      "target": "07-monitoring",
+      "kind": "related"
+    },
+    {
+      "source": "retry-with-backoff",
+      "target": "02-serverless-api",
+      "kind": "scenario"
+    },
+    {
+      "source": "retry-with-backoff",
+      "target": "07-monitoring",
+      "kind": "scenario"
+    },
+    {
+      "source": "retry-with-backoff",
+      "target": "availability",
+      "kind": "improves"
+    },
+    {
+      "source": "retry-with-backoff",
+      "target": "recoverability",
+      "kind": "improves"
+    },
+    {
+      "source": "retry-with-backoff",
+      "target": "performance",
+      "kind": "degrades"
+    },
+    {
+      "source": "saga",
+      "target": "microservices",
+      "kind": "related"
+    },
+    {
+      "source": "saga",
+      "target": "event-driven",
+      "kind": "related"
+    },
+    {
+      "source": "saga",
+      "target": "command",
+      "kind": "related"
+    },
+    {
+      "source": "saga",
+      "target": "idempotent-consumer",
+      "kind": "related"
+    },
+    {
+      "source": "saga",
+      "target": "observer",
+      "kind": "related"
+    },
+    {
+      "source": "saga",
+      "target": "09-microservices",
+      "kind": "related"
+    },
+    {
+      "source": "saga",
+      "target": "09-microservices",
+      "kind": "scenario"
+    },
+    {
+      "source": "saga",
+      "target": "recoverability",
+      "kind": "improves"
+    },
+    {
+      "source": "saga",
+      "target": "modifiability",
+      "kind": "improves"
+    },
+    {
+      "source": "saga",
+      "target": "testability",
+      "kind": "degrades"
+    },
+    {
+      "source": "availability",
+      "target": "microservices",
+      "kind": "related"
+    },
+    {
+      "source": "availability",
+      "target": "serverless",
+      "kind": "related"
+    },
+    {
+      "source": "availability",
+      "target": "layered",
+      "kind": "related"
+    },
+    {
+      "source": "availability",
+      "target": "07-monitoring",
+      "kind": "related"
+    },
+    {
+      "source": "availability",
+      "target": "10-disaster-recovery",
+      "kind": "related"
+    },
+    {
+      "source": "modifiability",
+      "target": "layered",
+      "kind": "related"
+    },
+    {
+      "source": "modifiability",
+      "target": "microservices",
+      "kind": "related"
+    },
+    {
+      "source": "modifiability",
+      "target": "cqrs",
+      "kind": "related"
+    },
+    {
+      "source": "modifiability",
+      "target": "repository",
+      "kind": "related"
+    },
+    {
+      "source": "modifiability",
+      "target": "dependency-injection",
+      "kind": "related"
+    },
+    {
+      "source": "modifiability",
+      "target": "06-cicd-pipeline",
+      "kind": "related"
+    },
+    {
+      "source": "performance",
+      "target": "cqrs",
+      "kind": "related"
+    },
+    {
+      "source": "performance",
+      "target": "serverless",
+      "kind": "related"
+    },
+    {
+      "source": "performance",
+      "target": "pipe-and-filter",
+      "kind": "related"
+    },
+    {
+      "source": "performance",
+      "target": "proxy",
+      "kind": "related"
+    },
+    {
+      "source": "performance",
+      "target": "08-streaming",
+      "kind": "related"
+    },
+    {
+      "source": "performance",
+      "target": "05-3tier-web",
+      "kind": "related"
+    },
+    {
+      "source": "recoverability",
+      "target": "event-driven",
+      "kind": "related"
+    },
+    {
+      "source": "recoverability",
+      "target": "cqrs",
+      "kind": "related"
+    },
+    {
+      "source": "recoverability",
+      "target": "microservices",
+      "kind": "related"
+    },
+    {
+      "source": "recoverability",
+      "target": "10-disaster-recovery",
+      "kind": "related"
+    },
+    {
+      "source": "recoverability",
+      "target": "07-monitoring",
+      "kind": "related"
+    },
+    {
+      "source": "security",
+      "target": "proxy",
+      "kind": "related"
+    },
+    {
+      "source": "security",
+      "target": "facade",
+      "kind": "related"
+    },
+    {
+      "source": "security",
+      "target": "microservices",
+      "kind": "related"
+    },
+    {
+      "source": "security",
+      "target": "layered",
+      "kind": "related"
+    },
+    {
+      "source": "security",
+      "target": "07-monitoring",
+      "kind": "related"
+    },
+    {
+      "source": "testability",
+      "target": "layered",
+      "kind": "related"
+    },
+    {
+      "source": "testability",
+      "target": "pipe-and-filter",
+      "kind": "related"
+    },
+    {
+      "source": "testability",
+      "target": "dependency-injection",
+      "kind": "related"
+    },
+    {
+      "source": "testability",
+      "target": "repository",
+      "kind": "related"
+    },
+    {
+      "source": "testability",
+      "target": "06-cicd-pipeline",
+      "kind": "related"
+    },
+    {
+      "source": "abstract-factory",
+      "target": "03-event-driven",
+      "kind": "applies-to"
+    },
+    {
+      "source": "abstract-factory",
+      "target": "microservices",
+      "kind": "applies-to"
+    },
+    {
+      "source": "abstract-factory",
+      "target": "layered",
+      "kind": "applies-to"
+    },
+    {
+      "source": "adapter",
+      "target": "04-crud-api",
+      "kind": "applies-to"
+    },
+    {
+      "source": "adapter",
+      "target": "layered",
+      "kind": "applies-to"
+    },
+    {
+      "source": "adapter",
+      "target": "microservices",
+      "kind": "applies-to"
+    },
+    {
+      "source": "bridge",
+      "target": "07-monitoring",
+      "kind": "applies-to"
+    },
+    {
+      "source": "bridge",
+      "target": "layered",
+      "kind": "applies-to"
+    },
+    {
+      "source": "bridge",
+      "target": "microservices",
+      "kind": "applies-to"
+    },
+    {
+      "source": "builder",
+      "target": "06-cicd-pipeline",
+      "kind": "applies-to"
+    },
+    {
+      "source": "builder",
+      "target": "layered",
+      "kind": "applies-to"
+    },
+    {
+      "source": "builder",
+      "target": "cqrs",
+      "kind": "applies-to"
+    },
+    {
+      "source": "chain-of-responsibility",
+      "target": "09-microservices",
+      "kind": "applies-to"
+    },
+    {
+      "source": "chain-of-responsibility",
+      "target": "layered",
+      "kind": "applies-to"
+    },
+    {
+      "source": "chain-of-responsibility",
+      "target": "02-serverless-api",
+      "kind": "applies-to"
+    },
+    {
+      "source": "command",
+      "target": "03-event-driven",
+      "kind": "applies-to"
+    },
+    {
+      "source": "command",
+      "target": "queue-based-load-leveling",
+      "kind": "applies-to"
+    },
+    {
+      "source": "command",
+      "target": "cqrs",
+      "kind": "applies-to"
+    },
+    {
+      "source": "composite",
+      "target": "01-static-website",
+      "kind": "applies-to"
+    },
+    {
+      "source": "composite",
+      "target": "pipe-and-filter",
+      "kind": "applies-to"
+    },
+    {
+      "source": "composite",
+      "target": "layered",
+      "kind": "applies-to"
+    },
+    {
+      "source": "decorator",
+      "target": "04-crud-api",
+      "kind": "applies-to"
+    },
+    {
+      "source": "decorator",
+      "target": "layered",
+      "kind": "applies-to"
+    },
+    {
+      "source": "decorator",
+      "target": "cache-aside",
+      "kind": "applies-to"
+    },
+    {
+      "source": "dependency-injection",
+      "target": "09-microservices",
+      "kind": "applies-to"
+    },
+    {
+      "source": "dependency-injection",
+      "target": "layered",
+      "kind": "applies-to"
+    },
+    {
+      "source": "dependency-injection",
+      "target": "04-crud-api",
+      "kind": "applies-to"
+    },
+    {
+      "source": "facade",
+      "target": "02-serverless-api",
+      "kind": "applies-to"
+    },
+    {
+      "source": "facade",
+      "target": "layered",
+      "kind": "applies-to"
+    },
+    {
+      "source": "facade",
+      "target": "microservices",
+      "kind": "applies-to"
+    },
+    {
+      "source": "factory-method",
+      "target": "06-cicd-pipeline",
+      "kind": "applies-to"
+    },
+    {
+      "source": "factory-method",
+      "target": "layered",
+      "kind": "applies-to"
+    },
+    {
+      "source": "factory-method",
+      "target": "microservices",
+      "kind": "applies-to"
+    },
+    {
+      "source": "flyweight",
+      "target": "07-monitoring",
+      "kind": "applies-to"
+    },
+    {
+      "source": "flyweight",
+      "target": "cache-aside",
+      "kind": "applies-to"
+    },
+    {
+      "source": "flyweight",
+      "target": "01-static-website",
+      "kind": "applies-to"
+    },
+    {
+      "source": "iterator",
+      "target": "08-streaming",
+      "kind": "applies-to"
+    },
+    {
+      "source": "iterator",
+      "target": "pipe-and-filter",
+      "kind": "applies-to"
+    },
+    {
+      "source": "iterator",
+      "target": "layered",
+      "kind": "applies-to"
+    },
+    {
+      "source": "mediator",
+      "target": "09-microservices",
+      "kind": "applies-to"
+    },
+    {
+      "source": "mediator",
+      "target": "layered",
+      "kind": "applies-to"
+    },
+    {
+      "source": "mediator",
+      "target": "saga",
+      "kind": "applies-to"
+    },
+    {
+      "source": "memento",
+      "target": "cqrs",
+      "kind": "applies-to"
+    },
+    {
+      "source": "memento",
+      "target": "event-driven",
+      "kind": "applies-to"
+    },
+    {
+      "source": "memento",
+      "target": "layered",
+      "kind": "applies-to"
+    },
+    {
+      "source": "observer",
+      "target": "03-event-driven",
+      "kind": "applies-to"
+    },
+    {
+      "source": "observer",
+      "target": "event-driven",
+      "kind": "applies-to"
+    },
+    {
+      "source": "observer",
+      "target": "08-streaming",
+      "kind": "applies-to"
+    },
+    {
+      "source": "prototype",
+      "target": "06-cicd-pipeline",
+      "kind": "applies-to"
+    },
+    {
+      "source": "prototype",
+      "target": "serverless",
+      "kind": "applies-to"
+    },
+    {
+      "source": "prototype",
+      "target": "layered",
+      "kind": "applies-to"
+    },
+    {
+      "source": "proxy",
+      "target": "04-crud-api",
+      "kind": "applies-to"
+    },
+    {
+      "source": "proxy",
+      "target": "cache-aside",
+      "kind": "applies-to"
+    },
+    {
+      "source": "proxy",
+      "target": "microservices",
+      "kind": "applies-to"
+    },
+    {
+      "source": "repository",
+      "target": "04-crud-api",
+      "kind": "applies-to"
+    },
+    {
+      "source": "repository",
+      "target": "layered",
+      "kind": "applies-to"
+    },
+    {
+      "source": "repository",
+      "target": "cqrs",
+      "kind": "applies-to"
+    },
+    {
+      "source": "state",
+      "target": "06-cicd-pipeline",
+      "kind": "applies-to"
+    },
+    {
+      "source": "state",
+      "target": "saga",
+      "kind": "applies-to"
+    },
+    {
+      "source": "state",
+      "target": "event-driven",
+      "kind": "applies-to"
+    },
+    {
+      "source": "strategy",
+      "target": "02-serverless-api",
+      "kind": "applies-to"
+    },
+    {
+      "source": "strategy",
+      "target": "microservices",
+      "kind": "applies-to"
+    },
+    {
+      "source": "strategy",
+      "target": "layered",
+      "kind": "applies-to"
+    },
+    {
+      "source": "template-method",
+      "target": "pipe-and-filter",
+      "kind": "applies-to"
+    },
+    {
+      "source": "template-method",
+      "target": "08-streaming",
+      "kind": "applies-to"
+    },
+    {
+      "source": "template-method",
+      "target": "layered",
+      "kind": "applies-to"
+    },
+    {
+      "source": "unit-of-work",
+      "target": "05-3tier-web",
+      "kind": "applies-to"
+    },
+    {
+      "source": "unit-of-work",
+      "target": "layered",
+      "kind": "applies-to"
+    },
+    {
+      "source": "unit-of-work",
+      "target": "saga",
+      "kind": "applies-to"
+    },
+    {
+      "source": "visitor",
+      "target": "06-cicd-pipeline",
+      "kind": "applies-to"
+    },
+    {
+      "source": "visitor",
+      "target": "pipe-and-filter",
+      "kind": "applies-to"
+    },
+    {
+      "source": "visitor",
+      "target": "layered",
+      "kind": "applies-to"
+    },
+    {
+      "source": "01-static-website",
+      "target": "layered",
+      "kind": "uses"
+    },
+    {
+      "source": "01-static-website",
+      "target": "cache-aside",
+      "kind": "uses"
+    },
+    {
+      "source": "02-serverless-api",
+      "target": "serverless",
+      "kind": "uses"
+    },
+    {
+      "source": "02-serverless-api",
+      "target": "idempotent-consumer",
+      "kind": "uses"
+    },
+    {
+      "source": "02-serverless-api",
+      "target": "retry-with-backoff",
+      "kind": "uses"
+    },
+    {
+      "source": "03-event-driven",
+      "target": "event-driven",
+      "kind": "uses"
+    },
+    {
+      "source": "03-event-driven",
+      "target": "queue-based-load-leveling",
+      "kind": "uses"
+    },
+    {
+      "source": "03-event-driven",
+      "target": "idempotent-consumer",
+      "kind": "uses"
+    },
+    {
+      "source": "04-crud-api",
+      "target": "layered",
+      "kind": "uses"
+    },
+    {
+      "source": "04-crud-api",
+      "target": "repository",
+      "kind": "uses"
+    },
+    {
+      "source": "04-crud-api",
+      "target": "serverless",
+      "kind": "uses"
+    },
+    {
+      "source": "05-3tier-web",
+      "target": "layered",
+      "kind": "uses"
+    },
+    {
+      "source": "05-3tier-web",
+      "target": "bulkhead",
+      "kind": "uses"
+    },
+    {
+      "source": "05-3tier-web",
+      "target": "cache-aside",
+      "kind": "uses"
+    },
+    {
+      "source": "06-cicd-pipeline",
+      "target": "blue-green-deploy",
+      "kind": "uses"
+    },
+    {
+      "source": "06-cicd-pipeline",
+      "target": "circuit-breaker",
+      "kind": "uses"
+    },
+    {
+      "source": "06-cicd-pipeline",
+      "target": "modifiability",
+      "kind": "uses"
+    },
+    {
+      "source": "07-monitoring",
+      "target": "recoverability",
+      "kind": "uses"
+    },
+    {
+      "source": "07-monitoring",
+      "target": "observability",
+      "kind": "uses"
+    },
+    {
+      "source": "07-monitoring",
+      "target": "circuit-breaker",
+      "kind": "uses"
+    },
+    {
+      "source": "08-streaming",
+      "target": "event-driven",
+      "kind": "uses"
+    },
+    {
+      "source": "08-streaming",
+      "target": "pipe-and-filter",
+      "kind": "uses"
+    },
+    {
+      "source": "08-streaming",
+      "target": "queue-based-load-leveling",
+      "kind": "uses"
+    },
+    {
+      "source": "09-microservices",
+      "target": "microservices",
+      "kind": "uses"
+    },
+    {
+      "source": "09-microservices",
+      "target": "saga",
+      "kind": "uses"
+    },
+    {
+      "source": "09-microservices",
+      "target": "bulkhead",
+      "kind": "uses"
+    },
+    {
+      "source": "09-microservices",
+      "target": "circuit-breaker",
+      "kind": "uses"
+    },
+    {
+      "source": "10-disaster-recovery",
+      "target": "availability",
+      "kind": "uses"
+    },
+    {
+      "source": "10-disaster-recovery",
+      "target": "recoverability",
+      "kind": "uses"
+    },
+    {
+      "source": "10-disaster-recovery",
+      "target": "blue-green-deploy",
+      "kind": "uses"
+    }
+  ]
+}

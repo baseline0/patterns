@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Repository</title>
+<style>body{font-family:system-ui,sans-serif;max-width:52rem;margin:2rem auto;padding:0 1rem;line-height:1.5}pre{background:#f3f3f3;padding:1rem;overflow-x:auto}code{background:#f3f3f3;padding:0 .2rem}</style>
+</head><body>
+<h1>Repository</h1>
+<p><strong>application</strong> — Mediate between domain and data mapping layers through a collection-like interface for aggregates.</p>
+<h2>Problem</h2><p>Domain logic becomes coupled to queries, ORM APIs, and persistence details, making it hard to test and evolve.</p>
+<h2>Structure</h2><pre>Domain/Service -&gt; Repository interface
+Repository -&gt; Data Mapper/ORM/DB
+Repository returns domain aggregates, not rows/clients</pre>
+<h2>Participants</h2><ul>
+<li><strong>Repository interface</strong>: Declares collection-oriented access methods for aggregates.</li>
+<li><strong>ConcreteRepository</strong>: Implements persistence using a data store or ORM.</li>
+<li><strong>Domain aggregate</strong>: Business object managed and returned by the repository.</li>
+</ul><h2>Forces</h2><ul
+><li>Domain model should be persistence-ignorant.</li>
+><li>Query and storage technologies may change.</li>
+><li>Testing needs in-memory substitutes.</li>
+></ul>
+<h2>Consequences</h2><p><strong>Benefit:</strong> Improves separation of concerns and testability of domain logic.</p>
+<p><strong>Cost:</strong> Can hide important query capabilities or add leaky abstractions if over-generalized.</p>
+<h2>Python sketch</h2><pre>class UserRepo:
+    def __init__(self):
+        self._db = {}
+
+    def add(self, user: dict):
+        self._db[user[&quot;id&quot;]] = user
+
+    def get(self, user_id: int):
+        return self._db.get(user_id)
+
+repo = UserRepo()
+repo.add({&quot;id&quot;: 1, &quot;name&quot;: &quot;A&quot;})
+print(repo.get(1))</pre>
+<h2>Interview example</h2><p>A layered CRUD API (04-crud-api) uses repositories so handlers and domain services depend on aggregate operations rather than database clients.</p>
+</body></html>

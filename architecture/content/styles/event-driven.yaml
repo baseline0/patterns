@@ -1,0 +1,63 @@
+id: event-driven
+name: Event-Driven Architecture
+summary: Components produce and consume immutable domain events so services react to facts that already happened without a synchronous caller waiting for the result.
+decision: Publish facts to a durable broker and let subscribers evolve independently, accepting eventual consistency in exchange for loose coupling and burst absorption.
+use_when:
+  - Several downstream services must react to the same business fact.
+  - Work arrives in bursts and producers should not block on consumers.
+  - Audit trails and replay of past facts are valuable.
+avoid_when:
+  - The workflow needs one strongly consistent transaction across services.
+  - The team cannot operate a broker and watch consumer lag.
+  - Simple synchronous request-response reads dominate the workload.
+components:
+  - name: Producer
+    role: Detects a state change and publishes an immutable event describing the fact.
+  - name: Event broker
+    role: Durably stores and routes events to subscribers with at-least-once delivery.
+  - name: Consumer
+    role: Subscribes to event types, applies idempotent state changes, and emits follow-up events.
+  - name: Event log
+    role: Retains the ordered fact history for replay, auditing, and projection rebuilding.
+tradeoffs:
+  - benefit: Producers and consumers can be deployed and scaled independently.
+    cost: Eventual consistency forces the UI to handle stale reads and pending state.
+  - benefit: A durable log allows replay and new subscribers without backfilling live systems.
+    cost: Duplicate delivery requires idempotent handlers and careful ordering design.
+quality_impacts:
+  - attribute: availability
+    effect: improves
+    note: A slow or down consumer does not fail the producer, so the ingress path stays available during bursts.
+  - attribute: modifiability
+    effect: improves
+    note: Adding a subscriber is a local change that does not edit the producer, shortening change lead time.
+  - attribute: recoverability
+    effect: improves
+    note: Replaying the log rebuilds projections after a failure, supporting a defined RTO without manual data repair.
+related_patterns:
+  - observer
+  - cqrs
+  - queue-based-load-leveling
+  - idempotent-consumer
+  - 03-event-driven
+  - 08-streaming
+scenarios:
+  - 03-event-driven
+  - 08-streaming
+quiz:
+  - question: Why must an event consumer be idempotent?
+    choices:
+      - Events are always delivered in a single global order.
+      - At-least-once delivery can present the same fact more than once.
+      - Brokers encrypt payloads on every redelivery.
+      - Idempotence removes the need for a broker.
+    answer: 1
+    explanation: At-least-once delivery means duplicates are expected, so consumers must produce the same result on repeated input.
+  - question: What consistency model does an event-driven design normally accept?
+    choices:
+      - Strong consistency across all services
+      - Eventual consistency with observable lag
+      - No consistency guarantees at all
+      - Serialized writes through the user interface
+    answer: 1
+    explanation: Decoupled services converge over time, so the UI must tolerate lag between a write and updated projections.

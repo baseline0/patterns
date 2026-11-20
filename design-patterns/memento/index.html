@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Memento</title>
+<style>body{font-family:system-ui,sans-serif;max-width:52rem;margin:2rem auto;padding:0 1rem;line-height:1.5}pre{background:#f3f3f3;padding:1rem;overflow-x:auto}code{background:#f3f3f3;padding:0 .2rem}</style>
+</head><body>
+<h1>Memento</h1>
+<p><strong>behavioral</strong> — Capture and externalize an object’s internal state so it can be restored later without violating encapsulation.</p>
+<h2>Problem</h2><p>Implementing undo, checkpoints, or rollback requires access to internal state that should remain private.</p>
+<h2>Structure</h2><pre>Originator.create_memento() -&gt; Memento(state)
+Caretaker stores Memento
+Originator.restore(memento) -&gt; reinstates state</pre>
+<h2>Participants</h2><ul>
+<li><strong>Originator</strong>: Creates mementos from its state and restores from them.</li>
+<li><strong>Memento</strong>: Stores a snapshot of the originator’s internal state.</li>
+<li><strong>Caretaker</strong>: Keeps mementos without inspecting or modifying their contents.</li>
+</ul><h2>Forces</h2><ul
+><li>Undo/rollback capability is required.</li>
+><li>Internal state must stay encapsulated.</li>
+><li>Snapshots may be frequent or large.</li>
+></ul>
+<h2>Consequences</h2><p><strong>Benefit:</strong> Supports rollback and checkpoints while preserving encapsulation boundaries.</p>
+<p><strong>Cost:</strong> Can consume significant memory or require careful snapshot sizing.</p>
+<h2>Python sketch</h2><pre>class Editor:
+    def __init__(self):
+        self.text = &quot;&quot;
+
+    def write(self, s: str):
+        self.text += s
+
+    def save(self) -&gt; tuple:
+        return (self.text,)
+
+    def restore(self, snap: tuple):
+        self.text = snap[0]
+
+ed = Editor(); ed.write(&quot;a&quot;); snap = ed.save(); ed.write(&quot;b&quot;); ed.restore(snap)
+print(ed.text)</pre>
+<h2>Interview example</h2><p>A CQRS command side (cqrs) can snapshot aggregate state before applying a risky command, enabling controlled rollback or debugging without leaking internals.</p>
+</body></html>

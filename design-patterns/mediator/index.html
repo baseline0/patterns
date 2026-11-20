@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mediator</title>
+<style>body{font-family:system-ui,sans-serif;max-width:52rem;margin:2rem auto;padding:0 1rem;line-height:1.5}pre{background:#f3f3f3;padding:1rem;overflow-x:auto}code{background:#f3f3f3;padding:0 .2rem}</style>
+</head><body>
+<h1>Mediator</h1>
+<p><strong>behavioral</strong> — Centralize complex interactions between related objects in a mediator to reduce direct dependencies.</p>
+<h2>Problem</h2><p>Many components reference each other directly, creating tangled communication and fragile change propagation.</p>
+<h2>Structure</h2><pre>ColleagueA &lt;-&gt; Mediator &lt;-&gt; ColleagueB
+Colleagues notify mediator instead of peers
+Mediator coordinates responses</pre>
+<h2>Participants</h2><ul>
+<li><strong>Mediator</strong>: Defines coordination interface for colleagues.</li>
+<li><strong>ConcreteMediator</strong>: Encapsulates interaction rules between colleagues.</li>
+<li><strong>Colleague</strong>: Communicates through the mediator rather than directly with peers.</li>
+</ul><h2>Forces</h2><ul
+><li>Object interactions are many-to-many and hard to reason about.</li>
+><li>Reuse of components is limited by peer coupling.</li>
+><li>Interaction rules change frequently.</li>
+></ul>
+<h2>Consequences</h2><p><strong>Benefit:</strong> Reduces coupling between components and localizes collaboration logic.</p>
+<p><strong>Cost:</strong> Mediator can grow into a complex central controller.</p>
+<h2>Python sketch</h2><pre>class ChatRoom:
+    def __init__(self):
+        self.users = []
+
+    def register(self, user):
+        self.users.append(user)
+        user.room = self
+
+    def send(self, sender, msg: str):
+        for u in self.users:
+            if u is not sender:
+                u.receive(msg)
+
+class User:
+    def __init__(self, name):
+        self.name = name
+        self.room = None
+
+    def say(self, msg: str):
+        self.room.send(self, msg)
+
+    def receive(self, msg: str):
+        pass</pre>
+<h2>Interview example</h2><p>A microservices orchestration layer (09-microservices) can act as a mediator for UI workflows, coordinating service calls instead of letting clients chat with every service directly.</p>
+</body></html>

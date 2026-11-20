@@ -1,0 +1,59 @@
+id: memento
+name: Memento
+category: behavioral
+intent: Capture and externalize an object’s internal state so it can be restored later without violating
+  encapsulation.
+problem: Implementing undo, checkpoints, or rollback requires access to internal state that should remain
+  private.
+structure: 'Originator.create_memento() -> Memento(state)
+
+  Caretaker stores Memento
+
+  Originator.restore(memento) -> reinstates state'
+participants:
+- name: Originator
+  role: Creates mementos from its state and restores from them.
+- name: Memento
+  role: Stores a snapshot of the originator’s internal state.
+- name: Caretaker
+  role: Keeps mementos without inspecting or modifying their contents.
+forces:
+- Undo/rollback capability is required.
+- Internal state must stay encapsulated.
+- Snapshots may be frequent or large.
+consequences:
+  benefit: Supports rollback and checkpoints while preserving encapsulation boundaries.
+  cost: Can consume significant memory or require careful snapshot sizing.
+smells_fixed:
+- Exposing private fields just to support undo
+- Ad hoc rollback logic scattered across callers
+smells_created:
+- High memory usage from frequent snapshots
+- Caretakers retaining mementos longer than needed
+python: "class Editor:\n    def __init__(self):\n        self.text = \"\"\n\n    def write(self, s: str):\n\
+  \        self.text += s\n\n    def save(self) -> tuple:\n        return (self.text,)\n\n    def restore(self,\
+  \ snap: tuple):\n        self.text = snap[0]\n\ned = Editor(); ed.write(\"a\"); snap = ed.save(); ed.write(\"\
+  b\"); ed.restore(snap)\nprint(ed.text)"
+example: A CQRS command side (cqrs) can snapshot aggregate state before applying a risky command, enabling
+  controlled rollback or debugging without leaking internals.
+related_architecture:
+- cqrs
+- event-driven
+- layered
+quiz:
+- question: 'Memento preserves encapsulation by:'
+  choices:
+  - Making all state public for caretakers
+  - Letting the originator create and consume opaque snapshots
+  - Storing state only in global variables
+  - Serializing directly in every client
+  answer: 1
+  explanation: Caretakers hold snapshots without reading their internal structure.
+- question: 'In event-driven systems, mementos are often used for:'
+  choices:
+  - Routing messages between brokers
+  - Checkpointing state for recovery/undo scenarios
+  - Load balancing HTTP traffic
+  - Schema migration
+  answer: 1
+  explanation: Snapshots can complement event streams for rollback or fast restore points.

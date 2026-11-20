@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Unit of Work</title>
+<style>body{font-family:system-ui,sans-serif;max-width:52rem;margin:2rem auto;padding:0 1rem;line-height:1.5}pre{background:#f3f3f3;padding:1rem;overflow-x:auto}code{background:#f3f3f3;padding:0 .2rem}</style>
+</head><body>
+<h1>Unit of Work</h1>
+<p><strong>application</strong> — Track changes to objects during a business transaction and coordinate writing them out as a single unit.</p>
+<h2>Problem</h2><p>Multiple repository operations within one use case can become inconsistent without coordinated commit/rollback boundaries.</p>
+<h2>Structure</h2><pre>UnitOfWork -&gt; tracks new/dirty/removed aggregates
+UnitOfWork -&gt; commit()/rollback()
+Repositories register changes with the UnitOfWork</pre>
+<h2>Participants</h2><ul>
+<li><strong>UnitOfWork</strong>: Maintains change tracking and transaction boundary.</li>
+<li><strong>Repository</strong>: Registers object changes with the unit of work.</li>
+<li><strong>Data mapper/session</strong>: Flushes coordinated changes to the persistence store.</li>
+</ul><h2>Forces</h2><ul
+><li>A use case spans multiple aggregates or repositories.</li>
+><li>Atomic commit or rollback semantics are required.</li>
+><li>Change tracking should be centralized.</li>
+></ul>
+<h2>Consequences</h2><p><strong>Benefit:</strong> Ensures consistency within a transaction and simplifies commit coordination.</p>
+<p><strong>Cost:</strong> Adds complexity and can be awkward across distributed systems or microservice boundaries.</p>
+<h2>Python sketch</h2><pre>class UnitOfWork:
+    def __init__(self):
+        self.new = []
+        self.committed = False
+
+    def register(self, obj):
+        self.new.append(obj)
+
+    def commit(self):
+        self.committed = True
+
+    def rollback(self):
+        self.new.clear()
+
+uow = UnitOfWork()
+uow.register({&quot;id&quot;: 1})
+uow.commit()
+print(uow.committed, len(uow.new))</pre>
+<h2>Interview example</h2><p>In a 3-tier web app (05-3tier-web), a service-layer unit of work coordinates repository updates so an order and its lines commit or roll back together.</p>
+</body></html>

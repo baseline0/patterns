@@ -1,0 +1,63 @@
+id: serverless
+name: Serverless Architecture
+summary: Run application logic in short-lived managed functions triggered by events, with the platform handling capacity, scaling, and operational plumbing.
+decision: Express behaviour as small functions behind managed triggers and pay for actual execution, accepting cold starts and statelessness in exchange for minimal idle cost and elastic scale.
+use_when:
+  - Traffic is spiky or unpredictable and idle capacity would be wasted.
+  - Work is naturally event driven, such as API requests, queues, or schedules.
+  - A small team wants to avoid server and runtime patching.
+avoid_when:
+  - Workloads are long-running, CPU-bound, or need persistent in-process state.
+  - Strict p95 latency budgets cannot tolerate cold starts.
+  - Deep vendor-specific integration is unacceptable.
+components:
+  - name: Function
+    role: Executes one stateless unit of business logic in response to a trigger.
+  - name: API gateway
+    role: Maps HTTP requests to functions and handles throttling and request validation.
+  - name: Managed trigger
+    role: Starts a function from a queue, schedule, object store, or stream event.
+  - name: Managed datastore
+    role: Stores durable state outside the function so invocations remain stateless.
+tradeoffs:
+  - benefit: Capacity scales to zero and back without provisioning servers.
+    cost: Cold starts can add hundreds of milliseconds to p95 latency for infrequent paths.
+  - benefit: The team stops managing operating systems and runtime patching.
+    cost: Stateless execution pushes all state to external services and complicates local testing.
+quality_impacts:
+  - attribute: performance
+    effect: improves
+    note: Horizontal scale follows demand automatically, keeping p95 latency stable under bursty load once functions are warm.
+  - attribute: availability
+    effect: improves
+    note: Managed triggers and multi-zone execution remove single-server failure points from the request path.
+  - attribute: modifiability
+    effect: improves
+    note: Small functions with narrow triggers allow feature changes to ship in minutes, shortening change lead time.
+related_patterns:
+  - idempotent-consumer
+  - retry-with-backoff
+  - cache-aside
+  - facade
+  - 02-serverless-api
+  - 04-crud-api
+scenarios:
+  - 02-serverless-api
+  - 04-crud-api
+quiz:
+  - question: What is the main latency risk of a serverless function?
+    choices:
+      - It always runs on a dedicated reserved host.
+      - A cold start delays an invocation that has no warm instance.
+      - Functions cannot be invoked concurrently.
+      - Managed datastores add no latency.
+    answer: 1
+    explanation: A cold start initializes a new execution environment, which can add hundreds of milliseconds to p95 latency.
+  - question: Why should a function handler be idempotent?
+    choices:
+      - Triggers may redeliver the same event after a timeout.
+      - Functions keep in-memory state between invocations.
+      - Idempotence removes the need for a datastore.
+      - Triggers guarantee exactly-once execution.
+    answer: 0
+    explanation: Managed triggers typically provide at-least-once delivery, so a retry must not duplicate side effects.

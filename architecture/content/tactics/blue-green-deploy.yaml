@@ -1,0 +1,60 @@
+id: blue-green-deploy
+name: Blue-Green Deploy
+summary: Run two identical production environments and switch traffic from the current one to the prepared one only after the new version is verified.
+decision: Keep a stable blue environment serving users while green is deployed and tested, then flip the router or DNS so rollback is a fast switch back rather than a redeploy.
+mechanism: Provision an equal green environment, deploy and smoke-test the new release there, shift traffic gradually or atomically at the router, and keep blue warm for immediate rollback.
+failure_modes:
+  - Shared state or schema changes that make one version incompatible with the other.
+  - Cutting over before green passes health and smoke checks.
+  - Draining blue too quickly so rollback is no longer instant.
+  - Sticky sessions keeping users on the old version after the switch.
+use_when:
+  - Rollback must be fast and predictable for availability targets.
+  - The environment can be duplicated at acceptable cost.
+  - Releases are infrequent enough that warm standby capacity is justified.
+avoid_when:
+  - Infrastructure cost of a full second environment is unacceptable.
+  - The system is stateful in a way that prevents quick traffic switching.
+  - Deployments happen many times a day with tiny changes and rolling updates suffice.
+tradeoffs:
+  - benefit: Rollback is a traffic switch, reducing recovery time after a bad release.
+    cost: Doubling capacity for the standby environment raises cost.
+  - benefit: Green can be validated with real traffic patterns before users see it.
+    cost: Database migrations must be backward compatible across both versions.
+quality_impacts:
+  - attribute: availability
+    effect: improves
+    note: Instant traffic switch and rollback protect the availability percentage during releases.
+  - attribute: recoverability
+    effect: improves
+    note: A bad release is undone within seconds, well inside the RTO for a failed deployment.
+  - attribute: modifiability
+    effect: improves
+    note: Isolated release environments let changes ship with less coordination, shortening change lead time.
+related_patterns:
+  - proxy
+  - circuit-breaker
+  - facade
+  - microservices
+  - 06-cicd-pipeline
+  - 10-disaster-recovery
+scenarios:
+  - 06-cicd-pipeline
+  - 10-disaster-recovery
+quiz:
+  - question: What makes rollback fast in a blue-green deploy?
+    choices:
+      - Rebuilding the old environment from scratch
+      - Switching traffic back to the still-running old environment
+      - Restoring a nightly backup
+      - Running the deployment script in reverse
+    answer: 1
+    explanation: The previous environment stays warm, so rollback is a router change rather than a rebuild.
+  - question: What database practice does blue-green require?
+    choices:
+      - Schema changes that both versions can tolerate
+      - Renaming tables on every release
+      - Taking the database offline during cutover
+      - Storing schema inside each application binary
+    answer: 0
+    explanation: Both versions run at once, so migrations must be backward compatible until the old version is drained.

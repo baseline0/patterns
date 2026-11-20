@@ -1,0 +1,59 @@
+id: command
+name: Command
+category: behavioral
+intent: Encapsulate a request as an object, allowing parameterization, queuing, logging, and undo.
+problem: Invokers are tightly coupled to concrete operations, making it hard to queue, audit, retry, or
+  reverse actions.
+structure: 'Invoker -> Command.execute()
+
+  ConcreteCommand holds Receiver and parameters
+
+  Receiver performs the actual work'
+participants:
+- name: Command
+  role: Declares an execution interface for an action.
+- name: ConcreteCommand
+  role: Binds a receiver and parameters to implement the action.
+- name: Invoker
+  role: Triggers commands without knowing operation details.
+- name: Receiver
+  role: Contains the business logic needed to fulfill the request.
+forces:
+- Actions must be queued, logged, or retried.
+- Invoker should be decoupled from operation details.
+- Undo/redo or audit trails may be required.
+consequences:
+  benefit: Decouples invocation from execution and enables scheduling, auditing, and reversal.
+  cost: Introduces many small command objects and lifecycle management concerns.
+smells_fixed:
+- Invokers calling many concrete operations directly
+- No uniform way to log, queue, or undo actions
+smells_created:
+- Command class sprawl
+- Complexity in command persistence and idempotency
+python: "class Light:\n    def on(self): return \"on\"\n\nclass SwitchOn:\n    def __init__(self, light:\
+  \ Light):\n        self.light = light\n\n    def execute(self):\n        return self.light.on()\n\n\
+  queue = [SwitchOn(Light())]\nfor cmd in queue:\n    print(cmd.execute())"
+example: In an event-driven system (03-event-driven), commands can be serialized to a queue for asynchronous
+  processing with retries and audit logs, complementing queue-based-load-leveling.
+related_architecture:
+- 03-event-driven
+- queue-based-load-leveling
+- cqrs
+quiz:
+- question: 'Command turns a request into:'
+  choices:
+  - A database schema
+  - A standalone object with execution context
+  - A shared mutable singleton
+  - A compile-time macro
+  answer: 1
+  explanation: Encapsulation as an object enables queuing, logging, and undo.
+- question: 'In CQRS-style systems, commands are useful because:'
+  choices:
+  - They replace read models entirely
+  - They represent intentful writes that can be validated, queued, and audited
+  - They guarantee eventual consistency without design
+  - They eliminate domain logic
+  answer: 1
+  explanation: Commands make write operations explicit and manageable.

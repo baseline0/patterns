@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Observer</title>
+<style>body{font-family:system-ui,sans-serif;max-width:52rem;margin:2rem auto;padding:0 1rem;line-height:1.5}pre{background:#f3f3f3;padding:1rem;overflow-x:auto}code{background:#f3f3f3;padding:0 .2rem}</style>
+</head><body>
+<h1>Observer</h1>
+<p><strong>behavioral</strong> — Define a one-to-many dependency so dependents are notified when a subject changes state.</p>
+<h2>Problem</h2><p>Components need to react to state changes without hard-coded polling or tight coupling between publisher and subscribers.</p>
+<h2>Structure</h2><pre>Subject.attach(observer)
+Subject.notify() -&gt; Observer.update(event)
+ConcreteObservers react independently</pre>
+<h2>Participants</h2><ul>
+<li><strong>Subject</strong>: Maintains observer list and emits notifications on change.</li>
+<li><strong>Observer</strong>: Declares the update interface for receiving events.</li>
+<li><strong>ConcreteObserver</strong>: Reacts to notifications with specific behavior.</li>
+</ul><h2>Forces</h2><ul
+><li>Multiple consumers react to the same state change.</li>
+><li>Publisher should not know concrete subscribers.</li>
+><li>Subscription set can change at runtime.</li>
+></ul>
+<h2>Consequences</h2><p><strong>Benefit:</strong> Enables loose coupling and dynamic subscription for change propagation.</p>
+<p><strong>Cost:</strong> Notification order, storms, and debugging event flows can be challenging.</p>
+<h2>Python sketch</h2><pre>class Subject:
+    def __init__(self):
+        self._subs = []
+
+    def subscribe(self, fn):
+        self._subs.append(fn)
+
+    def publish(self, value):
+        for fn in self._subs:
+            fn(value)
+
+bus = Subject()
+bus.subscribe(lambda v: print(&quot;audit&quot;, v))
+bus.subscribe(lambda v: print(&quot;metrics&quot;, v))
+bus.publish(&quot;order-created&quot;)</pre>
+<h2>Interview example</h2><p>An event-driven architecture (03-event-driven) uses observer-like subscriptions so independent consumers react to domain events without coupling to the producer.</p>
+</body></html>

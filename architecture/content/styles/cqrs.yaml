@@ -1,0 +1,63 @@
+id: cqrs
+name: Command Query Responsibility Segregation
+summary: Use separate models to update state and to read state, so each side can be optimized, scaled, and evolved for its own workload.
+decision: Route writes through a command model and maintain one or more read projections from the resulting events, accepting replication lag in return for independent read and write design.
+use_when:
+  - Read and write workloads have very different volume or shape.
+  - Complex queries would distort the write model.
+  - Several read views of the same data are needed.
+avoid_when:
+  - Read-after-write consistency must be immediate for every user action.
+  - The domain is simple and one model already serves both paths well.
+  - The team cannot maintain projection rebuild and lag monitoring.
+components:
+  - name: Command model
+    role: Validates and applies business rules to state changes and emits resulting events.
+  - name: Event log
+    role: Records accepted state changes as the durable source of truth for projections.
+  - name: Projection builder
+    role: Consumes events and updates read models, tracking progress for replay and recovery.
+  - name: Query model
+    role: Serves reads from purpose-built, denormalized views tuned for specific queries.
+tradeoffs:
+  - benefit: Read views can be denormalized for fast queries without constraining writes.
+    cost: Replication lag means a just-written value may be absent from a read view.
+  - benefit: Read and write sides scale and deploy independently.
+    cost: Projections must be rebuilt on schema change, which costs time and operational care.
+quality_impacts:
+  - attribute: performance
+    effect: improves
+    note: Purpose-built read views reduce query fan-out and can hold p95 latency flat as read volume grows.
+  - attribute: modifiability
+    effect: improves
+    note: Read models can be added without touching commands, shortening change lead time for new views.
+  - attribute: recoverability
+    effect: improves
+    note: Projections can be rebuilt from the event log within a stated RTO after corruption or loss.
+related_patterns:
+  - event-driven
+  - observer
+  - repository
+  - idempotent-consumer
+  - 03-event-driven
+  - 08-streaming
+scenarios:
+  - 03-event-driven
+  - 08-streaming
+quiz:
+  - question: What makes CQRS different from a simple read replica?
+    choices:
+      - It stores every write in a single table.
+      - It uses distinct write and read models that can evolve separately.
+      - It removes the need to store events.
+      - It guarantees zero replication lag.
+    answer: 1
+    explanation: CQRS separates models and deployment paths, not just physical copies of the same schema.
+  - question: Which consistency trade-off does CQRS require?
+    choices:
+      - Reads may lag behind writes until projections catch up.
+      - Writes are always rejected under load.
+      - There is no durable record of state changes.
+      - Queries must use distributed transactions.
+    answer: 0
+    explanation: Projections are updated asynchronously, so the system must expose and monitor replication lag.

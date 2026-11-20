@@ -1,0 +1,61 @@
+id: visitor
+name: Visitor
+category: behavioral
+intent: Represent an operation to be performed on elements of an object structure without changing the
+  element classes.
+problem: Adding new operations across a stable set of element types leads to repeated edits and scattered
+  logic in those classes.
+structure: 'Element.accept(visitor)
+
+  Visitor.visitElementA/B(...)
+
+  ConcreteVisitor implements operations across elements'
+participants:
+- name: Visitor
+  role: Declares visit operations for each concrete element type.
+- name: ConcreteVisitor
+  role: Implements a specific operation over the structure.
+- name: Element
+  role: Declares accept to dispatch to the visitor.
+- name: ConcreteElement
+  role: Implements accept by calling the matching visit method.
+forces:
+- Element hierarchy is stable but operations change often.
+- Related behavior should be grouped by operation.
+- Double dispatch or equivalent is available.
+consequences:
+  benefit: Makes adding new operations easy and keeps operation-specific logic cohesive.
+  cost: Adding new element types requires changing every visitor.
+smells_fixed:
+- Operation logic scattered across many element classes
+- Repeated type switches to perform operations over a structure
+smells_created:
+- Visitor interface churn when elements change
+- Tight coupling between visitors and element set
+python: "class Number:\n    def __init__(self, value):\n        self.value = value\n\n    def accept(self,\
+  \ v):\n        return v.visit_number(self)\n\nclass SumVisitor:\n    def __init__(self):\n        self.total\
+  \ = 0\n\n    def visit_number(self, n):\n        self.total += n.value\n\nnums = [Number(1), Number(2),\
+  \ Number(3)]\nvis = SumVisitor()\nfor n in nums:\n    n.accept(vis)\nprint(vis.total)"
+example: In a CI/CD or policy engine (06-cicd-pipeline), visitors can run lint, cost, or security analyses
+  over a stable pipeline AST without modifying node classes.
+related_architecture:
+- 06-cicd-pipeline
+- pipe-and-filter
+- layered
+quiz:
+- question: 'Visitor is a good fit when:'
+  choices:
+  - Element types change frequently but operations are fixed
+  - Element structure is stable and new operations are added often
+  - You need to share intrinsic state
+  - You need runtime service discovery
+  answer: 1
+  explanation: It optimizes for adding operations across a stable set of elements.
+- question: 'A major cost of Visitor is:'
+  choices:
+  - No way to group operation logic
+  - Adding a new element type forces updates to all visitors
+  - It cannot traverse structures
+  - It requires global variables
+  answer: 1
+  explanation: The visitor interface mirrors the element hierarchy.

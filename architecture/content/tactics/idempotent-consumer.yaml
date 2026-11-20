@@ -1,0 +1,61 @@
+id: idempotent-consumer
+name: Idempotent Consumer
+summary: Make message handling safe to repeat so redelivery of the same event produces exactly the same observable result as a single delivery.
+decision: Attach a stable identity to each message and record processed identities atomically with the resulting state change so duplicates are detected and skipped.
+mechanism: Extract a deduplication key, check a processed-key store or unique constraint inside the same transaction as the side effect, commit once, and treat a duplicate as a successful no-op.
+failure_modes:
+  - Recording the key separately from the state change so a crash leaves them inconsistent.
+  - Using a key that changes on redelivery and defeats detection.
+  - Keeping deduplication records forever without a retention policy.
+  - Assuming exactly-once delivery from a broker that provides at-least-once.
+use_when:
+  - A broker delivers at least once and duplicates are expected.
+  - Retry and replay are part of normal operation.
+  - Side effects can be tied to a stable message identity.
+avoid_when:
+  - Delivery is genuinely exactly once and never replayed.
+  - The operation has no persistent state to record keys.
+  - Each identical request is meant to produce a distinct effect.
+tradeoffs:
+  - benefit: Retries and replay become safe, improving recoverability after failures.
+    cost: A deduplication store adds a read or unique constraint on every message.
+  - benefit: Duplicate events no longer corrupt counts or create repeated orders.
+    cost: Key retention must be designed so old duplicates cannot be accepted after cleanup.
+quality_impacts:
+  - attribute: recoverability
+    effect: improves
+    note: Replaying a log after a crash is safe because repeated events are skipped, supporting the RTO and RPO targets.
+  - attribute: availability
+    effect: improves
+    note: Consumers can acknowledge and retry freely without manual cleanup, keeping the pipeline available during faults.
+  - attribute: performance
+    effect: degrades
+    note: Deduplication lookups add a datastore operation per message, raising p95 latency for high-volume consumers.
+related_patterns:
+  - event-driven
+  - queue-based-load-leveling
+  - retry-with-backoff
+  - serverless
+  - unit-of-work
+  - 02-serverless-api
+  - 03-event-driven
+scenarios:
+  - 02-serverless-api
+  - 03-event-driven
+quiz:
+  - question: Where must a processed message key be recorded?
+    choices:
+      - In a separate log written after the state change
+      - In the same atomic transaction as the state change
+      - Only in the consumer's memory
+      - In the producer's configuration
+    answer: 1
+    explanation: Atomic recording prevents a crash between the side effect and the deduplication record from causing a duplicate.
+  - question: Why does at-least-once delivery require idempotent handlers?
+    choices:
+      - It never delivers a message more than once.
+      - It guarantees strict global ordering.
+      - It may redeliver the same message after a timeout.
+      - It encrypts every message differently.
+    answer: 2
+    explanation: Redelivery after an unacknowledged timeout is normal, so handlers must tolerate repeated input.

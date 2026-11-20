@@ -1,0 +1,39 @@
+id: testability
+name: Testability
+definition: The ease with which a system can be verified against its specification by isolating parts, controlling their inputs, and observing their outputs.
+stimulus:
+  - A new feature is added, a fault must be injected, or a regression suite runs before a release.
+response:
+  - Components can be exercised independently with deterministic inputs and observable outputs, and failure paths can be reproduced on demand.
+measure:
+  - Unit test runtime under 60 seconds for a single service.
+  - Full integration suite runtime under 10 minutes.
+  - At least 90 percent of critical paths covered by failure-injection cases.
+  - Every filter or handler testable with fixture input and no live broker.
+tactics:
+  - observability
+  - bulkhead
+  - idempotent-consumer
+related_patterns:
+  - layered
+  - pipe-and-filter
+  - dependency-injection
+  - repository
+  - 06-cicd-pipeline
+quiz:
+  - question: What makes a component easy to test in isolation?
+    choices:
+      - It reads global configuration at call time.
+      - It depends on concrete external services directly.
+      - It accepts dependencies and exposes observable outputs.
+      - It hides all of its state in static fields.
+    answer: 2
+    explanation: Injectable dependencies and observable outputs let a test control inputs and assert results without live systems.
+  - question: Why do compensating sagas tend to increase test runtime?
+    choices:
+      - They remove all failure paths.
+      - Each step and compensation pair needs its own failure-path test.
+      - They run only in production.
+      - They cannot be tested at all.
+    answer: 1
+    explanation: Every step needs a verified undo path, which multiplies the number of cases that a suite must exercise.

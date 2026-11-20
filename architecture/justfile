@@ -1,0 +1,13 @@
+# Architecture catalogue and graph. Paths are relative to this justfile's directory.
+
+# Regenerate the canonical catalogue, graph, glossary, and HTML index.
+build:
+    uv run python tools/build.py build
+
+# Fail when a checked-in architecture output differs from its YAML source.
+check:
+    uv run python tools/build.py build --check
+
+# List architecture ids by kind.
+list:
+    uv run python tools/build.py list

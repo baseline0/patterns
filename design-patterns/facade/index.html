@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Facade</title>
+<style>body{font-family:system-ui,sans-serif;max-width:52rem;margin:2rem auto;padding:0 1rem;line-height:1.5}pre{background:#f3f3f3;padding:1rem;overflow-x:auto}code{background:#f3f3f3;padding:0 .2rem}</style>
+</head><body>
+<h1>Facade</h1>
+<p><strong>structural</strong> — Provide a simplified interface to a complex subsystem.</p>
+<h2>Problem</h2><p>Clients must orchestrate many subsystem classes and calls, increasing coupling and misuse risk.</p>
+<h2>Structure</h2><pre>Client -&gt; Facade.simple_op()
+Facade -&gt; SubsystemA / SubsystemB / SubsystemC
+Subsystem classes remain available for advanced use</pre>
+<h2>Participants</h2><ul>
+<li><strong>Facade</strong>: Offers coarse-grained operations that coordinate subsystem work.</li>
+<li><strong>Subsystem classes</strong>: Implement detailed functionality behind the facade.</li>
+<li><strong>Client</strong>: Uses the facade for common cases instead of subsystem internals.</li>
+</ul><h2>Forces</h2><ul
+><li>Subsystem APIs are complex or unstable.</li>
+><li>Most clients need a narrow, common workflow.</li>
+><li>Direct access may still be required for advanced cases.</li>
+></ul>
+<h2>Consequences</h2><p><strong>Benefit:</strong> Reduces coupling and makes common use cases easier and safer.</p>
+<p><strong>Cost:</strong> Can become a god object if it accumulates unrelated responsibilities.</p>
+<h2>Python sketch</h2><pre>class Encoder:
+    def encode(self, data: bytes) -&gt; bytes: return data[::-1]
+
+class Storage:
+    def save(self, name: str, data: bytes) -&gt; str: return f&quot;stored:{name}:{len(data)}&quot;
+
+class Notifier:
+    def notify(self, name: str) -&gt; str: return f&quot;notified:{name}&quot;
+
+class MediaFacade:
+    def __init__(self):
+        self.encoder = Encoder()
+        self.storage = Storage()
+        self.notifier = Notifier()
+
+    def publish(self, name: str, data: bytes) -&gt; dict:
+        blob = self.encoder.encode(data)
+        loc = self.storage.save(name, blob)
+        msg = self.notifier.notify(name)
+        return {&quot;location&quot;: loc, &quot;message&quot;: msg}
+
+print(MediaFacade().publish(&quot;a.txt&quot;, b&quot;hi&quot;))</pre>
+<h2>Interview example</h2><p>A serverless API (02-serverless-api) can expose a facade over auth, storage, and queue clients so handlers invoke one workflow instead of managing each SDK call.</p>
+</body></html>

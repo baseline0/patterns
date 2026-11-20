@@ -1,0 +1,146 @@
+[
+  {
+    "title": "Provider map: Event-driven processing",
+    "body": "**aws**: SQS queue with dead-letter queue + AWS Lambda + DynamoDB\n**azure**: Azure Storage Queues with poison queue + Azure Functions + Table Storage\n**gcp**: Pub/Sub topic with dead-letter topic + Cloud Functions + Firestore",
+    "metadata": {
+      "tags": [
+        "provider",
+        "event-driven",
+        "mapping"
+      ],
+      "source": "providers/glossary.json"
+    }
+  },
+  {
+    "title": "Event-driven processing on AWS",
+    "body": "SQS queue with dead-letter queue + AWS Lambda + DynamoDB\n\n**Plan only**: `terraform/aws/event-driven`\n\n**Watch out**: The event source mapping and redrive policy reference ARNs; verify both resolve in the plan without live state.",
+    "metadata": {
+      "tags": [
+        "provider",
+        "event-driven",
+        "aws"
+      ],
+      "source": "providers/glossary.json"
+    }
+  },
+  {
+    "title": "Event-driven processing on AZURE",
+    "body": "Azure Storage Queues with poison queue + Azure Functions + Table Storage\n\n**Plan only**: `terraform/azure/event-driven`\n\n**Watch out**: Storage Queue and Table names must be lowercase, and Function App names are globally unique.",
+    "metadata": {
+      "tags": [
+        "provider",
+        "event-driven",
+        "azure"
+      ],
+      "source": "providers/glossary.json"
+    }
+  },
+  {
+    "title": "Event-driven processing on GCP",
+    "body": "Pub/Sub topic with dead-letter topic + Cloud Functions + Firestore\n\n**Plan only**: `terraform/gcp/event-driven`\n\n**Watch out**: Dead-letter policies need a topic id and delivery attempt count; keep the trigger and subscription on the same project.",
+    "metadata": {
+      "tags": [
+        "provider",
+        "event-driven",
+        "gcp"
+      ],
+      "source": "providers/glossary.json"
+    }
+  },
+  {
+    "title": "Q1: What does a dead-letter destination provide in an event-driv",
+    "body": "A. It caches successful responses for faster reads\nB. It isolates messages that repeatedly fail processing\nC. It replaces the queue when traffic spikes\nD. It encrypts the topic at rest\n\n**B.** A dead-letter queue or topic captures poison messages after a retry limit so the main stream keeps flowing.",
+    "metadata": {
+      "tags": [
+        "provider",
+        "event-driven",
+        "question"
+      ],
+      "source": "providers/glossary.json"
+    }
+  },
+  {
+    "title": "Q2: Which combination models the event-driven pattern across all",
+    "body": "A. Queue or topic, consumer function, and dead-letter or storage\nB. API gateway, function, and relational database\nC. Load balancer, virtual machine, and block storage\nD. CDN, static files, and DNS record\n\n**A.** Each provider fixture names a queue or topic, a function to consume events, and a dead-letter destination plus state storage.",
+    "metadata": {
+      "tags": [
+        "provider",
+        "event-driven",
+        "question"
+      ],
+      "source": "providers/glossary.json"
+    }
+  },
+  {
+    "title": "Provider map: Serverless API",
+    "body": "**aws**: API Gateway HTTP API + AWS Lambda + DynamoDB\n**azure**: API Management + Azure Functions + Table Storage\n**gcp**: Cloud Run endpoint + Cloud Functions + Firestore",
+    "metadata": {
+      "tags": [
+        "provider",
+        "serverless-api",
+        "mapping"
+      ],
+      "source": "providers/glossary.json"
+    }
+  },
+  {
+    "title": "Serverless API on AWS",
+    "body": "API Gateway HTTP API + AWS Lambda + DynamoDB\n\n**Plan only**: `terraform/aws/serverless-api`\n\n**Watch out**: Lambda invoke permissions and integration URIs are easy to miswire; check the API Gateway source ARN in the plan.",
+    "metadata": {
+      "tags": [
+        "provider",
+        "serverless-api",
+        "aws"
+      ],
+      "source": "providers/glossary.json"
+    }
+  },
+  {
+    "title": "Serverless API on AZURE",
+    "body": "API Management + Azure Functions + Table Storage\n\n**Plan only**: `terraform/azure/serverless-api`\n\n**Watch out**: Function App and Storage Account names are globally unique, and API Management needs publisher details even in a plan.",
+    "metadata": {
+      "tags": [
+        "provider",
+        "serverless-api",
+        "azure"
+      ],
+      "source": "providers/glossary.json"
+    }
+  },
+  {
+    "title": "Serverless API on GCP",
+    "body": "Cloud Run endpoint + Cloud Functions + Firestore\n\n**Plan only**: `terraform/gcp/serverless-api`\n\n**Watch out**: Cloud Functions needs a runtime, entry point, and source location at plan time; supply placeholders, never credentials.",
+    "metadata": {
+      "tags": [
+        "provider",
+        "serverless-api",
+        "gcp"
+      ],
+      "source": "providers/glossary.json"
+    }
+  },
+  {
+    "title": "Q1: What is the provider-neutral core of the serverless API patt",
+    "body": "A. A long-running VM behind a load balancer\nB. An HTTP endpoint, a stateless function, and a managed store\nC. A message queue with a dead-letter queue\nD. A container orchestrator with persistent volumes\n\n**B.** The pattern is an endpoint that routes to a stateless handler which persists to a managed table or document store.",
+    "metadata": {
+      "tags": [
+        "provider",
+        "serverless-api",
+        "question"
+      ],
+      "source": "providers/glossary.json"
+    }
+  },
+  {
+    "title": "Q2: Why do the Terraform fixtures use placeholder project names ",
+    "body": "A. To make terraform apply succeed without a budget\nB. To satisfy emulator authentication\nC. To allow terraform plan without live state or credentials\nD. To enable automatic provider upgrades\n\n**C.** Placeholders keep the fixtures cost-free and offline; plan can resolve schema and references without contacting a provider.",
+    "metadata": {
+      "tags": [
+        "provider",
+        "serverless-api",
+        "question"
+      ],
+      "source": "providers/glossary.json"
+    }
+  }
+]

@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chain of Responsibility</title>
+<style>body{font-family:system-ui,sans-serif;max-width:52rem;margin:2rem auto;padding:0 1rem;line-height:1.5}pre{background:#f3f3f3;padding:1rem;overflow-x:auto}code{background:#f3f3f3;padding:0 .2rem}</style>
+</head><body>
+<h1>Chain of Responsibility</h1>
+<p><strong>behavioral</strong> — Pass a request along a chain of handlers until one handles or processes it.</p>
+<h2>Problem</h2><p>Coupling senders to specific handlers or writing large conditional dispatch logic makes request processing rigid.</p>
+<h2>Structure</h2><pre>Client -&gt; Handler.handle(req)
+Handler -&gt; next.handle(req) (optional)
+ConcreteHandlerA/B decide to handle or forward</pre>
+<h2>Participants</h2><ul>
+<li><strong>Handler</strong>: Declares handling interface and reference to the next handler.</li>
+<li><strong>ConcreteHandler</strong>: Handles requests it is responsible for or forwards them.</li>
+<li><strong>Client</strong>: Submits requests to the chain entry point.</li>
+</ul><h2>Forces</h2><ul
+><li>More than one object may handle a request.</li>
+><li>Handler set or order may vary.</li>
+><li>Sender should not know the concrete handler.</li>
+></ul>
+<h2>Consequences</h2><p><strong>Benefit:</strong> Decouples senders from receivers and makes pipelines of checks or transforms composable.</p>
+<p><strong>Cost:</strong> A request may go unhandled and chains can be harder to trace.</p>
+<h2>Python sketch</h2><pre>class Handler:
+    def __init__(self, nxt=None):
+        self.nxt = nxt
+
+    def handle(self, req: dict):
+        if self.nxt:
+            return self.nxt.handle(req)
+        return None
+
+class Auth(Handler):
+    def handle(self, req: dict):
+        if not req.get(&quot;user&quot;):
+            return &quot;401&quot;
+        return super().handle(req)
+
+class RateLimit(Handler):
+    def handle(self, req: dict):
+        if req.get(&quot;burst&quot;):
+            return &quot;429&quot;
+        return &quot;200&quot;
+
+chain = Auth(RateLimit())
+print(chain.handle({&quot;user&quot;: &quot;a&quot;, &quot;burst&quot;: False}))</pre>
+<h2>Interview example</h2><p>An API gateway in front of microservices (09-microservices) can run auth, rate-limit, and validation handlers in sequence before forwarding requests.</p>
+</body></html>

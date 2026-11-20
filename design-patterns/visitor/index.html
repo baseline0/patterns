@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Visitor</title>
+<style>body{font-family:system-ui,sans-serif;max-width:52rem;margin:2rem auto;padding:0 1rem;line-height:1.5}pre{background:#f3f3f3;padding:1rem;overflow-x:auto}code{background:#f3f3f3;padding:0 .2rem}</style>
+</head><body>
+<h1>Visitor</h1>
+<p><strong>behavioral</strong> — Represent an operation to be performed on elements of an object structure without changing the element classes.</p>
+<h2>Problem</h2><p>Adding new operations across a stable set of element types leads to repeated edits and scattered logic in those classes.</p>
+<h2>Structure</h2><pre>Element.accept(visitor)
+Visitor.visitElementA/B(...)
+ConcreteVisitor implements operations across elements</pre>
+<h2>Participants</h2><ul>
+<li><strong>Visitor</strong>: Declares visit operations for each concrete element type.</li>
+<li><strong>ConcreteVisitor</strong>: Implements a specific operation over the structure.</li>
+<li><strong>Element</strong>: Declares accept to dispatch to the visitor.</li>
+<li><strong>ConcreteElement</strong>: Implements accept by calling the matching visit method.</li>
+</ul><h2>Forces</h2><ul
+><li>Element hierarchy is stable but operations change often.</li>
+><li>Related behavior should be grouped by operation.</li>
+><li>Double dispatch or equivalent is available.</li>
+></ul>
+<h2>Consequences</h2><p><strong>Benefit:</strong> Makes adding new operations easy and keeps operation-specific logic cohesive.</p>
+<p><strong>Cost:</strong> Adding new element types requires changing every visitor.</p>
+<h2>Python sketch</h2><pre>class Number:
+    def __init__(self, value):
+        self.value = value
+
+    def accept(self, v):
+        return v.visit_number(self)
+
+class SumVisitor:
+    def __init__(self):
+        self.total = 0
+
+    def visit_number(self, n):
+        self.total += n.value
+
+nums = [Number(1), Number(2), Number(3)]
+vis = SumVisitor()
+for n in nums:
+    n.accept(vis)
+print(vis.total)</pre>
+<h2>Interview example</h2><p>In a CI/CD or policy engine (06-cicd-pipeline), visitors can run lint, cost, or security analyses over a stable pipeline AST without modifying node classes.</p>
+</body></html>

@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Flyweight</title>
+<style>body{font-family:system-ui,sans-serif;max-width:52rem;margin:2rem auto;padding:0 1rem;line-height:1.5}pre{background:#f3f3f3;padding:1rem;overflow-x:auto}code{background:#f3f3f3;padding:0 .2rem}</style>
+</head><body>
+<h1>Flyweight</h1>
+<p><strong>structural</strong> — Share common intrinsic state across many fine-grained objects to reduce memory use.</p>
+<h2>Problem</h2><p>Large numbers of similar objects duplicate immutable data, causing high memory overhead.</p>
+<h2>Structure</h2><pre>Client -&gt; FlyweightFactory.get(key)
+Factory returns shared Flyweight(intrinsic)
+Client supplies extrinsic state at use time</pre>
+<h2>Participants</h2><ul>
+<li><strong>Flyweight</strong>: Stores shared intrinsic state and operates on extrinsic state.</li>
+<li><strong>FlyweightFactory</strong>: Creates and caches flyweights by intrinsic key.</li>
+<li><strong>Client</strong>: Maintains or computes extrinsic state passed to flyweights.</li>
+</ul><h2>Forces</h2><ul
+><li>Many objects share immutable data.</li>
+><li>Memory footprint is a bottleneck.</li>
+><li>Intrinsic and extrinsic state can be separated clearly.</li>
+></ul>
+<h2>Consequences</h2><p><strong>Benefit:</strong> Reduces memory and allocation costs for large object populations.</p>
+<p><strong>Cost:</strong> Adds complexity and may increase CPU cost to manage extrinsic state.</p>
+<h2>Python sketch</h2><pre>class Icon:
+    def __init__(self, name: str):
+        self.name = name
+
+    def render(self, x: int, y: int) -&gt; str:
+        return f&quot;{self.name}@{x},{y}&quot;
+
+class IconFactory:
+    def __init__(self):
+        self._pool = {}
+
+    def get(self, name: str) -&gt; Icon:
+        if name not in self._pool:
+            self._pool[name] = Icon(name)
+        return self._pool[name]
+
+factory = IconFactory()
+print(factory.get(&quot;pin&quot;).render(1, 2), factory.get(&quot;pin&quot;) is factory.get(&quot;pin&quot;))</pre>
+<h2>Interview example</h2><p>A monitoring UI (07-monitoring) can share icon/glyph flyweights across thousands of chart points while passing per-point coordinates as extrinsic state.</p>
+</body></html>

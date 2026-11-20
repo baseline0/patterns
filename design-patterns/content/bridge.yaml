@@ -1,0 +1,62 @@
+id: bridge
+name: Bridge
+category: structural
+intent: Decouple an abstraction from its implementation so both can vary independently.
+problem: Combining multiple abstractions with multiple implementations via inheritance causes class explosion
+  and tight coupling.
+structure: 'Abstraction -> Implementor.operation_impl()
+
+  RefinedAbstraction extends Abstraction
+
+  ConcreteImplementorA/B implement Implementor'
+participants:
+- name: Abstraction
+  role: Defines high-level control logic and holds a reference to an implementor.
+- name: RefinedAbstraction
+  role: Extends the abstraction without changing implementors.
+- name: Implementor
+  role: Declares low-level operations used by the abstraction.
+- name: ConcreteImplementor
+  role: Provides a specific implementation of the low-level operations.
+forces:
+- Abstraction and implementation dimensions vary independently.
+- Inheritance combinations are multiplying.
+- Runtime selection of implementation is needed.
+consequences:
+  benefit: Reduces subclass explosion and enables independent evolution of both hierarchies.
+  cost: Increases design complexity and requires up-front separation of concerns.
+smells_fixed:
+- Cartesian-product inheritance hierarchies
+- Abstractions hard-wired to one platform implementation
+smells_created:
+- Extra indirection for simple cases
+- Unclear split between abstraction and implementation responsibilities
+python: "class Renderer:\n    def draw(self, text: str) -> str:\n        raise NotImplementedError\n\n\
+  class Html(Renderer):\n    def draw(self, text: str) -> str:\n        return f\"<p>{text}</p>\"\n\n\
+  class Plain(Renderer):\n    def draw(self, text: str) -> str:\n        return text\n\nclass Notification:\n\
+  \    def __init__(self, renderer: Renderer):\n        self.renderer = renderer\n\n    def send(self,\
+  \ text: str) -> str:\n        return self.renderer.draw(text)\n\nprint(Notification(Html()).send(\"\
+  deploy ok\"))"
+example: A monitoring dashboard (07-monitoring) can separate alert abstractions from delivery implementations
+  (email, chat, pager) so new channels do not require new alert subclasses.
+related_architecture:
+- 07-monitoring
+- layered
+- microservices
+quiz:
+- question: 'Bridge is preferred over inheritance when:'
+  choices:
+  - Only one implementation will ever exist
+  - Two orthogonal dimensions must vary independently
+  - Objects must be composed into trees
+  - You need to cache remote responses
+  answer: 1
+  explanation: It splits abstraction and implementation into separate hierarchies.
+- question: 'A sign Bridge may be missing is:'
+  choices:
+  - Many subclasses named like FeatureXOnPlatformY
+  - Need for undo/redo
+  - Expensive object creation
+  - Tree traversal requirements
+  answer: 0
+  explanation: Combinatorial subclasses indicate abstraction and implementation are tangled.

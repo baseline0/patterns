@@ -1,0 +1,1562 @@
+[
+  {
+    "title": "Intent: Abstract Factory",
+    "body": "Provide an interface for creating families of related objects without specifying concrete classes.",
+    "metadata": {
+      "tags": [
+        "design-pattern",
+        "creational",
+        "abstract-factory",
+        "intent"
+      ],
+      "source": "design-patterns/glossary.json"
+    }
+  },
+  {
+    "title": "Use Abstract Factory when",
+    "body": "A system must produce compatible sets of components (UI widgets, storage clients, drivers) that vary by environment but must work together.",
+    "metadata": {
+      "tags": [
+        "design-pattern",
+        "creational",
+        "abstract-factory",
+        "problem"
+      ],
+      "source": "design-patterns/glossary.json"
+    }
+  },
+  {
+    "title": "Trade-off: Abstract Factory",
+    "body": "**Benefit**: Enforces consistency among related products and centralizes family selection.\n\n**Cost**: Adding a new product kind requires changing every factory interface and implementation.",
+    "metadata": {
+      "tags": [
+        "design-pattern",
+        "creational",
+        "abstract-factory",
+        "tradeoff"
+      ],
+      "source": "design-patterns/glossary.json"
+    }
+  },
+  {
+    "title": "Q1: Abstract Factory differs from Factory Method because it:",
+    "body": "A. Creates one product via inheritance hook only\nB. Creates families of related products together\nC. Clones existing instances\nD. Builds objects step by step\n\n**B.** Its focus is consistent families (e.g., queue + storage + metrics) per environment.",
+    "metadata": {
+      "tags": [
+        "design-pattern",
+        "creational",
+        "abstract-factory",
+        "question"
+      ],
+      "source": "design-patterns/glossary.json"
+    }
+  },
+  {
+    "title": "Q2: When adding a new product type to an Abstract Factory, you u",
+    "body": "A. Change only one concrete class\nB. Update all factory interfaces and concrete factories\nC. Add a database migration\nD. Introduce an event bus\n\n**B.** The abstraction declares creation for every family member, so it widens across implementations.",
+    "metadata": {
+      "tags": [
+        "design-pattern",
+        "creational",
+        "abstract-factory",
+        "question"
+      ],
+      "source": "design-patterns/glossary.json"
+    }
+  },
+  {
+    "title": "Intent: Adapter",
+    "body": "Convert the interface of a component into one clients expect so incompatible interfaces can collaborate.",
+    "metadata": {
+      "tags": [
+        "design-pattern",
+        "structural",
+        "adapter",
+        "intent"
+      ],
+      "source": "design-patterns/glossary.json"
+    }
+  },
+  {
+    "title": "Use Adapter when",
+    "body": "Integrating third-party or legacy APIs requires changing client code or duplicating translation logic across the system.",
+    "metadata": {
+      "tags": [
+        "design-pattern",
+        "structural",
+        "adapter",
+        "problem"
+      ],
+      "source": "design-patterns/glossary.json"
+    }
+  },
+  {
+    "title": "Trade-off: Adapter",
+    "body": "**Benefit**: Enables reuse of existing components without polluting client code.\n\n**Cost**: Adds a translation layer that can hide impedance mismatches or performance costs.",
+    "metadata": {
+      "tags": [
+        "design-pattern",
+        "structural",
+        "adapter",
+        "tradeoff"
+      ],
+      "source": "design-patterns/glossary.json"
+    }
+  },
+  {
+    "title": "Q1: Adapter primarily addresses:",
+    "body": "A. Object creation complexity\nB. Interface incompatibility between components\nC. Concurrent access control\nD. State persistence\n\n**B.** It translates one interface into another expected by clients.",
+    "metadata": {
+      "tags": [
+        "design-pattern",
+        "structural",
+        "adapter",
+        "question"
+      ],
+      "source": "design-patterns/glossary.json"
+    }
+  },
+  {
+    "title": "Q2: In a layered architecture, an adapter commonly lives at:",
+    "body": "A. The domain core only\nB. An integration boundary such as infrastructure/ports\nC. The browser UI exclusively\nD. The database index layer\n\n**B.** Adapters bridge external or legacy systems to internal abstractions at boundaries.",
+    "metadata": {
+      "tags": [
+        "design-pattern",
+        "structural",
+        "adapter",
+        "question"
+      ],
+      "source": "design-patterns/glossary.json"
+    }
+  },
+  {
+    "title": "Intent: Bridge",
+    "body": "Decouple an abstraction from its implementation so both can vary independently.",
+    "metadata": {
+      "tags": [
+        "design-pattern",
+        "structural",
+        "bridge",
+        "intent"
+      ],
+      "source": "design-patterns/glossary.json"
+    }
+  },
+  {
+    "title": "Use Bridge when",
+    "body": "Combining multiple abstractions with multiple implementations via inheritance causes class explosion and tight coupling.",
+    "metadata": {
+      "tags": [
+        "design-pattern",
+        "structural",
+        "bridge",
+        "problem"
+      ],
+      "source": "design-patterns/glossary.json"
+    }
+  },
+  {
+    "title": "Trade-off: Bridge",
+    "body": "**Benefit**: Reduces subclass explosion and enables independent evolution of both hierarchies.\n\n**Cost**: Increases design complexity and requires up-front separation of concerns.",
+    "metadata": {
+      "tags": [
+        "design-pattern",
+        "structural",
+        "bridge",
+        "tradeoff"
+      ],
+      "source": "design-patterns/glossary.json"
+    }
+  },
+  {
+    "title": "Q1: Bridge is preferred over inheritance when:",
+    "body": "A. Only one implementation will ever exist\nB. Two orthogonal dimensions must vary independently\nC. Objects must be composed into trees\nD. You need to cache remote responses\n\n**B.** It splits abstraction and implementation into separate hierarchies.",
+    "metadata": {
+      "tags": [
+        "design-pattern",
+        "structural",
+        "bridge",
+        "question"
+      ],
+      "source": "design-patterns/glossary.json"
+    }
+  },
+  {
+    "title": "Q2: A sign Bridge may be missing is:",
+    "body": "A. Many subclasses named like FeatureXOnPlatformY\nB. Need for undo/redo\nC. Expensive object creation\nD. Tree traversal requirements\n\n**A.** Combinatorial subclasses indicate abstraction and implementation are tangled.",
+    "metadata": {
+      "tags": [
+        "design-pattern",
+        "structural",
+        "bridge",
+        "question"
+      ],
+      "source": "design-patterns/glossary.json"
+    }
+  },
+  {
+    "title": "Intent: Builder",
+    "body": "Separate construction of a complex object from its representation so the same process can create different forms.",
+    "metadata": {
+      "tags": [
+        "design-pattern",
+        "creational",
+        "builder",
+        "intent"
+      ],
+      "source": "design-patterns/glossary.json"
+    }
+  },
+  {
+    "title": "Use Builder when",
+    "body": "Creating objects with many optional parts, validation rules, or assembly steps leads to telescoping constructors and fragile setup code.",
+    "metadata": {
+      "tags": [
+        "design-pattern",
+        "creational",
+        "builder",
+        "problem"
+      ],
+      "source": "design-patterns/glossary.json"
+    }
+  },
+  {
+    "title": "Trade-off: Builder",
+    "body": "**Benefit**: Improves readability and correctness for complex object assembly.\n\n**Cost**: Adds classes/objects and can be overkill for simple data structures.",
+    "metadata": {
+      "tags": [
+        "design-pattern",
+        "creational",
+        "builder",
+        "tradeoff"
+      ],
+      "source": "design-patterns/glossary.json"
+    }
+  },
+  {
+    "title": "Q1: Builder is a better fit than many constructor parameters whe",
+    "body": "A. Objects must be globally unique\nB. Construction is stepwise with optional parts and validation\nC. Behavior must be swapped at runtime\nD. Access to a remote service must be proxied\n\n**B.** It makes complex, ordered assembly explicit and safe.",
+    "metadata": {
+      "tags": [
+        "design-pattern",
+        "creational",
+        "builder",
+        "question"
+      ],
+      "source": "design-patterns/glossary.json"
+    }
+  },
+  {
+    "title": "Q2: What does a Director contribute?",
+    "body": "A. Stores the final product for all clients\nB. Encapsulates a reusable construction sequence\nC. Selects concrete classes by string name\nD. Handles persistence transactions\n\n**B.** The Director knows the order of steps; builders know how to perform each step.",
+    "metadata": {
+      "tags": [
+        "design-pattern",
+        "creational",
+        "builder",
+        "question"
+      ],
+      "source": "design-patterns/glossary.json"
+    }
+  },
+  {
+    "title": "Intent: Chain of Responsibility",
+    "body": "Pass a request along a chain of handlers until one handles or processes it.",
+    "metadata": {
+      "tags": [
+        "design-pattern",
+        "behavioral",
+        "chain-of-responsibility",
+        "intent"
+      ],
+      "source": "design-patterns/glossary.json"
+    }
+  },
+  {
+    "title": "Use Chain of Responsibility when",
+    "body": "Coupling senders to specific handlers or writing large conditional dispatch logic makes request processing rigid.",
+    "metadata": {
+      "tags": [
+        "design-pattern",
+        "behavioral",
+        "chain-of-responsibility",
+        "problem"
+      ],
+      "source": "design-patterns/glossary.json"
+    }
+  },
+  {
+    "title": "Trade-off: Chain of Responsibility",
+    "body": "**Benefit**: Decouples senders from receivers and makes pipelines of checks or transforms composable.\n\n**Cost**: A request may go unhandled and chains can be harder to trace.",
+    "metadata": {
+      "tags": [
+        "design-pattern",
+        "behavioral",
+        "chain-of-responsibility",
+        "tradeoff"
+      ],
+      "source": "design-patterns/glossary.json"
+    }
+  },
+  {
+    "title": "Q1: Chain of Responsibility lets you:",
+    "body": "A. Guarantee exactly one handler always runs\nB. Decouple sender from the concrete receiver by forwarding along handlers\nC. Replicate state across nodes\nD. Compile queries into SQL\n\n**B.** Handlers are linked and each decides whether to act or pass along.",
+    "metadata": {
+      "tags": [
+        "design-pattern",
+        "behavioral",
+        "chain-of-responsibility",
+        "question"
+      ],
+      "source": "design-patterns/glossary.json"
+    }
+  },
+  {
+    "title": "Q2: A risk to manage in handler chains is:",
+    "body": "A. Mandatory global locks\nB. Requests falling off the end unhandled\nC. Inability to add new handlers\nD. Loss of type safety in all languages\n\n**B.** Without a terminal handler or contract, some requests may not be processed.",
+    "metadata": {
+      "tags": [
+        "design-pattern",
+        "behavioral",
+        "chain-of-responsibility",
+        "question"
+      ],
+      "source": "design-patterns/glossary.json"
+    }
+  },
+  {
+    "title": "Intent: Command",
+    "body": "Encapsulate a request as an object, allowing parameterization, queuing, logging, and undo.",
+    "metadata": {
+      "tags": [
+        "design-pattern",
+        "behavioral",
+        "command",
+        "intent"
+      ],
+      "source": "design-patterns/glossary.json"
+    }
+  },
+  {
+    "title": "Use Command when",
+    "body": "Invokers are tightly coupled to concrete operations, making it hard to queue, audit, retry, or reverse actions.",
+    "metadata": {
+      "tags": [
+        "design-pattern",
+        "behavioral",
+        "command",
+        "problem"
+      ],
+      "source": "design-patterns/glossary.json"
+    }
+  },
+  {
+    "title": "Trade-off: Command",
+    "body": "**Benefit**: Decouples invocation from execution and enables scheduling, auditing, and reversal.\n\n**Cost**: Introduces many small command objects and lifecycle management concerns.",
+    "metadata": {
+      "tags": [
+        "design-pattern",
+        "behavioral",
+        "command",
+        "tradeoff"
+      ],
+      "source": "design-patterns/glossary.json"
+    }
+  },
+  {
+    "title": "Q1: Command turns a request into:",
+    "body": "A. A database schema\nB. A standalone object with execution context\nC. A shared mutable singleton\nD. A compile-time macro\n\n**B.** Encapsulation as an object enables queuing, logging, and undo.",
+    "metadata": {
+      "tags": [
+        "design-pattern",
+        "behavioral",
+        "command",
+        "question"
+      ],
+      "source": "design-patterns/glossary.json"
+    }
+  },
+  {
+    "title": "Q2: In CQRS-style systems, commands are useful because:",
+    "body": "A. They replace read models entirely\nB. They represent intentful writes that can be validated, queued, and audited\nC. They guarantee eventual consistency without design\nD. They eliminate domain logic\n\n**B.** Commands make write operations explicit and manageable.",
+    "metadata": {
+      "tags": [
+        "design-pattern",
+        "behavioral",
+        "command",
+        "question"
+      ],
+      "source": "design-patterns/glossary.json"
+    }
+  },
+  {
+    "title": "Intent: Composite",
+    "body": "Compose objects into tree structures and let clients treat individual objects and compositions uniformly.",
+    "metadata": {
+      "tags": [
+        "design-pattern",
+        "structural",
+        "composite",
+        "intent"
+      ],
+      "source": "design-patterns/glossary.json"
+    }
+  },
+  {
+    "title": "Use Composite when",
+    "body": "Client code must distinguish leaves from containers when operating over hierarchical structures, leading to special-case logic.",
+    "metadata": {
+      "tags": [
+        "design-pattern",
+        "structural",
+        "composite",
+        "problem"
+      ],
+      "source": "design-patterns/glossary.json"
+    }
+  },
+  {
+    "title": "Trade-off: Composite",
+    "body": "**Benefit**: Simplifies client code and makes it easy to add new component types.\n\n**Cost**: Can make it harder to restrict which children a composite may contain.",
+    "metadata": {
+      "tags": [
+        "design-pattern",
+        "structural",
+        "composite",
+        "tradeoff"
+      ],
+      "source": "design-patterns/glossary.json"
+    }
+  },
+  {
+    "title": "Q1: Composite is most appropriate for:",
+    "body": "A. Flat collections with no nesting\nB. Tree-like part-whole structures\nC. Request/response retries\nD. Two-phase commits\n\n**B.** It models recursive hierarchies behind a uniform interface.",
+    "metadata": {
+      "tags": [
+        "design-pattern",
+        "structural",
+        "composite",
+        "question"
+      ],
+      "source": "design-patterns/glossary.json"
+    }
+  },
+  {
+    "title": "Q2: A trade-off of Composite is:",
+    "body": "A. Clients must always know concrete types\nB. Constraining allowed child types can become harder\nC. It cannot support recursion\nD. It removes polymorphism\n\n**B.** A uniform component interface can weaken compile-time/type-level constraints.",
+    "metadata": {
+      "tags": [
+        "design-pattern",
+        "structural",
+        "composite",
+        "question"
+      ],
+      "source": "design-patterns/glossary.json"
+    }
+  },
+  {
+    "title": "Intent: Decorator",
+    "body": "Attach additional responsibilities to an object dynamically by wrapping it.",
+    "metadata": {
+      "tags": [
+        "design-pattern",
+        "structural",
+        "decorator",
+        "intent"
+      ],
+      "source": "design-patterns/glossary.json"
+    }
+  },
+  {
+    "title": "Use Decorator when",
+    "body": "Subclassing to add combinations of behaviors (logging, caching, auth, metrics) causes class explosion and rigid composition.",
+    "metadata": {
+      "tags": [
+        "design-pattern",
+        "structural",
+        "decorator",
+        "problem"
+      ],
+      "source": "design-patterns/glossary.json"
+    }
+  },
+  {
+    "title": "Trade-off: Decorator",
+    "body": "**Benefit**: Enables flexible, mix-and-match behavior without subclass explosions.\n\n**Cost**: Many small wrappers can complicate debugging and object identity.",
+    "metadata": {
+      "tags": [
+        "design-pattern",
+        "structural",
+        "decorator",
+        "tradeoff"
+      ],
+      "source": "design-patterns/glossary.json"
+    }
+  },
+  {
+    "title": "Q1: Decorator differs from inheritance by:",
+    "body": "A. Composing behavior at runtime via wrapping\nB. Requiring access to source code\nC. Only working for UI widgets\nD. Forcing a single global wrapper\n\n**A.** Decorators wrap objects dynamically, allowing flexible combinations.",
+    "metadata": {
+      "tags": [
+        "design-pattern",
+        "structural",
+        "decorator",
+        "question"
+      ],
+      "source": "design-patterns/glossary.json"
+    }
+  },
+  {
+    "title": "Q2: A common operational pitfall of decorators is:",
+    "body": "A. They cannot implement interfaces\nB. Wrapper order can change semantics and complicate tracing\nC. They require database locks\nD. They eliminate the need for testing\n\n**B.** Behavior like auth-before-cache vs cache-before-auth depends on composition order.",
+    "metadata": {
+      "tags": [
+        "design-pattern",
+        "structural",
+        "decorator",
+        "question"
+      ],
+      "source": "design-patterns/glossary.json"
+    }
+  },
+  {
+    "title": "Intent: Dependency Injection",
+    "body": "Supply an object’s dependencies from the outside rather than having it construct or locate them internally.",
+    "metadata": {
+      "tags": [
+        "design-pattern",
+        "application",
+        "dependency-injection",
+        "intent"
+      ],
+      "source": "design-patterns/glossary.json"
+    }
+  },
+  {
+    "title": "Use Dependency Injection when",
+    "body": "Hard-coded dependencies make code difficult to test, configure, and extend across environments.",
+    "metadata": {
+      "tags": [
+        "design-pattern",
+        "application",
+        "dependency-injection",
+        "problem"
+      ],
+      "source": "design-patterns/glossary.json"
+    }
+  },
+  {
+    "title": "Trade-off: Dependency Injection",
+    "body": "**Benefit**: Improves testability, configurability, and adherence to dependency inversion.\n\n**Cost**: Can obscure object creation flow and introduce container/configuration complexity.",
+    "metadata": {
+      "tags": [
+        "design-pattern",
+        "application",
+        "dependency-injection",
+        "tradeoff"
+      ],
+      "source": "design-patterns/glossary.json"
+    }
+  },
+  {
+    "title": "Q1: Dependency Injection mainly improves:",
+    "body": "A. Network throughput\nB. Testability and flexibility by externalizing dependency creation\nC. Database normalization\nD. Binary size\n\n**B.** Clients receive collaborators, making substitution and configuration easier.",
+    "metadata": {
+      "tags": [
+        "design-pattern",
+        "application",
+        "dependency-injection",
+        "question"
+      ],
+      "source": "design-patterns/glossary.json"
+    }
+  },
+  {
+    "title": "Q2: A potential downside of DI containers is:",
+    "body": "A. They prevent interface use\nB. Wiring can become implicit and harder to trace\nC. They require no configuration ever\nD. They eliminate constructors\n\n**B.** Automated wiring may hide how objects are composed, so explicitness matters.",
+    "metadata": {
+      "tags": [
+        "design-pattern",
+        "application",
+        "dependency-injection",
+        "question"
+      ],
+      "source": "design-patterns/glossary.json"
+    }
+  },
+  {
+    "title": "Intent: Facade",
+    "body": "Provide a simplified interface to a complex subsystem.",
+    "metadata": {
+      "tags": [
+        "design-pattern",
+        "structural",
+        "facade",
+        "intent"
+      ],
+      "source": "design-patterns/glossary.json"
+    }
+  },
+  {
+    "title": "Use Facade when",
+    "body": "Clients must orchestrate many subsystem classes and calls, increasing coupling and misuse risk.",
+    "metadata": {
+      "tags": [
+        "design-pattern",
+        "structural",
+        "facade",
+        "problem"
+      ],
+      "source": "design-patterns/glossary.json"
+    }
+  },
+  {
+    "title": "Trade-off: Facade",
+    "body": "**Benefit**: Reduces coupling and makes common use cases easier and safer.\n\n**Cost**: Can become a god object if it accumulates unrelated responsibilities.",
+    "metadata": {
+      "tags": [
+        "design-pattern",
+        "structural",
+        "facade",
+        "tradeoff"
+      ],
+      "source": "design-patterns/glossary.json"
+    }
+  },
+  {
+    "title": "Q1: Facade is primarily about:",
+    "body": "A. Enforcing one instance globally\nB. Simplifying access to a subsystem\nC. Sharing intrinsic state efficiently\nD. Deferring execution as commands\n\n**B.** It provides a higher-level interface over complex components.",
+    "metadata": {
+      "tags": [
+        "design-pattern",
+        "structural",
+        "facade",
+        "question"
+      ],
+      "source": "design-patterns/glossary.json"
+    }
+  },
+  {
+    "title": "Q2: When should clients bypass a facade?",
+    "body": "A. Never, facades must hide everything permanently\nB. When advanced or uncommon capabilities are legitimately needed\nC. Only during testing\nD. Whenever performance matters\n\n**B.** Facades simplify common paths but do not have to forbid direct subsystem access.",
+    "metadata": {
+      "tags": [
+        "design-pattern",
+        "structural",
+        "facade",
+        "question"
+      ],
+      "source": "design-patterns/glossary.json"
+    }
+  },
+  {
+    "title": "Intent: Factory Method",
+    "body": "Let subclasses or hook implementations decide which concrete object to create.",
+    "metadata": {
+      "tags": [
+        "design-pattern",
+        "creational",
+        "factory-method",
+        "intent"
+      ],
+      "source": "design-patterns/glossary.json"
+    }
+  },
+  {
+    "title": "Use Factory Method when",
+    "body": "A framework needs to create products while allowing extensions to choose concrete types without changing core workflow code.",
+    "metadata": {
+      "tags": [
+        "design-pattern",
+        "creational",
+        "factory-method",
+        "problem"
+      ],
+      "source": "design-patterns/glossary.json"
+    }
+  },
+  {
+    "title": "Trade-off: Factory Method",
+    "body": "**Benefit**: Decouples object creation from the high-level algorithm that uses it.\n\n**Cost**: Introduces subclassing or hook points that can proliferate.",
+    "metadata": {
+      "tags": [
+        "design-pattern",
+        "creational",
+        "factory-method",
+        "tradeoff"
+      ],
+      "source": "design-patterns/glossary.json"
+    }
+  },
+  {
+    "title": "Q1: Factory Method is most useful when:",
+    "body": "A. One global object must be shared\nB. Object creation must vary while the workflow stays fixed\nC. Multiple objects must be created as a family atomically\nD. An object graph is too expensive to copy\n\n**B.** It defers instantiation to an overridable hook so workflows can stay generic.",
+    "metadata": {
+      "tags": [
+        "design-pattern",
+        "creational",
+        "factory-method",
+        "question"
+      ],
+      "source": "design-patterns/glossary.json"
+    }
+  },
+  {
+    "title": "Q2: Compared to putting `if type == ...` in the workflow, Factor",
+    "body": "A. Removes all runtime polymorphism\nB. Moves variation to a dedicated creation point\nC. Requires distributed messaging\nD. Eliminates the need for interfaces\n\n**B.** Creation variability is isolated behind the factory method.",
+    "metadata": {
+      "tags": [
+        "design-pattern",
+        "creational",
+        "factory-method",
+        "question"
+      ],
+      "source": "design-patterns/glossary.json"
+    }
+  },
+  {
+    "title": "Intent: Flyweight",
+    "body": "Share common intrinsic state across many fine-grained objects to reduce memory use.",
+    "metadata": {
+      "tags": [
+        "design-pattern",
+        "structural",
+        "flyweight",
+        "intent"
+      ],
+      "source": "design-patterns/glossary.json"
+    }
+  },
+  {
+    "title": "Use Flyweight when",
+    "body": "Large numbers of similar objects duplicate immutable data, causing high memory overhead.",
+    "metadata": {
+      "tags": [
+        "design-pattern",
+        "structural",
+        "flyweight",
+        "problem"
+      ],
+      "source": "design-patterns/glossary.json"
+    }
+  },
+  {
+    "title": "Trade-off: Flyweight",
+    "body": "**Benefit**: Reduces memory and allocation costs for large object populations.\n\n**Cost**: Adds complexity and may increase CPU cost to manage extrinsic state.",
+    "metadata": {
+      "tags": [
+        "design-pattern",
+        "structural",
+        "flyweight",
+        "tradeoff"
+      ],
+      "source": "design-patterns/glossary.json"
+    }
+  },
+  {
+    "title": "Q1: Flyweight saves memory by:",
+    "body": "A. Compressing objects on disk\nB. Sharing intrinsic state and externalizing extrinsic state\nC. Using lazy database queries\nD. Batching network calls\n\n**B.** Common immutable data is stored once and reused across many logical instances.",
+    "metadata": {
+      "tags": [
+        "design-pattern",
+        "structural",
+        "flyweight",
+        "question"
+      ],
+      "source": "design-patterns/glossary.json"
+    }
+  },
+  {
+    "title": "Q2: A precondition for safe Flyweight use is:",
+    "body": "A. Intrinsic state must be mutable by clients\nB. Clear separation between shared and per-use state\nC. All objects must live in one process globally\nD. No factory can be used\n\n**B.** Shared state must be immutable or carefully controlled; extrinsic state is supplied per operation.",
+    "metadata": {
+      "tags": [
+        "design-pattern",
+        "structural",
+        "flyweight",
+        "question"
+      ],
+      "source": "design-patterns/glossary.json"
+    }
+  },
+  {
+    "title": "Intent: Iterator",
+    "body": "Provide a way to access elements of an aggregate sequentially without exposing its representation.",
+    "metadata": {
+      "tags": [
+        "design-pattern",
+        "behavioral",
+        "iterator",
+        "intent"
+      ],
+      "source": "design-patterns/glossary.json"
+    }
+  },
+  {
+    "title": "Use Iterator when",
+    "body": "Clients need to traverse collections with different internal structures without depending on their concrete storage details.",
+    "metadata": {
+      "tags": [
+        "design-pattern",
+        "behavioral",
+        "iterator",
+        "problem"
+      ],
+      "source": "design-patterns/glossary.json"
+    }
+  },
+  {
+    "title": "Trade-off: Iterator",
+    "body": "**Benefit**: Simplifies client traversal logic and supports multiple simultaneous traversals.\n\n**Cost**: Adds objects and can be redundant in languages with rich built-in iteration.",
+    "metadata": {
+      "tags": [
+        "design-pattern",
+        "behavioral",
+        "iterator",
+        "tradeoff"
+      ],
+      "source": "design-patterns/glossary.json"
+    }
+  },
+  {
+    "title": "Q1: Iterator’s key benefit is:",
+    "body": "A. Faster sorting algorithms\nB. Traversal without exposing internal representation\nC. Automatic persistence\nD. Distributed consensus\n\n**B.** Clients consume elements through a standard interface regardless of storage layout.",
+    "metadata": {
+      "tags": [
+        "design-pattern",
+        "behavioral",
+        "iterator",
+        "question"
+      ],
+      "source": "design-patterns/glossary.json"
+    }
+  },
+  {
+    "title": "Q2: In data pipeline code, iterators are useful because:",
+    "body": "A. They eliminate backpressure\nB. They provide a uniform way to stream records from varied sources\nC. They replace message queues\nD. They guarantee exactly-once delivery\n\n**B.** Different sources can expose the same traversal contract to downstream stages.",
+    "metadata": {
+      "tags": [
+        "design-pattern",
+        "behavioral",
+        "iterator",
+        "question"
+      ],
+      "source": "design-patterns/glossary.json"
+    }
+  },
+  {
+    "title": "Intent: Mediator",
+    "body": "Centralize complex interactions between related objects in a mediator to reduce direct dependencies.",
+    "metadata": {
+      "tags": [
+        "design-pattern",
+        "behavioral",
+        "mediator",
+        "intent"
+      ],
+      "source": "design-patterns/glossary.json"
+    }
+  },
+  {
+    "title": "Use Mediator when",
+    "body": "Many components reference each other directly, creating tangled communication and fragile change propagation.",
+    "metadata": {
+      "tags": [
+        "design-pattern",
+        "behavioral",
+        "mediator",
+        "problem"
+      ],
+      "source": "design-patterns/glossary.json"
+    }
+  },
+  {
+    "title": "Trade-off: Mediator",
+    "body": "**Benefit**: Reduces coupling between components and localizes collaboration logic.\n\n**Cost**: Mediator can grow into a complex central controller.",
+    "metadata": {
+      "tags": [
+        "design-pattern",
+        "behavioral",
+        "mediator",
+        "tradeoff"
+      ],
+      "source": "design-patterns/glossary.json"
+    }
+  },
+  {
+    "title": "Q1: Mediator reduces:",
+    "body": "A. The need for any interfaces\nB. Direct many-to-many dependencies between colleagues\nC. All runtime latency\nD. Storage requirements\n\n**B.** Peers communicate via a central coordinator rather than referencing each other.",
+    "metadata": {
+      "tags": [
+        "design-pattern",
+        "behavioral",
+        "mediator",
+        "question"
+      ],
+      "source": "design-patterns/glossary.json"
+    }
+  },
+  {
+    "title": "Q2: A warning sign when using Mediator is:",
+    "body": "A. Colleagues become too reusable\nB. The mediator accumulates most business rules and complexity\nC. Handlers become stateless\nD. Events become immutable\n\n**B.** Centralization helps decoupling but can create a god object if overused.",
+    "metadata": {
+      "tags": [
+        "design-pattern",
+        "behavioral",
+        "mediator",
+        "question"
+      ],
+      "source": "design-patterns/glossary.json"
+    }
+  },
+  {
+    "title": "Intent: Memento",
+    "body": "Capture and externalize an object’s internal state so it can be restored later without violating encapsulation.",
+    "metadata": {
+      "tags": [
+        "design-pattern",
+        "behavioral",
+        "memento",
+        "intent"
+      ],
+      "source": "design-patterns/glossary.json"
+    }
+  },
+  {
+    "title": "Use Memento when",
+    "body": "Implementing undo, checkpoints, or rollback requires access to internal state that should remain private.",
+    "metadata": {
+      "tags": [
+        "design-pattern",
+        "behavioral",
+        "memento",
+        "problem"
+      ],
+      "source": "design-patterns/glossary.json"
+    }
+  },
+  {
+    "title": "Trade-off: Memento",
+    "body": "**Benefit**: Supports rollback and checkpoints while preserving encapsulation boundaries.\n\n**Cost**: Can consume significant memory or require careful snapshot sizing.",
+    "metadata": {
+      "tags": [
+        "design-pattern",
+        "behavioral",
+        "memento",
+        "tradeoff"
+      ],
+      "source": "design-patterns/glossary.json"
+    }
+  },
+  {
+    "title": "Q1: Memento preserves encapsulation by:",
+    "body": "A. Making all state public for caretakers\nB. Letting the originator create and consume opaque snapshots\nC. Storing state only in global variables\nD. Serializing directly in every client\n\n**B.** Caretakers hold snapshots without reading their internal structure.",
+    "metadata": {
+      "tags": [
+        "design-pattern",
+        "behavioral",
+        "memento",
+        "question"
+      ],
+      "source": "design-patterns/glossary.json"
+    }
+  },
+  {
+    "title": "Q2: In event-driven systems, mementos are often used for:",
+    "body": "A. Routing messages between brokers\nB. Checkpointing state for recovery/undo scenarios\nC. Load balancing HTTP traffic\nD. Schema migration\n\n**B.** Snapshots can complement event streams for rollback or fast restore points.",
+    "metadata": {
+      "tags": [
+        "design-pattern",
+        "behavioral",
+        "memento",
+        "question"
+      ],
+      "source": "design-patterns/glossary.json"
+    }
+  },
+  {
+    "title": "Intent: Observer",
+    "body": "Define a one-to-many dependency so dependents are notified when a subject changes state.",
+    "metadata": {
+      "tags": [
+        "design-pattern",
+        "behavioral",
+        "observer",
+        "intent"
+      ],
+      "source": "design-patterns/glossary.json"
+    }
+  },
+  {
+    "title": "Use Observer when",
+    "body": "Components need to react to state changes without hard-coded polling or tight coupling between publisher and subscribers.",
+    "metadata": {
+      "tags": [
+        "design-pattern",
+        "behavioral",
+        "observer",
+        "problem"
+      ],
+      "source": "design-patterns/glossary.json"
+    }
+  },
+  {
+    "title": "Trade-off: Observer",
+    "body": "**Benefit**: Enables loose coupling and dynamic subscription for change propagation.\n\n**Cost**: Notification order, storms, and debugging event flows can be challenging.",
+    "metadata": {
+      "tags": [
+        "design-pattern",
+        "behavioral",
+        "observer",
+        "tradeoff"
+      ],
+      "source": "design-patterns/glossary.json"
+    }
+  },
+  {
+    "title": "Q1: Observer is best characterized as:",
+    "body": "A. One-to-one synchronous call chains only\nB. A publish/subscribe dependency between subject and observers\nC. A data partitioning strategy\nD. A compile-time code generator\n\n**B.** Observers register interest and receive updates when the subject changes.",
+    "metadata": {
+      "tags": [
+        "design-pattern",
+        "behavioral",
+        "observer",
+        "question"
+      ],
+      "source": "design-patterns/glossary.json"
+    }
+  },
+  {
+    "title": "Q2: In distributed event-driven systems, a common observer risk ",
+    "body": "A. No way to add subscribers\nB. Uncontrolled cascades and unclear delivery/ordering semantics\nC. Guaranteed global transactions\nD. Static schemas only\n\n**B.** Loose coupling is powerful but requires attention to ordering, retries, and idempotency.",
+    "metadata": {
+      "tags": [
+        "design-pattern",
+        "behavioral",
+        "observer",
+        "question"
+      ],
+      "source": "design-patterns/glossary.json"
+    }
+  },
+  {
+    "title": "Intent: Prototype",
+    "body": "Create new objects by copying a prototypical instance instead of instantiating from scratch.",
+    "metadata": {
+      "tags": [
+        "design-pattern",
+        "creational",
+        "prototype",
+        "intent"
+      ],
+      "source": "design-patterns/glossary.json"
+    }
+  },
+  {
+    "title": "Use Prototype when",
+    "body": "Object creation is expensive or configuration-heavy, and new instances should start from known templates with small variations.",
+    "metadata": {
+      "tags": [
+        "design-pattern",
+        "creational",
+        "prototype",
+        "problem"
+      ],
+      "source": "design-patterns/glossary.json"
+    }
+  },
+  {
+    "title": "Trade-off: Prototype",
+    "body": "**Benefit**: Speeds creation and centralizes default templates.\n\n**Cost**: Cloning graphs with shared references or cycles can be error-prone.",
+    "metadata": {
+      "tags": [
+        "design-pattern",
+        "creational",
+        "prototype",
+        "tradeoff"
+      ],
+      "source": "design-patterns/glossary.json"
+    }
+  },
+  {
+    "title": "Q1: Prototype is especially helpful when:",
+    "body": "A. You need one instance per process\nB. Creating from a configured template is cheaper than full construction\nC. Objects must never be copied\nD. You must enforce access control\n\n**B.** Cloning reuses an initialized template as the starting point.",
+    "metadata": {
+      "tags": [
+        "design-pattern",
+        "creational",
+        "prototype",
+        "question"
+      ],
+      "source": "design-patterns/glossary.json"
+    }
+  },
+  {
+    "title": "Q2: A key risk with Prototype is:",
+    "body": "A. Inability to support interfaces\nB. Incorrect deep vs shallow copying of mutable state\nC. Guaranteed memory leaks\nD. Mandatory network calls during clone\n\n**B.** Copy semantics determine whether clones share nested mutable objects.",
+    "metadata": {
+      "tags": [
+        "design-pattern",
+        "creational",
+        "prototype",
+        "question"
+      ],
+      "source": "design-patterns/glossary.json"
+    }
+  },
+  {
+    "title": "Intent: Proxy",
+    "body": "Provide a surrogate or placeholder that controls access to another object.",
+    "metadata": {
+      "tags": [
+        "design-pattern",
+        "structural",
+        "proxy",
+        "intent"
+      ],
+      "source": "design-patterns/glossary.json"
+    }
+  },
+  {
+    "title": "Use Proxy when",
+    "body": "Direct access to an object is expensive, remote, unsafe, or needs cross-cutting controls like caching or lazy loading.",
+    "metadata": {
+      "tags": [
+        "design-pattern",
+        "structural",
+        "proxy",
+        "problem"
+      ],
+      "source": "design-patterns/glossary.json"
+    }
+  },
+  {
+    "title": "Trade-off: Proxy",
+    "body": "**Benefit**: Adds access control or optimization transparently to clients.\n\n**Cost**: Introduces latency/complexity and can obscure failure modes of the real subject.",
+    "metadata": {
+      "tags": [
+        "design-pattern",
+        "structural",
+        "proxy",
+        "tradeoff"
+      ],
+      "source": "design-patterns/glossary.json"
+    }
+  },
+  {
+    "title": "Q1: A proxy and the real subject typically:",
+    "body": "A. Expose unrelated interfaces\nB. Share the same subject interface so clients are unaware\nC. Must run in different processes\nD. Cannot be swapped at runtime\n\n**B.** Transparency to the client is a core property of Proxy.",
+    "metadata": {
+      "tags": [
+        "design-pattern",
+        "structural",
+        "proxy",
+        "question"
+      ],
+      "source": "design-patterns/glossary.json"
+    }
+  },
+  {
+    "title": "Q2: Which is a valid proxy use case?",
+    "body": "A. Defining algorithm families\nB. Lazy loading or access control around a real object\nC. Building objects stepwise\nD. Traversing tree structures uniformly\n\n**B.** Proxies control access for concerns like laziness, protection, remoting, or caching.",
+    "metadata": {
+      "tags": [
+        "design-pattern",
+        "structural",
+        "proxy",
+        "question"
+      ],
+      "source": "design-patterns/glossary.json"
+    }
+  },
+  {
+    "title": "Intent: Repository",
+    "body": "Mediate between domain and data mapping layers through a collection-like interface for aggregates.",
+    "metadata": {
+      "tags": [
+        "design-pattern",
+        "application",
+        "repository",
+        "intent"
+      ],
+      "source": "design-patterns/glossary.json"
+    }
+  },
+  {
+    "title": "Use Repository when",
+    "body": "Domain logic becomes coupled to queries, ORM APIs, and persistence details, making it hard to test and evolve.",
+    "metadata": {
+      "tags": [
+        "design-pattern",
+        "application",
+        "repository",
+        "problem"
+      ],
+      "source": "design-patterns/glossary.json"
+    }
+  },
+  {
+    "title": "Trade-off: Repository",
+    "body": "**Benefit**: Improves separation of concerns and testability of domain logic.\n\n**Cost**: Can hide important query capabilities or add leaky abstractions if over-generalized.",
+    "metadata": {
+      "tags": [
+        "design-pattern",
+        "application",
+        "repository",
+        "tradeoff"
+      ],
+      "source": "design-patterns/glossary.json"
+    }
+  },
+  {
+    "title": "Q1: Repository aims to present persistence as:",
+    "body": "A. A set of HTTP endpoints\nB. A collection-like interface over domain aggregates\nC. A UI component tree\nD. A message broker topic\n\n**B.** It abstracts storage behind domain-oriented operations.",
+    "metadata": {
+      "tags": [
+        "design-pattern",
+        "application",
+        "repository",
+        "question"
+      ],
+      "source": "design-patterns/glossary.json"
+    }
+  },
+  {
+    "title": "Q2: A common repository anti-pattern is:",
+    "body": "A. Defining methods per aggregate use case\nB. A one-size-fits-all generic CRUD interface that hides important domain queries\nC. Using interfaces for testing\nD. Separating domain and infrastructure\n\n**B.** Overly generic repositories can leak persistence details or fail to express intent.",
+    "metadata": {
+      "tags": [
+        "design-pattern",
+        "application",
+        "repository",
+        "question"
+      ],
+      "source": "design-patterns/glossary.json"
+    }
+  },
+  {
+    "title": "Intent: State",
+    "body": "Allow an object to alter its behavior when its internal state changes by delegating to state objects.",
+    "metadata": {
+      "tags": [
+        "design-pattern",
+        "behavioral",
+        "state",
+        "intent"
+      ],
+      "source": "design-patterns/glossary.json"
+    }
+  },
+  {
+    "title": "Use State when",
+    "body": "Behavior that depends on lifecycle state leads to large conditional blocks and invalid transitions scattered through methods.",
+    "metadata": {
+      "tags": [
+        "design-pattern",
+        "behavioral",
+        "state",
+        "problem"
+      ],
+      "source": "design-patterns/glossary.json"
+    }
+  },
+  {
+    "title": "Trade-off: State",
+    "body": "**Benefit**: Localizes state-specific behavior and makes transitions explicit.\n\n**Cost**: Increases number of classes and requires careful transition ownership.",
+    "metadata": {
+      "tags": [
+        "design-pattern",
+        "behavioral",
+        "state",
+        "tradeoff"
+      ],
+      "source": "design-patterns/glossary.json"
+    }
+  },
+  {
+    "title": "Q1: State pattern is a strong fit when:",
+    "body": "A. Behavior is identical in all modes\nB. An object’s behavior and valid transitions depend on lifecycle phase\nC. You need to clone object graphs\nD. You need a simplified subsystem API\n\n**B.** It encapsulates per-state behavior and transitions.",
+    "metadata": {
+      "tags": [
+        "design-pattern",
+        "behavioral",
+        "state",
+        "question"
+      ],
+      "source": "design-patterns/glossary.json"
+    }
+  },
+  {
+    "title": "Q2: How does State differ from Strategy conceptually?",
+    "body": "A. State is chosen by client only; Strategy never is\nB. State transitions are typically driven by context lifecycle, Strategy by interchangeable policy choice\nC. State requires databases; Strategy does not\nD. They are identical patterns\n\n**B.** Both delegate behavior, but State models internal lifecycle transitions.",
+    "metadata": {
+      "tags": [
+        "design-pattern",
+        "behavioral",
+        "state",
+        "question"
+      ],
+      "source": "design-patterns/glossary.json"
+    }
+  },
+  {
+    "title": "Intent: Strategy",
+    "body": "Define interchangeable algorithms behind a stable interface so behavior can vary at runtime.",
+    "metadata": {
+      "tags": [
+        "design-pattern",
+        "behavioral",
+        "strategy",
+        "intent"
+      ],
+      "source": "design-patterns/glossary.json"
+    }
+  },
+  {
+    "title": "Use Strategy when",
+    "body": "A service needs multiple pricing, routing, or ranking behaviors without scattering conditionals across callers.",
+    "metadata": {
+      "tags": [
+        "design-pattern",
+        "behavioral",
+        "strategy",
+        "problem"
+      ],
+      "source": "design-patterns/glossary.json"
+    }
+  },
+  {
+    "title": "Trade-off: Strategy",
+    "body": "**Benefit**: Replaces branching logic with composable, testable policies.\n\n**Cost**: Adds indirection and requires explicit strategy selection.",
+    "metadata": {
+      "tags": [
+        "design-pattern",
+        "behavioral",
+        "strategy",
+        "tradeoff"
+      ],
+      "source": "design-patterns/glossary.json"
+    }
+  },
+  {
+    "title": "Q1: What problem does Strategy primarily solve?",
+    "body": "A. Sharing mutable state across objects\nB. Selecting algorithms at runtime without caller conditionals\nC. Persisting objects to storage\nD. Coordinating distributed transactions\n\n**B.** Strategy encapsulates interchangeable behaviors behind a common interface.",
+    "metadata": {
+      "tags": [
+        "design-pattern",
+        "behavioral",
+        "strategy",
+        "question"
+      ],
+      "source": "design-patterns/glossary.json"
+    }
+  },
+  {
+    "title": "Q2: In a microservices pricing service, where does Strategy fit ",
+    "body": "A. As a network retry policy between services\nB. As pluggable domain policies inside one service\nC. As the service discovery mechanism\nD. As the database replication protocol\n\n**B.** It organizes internal behavior variants; cross-service concerns belong to architecture patterns.",
+    "metadata": {
+      "tags": [
+        "design-pattern",
+        "behavioral",
+        "strategy",
+        "question"
+      ],
+      "source": "design-patterns/glossary.json"
+    }
+  },
+  {
+    "title": "Intent: Template Method",
+    "body": "Define the skeleton of an algorithm in a base operation, deferring specific steps to subclasses or hooks.",
+    "metadata": {
+      "tags": [
+        "design-pattern",
+        "behavioral",
+        "template-method",
+        "intent"
+      ],
+      "source": "design-patterns/glossary.json"
+    }
+  },
+  {
+    "title": "Use Template Method when",
+    "body": "Multiple implementations share the same overall process but duplicate its structure while varying a few steps.",
+    "metadata": {
+      "tags": [
+        "design-pattern",
+        "behavioral",
+        "template-method",
+        "problem"
+      ],
+      "source": "design-patterns/glossary.json"
+    }
+  },
+  {
+    "title": "Trade-off: Template Method",
+    "body": "**Benefit**: Reuses invariant workflow logic and enforces consistent sequencing.\n\n**Cost**: Relies on inheritance and can make flows harder to follow across class hierarchy.",
+    "metadata": {
+      "tags": [
+        "design-pattern",
+        "behavioral",
+        "template-method",
+        "tradeoff"
+      ],
+      "source": "design-patterns/glossary.json"
+    }
+  },
+  {
+    "title": "Q1: Template Method centralizes:",
+    "body": "A. Object construction of families\nB. The invariant sequence of an algorithm\nC. Network communication retries\nD. Persistent storage schemas\n\n**B.** The base class owns the skeleton; subclasses supply variable steps.",
+    "metadata": {
+      "tags": [
+        "design-pattern",
+        "behavioral",
+        "template-method",
+        "question"
+      ],
+      "source": "design-patterns/glossary.json"
+    }
+  },
+  {
+    "title": "Q2: A drawback compared to composition-based alternatives is:",
+    "body": "A. It cannot enforce ordering\nB. It depends on inheritance, limiting flexibility\nC. It prevents code reuse\nD. It only works in functional languages\n\n**B.** Behavior variation is expressed through subclassing rather than object composition.",
+    "metadata": {
+      "tags": [
+        "design-pattern",
+        "behavioral",
+        "template-method",
+        "question"
+      ],
+      "source": "design-patterns/glossary.json"
+    }
+  },
+  {
+    "title": "Intent: Unit of Work",
+    "body": "Track changes to objects during a business transaction and coordinate writing them out as a single unit.",
+    "metadata": {
+      "tags": [
+        "design-pattern",
+        "application",
+        "unit-of-work",
+        "intent"
+      ],
+      "source": "design-patterns/glossary.json"
+    }
+  },
+  {
+    "title": "Use Unit of Work when",
+    "body": "Multiple repository operations within one use case can become inconsistent without coordinated commit/rollback boundaries.",
+    "metadata": {
+      "tags": [
+        "design-pattern",
+        "application",
+        "unit-of-work",
+        "problem"
+      ],
+      "source": "design-patterns/glossary.json"
+    }
+  },
+  {
+    "title": "Trade-off: Unit of Work",
+    "body": "**Benefit**: Ensures consistency within a transaction and simplifies commit coordination.\n\n**Cost**: Adds complexity and can be awkward across distributed systems or microservice boundaries.",
+    "metadata": {
+      "tags": [
+        "design-pattern",
+        "application",
+        "unit-of-work",
+        "tradeoff"
+      ],
+      "source": "design-patterns/glossary.json"
+    }
+  },
+  {
+    "title": "Q1: Unit of Work primarily manages:",
+    "body": "A. UI rendering state\nB. A transactional boundary and tracked changes\nC. HTTP routing tables\nD. Container orchestration\n\n**B.** It coordinates what must be committed or rolled back as one unit.",
+    "metadata": {
+      "tags": [
+        "design-pattern",
+        "application",
+        "unit-of-work",
+        "question"
+      ],
+      "source": "design-patterns/glossary.json"
+    }
+  },
+  {
+    "title": "Q2: Across microservices with separate databases, Unit of Work a",
+    "body": "A. Provides global ACID transactions automatically\nB. Is limited to local boundaries; sagas/compensation are needed for cross-service consistency\nC. Replaces idempotent consumers\nD. Eliminates eventual consistency\n\n**B.** Distributed systems require additional coordination patterns beyond a local unit of work.",
+    "metadata": {
+      "tags": [
+        "design-pattern",
+        "application",
+        "unit-of-work",
+        "question"
+      ],
+      "source": "design-patterns/glossary.json"
+    }
+  },
+  {
+    "title": "Intent: Visitor",
+    "body": "Represent an operation to be performed on elements of an object structure without changing the element classes.",
+    "metadata": {
+      "tags": [
+        "design-pattern",
+        "behavioral",
+        "visitor",
+        "intent"
+      ],
+      "source": "design-patterns/glossary.json"
+    }
+  },
+  {
+    "title": "Use Visitor when",
+    "body": "Adding new operations across a stable set of element types leads to repeated edits and scattered logic in those classes.",
+    "metadata": {
+      "tags": [
+        "design-pattern",
+        "behavioral",
+        "visitor",
+        "problem"
+      ],
+      "source": "design-patterns/glossary.json"
+    }
+  },
+  {
+    "title": "Trade-off: Visitor",
+    "body": "**Benefit**: Makes adding new operations easy and keeps operation-specific logic cohesive.\n\n**Cost**: Adding new element types requires changing every visitor.",
+    "metadata": {
+      "tags": [
+        "design-pattern",
+        "behavioral",
+        "visitor",
+        "tradeoff"
+      ],
+      "source": "design-patterns/glossary.json"
+    }
+  },
+  {
+    "title": "Q1: Visitor is a good fit when:",
+    "body": "A. Element types change frequently but operations are fixed\nB. Element structure is stable and new operations are added often\nC. You need to share intrinsic state\nD. You need runtime service discovery\n\n**B.** It optimizes for adding operations across a stable set of elements.",
+    "metadata": {
+      "tags": [
+        "design-pattern",
+        "behavioral",
+        "visitor",
+        "question"
+      ],
+      "source": "design-patterns/glossary.json"
+    }
+  },
+  {
+    "title": "Q2: A major cost of Visitor is:",
+    "body": "A. No way to group operation logic\nB. Adding a new element type forces updates to all visitors\nC. It cannot traverse structures\nD. It requires global variables\n\n**B.** The visitor interface mirrors the element hierarchy.",
+    "metadata": {
+      "tags": [
+        "design-pattern",
+        "behavioral",
+        "visitor",
+        "question"
+      ],
+      "source": "design-patterns/glossary.json"
+    }
+  }
+]

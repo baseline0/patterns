@@ -1,0 +1,43 @@
+id: recoverability
+name: Recoverability
+definition: The ability of a system to restore an acceptable state and resume service after a failure, measured by how quickly and completely normal operation returns.
+stimulus:
+  - A service crashes, a region is lost, a bad release ships, or a batch of messages is processed incorrectly.
+response:
+  - The system restores state from durable records or undoes partial work, resumes traffic automatically, and stays within the stated recovery targets.
+measure:
+  - Recovery time objective of 30 minutes or less for a full service outage.
+  - Recovery point objective of 5 minutes or less for durable data.
+  - Rollback of a bad release completed in 60 seconds or less.
+  - Event replay rebuilds projections within 15 minutes of a failure.
+tactics:
+  - retry-with-backoff
+  - circuit-breaker
+  - saga
+  - idempotent-consumer
+  - blue-green-deploy
+  - queue-based-load-leveling
+  - observability
+related_patterns:
+  - event-driven
+  - cqrs
+  - microservices
+  - 10-disaster-recovery
+  - 07-monitoring
+quiz:
+  - question: What is the difference between RTO and RPO?
+    choices:
+      - RTO is downtime allowed, RPO is data loss allowed
+      - RTO is data loss allowed, RPO is downtime allowed
+      - Both describe the same recovery target
+      - RTO applies only to databases and RPO only to networks
+    answer: 0
+    explanation: RTO bounds how long service may be down, while RPO bounds how much recent data may be lost.
+  - question: Why does replay require idempotent consumers?
+    choices:
+      - Replay delivers each event exactly once.
+      - Replay redelivers events, and repeated processing must not change the result.
+      - Replay disables the datastore.
+      - Replay removes the need for a recovery target.
+    answer: 1
+    explanation: Replaying a log repeats facts, so handlers must be safe when the same input is applied more than once.

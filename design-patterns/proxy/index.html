@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Proxy</title>
+<style>body{font-family:system-ui,sans-serif;max-width:52rem;margin:2rem auto;padding:0 1rem;line-height:1.5}pre{background:#f3f3f3;padding:1rem;overflow-x:auto}code{background:#f3f3f3;padding:0 .2rem}</style>
+</head><body>
+<h1>Proxy</h1>
+<p><strong>structural</strong> — Provide a surrogate or placeholder that controls access to another object.</p>
+<h2>Problem</h2><p>Direct access to an object is expensive, remote, unsafe, or needs cross-cutting controls like caching or lazy loading.</p>
+<h2>Structure</h2><pre>Client -&gt; Subject interface
+Proxy implements Subject and references RealSubject
+Proxy may add control before/after forwarding</pre>
+<h2>Participants</h2><ul>
+<li><strong>Subject</strong>: Common interface implemented by proxy and real subject.</li>
+<li><strong>RealSubject</strong>: The actual object providing core functionality.</li>
+<li><strong>Proxy</strong>: Controls access to the real subject and may add behavior.</li>
+</ul><h2>Forces</h2><ul
+><li>Access requires indirection (lazy init, remote, protection, caching).</li>
+><li>Clients should use the same interface as the real object.</li>
+><li>Control logic must be centralized.</li>
+></ul>
+<h2>Consequences</h2><p><strong>Benefit:</strong> Adds access control or optimization transparently to clients.</p>
+<p><strong>Cost:</strong> Introduces latency/complexity and can obscure failure modes of the real subject.</p>
+<h2>Python sketch</h2><pre>class Api:
+    def fetch(self, key: str) -&gt; str:
+        return f&quot;value:{key}&quot;
+
+class CachedApi:
+    def __init__(self, inner: Api):
+        self.inner = inner
+        self.cache = {}
+
+    def fetch(self, key: str) -&gt; str:
+        if key not in self.cache:
+            self.cache[key] = self.inner.fetch(key)
+        return self.cache[key]
+
+api = CachedApi(Api())
+print(api.fetch(&quot;a&quot;), api.fetch(&quot;a&quot;))</pre>
+<h2>Interview example</h2><p>A CRUD service (04-crud-api) can use a proxy in front of a repository or remote client to add caching and auth checks, aligning with cache-aside strategies.</p>
+</body></html>
