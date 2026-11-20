@@ -54,6 +54,8 @@ a{color:inherit}ul.links{padding-left:1.2rem}.empty{padding:1rem;color:#888}
     <input id="q" type="search" placeholder="Search title, id, summary, tags…" aria-label="Search">
     <select id="family"><option value="">All families</option></select>
     <select id="kind"><option value="">All kinds</option></select>
+    <select id="status"><option value="">All statuses</option></select>
+    <select id="concern"><option value="">All concerns</option></select>
     <button id="clear" type="button">Clear</button>
     <span class="meta" id="stats"></span>
   </div>
@@ -72,12 +74,16 @@ a{color:inherit}ul.links{padding-left:1.2rem}.empty{padding:1rem;color:#888}
   const q = document.getElementById('q');
   const fam = document.getElementById('family');
   const kind = document.getElementById('kind');
+  const statusSel = document.getElementById('status');
+  const concernSel = document.getElementById('concern');
   const stats = document.getElementById('stats');
   const state = {selected: null};
 
   const uniq = (arr) => [...new Set(arr.filter(Boolean))].sort();
   uniq(items.map(i => i.family)).forEach(v => fam.add(new Option(v, v)));
   uniq(items.map(i => i.kind)).forEach(v => kind.add(new Option(v, v)));
+  uniq(items.map(i => i.status)).forEach(v => statusSel.add(new Option(v, v)));
+  uniq(items.flatMap(i => i.concerns || [])).forEach(v => concernSel.add(new Option(v, v)));
 
   const esc = (s) => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   const href = (p) => p ? '../' + p.replace(/^\.\//,'') : '';
@@ -86,8 +92,10 @@ a{color:inherit}ul.links{padding-left:1.2rem}.empty{padding:1rem;color:#888}
     const needle = q.value.trim().toLowerCase();
     if (fam.value && item.family !== fam.value) return false;
     if (kind.value && item.kind !== kind.value) return false;
+    if (statusSel.value && (item.status || '') !== statusSel.value) return false;
+    if (concernSel.value && !(item.concerns || []).includes(concernSel.value)) return false;
     if (!needle) return true;
-    const hay = [item.id, item.title, item.summary, item.family, item.kind, ...(item.tags||[]), ...(item.related||[])].join(' ').toLower();
+    const hay = [item.id, item.title, item.summary, item.family, item.kind, item.status, ...(item.concerns||[]), ...(item.tags||[]), ...(item.related||[])].join(' ').toLowerCase();
     return hay.includes(needle);
   }
 
@@ -113,7 +121,8 @@ a{color:inherit}ul.links{padding-left:1.2rem}.empty{padding:1rem;color:#888}
         const btn = document.createElement('button');
         btn.className = 'item' + (item.uid === state.selected ? ' active' : '');
         btn.type = 'button';
-        btn.innerHTML = `<div class="t">${esc(item.title || item.id)}</div><div class="s"><span class="pill">${esc(item.kind)}</span>${esc(item.summary || item.id || '')}</div>`;
+        const st = item.status ? `<span class="pill">${esc(item.status)}</span>` : '';
+        btn.innerHTML = `<div class="t">${esc(item.title || item.id)}</div><div class="s"><span class="pill">${esc(item.kind)}</span>${st}${esc(item.summary || item.id || '')}</div>`;
         btn.addEventListener('click', () => select(item.uid));
         det.appendChild(btn);
       }
@@ -132,7 +141,11 @@ a{color:inherit}ul.links{padding-left:1.2rem}.empty{padding:1rem;color:#888}
     const links = (item.links || []).filter(l => l && l.path);
     const rel = (item.related || []).map(id => items.find(x => x.id === id || x.uid === id)).filter(Boolean);
     let out = `<h2>${esc(item.title || item.id)}</h2>`;
-    out += `<p><span class="pill">${esc(item.family)}</span><span class="pill">${esc(item.kind)}</span>${(item.tags||[]).map(t=>`<span class="pill">${esc(t)}</span>`).join('')}</p>`;
+    const pills = [`<span class="pill">${esc(item.family)}</span>`,`<span class="pill">${esc(item.kind)}</span>`];
+    if (item.status) pills.push(`<span class="pill">${esc(item.status)}</span>`);
+    (item.concerns||[]).forEach(c => pills.push(`<span class="pill">${esc(c)}</span>`));
+    (item.tags||[]).forEach(t => pills.push(`<span class="pill">${esc(t)}</span>`));
+    out += `<p>${pills.join('')}</p>`;
     if (item.summary) out += `<p>${esc(item.summary)}</p>`;
     if (links.length) out += `<h3>Open</h3><ul class="links">${links.map(l => `<li><a href="${esc(href(l.path))}">${esc(l.label || l.path)}</a> <span class="meta">${esc(l.path)}</span></li>`).join('')}</ul>`;
     if (item.source) out += `<h3>Source</h3><p class="meta">${esc(item.source)}</p>`;
@@ -159,8 +172,8 @@ a{color:inherit}ul.links{padding-left:1.2rem}.empty{padding:1rem;color:#888}
     if (item) history.replaceState(null, '', '#'+encodeURIComponent(uid));
   }
 
-  [q,fam,kind].forEach(el => el.addEventListener('input', renderList));
-  document.getElementById('clear').addEventListener('click', () => { q.value=''; fam.value=''; kind.value=''; renderList(); });
+  [q,fam,kind,statusSel,concernSel].forEach(el => el.addEventListener('input', renderList));
+  document.getElementById('clear').addEventListener('click', () => { q.value=''; fam.value=''; kind.value=''; statusSel.value=''; concernSel.value=''; renderList(); });
   renderList();
   const hash = decodeURIComponent(location.hash.slice(1));
   if (hash && items.find(i => i.uid === hash)) select(hash);
