@@ -63,9 +63,10 @@ import 'just/fleet-test.just'
 
 # === Testing & Validation ===
 
-# Validate patterns.json schema and assets
+# Validate patterns.json schema, assets, and checked-in generated outputs
 @validate:
     python tests/validate_patterns.py
+    just -f site/justfile check
 
 # Run tests
 # Unit tests only, matching CI and the pre-push hook. Data validation is `just validate`.
@@ -89,6 +90,7 @@ test-unit:
     set -euo pipefail
     if uv run pytest --version >/dev/null 2>&1; then
         uv run pytest -m unit --tb=short -v
+        just -f site/justfile check
         exit 0
     fi
     echo "error: test-unit cannot run in this repo: install pytest as a dev dependency (uv add --dev pytest)" >&2
