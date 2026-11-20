@@ -29,7 +29,7 @@ img{max-width:100%;height:auto}pre{background:#8882;padding:.8rem;overflow:auto;
 .meta{color:#888;font-size:.85rem}table{border-collapse:collapse;width:100%}td,th{border:1px solid #8884;padding:.4rem;text-align:left}
 svg{max-width:100%;height:auto}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(16rem,1fr));gap:1rem}
 </style></head><body>
-<nav><a href="__HUB__">Visual hub</a><a href="__CARDS__">Cards</a><a href="__SECTION__">Section index</a></nav>
+<nav><a href="__SITE__">Explorer</a><a href="__HUB__">Visual hub</a><a href="__CARDS__">Cards</a><a href="__SECTION__">Section index</a></nav>
 __BODY__
 </body></html>
 """
@@ -54,6 +54,7 @@ def items(value: Any) -> list[dict[str, Any]]:
 def page(title: str, body: str, section: bool = False) -> str:
     """Section pages are one directory deeper than the hub, so their card link goes one level further up."""
     links = {
+        "__SITE__": "../../site/index.html" if section else "../site/index.html",
         "__HUB__": "../index.html" if section else "index.html",
         "__CARDS__": "../../cards/index.html" if section else "../cards/index.html",
         "__SECTION__": "index.html",
@@ -359,6 +360,7 @@ def render_all(root: Path = REPO_ROOT) -> dict[Path, str]:
                 "<h1>Visual review</h1>",
                 '<p class="meta">Generated from committed content. No network requests, no external scripts.</p>',
                 '<div class="grid">',
+                '<div><h2><a href="../site/index.html">Content explorer</a></h2><p>Searchable local index of patterns, architecture, papers, proofs, scenarios, and providers.</p></div>',
                 '<div><h2><a href="../cards/index.html">Cards</a></h2><p>Timed mixed review with local scheduling.</p></div>',
                 f'<div><h2><a href="concepts/index.html">Concept maps</a></h2><p>{len(papers)} paper map(s).</p></div>',
                 f'<div><h2><a href="diagrams/index.html">Diagrams</a></h2><p>{len(patterns)} architecture diagram(s).</p></div>',
