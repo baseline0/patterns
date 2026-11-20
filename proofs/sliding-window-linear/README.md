@@ -15,6 +15,10 @@
 
 **Complexity**: O(n) time, O(1) extra space.
 
+## Explore
+
+- Searchable local catalogue: `just -f site/justfile serve` then open `site/index.html`.
+
 ## Linked claims
 
 - `sliding-window-is-linear`

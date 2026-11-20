@@ -15,6 +15,10 @@
 
 **Complexity**: O(n) for n appends; O(1) amortized, O(n) worst case for a single resize.
 
+## Explore
+
+- Searchable local catalogue: `just -f site/justfile serve` then open `site/index.html`.
+
 ## Linked claims
 
 - `list-append-is-amortized-constant`

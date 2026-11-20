@@ -15,6 +15,10 @@
 
 **Complexity**: O(n) time and O(1) extra space, versus O(n log n) for repeated insertion.
 
+## Explore
+
+- Searchable local catalogue: `just -f site/justfile serve` then open `site/index.html`.
+
 ## Linked claims
 
 - `heapify-is-linear`
