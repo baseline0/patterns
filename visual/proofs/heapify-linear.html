@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bottom-up heapify is linear</title>
+<style>
+body{font-family:system-ui,sans-serif;max-width:60rem;margin:2rem auto;padding:0 1rem;line-height:1.5}
+h1,h2{margin-top:1.8rem}nav a{margin-right:1rem}figure{margin:1.5rem 0;border:1px solid #8884;border-radius:8px;padding:1rem}
+img{max-width:100%;height:auto}pre{background:#8882;padding:.8rem;overflow:auto;border-radius:6px}
+.meta{color:#888;font-size:.85rem}table{border-collapse:collapse;width:100%}td,th{border:1px solid #8884;padding:.4rem;text-align:left}
+svg{max-width:100%;height:auto}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(16rem,1fr));gap:1rem}
+</style></head><body>
+<nav><a href="../index.html">Visual hub</a><a href="../../cards/index.html">Cards</a><a href="index.html">Section index</a></nav>
+<h1>Bottom-up heapify is linear</h1>
+<h2>Statement</h2>
+<p>Constructing a binary heap by calling sift-down from the last internal node to the root takes O(n) time.</p>
+<h2>Invariant</h2>
+<p>Before node i is processed, every subtree rooted at an index greater than i is already a valid heap.</p>
+<h2>Proof graph</h2>
+<svg viewBox="0 0 930 230" role="img" aria-label="Proof dependency graph">
+<defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto"><path d="M0,0 L0,6 L7,3 z" fill="#666"/></marker></defs>
+<line x1="190" y1="170" x2="215" y2="170" stroke="#666" stroke-width="1.5" marker-end="url(#arrow)"/>
+<line x1="400" y1="170" x2="425" y2="170" stroke="#666" stroke-width="1.5" marker-end="url(#arrow)"/>
+<line x1="610" y1="170" x2="635" y2="170" stroke="#666" stroke-width="1.5" marker-end="url(#arrow)"/>
+<rect x="10" y="145" width="180" height="50" rx="8" fill="#3a7" stroke="#263"/>
+<text x="100" y="174" text-anchor="middle" fill="#fff" font-size="13">Leaves are heaps</text>
+<rect x="220" y="145" width="180" height="50" rx="8" fill="#3a7" stroke="#263"/>
+<text x="310" y="174" text-anchor="middle" fill="#fff" font-size="13">Process internal nodes bot</text>
+<rect x="430" y="145" width="180" height="50" rx="8" fill="#3a7" stroke="#263"/>
+<text x="520" y="174" text-anchor="middle" fill="#fff" font-size="13">Cost depends on height</text>
+<rect x="640" y="145" width="180" height="50" rx="8" fill="#3a7" stroke="#263"/>
+<text x="730" y="174" text-anchor="middle" fill="#fff" font-size="13">Bound the weighted sum</text>
+</svg>
+<h2>Steps</h2>
+<table><tr><th>Step</th><th>Detail</th><th>Depends on</th></tr>
+<tr><td>Leaves are heaps</td><td>Nodes with no children already satisfy the heap property, so processing can start at the last parent.</td><td></td></tr>
+<tr><td>Process internal nodes bottom-up</td><td>Walking from the last parent down to the root guarantees each child subtree is a heap before its parent is fixed.</td><td>leaves</td></tr>
+<tr><td>Cost depends on height</td><td>A node at height h moves at most h levels, and a binary heap has at most ceil(n / 2^(h+1)) nodes at height h.</td><td>reverse</td></tr>
+<tr><td>Bound the weighted sum</td><td>The sum over heights of h * n / 2^(h+1) is at most n, because the series sum h / 2^h converges to 2.</td><td>height-cost</td></tr>
+</table>
+<h2>Complexity</h2>
+<p>O(n) time and O(1) extra space, versus O(n log n) for repeated insertion.</p>
+</body></html>

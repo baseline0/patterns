@@ -1,0 +1,80 @@
+[
+  {
+    "title": "Prove: Bottom-up heapify is linear",
+    "body": "Constructing a binary heap by calling sift-down from the last internal node to the root takes O(n) time.\n\nComplexity: O(n) time and O(1) extra space, versus O(n log n) for repeated insertion.",
+    "metadata": {
+      "tags": [
+        "data-structures",
+        "proof",
+        "heapify-linear",
+        "statement"
+      ],
+      "source": "proofs/content/heapify-linear.yaml"
+    }
+  },
+  {
+    "title": "Invariant: Bottom-up heapify is linear",
+    "body": "Before node i is processed, every subtree rooted at an index greater than i is already a valid heap.",
+    "metadata": {
+      "tags": [
+        "data-structures",
+        "proof",
+        "heapify-linear",
+        "invariant"
+      ],
+      "source": "proofs/content/heapify-linear.yaml"
+    }
+  },
+  {
+    "title": "Proof step: Leaves are heaps",
+    "body": "Nodes with no children already satisfy the heap property, so processing can start at the last parent.",
+    "metadata": {
+      "tags": [
+        "data-structures",
+        "proof",
+        "heapify-linear",
+        "step"
+      ],
+      "source": "proofs/content/heapify-linear.yaml"
+    }
+  },
+  {
+    "title": "Proof step: Process internal nodes bottom-up",
+    "body": "Walking from the last parent down to the root guarantees each child subtree is a heap before its parent is fixed.\n\nDepends on: leaves",
+    "metadata": {
+      "tags": [
+        "data-structures",
+        "proof",
+        "heapify-linear",
+        "step"
+      ],
+      "source": "proofs/content/heapify-linear.yaml"
+    }
+  },
+  {
+    "title": "Proof step: Cost depends on height",
+    "body": "A node at height h moves at most h levels, and a binary heap has at most ceil(n / 2^(h+1)) nodes at height h.\n\nDepends on: reverse",
+    "metadata": {
+      "tags": [
+        "data-structures",
+        "proof",
+        "heapify-linear",
+        "step"
+      ],
+      "source": "proofs/content/heapify-linear.yaml"
+    }
+  },
+  {
+    "title": "Proof step: Bound the weighted sum",
+    "body": "The sum over heights of h * n / 2^(h+1) is at most n, because the series sum h / 2^h converges to 2.\n\nDepends on: height-cost",
+    "metadata": {
+      "tags": [
+        "data-structures",
+        "proof",
+        "heapify-linear",
+        "step"
+      ],
+      "source": "proofs/content/heapify-linear.yaml"
+    }
+  }
+]

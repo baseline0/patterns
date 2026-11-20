@@ -1,0 +1,35 @@
+{
+  "nodes": [
+    {
+      "id": "heo",
+      "label": "Halfway Escape Optimization",
+      "definition": "A quantum-inspired metaheuristic whose move rule lets candidates leave a local region before settling.",
+      "mentions": 5
+    },
+    {
+      "id": "tunnelling",
+      "label": "Tunnelling metaphor",
+      "definition": "The quantum-inspired escape idea that lets a candidate cross a barrier instead of only climbing downhill.",
+      "mentions": 3
+    },
+    {
+      "id": "benchmarks",
+      "label": "Benchmark suite",
+      "definition": "Fourteen general optimization functions evaluated at dimension thirty to compare search behaviour.",
+      "mentions": 4
+    },
+    {
+      "id": "baselines",
+      "label": "Established optimizers",
+      "definition": "PSO, GA, AFSA, GWO, and QPSO, used as comparison points for the new method.",
+      "mentions": 3
+    },
+    {
+      "id": "engineering-design",
+      "label": "Constrained design problems",
+      "definition": "Pressure-vessel and tubular-column design tasks used to test feasibility beyond synthetic functions.",
+      "mentions": 2
+    }
+  ],
+  "links": []
+}

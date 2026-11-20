@@ -1,0 +1,63 @@
+arxiv_id: 2409.13788v1
+version: 1
+date: '2026-11-20T00:05:13.011901+00:00'
+title: Quantum evolutionary algorithm for TSP combinatorial optimisation problem
+authors: []
+abstract: >-
+  An experimental comparison of a quantum-inspired genetic algorithm with a classical genetic algorithm on standard
+  TSPLIB tours. The study varies instance size and type, then compares solution quality, iteration count, runtime, and
+  stability. Across most instances, especially larger ones, the classical algorithm found better tours sooner. The
+  paper points to difficult quantum-gate parameter tuning and notes that no real quantum hardware was used, so the
+  results describe a simulation rather than a hardware speedup.
+rights:
+  quotes: none
+  basis: original-summary
+  note: Metadata came from a tool-lit-review export; no PDF text or quoted abstract is stored here.
+concepts:
+  - id: tsp
+    name: Travelling-salesman tour
+    definition: A combinatorial problem that asks for the shortest cycle visiting each city once and returning to the start.
+    mentions: 4
+    related: [qga, cga, tsp-lib]
+  - id: qga
+    name: Quantum-inspired genetic algorithm
+    definition: A population search that borrows quantum state and gate metaphors to encode and update candidate tours.
+    mentions: 5
+    related: [cga, angle-tuning]
+  - id: cga
+    name: Classical genetic algorithm
+    definition: A population heuristic using selection, crossover, and mutation to improve candidate tours.
+    mentions: 4
+    related: [qga]
+  - id: tsp-lib
+    name: TSPLIB benchmarks
+    definition: A standard library of tour instances used to compare algorithms across sizes and structures.
+    mentions: 2
+    related: [tsp]
+  - id: angle-tuning
+    name: Rotation-angle tuning
+    definition: The gate angle that controls how candidates change; the paper identifies it as a key tuning burden.
+    mentions: 2
+    related: [qga]
+equations: []
+claims:
+  - text: On the tested TSPLIB instances, the classical genetic algorithm usually converged to better tours faster than the quantum-inspired variant.
+    section: Experiments
+    support_level: reported-experimental
+  - text: The quantum-inspired results come from simulation; no real quantum hardware was evaluated.
+    section: Limitations
+    support_level: author-reported
+citations: []
+entities:
+  people: []
+  organizations: []
+source:
+  tool: tool-lit-review
+  schema_version: 1
+  paper_id: 2409.13788v1
+  sha256: 338f7fef07667bc3036fb6f8ba44b0ce6fc5bcbba3de571618cb278e378456cf
+  pdf: pdf/2409.13788v1.pdf
+  exported_at: '2026-11-20T00:05:13.011901+00:00'
+  source: arXiv
+  url: https://arxiv.org/pdf/2409.13788v1
+  published: '2024-09-20T08:27:42+00:00'

@@ -2090,6 +2090,426 @@
       }
     },
     {
+      "id": "9e0b49fb4581",
+      "title": "Concept: Halfway Escape Optimization",
+      "body": "A quantum-inspired metaheuristic whose move rule lets candidates leave a local region before settling.",
+      "metadata": {
+        "tags": [
+          "2405.02850v7",
+          "concept"
+        ],
+        "source": "papers/2405.02850v7/glossary.json"
+      }
+    },
+    {
+      "id": "8d1ed29fdaaa",
+      "title": "Concept: Tunnelling metaphor",
+      "body": "The quantum-inspired escape idea that lets a candidate cross a barrier instead of only climbing downhill.",
+      "metadata": {
+        "tags": [
+          "2405.02850v7",
+          "concept"
+        ],
+        "source": "papers/2405.02850v7/glossary.json"
+      }
+    },
+    {
+      "id": "4237d2d87f8a",
+      "title": "Concept: Benchmark suite",
+      "body": "Fourteen general optimization functions evaluated at dimension thirty to compare search behaviour.",
+      "metadata": {
+        "tags": [
+          "2405.02850v7",
+          "concept"
+        ],
+        "source": "papers/2405.02850v7/glossary.json"
+      }
+    },
+    {
+      "id": "66936830a077",
+      "title": "Concept: Established optimizers",
+      "body": "PSO, GA, AFSA, GWO, and QPSO, used as comparison points for the new method.",
+      "metadata": {
+        "tags": [
+          "2405.02850v7",
+          "concept"
+        ],
+        "source": "papers/2405.02850v7/glossary.json"
+      }
+    },
+    {
+      "id": "76f9780ca2bd",
+      "title": "Concept: Constrained design problems",
+      "body": "Pressure-vessel and tubular-column design tasks used to test feasibility beyond synthetic functions.",
+      "metadata": {
+        "tags": [
+          "2405.02850v7",
+          "concept"
+        ],
+        "source": "papers/2405.02850v7/glossary.json"
+      }
+    },
+    {
+      "id": "b7d6fd35fd1e",
+      "title": "Claim: Benchmark evaluation",
+      "body": "Halfway Escape Optimization is reported competitive with five established optimizers on fourteen benchmark functions at dimension thirty.",
+      "metadata": {
+        "tags": [
+          "2405.02850v7",
+          "claim"
+        ],
+        "source": "papers/2405.02850v7/glossary.json"
+      }
+    },
+    {
+      "id": "bdf98539b43d",
+      "title": "Claim: Applications",
+      "body": "The paper reports feasible engineering designs and higher accuracy on the Osmancik-97 and Cammeo rice classification tasks.",
+      "metadata": {
+        "tags": [
+          "2405.02850v7",
+          "claim"
+        ],
+        "source": "papers/2405.02850v7/glossary.json"
+      }
+    },
+    {
+      "id": "a1624034255a",
+      "title": "Concept: Travelling-salesman tour",
+      "body": "A combinatorial problem that asks for the shortest cycle visiting each city once and returning to the start.",
+      "metadata": {
+        "tags": [
+          "2409.13788v1",
+          "concept"
+        ],
+        "source": "papers/2409.13788v1/glossary.json"
+      }
+    },
+    {
+      "id": "4ead912ae0c1",
+      "title": "Concept: Quantum-inspired genetic algorithm",
+      "body": "A population search that borrows quantum state and gate metaphors to encode and update candidate tours.",
+      "metadata": {
+        "tags": [
+          "2409.13788v1",
+          "concept"
+        ],
+        "source": "papers/2409.13788v1/glossary.json"
+      }
+    },
+    {
+      "id": "1a13ae675a17",
+      "title": "Concept: Classical genetic algorithm",
+      "body": "A population heuristic using selection, crossover, and mutation to improve candidate tours.",
+      "metadata": {
+        "tags": [
+          "2409.13788v1",
+          "concept"
+        ],
+        "source": "papers/2409.13788v1/glossary.json"
+      }
+    },
+    {
+      "id": "1ae9acdf5a14",
+      "title": "Concept: TSPLIB benchmarks",
+      "body": "A standard library of tour instances used to compare algorithms across sizes and structures.",
+      "metadata": {
+        "tags": [
+          "2409.13788v1",
+          "concept"
+        ],
+        "source": "papers/2409.13788v1/glossary.json"
+      }
+    },
+    {
+      "id": "e3681f06ff5a",
+      "title": "Concept: Rotation-angle tuning",
+      "body": "The gate angle that controls how candidates change; the paper identifies it as a key tuning burden.",
+      "metadata": {
+        "tags": [
+          "2409.13788v1",
+          "concept"
+        ],
+        "source": "papers/2409.13788v1/glossary.json"
+      }
+    },
+    {
+      "id": "7f9ca71dbba6",
+      "title": "Claim: Experiments",
+      "body": "On the tested TSPLIB instances, the classical genetic algorithm usually converged to better tours faster than the quantum-inspired variant.",
+      "metadata": {
+        "tags": [
+          "2409.13788v1",
+          "claim"
+        ],
+        "source": "papers/2409.13788v1/glossary.json"
+      }
+    },
+    {
+      "id": "c6a516ff4832",
+      "title": "Claim: Limitations",
+      "body": "The quantum-inspired results come from simulation; no real quantum hardware was evaluated.",
+      "metadata": {
+        "tags": [
+          "2409.13788v1",
+          "claim"
+        ],
+        "source": "papers/2409.13788v1/glossary.json"
+      }
+    },
+    {
+      "id": "f37340d96371",
+      "title": "Prove: Dynamic array append is amortized O(1)",
+      "body": "A sequence of n appends to a geometrically growing array costs O(n) time in total.\n\nComplexity: O(n) for n appends; O(1) amortized, O(n) worst case for a single resize.",
+      "metadata": {
+        "tags": [
+          "data-structures",
+          "proof",
+          "dynamic-array-amortized",
+          "statement"
+        ],
+        "source": "proofs/dynamic-array-amortized/glossary.json"
+      }
+    },
+    {
+      "id": "b7282b23aacc",
+      "title": "Invariant: Dynamic array append is amortized O(1)",
+      "body": "After every append, capacity is at least length; immediately after a resize, capacity is at most twice length.",
+      "metadata": {
+        "tags": [
+          "data-structures",
+          "proof",
+          "dynamic-array-amortized",
+          "invariant"
+        ],
+        "source": "proofs/dynamic-array-amortized/glossary.json"
+      }
+    },
+    {
+      "id": "86e58335be4d",
+      "title": "Proof step: Base case",
+      "body": "The first append writes one slot into the initial capacity and performs no copy.",
+      "metadata": {
+        "tags": [
+          "data-structures",
+          "proof",
+          "dynamic-array-amortized",
+          "step"
+        ],
+        "source": "proofs/dynamic-array-amortized/glossary.json"
+      }
+    },
+    {
+      "id": "3b461c80400b",
+      "title": "Proof step: Resize points form a geometric series",
+      "body": "Capacity doubles only when length reaches capacity, so resizes happen at lengths 1, 2, 4, 8, and so on.\n\nDepends on: base",
+      "metadata": {
+        "tags": [
+          "data-structures",
+          "proof",
+          "dynamic-array-amortized",
+          "step"
+        ],
+        "source": "proofs/dynamic-array-amortized/glossary.json"
+      }
+    },
+    {
+      "id": "b4220dbe4392",
+      "title": "Proof step: Total copy work is bounded",
+      "body": "Across all resizes the array copies at most 1 + 2 + 4 + ... + n slots, which is less than 2n.\n\nDepends on: doubling",
+      "metadata": {
+        "tags": [
+          "data-structures",
+          "proof",
+          "dynamic-array-amortized",
+          "step"
+        ],
+        "source": "proofs/dynamic-array-amortized/glossary.json"
+      }
+    },
+    {
+      "id": "81be90459e46",
+      "title": "Proof step: Add writes and copies",
+      "body": "n appends perform n writes and fewer than 2n copies, so the sequence is linear and each append is O(1) on average.\n\nDepends on: copies",
+      "metadata": {
+        "tags": [
+          "data-structures",
+          "proof",
+          "dynamic-array-amortized",
+          "step"
+        ],
+        "source": "proofs/dynamic-array-amortized/glossary.json"
+      }
+    },
+    {
+      "id": "192555af0031",
+      "title": "Prove: Bottom-up heapify is linear",
+      "body": "Constructing a binary heap by calling sift-down from the last internal node to the root takes O(n) time.\n\nComplexity: O(n) time and O(1) extra space, versus O(n log n) for repeated insertion.",
+      "metadata": {
+        "tags": [
+          "data-structures",
+          "proof",
+          "heapify-linear",
+          "statement"
+        ],
+        "source": "proofs/heapify-linear/glossary.json"
+      }
+    },
+    {
+      "id": "6835d3027f21",
+      "title": "Invariant: Bottom-up heapify is linear",
+      "body": "Before node i is processed, every subtree rooted at an index greater than i is already a valid heap.",
+      "metadata": {
+        "tags": [
+          "data-structures",
+          "proof",
+          "heapify-linear",
+          "invariant"
+        ],
+        "source": "proofs/heapify-linear/glossary.json"
+      }
+    },
+    {
+      "id": "d9fa625eef9c",
+      "title": "Proof step: Leaves are heaps",
+      "body": "Nodes with no children already satisfy the heap property, so processing can start at the last parent.",
+      "metadata": {
+        "tags": [
+          "data-structures",
+          "proof",
+          "heapify-linear",
+          "step"
+        ],
+        "source": "proofs/heapify-linear/glossary.json"
+      }
+    },
+    {
+      "id": "8b852901f8d9",
+      "title": "Proof step: Process internal nodes bottom-up",
+      "body": "Walking from the last parent down to the root guarantees each child subtree is a heap before its parent is fixed.\n\nDepends on: leaves",
+      "metadata": {
+        "tags": [
+          "data-structures",
+          "proof",
+          "heapify-linear",
+          "step"
+        ],
+        "source": "proofs/heapify-linear/glossary.json"
+      }
+    },
+    {
+      "id": "60de0299c55e",
+      "title": "Proof step: Cost depends on height",
+      "body": "A node at height h moves at most h levels, and a binary heap has at most ceil(n / 2^(h+1)) nodes at height h.\n\nDepends on: reverse",
+      "metadata": {
+        "tags": [
+          "data-structures",
+          "proof",
+          "heapify-linear",
+          "step"
+        ],
+        "source": "proofs/heapify-linear/glossary.json"
+      }
+    },
+    {
+      "id": "8c0e6207ef2b",
+      "title": "Proof step: Bound the weighted sum",
+      "body": "The sum over heights of h * n / 2^(h+1) is at most n, because the series sum h / 2^h converges to 2.\n\nDepends on: height-cost",
+      "metadata": {
+        "tags": [
+          "data-structures",
+          "proof",
+          "heapify-linear",
+          "step"
+        ],
+        "source": "proofs/heapify-linear/glossary.json"
+      }
+    },
+    {
+      "id": "ba179a799948",
+      "title": "Prove: Sliding window moves each pointer at most n times",
+      "body": "A sliding window over an array of n elements runs in O(n) time when each pointer only moves forward.\n\nComplexity: O(n) time, O(1) extra space.",
+      "metadata": {
+        "tags": [
+          "data-structures",
+          "proof",
+          "sliding-window-linear",
+          "statement"
+        ],
+        "source": "proofs/sliding-window-linear/glossary.json"
+      }
+    },
+    {
+      "id": "de524b1db297",
+      "title": "Invariant: Sliding window moves each pointer at most n times",
+      "body": "At the start of every iteration the half-open interval [left, right) is the current window and right is one past the last inspected element.",
+      "metadata": {
+        "tags": [
+          "data-structures",
+          "proof",
+          "sliding-window-linear",
+          "invariant"
+        ],
+        "source": "proofs/sliding-window-linear/glossary.json"
+      }
+    },
+    {
+      "id": "edc7deb7a793",
+      "title": "Proof step: Empty window",
+      "body": "Set left = right = 0. The window is empty and the invariant holds before any input is consumed.",
+      "metadata": {
+        "tags": [
+          "data-structures",
+          "proof",
+          "sliding-window-linear",
+          "step"
+        ],
+        "source": "proofs/sliding-window-linear/glossary.json"
+      }
+    },
+    {
+      "id": "5c560f703266",
+      "title": "Proof step: Right pointer only advances",
+      "body": "Each iteration admits at most one new element by increasing right, so right advances at most n times.\n\nDepends on: init",
+      "metadata": {
+        "tags": [
+          "data-structures",
+          "proof",
+          "sliding-window-linear",
+          "step"
+        ],
+        "source": "proofs/sliding-window-linear/glossary.json"
+      }
+    },
+    {
+      "id": "34711c572519",
+      "title": "Proof step: Left pointer only advances",
+      "body": "Invalid windows are repaired by increasing left; it never decreases, so left also advances at most n times.\n\nDepends on: init",
+      "metadata": {
+        "tags": [
+          "data-structures",
+          "proof",
+          "sliding-window-linear",
+          "step"
+        ],
+        "source": "proofs/sliding-window-linear/glossary.json"
+      }
+    },
+    {
+      "id": "b8853299f83d",
+      "title": "Proof step: Sum the pointer moves",
+      "body": "At most n expansions plus at most n shrink steps gives O(n) total work, with O(1) extra space.\n\nDepends on: expand, shrink",
+      "metadata": {
+        "tags": [
+          "data-structures",
+          "proof",
+          "sliding-window-linear",
+          "step"
+        ],
+        "source": "proofs/sliding-window-linear/glossary.json"
+      }
+    },
+    {
       "id": "34621d26fdc2",
       "title": "Claim: contract-tests-prevent-api-misalignment",
       "body": "Contract tests verify that both client and server agree on API format before integration.",

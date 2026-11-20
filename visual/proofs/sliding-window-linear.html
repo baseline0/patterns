@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sliding window moves each pointer at most n times</title>
+<style>
+body{font-family:system-ui,sans-serif;max-width:60rem;margin:2rem auto;padding:0 1rem;line-height:1.5}
+h1,h2{margin-top:1.8rem}nav a{margin-right:1rem}figure{margin:1.5rem 0;border:1px solid #8884;border-radius:8px;padding:1rem}
+img{max-width:100%;height:auto}pre{background:#8882;padding:.8rem;overflow:auto;border-radius:6px}
+.meta{color:#888;font-size:.85rem}table{border-collapse:collapse;width:100%}td,th{border:1px solid #8884;padding:.4rem;text-align:left}
+svg{max-width:100%;height:auto}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(16rem,1fr));gap:1rem}
+</style></head><body>
+<nav><a href="../index.html">Visual hub</a><a href="../../cards/index.html">Cards</a><a href="index.html">Section index</a></nav>
+<h1>Sliding window moves each pointer at most n times</h1>
+<h2>Statement</h2>
+<p>A sliding window over an array of n elements runs in O(n) time when each pointer only moves forward.</p>
+<h2>Invariant</h2>
+<p>At the start of every iteration the half-open interval [left, right) is the current window and right is one past the last inspected element.</p>
+<h2>Proof graph</h2>
+<svg viewBox="0 0 720 340" role="img" aria-label="Proof dependency graph">
+<defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto"><path d="M0,0 L0,6 L7,3 z" fill="#666"/></marker></defs>
+<line x1="190" y1="170" x2="215" y2="170" stroke="#666" stroke-width="1.5" marker-end="url(#arrow)"/>
+<line x1="190" y1="170" x2="215" y2="280" stroke="#666" stroke-width="1.5" marker-end="url(#arrow)"/>
+<line x1="400" y1="170" x2="425" y2="170" stroke="#666" stroke-width="1.5" marker-end="url(#arrow)"/>
+<line x1="400" y1="280" x2="425" y2="170" stroke="#666" stroke-width="1.5" marker-end="url(#arrow)"/>
+<rect x="10" y="145" width="180" height="50" rx="8" fill="#3a7" stroke="#263"/>
+<text x="100" y="174" text-anchor="middle" fill="#fff" font-size="13">Empty window</text>
+<rect x="220" y="145" width="180" height="50" rx="8" fill="#3a7" stroke="#263"/>
+<text x="310" y="174" text-anchor="middle" fill="#fff" font-size="13">Right pointer only advance</text>
+<rect x="220" y="255" width="180" height="50" rx="8" fill="#3a7" stroke="#263"/>
+<text x="310" y="284" text-anchor="middle" fill="#fff" font-size="13">Left pointer only advances</text>
+<rect x="430" y="145" width="180" height="50" rx="8" fill="#3a7" stroke="#263"/>
+<text x="520" y="174" text-anchor="middle" fill="#fff" font-size="13">Sum the pointer moves</text>
+</svg>
+<h2>Steps</h2>
+<table><tr><th>Step</th><th>Detail</th><th>Depends on</th></tr>
+<tr><td>Empty window</td><td>Set left = right = 0. The window is empty and the invariant holds before any input is consumed.</td><td></td></tr>
+<tr><td>Right pointer only advances</td><td>Each iteration admits at most one new element by increasing right, so right advances at most n times.</td><td>init</td></tr>
+<tr><td>Left pointer only advances</td><td>Invalid windows are repaired by increasing left; it never decreases, so left also advances at most n times.</td><td>init</td></tr>
+<tr><td>Sum the pointer moves</td><td>At most n expansions plus at most n shrink steps gives O(n) total work, with O(1) extra space.</td><td>expand, shrink</td></tr>
+</table>
+<h2>Complexity</h2>
+<p>O(n) time, O(1) extra space.</p>
+</body></html>

@@ -8,7 +8,7 @@ generated from this repository; there are no network requests, CDN scripts, or s
 | `index.html` | all inventories | hub for the four review modes |
 | `concepts/arxiv-*.html` | `papers/content/*.yaml` | concept map + equations + claims to defend |
 | `diagrams/index.html` | `data/patterns.json`, `assets/diagrams/*.svg` | original architecture diagrams with decision captions |
-| `proofs/index.html` | `proofs/content/*.yaml` (optional) | proof DAGs for interview drills |
+| `proofs/index.html` | `proofs/content/*.yaml` | three real proof DAGs for interview drills |
 
 ## Commands
 
@@ -25,7 +25,7 @@ the graph is a static SVG laid out on a circle, so output is byte-stable and rev
 
 ## Adding proof graphs
 
-Create `proofs/content/<id>.yaml` (this directory does not have to exist yet):
+Add another `proofs/content/<id>.yaml` beside the three committed DAGs:
 
 ```yaml
 id: induction-on-loop
@@ -43,5 +43,5 @@ steps:
 complexity: "O(n^2) insertions; O(n log n) with binary insertion."
 ```
 
-`depends_on` gives the DAG edges; cycles and unknown ids fail the build. Add `tests/unit/test_visual.py` coverage when
-the first proof lands.
+`depends_on` gives the DAG edges; cycles and unknown ids fail the build. `tests/unit/test_visual.py` checks the renderer
+and `tests/unit/test_proofs.py` checks the YAML, claim links, and generated cards.

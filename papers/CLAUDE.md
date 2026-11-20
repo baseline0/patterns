@@ -34,6 +34,11 @@ abstract: "..."
 version: 1  # arXiv version (optional; defaults to latest)
 date: 2026-11-10
 
+rights:  # authored; required when source has no licence
+  quotes: none
+  basis: original-summary
+  note: "Metadata came from a tool-lit-review export; no PDF text or quoted abstract is stored here."
+
 source:  # written by import-export; do not edit by hand
   tool: tool-lit-review
   schema_version: 1
@@ -69,6 +74,9 @@ citations:
     title: "Cited Paper"
     relation: "builds_on"
 ```
+
+When `source` has no licence, write an original summary and keep `rights.quotes: none`; the unit gate rejects a missing
+rights block on an imported paper. Short attributed quotes need a licence gate and a human rights check upstream.
 
 ## Outputs Generated
 

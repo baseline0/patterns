@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import importlib.util
 import itertools
+import statistics
 import sys
 import time
 from collections import deque
@@ -171,10 +172,19 @@ def _heappop_yields_sorted_order() -> None:
 def _heapify_is_linear() -> None:
     import heapq
 
+    def timed(values: list[int]) -> float:
+        samples = []
+        for _ in range(7):
+            work = values[:]
+            start = time.perf_counter()
+            heapq.heapify(work)
+            samples.append(time.perf_counter() - start)
+        return statistics.median(samples)
+
     small = list(range(200_000, 0, -1))
     large = list(range(400_000, 0, -1))
-    t_small = _best_time(lambda: heapq.heapify(small[:]), repeat=5)
-    t_large = _best_time(lambda: heapq.heapify(large[:]), repeat=5)
+    t_small = timed(small)
+    t_large = timed(large)
     # Linear work doubles with n; n log n would be a little more than double. The bound leaves room for noise.
     assert t_large < 3 * t_small
 
@@ -260,7 +270,7 @@ def _inorder_traversal_yields_sorted() -> None:
     def inorder(node):
         if node is None:
             return []
-        return inorder(node.left) + [node.val] + inorder(node.right)
+        return [*inorder(node.left), node.val, *inorder(node.right)]
 
     # BST: 2 as root, 1 left, 3 right
     root = Node(2, Node(1), Node(3))

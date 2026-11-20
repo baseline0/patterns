@@ -1,0 +1,9 @@
+# Proof DAGs. Paths are relative to this justfile's directory.
+
+# Regenerate proof notes and glossaries from content/*.yaml.
+build:
+    uv run python tools/build.py
+
+# Fail when a checked-in proof output differs from its YAML source.
+check:
+    uv run python tools/build.py --check

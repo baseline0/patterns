@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Quantum evolutionary algorithm for TSP combinatorial optimisation problem</title>
+<style>
+body{font-family:system-ui,sans-serif;max-width:60rem;margin:2rem auto;padding:0 1rem;line-height:1.5}
+h1,h2{margin-top:1.8rem}nav a{margin-right:1rem}figure{margin:1.5rem 0;border:1px solid #8884;border-radius:8px;padding:1rem}
+img{max-width:100%;height:auto}pre{background:#8882;padding:.8rem;overflow:auto;border-radius:6px}
+.meta{color:#888;font-size:.85rem}table{border-collapse:collapse;width:100%}td,th{border:1px solid #8884;padding:.4rem;text-align:left}
+svg{max-width:100%;height:auto}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(16rem,1fr));gap:1rem}
+</style></head><body>
+<nav><a href="../index.html">Visual hub</a><a href="../../cards/index.html">Cards</a><a href="index.html">Section index</a></nav>
+<h1>Quantum evolutionary algorithm for TSP combinatorial optimisation problem</h1>
+<p class="meta">Source: papers/content/arxiv-2409.13788v1.yaml</p>
+<h2>Abstract</h2>
+<p>An experimental comparison of a quantum-inspired genetic algorithm with a classical genetic algorithm on standard TSPLIB tours. The study varies instance size and type, then compares solution quality, iteration count, runtime, and stability. Across most instances, especially larger ones, the classical algorithm found better tours sooner. The paper points to difficult quantum-gate parameter tuning and notes that no real quantum hardware was used, so the results describe a simulation rather than a hardware speedup.</p>
+<h2>Concept map</h2>
+<svg viewBox="0 0 640 440" role="img" aria-label="Concept map">
+<line x1="320.0" y1="70.0" x2="462.7" y2="173.6" stroke="#888" stroke-width="1.5"/>
+<line x1="320.0" y1="70.0" x2="408.2" y2="341.4" stroke="#888" stroke-width="1.5"/>
+<line x1="320.0" y1="70.0" x2="231.8" y2="341.4" stroke="#888" stroke-width="1.5"/>
+<line x1="462.7" y1="173.6" x2="408.2" y2="341.4" stroke="#888" stroke-width="1.5"/>
+<line x1="462.7" y1="173.6" x2="177.3" y2="173.6" stroke="#888" stroke-width="1.5"/>
+<line x1="408.2" y1="341.4" x2="462.7" y2="173.6" stroke="#888" stroke-width="1.5"/>
+<line x1="231.8" y1="341.4" x2="320.0" y2="70.0" stroke="#888" stroke-width="1.5"/>
+<line x1="177.3" y1="173.6" x2="462.7" y2="173.6" stroke="#888" stroke-width="1.5"/>
+<circle cx="320.0" cy="70.0" r="16" fill="#3a7" stroke="#263" />
+<text x="320.0" y="101.0" text-anchor="middle" font-size="12">Travelling-salesman tour</text>
+<circle cx="462.7" cy="173.6" r="17" fill="#3a7" stroke="#263" />
+<text x="462.7" y="205.6" text-anchor="middle" font-size="12">Quantum-inspired genetic…</text>
+<circle cx="408.2" cy="341.4" r="16" fill="#3a7" stroke="#263" />
+<text x="408.2" y="372.4" text-anchor="middle" font-size="12">Classical genetic algori…</text>
+<circle cx="231.8" cy="341.4" r="14" fill="#3a7" stroke="#263" />
+<text x="231.8" y="370.4" text-anchor="middle" font-size="12">TSPLIB benchmarks</text>
+<circle cx="177.3" cy="173.6" r="14" fill="#3a7" stroke="#263" />
+<text x="177.3" y="202.6" text-anchor="middle" font-size="12">Rotation-angle tuning</text>
+</svg>
+<h2>Concepts</h2>
+<table><tr><th>Concept</th><th>Definition</th></tr>
+<tr><td>Travelling-salesman tour</td><td>A combinatorial problem that asks for the shortest cycle visiting each city once and returning to the start.</td></tr>
+<tr><td>Quantum-inspired genetic algorithm</td><td>A population search that borrows quantum state and gate metaphors to encode and update candidate tours.</td></tr>
+<tr><td>Classical genetic algorithm</td><td>A population heuristic using selection, crossover, and mutation to improve candidate tours.</td></tr>
+<tr><td>TSPLIB benchmarks</td><td>A standard library of tour instances used to compare algorithms across sizes and structures.</td></tr>
+<tr><td>Rotation-angle tuning</td><td>The gate angle that controls how candidates change; the paper identifies it as a key tuning burden.</td></tr>
+</table>
+<h2>Claims to defend</h2>
+<p>On the tested TSPLIB instances, the classical genetic algorithm usually converged to better tours faster than the quantum-inspired variant.</p>
+<p>The quantum-inspired results come from simulation; no real quantum hardware was evaluated.</p>
+<h2>Source</h2>
+<p class="meta">2409.13788v1 · </p>
+</body></html>

@@ -32,4 +32,9 @@ network and no sibling checkout at runtime.
 **Import rules**: re-importing preserves authored concepts, equations, claims, and citations. The importer refuses an
 unknown export schema, a path outside the papers folder, or a malformed checksum.
 
+**Rights**: imported papers keep their `source` provenance and an authored `rights` block. When the export has no
+licence, overviews are original summaries with `quotes: none`; no PDF text or quoted abstract is committed here. The
+first real imports are `2409.13788v1` (TSP quantum-genetic comparison) and `2405.02850v7` (Halfway Escape Optimization),
+both rendered from a local `qiea` export.
+
 See [CLAUDE.md](CLAUDE.md) for the format and commands.

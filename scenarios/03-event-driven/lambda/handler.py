@@ -5,14 +5,14 @@ Demonstrates: event-driven patterns, SNS subscriptions, async processing."""
 
 import json
 import logging
-from typing import Any, Dict
+from typing import Any
 from urllib.parse import unquote_plus
 
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 
 
-def lambda_handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
+def lambda_handler(event: dict[str, Any], context: Any) -> dict[str, Any]:
     """
     Process SNS messages containing S3 event notifications.
 
@@ -36,7 +36,7 @@ def lambda_handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
                 process_sns_message(record)
                 processed_count += 1
             except Exception as e:
-                logger.error(f"Error processing record: {str(e)}", exc_info=True)
+                logger.error(f"Error processing record: {e!s}", exc_info=True)
                 error_count += 1
 
         result = {
@@ -48,12 +48,12 @@ def lambda_handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
         return result
 
     except Exception as e:
-        logger.error(f"Critical error: {str(e)}", exc_info=True)
+        logger.error(f"Critical error: {e!s}", exc_info=True)
         # Return 200 to prevent SNS retry loop
         return {"statusCode": 200, "error": str(e)}
 
 
-def process_sns_message(record: Dict[str, Any]) -> None:
+def process_sns_message(record: dict[str, Any]) -> None:
     """Extract S3 event from SNS message and process."""
     sns = record.get("Sns", {})
     message = sns.get("Message", "{}")
@@ -61,14 +61,14 @@ def process_sns_message(record: Dict[str, Any]) -> None:
     try:
         s3_event = json.loads(message)
     except json.JSONDecodeError as e:
-        logger.warning(f"Invalid JSON in SNS message: {str(e)}")
+        logger.warning(f"Invalid JSON in SNS message: {e!s}")
         return
 
     for s3_record in s3_event.get("Records", []):
         process_s3_event(s3_record)
 
 
-def process_s3_event(s3_record: Dict[str, Any]) -> None:
+def process_s3_event(s3_record: dict[str, Any]) -> None:
     """Process individual S3 event."""
     s3_data = s3_record.get("s3", {})
     bucket = s3_data.get("bucket", {}).get("name", "unknown")

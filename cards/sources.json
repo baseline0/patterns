@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "total": 276,
+  "total": 308,
   "sources": [
     {
       "path": "data-structures/arrays-and-2d-arrays/glossary.json",
@@ -29,6 +29,26 @@
     {
       "path": "data-structures/trees/glossary.json",
       "cards": 29
+    },
+    {
+      "path": "papers/2405.02850v7/glossary.json",
+      "cards": 7
+    },
+    {
+      "path": "papers/2409.13788v1/glossary.json",
+      "cards": 7
+    },
+    {
+      "path": "proofs/dynamic-array-amortized/glossary.json",
+      "cards": 6
+    },
+    {
+      "path": "proofs/heapify-linear/glossary.json",
+      "cards": 6
+    },
+    {
+      "path": "proofs/sliding-window-linear/glossary.json",
+      "cards": 6
     },
     {
       "path": "testing/contract-testing/glossary.json",

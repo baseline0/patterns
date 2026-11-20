@@ -1,0 +1,24 @@
+id: sliding-window-linear
+title: Sliding window moves each pointer at most n times
+family: data-structures
+claim_ids:
+  - sliding-window-is-linear
+statement: "A sliding window over an array of n elements runs in O(n) time when each pointer only moves forward."
+invariant: "At the start of every iteration the half-open interval [left, right) is the current window and right is one past the last inspected element."
+steps:
+  - id: init
+    label: "Empty window"
+    detail: "Set left = right = 0. The window is empty and the invariant holds before any input is consumed."
+  - id: expand
+    label: "Right pointer only advances"
+    detail: "Each iteration admits at most one new element by increasing right, so right advances at most n times."
+    depends_on: [init]
+  - id: shrink
+    label: "Left pointer only advances"
+    detail: "Invalid windows are repaired by increasing left; it never decreases, so left also advances at most n times."
+    depends_on: [init]
+  - id: bound
+    label: "Sum the pointer moves"
+    detail: "At most n expansions plus at most n shrink steps gives O(n) total work, with O(1) extra space."
+    depends_on: [expand, shrink]
+complexity: "O(n) time, O(1) extra space."

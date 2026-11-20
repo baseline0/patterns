@@ -744,6 +744,62 @@ Signal: Find paths or relationships between nodes in the tree,"**Structure**: re
 **Python**: `recursion; track path or constraint`
 
 **Example**: Lowest Common Ancestor (LeetCode 236)",trees signal
+Concept: Halfway Escape Optimization,A quantum-inspired metaheuristic whose move rule lets candidates leave a local region before settling.,2405.02850v7 concept
+Concept: Tunnelling metaphor,The quantum-inspired escape idea that lets a candidate cross a barrier instead of only climbing downhill.,2405.02850v7 concept
+Concept: Benchmark suite,Fourteen general optimization functions evaluated at dimension thirty to compare search behaviour.,2405.02850v7 concept
+Concept: Established optimizers,"PSO, GA, AFSA, GWO, and QPSO, used as comparison points for the new method.",2405.02850v7 concept
+Concept: Constrained design problems,Pressure-vessel and tubular-column design tasks used to test feasibility beyond synthetic functions.,2405.02850v7 concept
+Claim: Benchmark evaluation,Halfway Escape Optimization is reported competitive with five established optimizers on fourteen benchmark functions at dimension thirty.,2405.02850v7 claim
+Claim: Applications,The paper reports feasible engineering designs and higher accuracy on the Osmancik-97 and Cammeo rice classification tasks.,2405.02850v7 claim
+Concept: Travelling-salesman tour,A combinatorial problem that asks for the shortest cycle visiting each city once and returning to the start.,2409.13788v1 concept
+Concept: Quantum-inspired genetic algorithm,A population search that borrows quantum state and gate metaphors to encode and update candidate tours.,2409.13788v1 concept
+Concept: Classical genetic algorithm,"A population heuristic using selection, crossover, and mutation to improve candidate tours.",2409.13788v1 concept
+Concept: TSPLIB benchmarks,A standard library of tour instances used to compare algorithms across sizes and structures.,2409.13788v1 concept
+Concept: Rotation-angle tuning,The gate angle that controls how candidates change; the paper identifies it as a key tuning burden.,2409.13788v1 concept
+Claim: Experiments,"On the tested TSPLIB instances, the classical genetic algorithm usually converged to better tours faster than the quantum-inspired variant.",2409.13788v1 claim
+Claim: Limitations,The quantum-inspired results come from simulation; no real quantum hardware was evaluated.,2409.13788v1 claim
+Prove: Dynamic array append is amortized O(1),"A sequence of n appends to a geometrically growing array costs O(n) time in total.
+
+Complexity: O(n) for n appends; O(1) amortized, O(n) worst case for a single resize.",data-structures proof dynamic-array-amortized statement
+Invariant: Dynamic array append is amortized O(1),"After every append, capacity is at least length; immediately after a resize, capacity is at most twice length.",data-structures proof dynamic-array-amortized invariant
+Proof step: Base case,The first append writes one slot into the initial capacity and performs no copy.,data-structures proof dynamic-array-amortized step
+Proof step: Resize points form a geometric series,"Capacity doubles only when length reaches capacity, so resizes happen at lengths 1, 2, 4, 8, and so on.
+
+Depends on: base",data-structures proof dynamic-array-amortized step
+Proof step: Total copy work is bounded,"Across all resizes the array copies at most 1 + 2 + 4 + ... + n slots, which is less than 2n.
+
+Depends on: doubling",data-structures proof dynamic-array-amortized step
+Proof step: Add writes and copies,"n appends perform n writes and fewer than 2n copies, so the sequence is linear and each append is O(1) on average.
+
+Depends on: copies",data-structures proof dynamic-array-amortized step
+Prove: Bottom-up heapify is linear,"Constructing a binary heap by calling sift-down from the last internal node to the root takes O(n) time.
+
+Complexity: O(n) time and O(1) extra space, versus O(n log n) for repeated insertion.",data-structures proof heapify-linear statement
+Invariant: Bottom-up heapify is linear,"Before node i is processed, every subtree rooted at an index greater than i is already a valid heap.",data-structures proof heapify-linear invariant
+Proof step: Leaves are heaps,"Nodes with no children already satisfy the heap property, so processing can start at the last parent.",data-structures proof heapify-linear step
+Proof step: Process internal nodes bottom-up,"Walking from the last parent down to the root guarantees each child subtree is a heap before its parent is fixed.
+
+Depends on: leaves",data-structures proof heapify-linear step
+Proof step: Cost depends on height,"A node at height h moves at most h levels, and a binary heap has at most ceil(n / 2^(h+1)) nodes at height h.
+
+Depends on: reverse",data-structures proof heapify-linear step
+Proof step: Bound the weighted sum,"The sum over heights of h * n / 2^(h+1) is at most n, because the series sum h / 2^h converges to 2.
+
+Depends on: height-cost",data-structures proof heapify-linear step
+Prove: Sliding window moves each pointer at most n times,"A sliding window over an array of n elements runs in O(n) time when each pointer only moves forward.
+
+Complexity: O(n) time, O(1) extra space.",data-structures proof sliding-window-linear statement
+Invariant: Sliding window moves each pointer at most n times,"At the start of every iteration the half-open interval [left, right) is the current window and right is one past the last inspected element.",data-structures proof sliding-window-linear invariant
+Proof step: Empty window,Set left = right = 0. The window is empty and the invariant holds before any input is consumed.,data-structures proof sliding-window-linear step
+Proof step: Right pointer only advances,"Each iteration admits at most one new element by increasing right, so right advances at most n times.
+
+Depends on: init",data-structures proof sliding-window-linear step
+Proof step: Left pointer only advances,"Invalid windows are repaired by increasing left; it never decreases, so left also advances at most n times.
+
+Depends on: init",data-structures proof sliding-window-linear step
+Proof step: Sum the pointer moves,"At most n expansions plus at most n shrink steps gives O(n) total work, with O(1) extra space.
+
+Depends on: expand, shrink",data-structures proof sliding-window-linear step
 Claim: contract-tests-prevent-api-misalignment,Contract tests verify that both client and server agree on API format before integration.,contract-testing claim
 Claim: consumer-driven-contracts-empower-clients,Consumer-driven contracts let clients define their needs; providers implement to meet them.,contract-testing claim
 Claim: contract-tests-are-faster-than-e2e-tests,Contract tests don't require full service startup; they're faster than end-to-end tests and provide quicker feedback.,contract-testing claim

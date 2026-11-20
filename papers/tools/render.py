@@ -167,6 +167,7 @@ def render_outputs(paper: dict[str, Any], topic: str) -> dict[str, str]:
     }
 
 
+@app.command()
 def render(arxiv_id: str = typer.Argument(..., help="arXiv ID (e.g., 2401.12345)")) -> None:
     """Render one committed paper YAML into its output folder. No network, no PDF parsing."""
     arxiv_id_clean = arxiv_id.replace("/", ".") if "/" in arxiv_id else arxiv_id

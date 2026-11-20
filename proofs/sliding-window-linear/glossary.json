@@ -1,0 +1,80 @@
+[
+  {
+    "title": "Prove: Sliding window moves each pointer at most n times",
+    "body": "A sliding window over an array of n elements runs in O(n) time when each pointer only moves forward.\n\nComplexity: O(n) time, O(1) extra space.",
+    "metadata": {
+      "tags": [
+        "data-structures",
+        "proof",
+        "sliding-window-linear",
+        "statement"
+      ],
+      "source": "proofs/content/sliding-window-linear.yaml"
+    }
+  },
+  {
+    "title": "Invariant: Sliding window moves each pointer at most n times",
+    "body": "At the start of every iteration the half-open interval [left, right) is the current window and right is one past the last inspected element.",
+    "metadata": {
+      "tags": [
+        "data-structures",
+        "proof",
+        "sliding-window-linear",
+        "invariant"
+      ],
+      "source": "proofs/content/sliding-window-linear.yaml"
+    }
+  },
+  {
+    "title": "Proof step: Empty window",
+    "body": "Set left = right = 0. The window is empty and the invariant holds before any input is consumed.",
+    "metadata": {
+      "tags": [
+        "data-structures",
+        "proof",
+        "sliding-window-linear",
+        "step"
+      ],
+      "source": "proofs/content/sliding-window-linear.yaml"
+    }
+  },
+  {
+    "title": "Proof step: Right pointer only advances",
+    "body": "Each iteration admits at most one new element by increasing right, so right advances at most n times.\n\nDepends on: init",
+    "metadata": {
+      "tags": [
+        "data-structures",
+        "proof",
+        "sliding-window-linear",
+        "step"
+      ],
+      "source": "proofs/content/sliding-window-linear.yaml"
+    }
+  },
+  {
+    "title": "Proof step: Left pointer only advances",
+    "body": "Invalid windows are repaired by increasing left; it never decreases, so left also advances at most n times.\n\nDepends on: init",
+    "metadata": {
+      "tags": [
+        "data-structures",
+        "proof",
+        "sliding-window-linear",
+        "step"
+      ],
+      "source": "proofs/content/sliding-window-linear.yaml"
+    }
+  },
+  {
+    "title": "Proof step: Sum the pointer moves",
+    "body": "At most n expansions plus at most n shrink steps gives O(n) total work, with O(1) extra space.\n\nDepends on: expand, shrink",
+    "metadata": {
+      "tags": [
+        "data-structures",
+        "proof",
+        "sliding-window-linear",
+        "step"
+      ],
+      "source": "proofs/content/sliding-window-linear.yaml"
+    }
+  }
+]

@@ -1,0 +1,74 @@
+[
+  {
+    "title": "Concept: Halfway Escape Optimization",
+    "body": "A quantum-inspired metaheuristic whose move rule lets candidates leave a local region before settling.",
+    "metadata": {
+      "tags": [
+        "2405.02850v7",
+        "concept"
+      ]
+    }
+  },
+  {
+    "title": "Concept: Tunnelling metaphor",
+    "body": "The quantum-inspired escape idea that lets a candidate cross a barrier instead of only climbing downhill.",
+    "metadata": {
+      "tags": [
+        "2405.02850v7",
+        "concept"
+      ]
+    }
+  },
+  {
+    "title": "Concept: Benchmark suite",
+    "body": "Fourteen general optimization functions evaluated at dimension thirty to compare search behaviour.",
+    "metadata": {
+      "tags": [
+        "2405.02850v7",
+        "concept"
+      ]
+    }
+  },
+  {
+    "title": "Concept: Established optimizers",
+    "body": "PSO, GA, AFSA, GWO, and QPSO, used as comparison points for the new method.",
+    "metadata": {
+      "tags": [
+        "2405.02850v7",
+        "concept"
+      ]
+    }
+  },
+  {
+    "title": "Concept: Constrained design problems",
+    "body": "Pressure-vessel and tubular-column design tasks used to test feasibility beyond synthetic functions.",
+    "metadata": {
+      "tags": [
+        "2405.02850v7",
+        "concept"
+      ]
+    }
+  },
+  {
+    "title": "Claim: Benchmark evaluation",
+    "body": "Halfway Escape Optimization is reported competitive with five established optimizers on fourteen benchmark functions at dimension thirty.",
+    "metadata": {
+      "tags": [
+        "2405.02850v7",
+        "claim"
+      ],
+      "support_level": "reported-experimental"
+    }
+  },
+  {
+    "title": "Claim: Applications",
+    "body": "The paper reports feasible engineering designs and higher accuracy on the Osmancik-97 and Cammeo rice classification tasks.",
+    "metadata": {
+      "tags": [
+        "2405.02850v7",
+        "claim"
+      ],
+      "support_level": "reported-experimental"
+    }
+  }
+]

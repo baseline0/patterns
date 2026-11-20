@@ -1,0 +1,74 @@
+[
+  {
+    "title": "Concept: Travelling-salesman tour",
+    "body": "A combinatorial problem that asks for the shortest cycle visiting each city once and returning to the start.",
+    "metadata": {
+      "tags": [
+        "2409.13788v1",
+        "concept"
+      ]
+    }
+  },
+  {
+    "title": "Concept: Quantum-inspired genetic algorithm",
+    "body": "A population search that borrows quantum state and gate metaphors to encode and update candidate tours.",
+    "metadata": {
+      "tags": [
+        "2409.13788v1",
+        "concept"
+      ]
+    }
+  },
+  {
+    "title": "Concept: Classical genetic algorithm",
+    "body": "A population heuristic using selection, crossover, and mutation to improve candidate tours.",
+    "metadata": {
+      "tags": [
+        "2409.13788v1",
+        "concept"
+      ]
+    }
+  },
+  {
+    "title": "Concept: TSPLIB benchmarks",
+    "body": "A standard library of tour instances used to compare algorithms across sizes and structures.",
+    "metadata": {
+      "tags": [
+        "2409.13788v1",
+        "concept"
+      ]
+    }
+  },
+  {
+    "title": "Concept: Rotation-angle tuning",
+    "body": "The gate angle that controls how candidates change; the paper identifies it as a key tuning burden.",
+    "metadata": {
+      "tags": [
+        "2409.13788v1",
+        "concept"
+      ]
+    }
+  },
+  {
+    "title": "Claim: Experiments",
+    "body": "On the tested TSPLIB instances, the classical genetic algorithm usually converged to better tours faster than the quantum-inspired variant.",
+    "metadata": {
+      "tags": [
+        "2409.13788v1",
+        "claim"
+      ],
+      "support_level": "reported-experimental"
+    }
+  },
+  {
+    "title": "Claim: Limitations",
+    "body": "The quantum-inspired results come from simulation; no real quantum hardware was evaluated.",
+    "metadata": {
+      "tags": [
+        "2409.13788v1",
+        "claim"
+      ],
+      "support_level": "author-reported"
+    }
+  }
+]

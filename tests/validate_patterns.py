@@ -30,7 +30,7 @@ def validate_schema(data):
     if not isinstance(data["patterns"], list):
         raise AssertionError("'patterns' must be a list")
 
-    print(f"✓ Top-level schema valid")
+    print("✓ Top-level schema valid")
 
 def validate_pattern(pattern, index):
     """Validate individual pattern structure."""
@@ -94,7 +94,7 @@ def validate_pattern(pattern, index):
             raise AssertionError(f"Pattern {index} '{pattern['id']}' decision {i}: must have 'decision' and 'rationale'")
 
     # Validate diagram
-    if "diagram" in pattern and pattern["diagram"]:
+    if pattern.get("diagram"):
         diagram = pattern["diagram"]
         if "kind" not in diagram or diagram["kind"] != "original_svg":
             raise AssertionError(f"Pattern {index} '{pattern['id']}': diagram kind must be 'original_svg'")

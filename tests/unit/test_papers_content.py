@@ -14,6 +14,7 @@ from pathlib import Path
 import pytest
 import yaml
 from constants import REPO_ROOT
+from typer.testing import CliRunner
 
 PAPERS = REPO_ROOT / "papers"
 TOOLS = PAPERS / "tools"
@@ -155,6 +156,44 @@ def test_render_outputs_are_derived_from_committed_yaml(tmp_path: Path) -> None:
         ["2401.12345", "concept"],
         ["2401.12345", "claim"],
     ]
+
+
+def test_render_cli_exposes_the_arxiv_argument() -> None:
+    result = CliRunner().invoke(render.app, ["--help"])
+
+    assert result.exit_code == 0, result.output
+    assert "arxiv" in result.output.lower()
+
+
+def test_imported_papers_record_original_summary_rights() -> None:
+    imported = 0
+    for path in sorted((PAPERS / "content").glob("arxiv-*.yaml")):
+        paper = yaml.safe_load(path.read_text(encoding="utf-8"))
+        source = paper.get("source")
+        if not isinstance(source, dict) or not source.get("paper_id"):
+            continue
+        imported += 1
+        assert paper.get("abstract", "").strip(), path.name
+        rights = paper.get("rights")
+        assert isinstance(rights, dict) and rights.get("quotes") == "none", path.name
+        assert rights.get("basis") == "original-summary", path.name
+        assert not source.get("licence"), path.name
+        assert len(str(source.get("sha256", ""))) == 64, path.name
+    assert imported >= 2
+
+
+def test_committed_paper_outputs_have_no_drift() -> None:
+    for path in sorted((PAPERS / "content").glob("arxiv-*.yaml")):
+        paper = yaml.safe_load(path.read_text(encoding="utf-8"))
+        source = paper.get("source")
+        if not isinstance(source, dict) or not source.get("paper_id"):
+            continue
+        arxiv_id = path.stem.removeprefix("arxiv-")
+        target = PAPERS / arxiv_id
+        outputs = render.render_outputs(paper, arxiv_id)
+        assert set(outputs) == {"README.md", "index.html", "concepts.json", "equations.md", "glossary.json"}
+        for name, value in outputs.items():
+            assert (target / name).read_text(encoding="utf-8") == value, f"{arxiv_id}/{name}"
 
 
 # --- identity guards -------------------------------------------------------------------------------------------------

@@ -7,7 +7,8 @@ import json
 import os
 import uuid
 from datetime import datetime
-from typing import Any, Dict
+from typing import Any
+
 import boto3
 
 # DynamoDB client
@@ -15,7 +16,7 @@ dynamodb = boto3.resource('dynamodb')
 table = dynamodb.Table(os.environ.get('TABLE_NAME', 'todos'))
 
 
-def lambda_handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
+def lambda_handler(event: dict[str, Any], context: Any) -> dict[str, Any]:
     """Route HTTP requests to CRUD operations."""
     method = event.get('requestContext', {}).get('http', {}).get('method', 'GET')
     path = event.get('rawPath', '')
@@ -39,11 +40,11 @@ def lambda_handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
             return error_response(404, f"Endpoint {method} {path} not found")
 
     except Exception as e:
-        print(f"Error: {str(e)}")
+        print(f"Error: {e!s}")
         return error_response(500, str(e))
 
 
-def list_todos() -> Dict[str, Any]:
+def list_todos() -> dict[str, Any]:
     """GET /todos - List all todos."""
     try:
         response = table.scan()
@@ -58,7 +59,7 @@ def list_todos() -> Dict[str, Any]:
         return error_response(500, str(e))
 
 
-def create_todo(event: Dict[str, Any]) -> Dict[str, Any]:
+def create_todo(event: dict[str, Any]) -> dict[str, Any]:
     """POST /todos - Create new todo."""
     try:
         body = json.loads(event.get('body', '{}'))
@@ -90,7 +91,7 @@ def create_todo(event: Dict[str, Any]) -> Dict[str, Any]:
         return error_response(500, str(e))
 
 
-def get_todo(todo_id: str) -> Dict[str, Any]:
+def get_todo(todo_id: str) -> dict[str, Any]:
     """GET /todos/{id} - Get specific todo."""
     try:
         response = table.get_item(Key={'id': todo_id})
@@ -104,7 +105,7 @@ def get_todo(todo_id: str) -> Dict[str, Any]:
         return error_response(500, str(e))
 
 
-def update_todo(todo_id: str, event: Dict[str, Any]) -> Dict[str, Any]:
+def update_todo(todo_id: str, event: dict[str, Any]) -> dict[str, Any]:
     """PUT /todos/{id} - Update existing todo."""
     try:
         body = json.loads(event.get('body', '{}'))
@@ -147,7 +148,7 @@ def update_todo(todo_id: str, event: Dict[str, Any]) -> Dict[str, Any]:
         return error_response(500, str(e))
 
 
-def delete_todo(todo_id: str) -> Dict[str, Any]:
+def delete_todo(todo_id: str) -> dict[str, Any]:
     """DELETE /todos/{id} - Delete todo."""
     try:
         # Check if exists
@@ -164,7 +165,7 @@ def delete_todo(todo_id: str) -> Dict[str, Any]:
         return error_response(500, str(e))
 
 
-def success_response(data: Dict[str, Any], status_code: int = 200) -> Dict[str, Any]:
+def success_response(data: dict[str, Any], status_code: int = 200) -> dict[str, Any]:
     """Format success response."""
     return {
         'statusCode': status_code,
@@ -173,7 +174,7 @@ def success_response(data: Dict[str, Any], status_code: int = 200) -> Dict[str, 
     }
 
 
-def error_response(status_code: int, message: str) -> Dict[str, Any]:
+def error_response(status_code: int, message: str) -> dict[str, Any]:
     """Format error response."""
     return {
         'statusCode': status_code,

@@ -12,10 +12,10 @@ Demonstrates core Lambda + API Gateway patterns:
 import json
 import os
 from datetime import datetime
-from typing import Dict, Any, Tuple
+from typing import Any
 
 
-def lambda_handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
+def lambda_handler(event: dict[str, Any], context: Any) -> dict[str, Any]:
     """
     Main Lambda handler - processes HTTP requests from API Gateway.
 
@@ -55,11 +55,11 @@ def lambda_handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
             return error_response(404, f"Endpoint {method} {path} not found")
 
     except Exception as e:
-        print(f"Error: {str(e)}")
-        return error_response(500, f"Internal server error: {str(e)}")
+        print(f"Error: {e!s}")
+        return error_response(500, f"Internal server error: {e!s}")
 
 
-def handle_hello(event: Dict[str, Any]) -> Dict[str, Any]:
+def handle_hello(event: dict[str, Any]) -> dict[str, Any]:
     """
     GET /hello - Return greeting (optionally with query parameter ?name=World)
     """
@@ -84,7 +84,7 @@ def handle_hello(event: Dict[str, Any]) -> Dict[str, Any]:
     return success_response(response_data)
 
 
-def handle_hello_with_name(name: str) -> Dict[str, Any]:
+def handle_hello_with_name(name: str) -> dict[str, Any]:
     """
     GET /hello/{name} - Return greeting with path parameter
     """
@@ -113,7 +113,7 @@ def handle_hello_with_name(name: str) -> Dict[str, Any]:
     return success_response(response_data)
 
 
-def handle_health() -> Dict[str, Any]:
+def handle_health() -> dict[str, Any]:
     """
     GET /health - Return health check status
 
@@ -133,7 +133,7 @@ def handle_health() -> Dict[str, Any]:
     return success_response(response_data)
 
 
-def success_response(data: Dict[str, Any], status_code: int = 200) -> Dict[str, Any]:
+def success_response(data: dict[str, Any], status_code: int = 200) -> dict[str, Any]:
     """
     Format successful API response
 
@@ -154,7 +154,7 @@ def success_response(data: Dict[str, Any], status_code: int = 200) -> Dict[str, 
     }
 
 
-def error_response(status_code: int, message: str) -> Dict[str, Any]:
+def error_response(status_code: int, message: str) -> dict[str, Any]:
     """
     Format error API response
 

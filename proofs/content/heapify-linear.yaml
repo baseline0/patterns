@@ -1,0 +1,24 @@
+id: heapify-linear
+title: Bottom-up heapify is linear
+family: data-structures
+claim_ids:
+  - heapify-is-linear
+statement: "Constructing a binary heap by calling sift-down from the last internal node to the root takes O(n) time."
+invariant: "Before node i is processed, every subtree rooted at an index greater than i is already a valid heap."
+steps:
+  - id: leaves
+    label: "Leaves are heaps"
+    detail: "Nodes with no children already satisfy the heap property, so processing can start at the last parent."
+  - id: reverse
+    label: "Process internal nodes bottom-up"
+    detail: "Walking from the last parent down to the root guarantees each child subtree is a heap before its parent is fixed."
+    depends_on: [leaves]
+  - id: height-cost
+    label: "Cost depends on height"
+    detail: "A node at height h moves at most h levels, and a binary heap has at most ceil(n / 2^(h+1)) nodes at height h."
+    depends_on: [reverse]
+  - id: series
+    label: "Bound the weighted sum"
+    detail: "The sum over heights of h * n / 2^(h+1) is at most n, because the series sum h / 2^h converges to 2."
+    depends_on: [height-cost]
+complexity: "O(n) time and O(1) extra space, versus O(n log n) for repeated insertion."

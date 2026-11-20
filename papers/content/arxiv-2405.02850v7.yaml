@@ -1,0 +1,64 @@
+arxiv_id: 2405.02850v7
+version: 1
+date: '2026-11-20T00:05:13.011901+00:00'
+title: 'Halfway Escape Optimization: A Quantum-Inspired Solution for General Optimization
+  Problems'
+authors: []
+abstract: >-
+  Introduces Halfway Escape Optimization, a quantum-inspired metaheuristic that models tunnelling and entanglement
+  effects to move candidates between search regions. The paper evaluates it on fourteen thirty-dimensional benchmark
+  functions against particle swarm, genetic, artificial fish swarm, grey wolf, and quantum-behaved particle swarm
+  optimizers. It then tries two constrained engineering designs and a rice-classification task, reporting competitive
+  optimizer performance and stronger accuracy on the classification example.
+rights:
+  quotes: none
+  basis: original-summary
+  note: Metadata came from a tool-lit-review export; no PDF text or quoted abstract is stored here.
+concepts:
+  - id: heo
+    name: Halfway Escape Optimization
+    definition: A quantum-inspired metaheuristic whose move rule lets candidates leave a local region before settling.
+    mentions: 5
+    related: [tunnelling, benchmarks, baselines]
+  - id: tunnelling
+    name: Tunnelling metaphor
+    definition: The quantum-inspired escape idea that lets a candidate cross a barrier instead of only climbing downhill.
+    mentions: 3
+    related: [heo]
+  - id: benchmarks
+    name: Benchmark suite
+    definition: Fourteen general optimization functions evaluated at dimension thirty to compare search behaviour.
+    mentions: 4
+    related: [heo, baselines]
+  - id: baselines
+    name: Established optimizers
+    definition: PSO, GA, AFSA, GWO, and QPSO, used as comparison points for the new method.
+    mentions: 3
+    related: [heo, benchmarks]
+  - id: engineering-design
+    name: Constrained design problems
+    definition: Pressure-vessel and tubular-column design tasks used to test feasibility beyond synthetic functions.
+    mentions: 2
+    related: [heo]
+equations: []
+claims:
+  - text: Halfway Escape Optimization is reported competitive with five established optimizers on fourteen benchmark functions at dimension thirty.
+    section: Benchmark evaluation
+    support_level: reported-experimental
+  - text: The paper reports feasible engineering designs and higher accuracy on the Osmancik-97 and Cammeo rice classification tasks.
+    section: Applications
+    support_level: reported-experimental
+citations: []
+entities:
+  people: []
+  organizations: []
+source:
+  tool: tool-lit-review
+  schema_version: 1
+  paper_id: 2405.02850v7
+  sha256: 3a156b388991ed0bb3382fdfdd081a4fc0c3c08e21ab3765419350877a238459
+  pdf: pdf/2405.02850v7.pdf
+  exported_at: '2026-11-20T00:05:13.011901+00:00'
+  source: arXiv
+  url: https://arxiv.org/pdf/2405.02850v7
+  published: '2024-05-05T08:43:07+00:00'

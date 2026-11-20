@@ -19,6 +19,8 @@ For universal rules, see `~/.claude/CLAUDE.md`.
 - `patterns/*/` — Cloud architecture patterns (serverless, microservices, data lakes, etc.)
 - `cards/` — Canonical deck from committed glossaries; Anki CSV, local review page, timed terminal drill
 - `visual/` — Deterministic concept maps, architecture diagram gallery, and proof DAG pages
+- `proofs/` — Committed proof DAG YAML, rendered notes, and proof review cards
+- `papers/` — Imported paper metadata and locally rendered original summaries
 - `terraform/{aws,azure,gcp}/` — Production-ready IaC for each pattern + provider
 - `docker-compose/` — Local emulator setup (Floci/LocalStack)
 - `diagrams/` — Architecture diagrams (Draw.io source)
@@ -50,6 +52,7 @@ For universal rules, see `~/.claude/CLAUDE.md`.
 just -f cards/justfile build          # regenerate deck.json, anki.csv, index.html
 just -f cards/justfile preview        # dry-run a session; writes nothing
 just -f cards/justfile review --minutes 30
+just -f proofs/justfile build         # regenerate proof notes and proof glossaries
 just -f visual/justfile build         # regenerate concept maps, diagrams, proof graphs
 just -f visual/justfile serve         # http://localhost:8000/visual/index.html
 ```
@@ -173,6 +176,10 @@ patterns/
 │   ├── aws-waf.md
 │   ├── azure-patterns.md
 │   └── gcp-patterns.md
+├── proofs/                        # proof DAG source, notes, glossaries
+├── papers/                        # imported paper content and rendering
+├── cards/                         # canonical deck and review paths
+├── visual/                        # concept maps, diagrams, proof pages
 └── .github/workflows/
     └── validate.yml               # CI: Terraform validation
 ```

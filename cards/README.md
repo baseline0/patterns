@@ -1,7 +1,8 @@
 # Cards
 
 One deck for every pattern family. This module is a **consumer** of committed `glossary.json` files; the family builders
-(`data-structures/tools/build.py`, `testing/tools/build.py`, `papers/tools/render.py`) remain the source of truth.
+(`data-structures/tools/build.py`, `testing/tools/build.py`, `papers/tools/render.py`, `proofs/tools/build.py`) remain the
+source of truth.
 
 ## Canonical card
 
@@ -43,6 +44,6 @@ Front = `title`, Back = `body`, Tags = the card's tags.
 
 ## Adding cards
 
-1. Edit the family YAML (`data-structures/content/`, `testing/content/`, or `papers/content/`).
+1. Edit the family YAML (`data-structures/content/`, `testing/content/`, `papers/content/`, or `proofs/content/`).
 2. Run that family's builder to refresh its `glossary.json`.
 3. Run `just -f cards/justfile build`, then `uv run pytest tests/unit/test_cards.py`.

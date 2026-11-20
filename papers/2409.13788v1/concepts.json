@@ -1,0 +1,35 @@
+{
+  "nodes": [
+    {
+      "id": "tsp",
+      "label": "Travelling-salesman tour",
+      "definition": "A combinatorial problem that asks for the shortest cycle visiting each city once and returning to the start.",
+      "mentions": 4
+    },
+    {
+      "id": "qga",
+      "label": "Quantum-inspired genetic algorithm",
+      "definition": "A population search that borrows quantum state and gate metaphors to encode and update candidate tours.",
+      "mentions": 5
+    },
+    {
+      "id": "cga",
+      "label": "Classical genetic algorithm",
+      "definition": "A population heuristic using selection, crossover, and mutation to improve candidate tours.",
+      "mentions": 4
+    },
+    {
+      "id": "tsp-lib",
+      "label": "TSPLIB benchmarks",
+      "definition": "A standard library of tour instances used to compare algorithms across sizes and structures.",
+      "mentions": 2
+    },
+    {
+      "id": "angle-tuning",
+      "label": "Rotation-angle tuning",
+      "definition": "The gate angle that controls how candidates change; the paper identifies it as a key tuning burden.",
+      "mentions": 2
+    }
+  ],
+  "links": []
+}
