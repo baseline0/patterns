@@ -1,0 +1,3867 @@
+{
+  "schema_version": 1,
+  "generated_by": "site/tools/build.py",
+  "total": 88,
+  "families": [
+    "architecture",
+    "data-structures",
+    "design-patterns",
+    "papers",
+    "pattern-catalogue",
+    "patterns-library",
+    "proofs",
+    "providers",
+    "review",
+    "scenarios",
+    "testing"
+  ],
+  "kinds": [
+    "application",
+    "behavioral",
+    "catalogue",
+    "creational",
+    "data-structure",
+    "delivery-and-reliability",
+    "implemented",
+    "interactive",
+    "mapping",
+    "migration",
+    "paper",
+    "pattern-doc",
+    "proof",
+    "quality-attribute",
+    "structural",
+    "style",
+    "tactic",
+    "template",
+    "testing-pattern"
+  ],
+  "items": [
+    {
+      "id": "architecture-catalogue",
+      "title": "Architecture catalogue",
+      "family": "architecture",
+      "kind": "catalogue",
+      "summary": "Generated canonical architecture index.",
+      "tags": [
+        "catalogue",
+        "architecture"
+      ],
+      "source": "architecture/CATALOGUE.md",
+      "links": [
+        {
+          "label": "Open",
+          "path": "architecture/CATALOGUE.md"
+        }
+      ],
+      "related": [],
+      "uid": "architecture:catalogue:architecture-catalogue"
+    },
+    {
+      "id": "availability",
+      "title": "Availability",
+      "family": "architecture",
+      "kind": "quality-attribute",
+      "summary": "The proportion of time a system is able to serve valid requests, usually expressed as a percentage of uptime measured at the service level indicator.",
+      "decision": "",
+      "use_when": [
+        "A dependency degrades, a host fails, or traffic suddenly spikes beyond the normal peak.",
+        "A new release is deployed to production."
+      ],
+      "avoid_when": [],
+      "tradeoffs": null,
+      "components": null,
+      "measure": [
+        "Monthly successful request ratio at or above 99.95 percent.",
+        "p95 request latency at or below 300 ms during normal operation.",
+        "Mean time to detect a user-visible failure under 5 minutes.",
+        "No single dependency fault reduces successful requests below 99 percent for more than 10 minutes."
+      ],
+      "mechanism": "",
+      "related": [
+        "circuit-breaker",
+        "bulkhead",
+        "retry-with-backoff",
+        "cache-aside",
+        "blue-green-deploy",
+        "queue-based-load-leveling",
+        "observability"
+      ],
+      "tags": [
+        "quality-attribute",
+        "architecture"
+      ],
+      "source": "architecture/content/quality-attributes/availability.yaml",
+      "links": [
+        {
+          "label": "Catalogue",
+          "path": "architecture/CATALOGUE.md"
+        },
+        {
+          "label": "Graph page",
+          "path": "visual/architecture/index.html"
+        }
+      ],
+      "uid": "architecture:quality-attribute:availability"
+    },
+    {
+      "id": "modifiability",
+      "title": "Modifiability",
+      "family": "architecture",
+      "kind": "quality-attribute",
+      "summary": "The ease with which a system can be changed to add a feature, replace a component, or adapt to a new requirement without unintended effects elsewhere.",
+      "decision": "",
+      "use_when": [
+        "A requirement changes, a datastore is swapped, a new read view is requested, or a library is upgraded."
+      ],
+      "avoid_when": [],
+      "tradeoffs": null,
+      "components": null,
+      "measure": [
+        "Change lead time under one working day for a localized feature.",
+        "At least 90 percent of changes require no cross-team coordination.",
+        "Time to add a new read projection under two days.",
+        "Replacement of a persistence adapter touches one layer and no domain files."
+      ],
+      "mechanism": "",
+      "related": [
+        "blue-green-deploy",
+        "cache-aside",
+        "saga",
+        "bulkhead"
+      ],
+      "tags": [
+        "quality-attribute",
+        "architecture"
+      ],
+      "source": "architecture/content/quality-attributes/modifiability.yaml",
+      "links": [
+        {
+          "label": "Catalogue",
+          "path": "architecture/CATALOGUE.md"
+        },
+        {
+          "label": "Graph page",
+          "path": "visual/architecture/index.html"
+        }
+      ],
+      "uid": "architecture:quality-attribute:modifiability"
+    },
+    {
+      "id": "performance",
+      "title": "Performance",
+      "family": "architecture",
+      "kind": "quality-attribute",
+      "summary": "The responsiveness and throughput of a system under a specified workload, commonly expressed as latency percentiles and requests handled per unit of time.",
+      "decision": "",
+      "use_when": [
+        "A burst of concurrent requests, a large stream of records, or a peak traffic window arrives."
+      ],
+      "avoid_when": [],
+      "tradeoffs": null,
+      "components": null,
+      "measure": [
+        "p95 request latency at or below 300 ms and p99 at or below 1000 ms.",
+        "Sustained throughput of at least 5000 requests per second.",
+        "Cache hit ratio above 80 percent for read-heavy endpoints.",
+        "Backlog drains within 5 minutes after a traffic burst ends."
+      ],
+      "mechanism": "",
+      "related": [
+        "cache-aside",
+        "queue-based-load-leveling",
+        "bulkhead",
+        "circuit-breaker",
+        "retry-with-backoff",
+        "observability"
+      ],
+      "tags": [
+        "quality-attribute",
+        "architecture"
+      ],
+      "source": "architecture/content/quality-attributes/performance.yaml",
+      "links": [
+        {
+          "label": "Catalogue",
+          "path": "architecture/CATALOGUE.md"
+        },
+        {
+          "label": "Graph page",
+          "path": "visual/architecture/index.html"
+        }
+      ],
+      "uid": "architecture:quality-attribute:performance"
+    },
+    {
+      "id": "recoverability",
+      "title": "Recoverability",
+      "family": "architecture",
+      "kind": "quality-attribute",
+      "summary": "The ability of a system to restore an acceptable state and resume service after a failure, measured by how quickly and completely normal operation returns.",
+      "decision": "",
+      "use_when": [
+        "A service crashes, a region is lost, a bad release ships, or a batch of messages is processed incorrectly."
+      ],
+      "avoid_when": [],
+      "tradeoffs": null,
+      "components": null,
+      "measure": [
+        "Recovery time objective of 30 minutes or less for a full service outage.",
+        "Recovery point objective of 5 minutes or less for durable data.",
+        "Rollback of a bad release completed in 60 seconds or less.",
+        "Event replay rebuilds projections within 15 minutes of a failure."
+      ],
+      "mechanism": "",
+      "related": [
+        "retry-with-backoff",
+        "circuit-breaker",
+        "saga",
+        "idempotent-consumer",
+        "blue-green-deploy",
+        "queue-based-load-leveling",
+        "observability"
+      ],
+      "tags": [
+        "quality-attribute",
+        "architecture"
+      ],
+      "source": "architecture/content/quality-attributes/recoverability.yaml",
+      "links": [
+        {
+          "label": "Catalogue",
+          "path": "architecture/CATALOGUE.md"
+        },
+        {
+          "label": "Graph page",
+          "path": "visual/architecture/index.html"
+        }
+      ],
+      "uid": "architecture:quality-attribute:recoverability"
+    },
+    {
+      "id": "security",
+      "title": "Security",
+      "family": "architecture",
+      "kind": "quality-attribute",
+      "summary": "The ability of a system to protect data and resources from unauthorized access and misuse while remaining usable for legitimate requests.",
+      "decision": "",
+      "use_when": [
+        "An unauthenticated caller, a hostile tenant, a leaked credential, or an attempt to flood shared capacity occurs."
+      ],
+      "avoid_when": [],
+      "tradeoffs": null,
+      "components": null,
+      "measure": [
+        "100 percent of external endpoints enforce authentication and authorization.",
+        "Zero critical or high findings in dependency and configuration scans.",
+        "Zero recorded secret or personal data leaks in application logs over each audit period.",
+        "Compromised credential revoked in 5 minutes or less.",
+        "Audit logs retained for 365 days."
+      ],
+      "mechanism": "",
+      "related": [
+        "bulkhead",
+        "observability",
+        "blue-green-deploy"
+      ],
+      "tags": [
+        "quality-attribute",
+        "architecture"
+      ],
+      "source": "architecture/content/quality-attributes/security.yaml",
+      "links": [
+        {
+          "label": "Catalogue",
+          "path": "architecture/CATALOGUE.md"
+        },
+        {
+          "label": "Graph page",
+          "path": "visual/architecture/index.html"
+        }
+      ],
+      "uid": "architecture:quality-attribute:security"
+    },
+    {
+      "id": "testability",
+      "title": "Testability",
+      "family": "architecture",
+      "kind": "quality-attribute",
+      "summary": "The ease with which a system can be verified against its specification by isolating parts, controlling their inputs, and observing their outputs.",
+      "decision": "",
+      "use_when": [
+        "A new feature is added, a fault must be injected, or a regression suite runs before a release."
+      ],
+      "avoid_when": [],
+      "tradeoffs": null,
+      "components": null,
+      "measure": [
+        "Unit test runtime under 60 seconds for a single service.",
+        "Full integration suite runtime under 10 minutes.",
+        "At least 90 percent of critical paths covered by failure-injection cases.",
+        "Every filter or handler testable with fixture input and no live broker."
+      ],
+      "mechanism": "",
+      "related": [
+        "observability",
+        "bulkhead",
+        "idempotent-consumer"
+      ],
+      "tags": [
+        "quality-attribute",
+        "architecture"
+      ],
+      "source": "architecture/content/quality-attributes/testability.yaml",
+      "links": [
+        {
+          "label": "Catalogue",
+          "path": "architecture/CATALOGUE.md"
+        },
+        {
+          "label": "Graph page",
+          "path": "visual/architecture/index.html"
+        }
+      ],
+      "uid": "architecture:quality-attribute:testability"
+    },
+    {
+      "id": "cqrs",
+      "title": "Command Query Responsibility Segregation",
+      "family": "architecture",
+      "kind": "style",
+      "summary": "Use separate models to update state and to read state, so each side can be optimized, scaled, and evolved for its own workload.",
+      "decision": "Route writes through a command model and maintain one or more read projections from the resulting events, accepting replication lag in return for independent read and write design.",
+      "use_when": [
+        "Read and write workloads have very different volume or shape.",
+        "Complex queries would distort the write model.",
+        "Several read views of the same data are needed."
+      ],
+      "avoid_when": [
+        "Read-after-write consistency must be immediate for every user action.",
+        "The domain is simple and one model already serves both paths well.",
+        "The team cannot maintain projection rebuild and lag monitoring."
+      ],
+      "tradeoffs": [
+        {
+          "benefit": "Read views can be denormalized for fast queries without constraining writes.",
+          "cost": "Replication lag means a just-written value may be absent from a read view."
+        },
+        {
+          "benefit": "Read and write sides scale and deploy independently.",
+          "cost": "Projections must be rebuilt on schema change, which costs time and operational care."
+        }
+      ],
+      "components": [
+        {
+          "name": "Command model",
+          "role": "Validates and applies business rules to state changes and emits resulting events."
+        },
+        {
+          "name": "Event log",
+          "role": "Records accepted state changes as the durable source of truth for projections."
+        },
+        {
+          "name": "Projection builder",
+          "role": "Consumes events and updates read models, tracking progress for replay and recovery."
+        },
+        {
+          "name": "Query model",
+          "role": "Serves reads from purpose-built, denormalized views tuned for specific queries."
+        }
+      ],
+      "measure": [],
+      "mechanism": "",
+      "related": [],
+      "tags": [
+        "style",
+        "architecture"
+      ],
+      "source": "architecture/content/styles/cqrs.yaml",
+      "links": [
+        {
+          "label": "Catalogue",
+          "path": "architecture/CATALOGUE.md"
+        },
+        {
+          "label": "Graph page",
+          "path": "visual/architecture/index.html"
+        }
+      ],
+      "uid": "architecture:style:cqrs"
+    },
+    {
+      "id": "event-driven",
+      "title": "Event-Driven Architecture",
+      "family": "architecture",
+      "kind": "style",
+      "summary": "Components produce and consume immutable domain events so services react to facts that already happened without a synchronous caller waiting for the result.",
+      "decision": "Publish facts to a durable broker and let subscribers evolve independently, accepting eventual consistency in exchange for loose coupling and burst absorption.",
+      "use_when": [
+        "Several downstream services must react to the same business fact.",
+        "Work arrives in bursts and producers should not block on consumers.",
+        "Audit trails and replay of past facts are valuable."
+      ],
+      "avoid_when": [
+        "The workflow needs one strongly consistent transaction across services.",
+        "The team cannot operate a broker and watch consumer lag.",
+        "Simple synchronous request-response reads dominate the workload."
+      ],
+      "tradeoffs": [
+        {
+          "benefit": "Producers and consumers can be deployed and scaled independently.",
+          "cost": "Eventual consistency forces the UI to handle stale reads and pending state."
+        },
+        {
+          "benefit": "A durable log allows replay and new subscribers without backfilling live systems.",
+          "cost": "Duplicate delivery requires idempotent handlers and careful ordering design."
+        }
+      ],
+      "components": [
+        {
+          "name": "Producer",
+          "role": "Detects a state change and publishes an immutable event describing the fact."
+        },
+        {
+          "name": "Event broker",
+          "role": "Durably stores and routes events to subscribers with at-least-once delivery."
+        },
+        {
+          "name": "Consumer",
+          "role": "Subscribes to event types, applies idempotent state changes, and emits follow-up events."
+        },
+        {
+          "name": "Event log",
+          "role": "Retains the ordered fact history for replay, auditing, and projection rebuilding."
+        }
+      ],
+      "measure": [],
+      "mechanism": "",
+      "related": [],
+      "tags": [
+        "style",
+        "architecture"
+      ],
+      "source": "architecture/content/styles/event-driven.yaml",
+      "links": [
+        {
+          "label": "Catalogue",
+          "path": "architecture/CATALOGUE.md"
+        },
+        {
+          "label": "Graph page",
+          "path": "visual/architecture/index.html"
+        }
+      ],
+      "uid": "architecture:style:event-driven"
+    },
+    {
+      "id": "layered",
+      "title": "Layered Architecture",
+      "family": "architecture",
+      "kind": "style",
+      "summary": "Organize code into horizontal layers where each layer depends only on the layer directly beneath it, separating presentation, application, domain, and persistence concerns.",
+      "decision": "Split the system into presentation, application, domain, and infrastructure layers and enforce one-way dependencies so a storage change does not ripple into business rules.",
+      "use_when": [
+        "The domain is stable and the user interface or data store is likely to change.",
+        "A team wants a low-complexity default with clear separation of concerns.",
+        "Requirements map to CRUD screens over a relational model."
+      ],
+      "avoid_when": [
+        "Read and write paths need independent scaling under very different load.",
+        "Deep synchronous call chains make latency budgets hard to meet.",
+        "Domain logic is thin and layering adds ceremony without benefit."
+      ],
+      "tradeoffs": [
+        {
+          "benefit": "Changes to a single concern stay local when dependencies point inward.",
+          "cost": "A request typically crosses every layer, adding indirection and call overhead."
+        },
+        {
+          "benefit": "New developers find a familiar and easy-to-explain structure.",
+          "cost": "Rigid layering can encourage anemic domain models that only pass data through."
+        }
+      ],
+      "components": [
+        {
+          "name": "Presentation",
+          "role": "Renders user-facing screens or public HTTP responses and translates input into application calls."
+        },
+        {
+          "name": "Application",
+          "role": "Coordinates use cases and orchestrates domain objects without holding business rules."
+        },
+        {
+          "name": "Domain",
+          "role": "Holds entities, value objects, and business invariants independent of delivery and storage."
+        },
+        {
+          "name": "Infrastructure",
+          "role": "Implements persistence, messaging, and external adapters behind interfaces defined by inner layers."
+        }
+      ],
+      "measure": [],
+      "mechanism": "",
+      "related": [],
+      "tags": [
+        "style",
+        "architecture"
+      ],
+      "source": "architecture/content/styles/layered.yaml",
+      "links": [
+        {
+          "label": "Catalogue",
+          "path": "architecture/CATALOGUE.md"
+        },
+        {
+          "label": "Graph page",
+          "path": "visual/architecture/index.html"
+        }
+      ],
+      "uid": "architecture:style:layered"
+    },
+    {
+      "id": "microservices",
+      "title": "Microservices Architecture",
+      "family": "architecture",
+      "kind": "style",
+      "summary": "Decompose a system into small services aligned to business capabilities, each owning its data and exposing a network API so teams can deploy and scale independently.",
+      "decision": "Draw service boundaries around bounded contexts with separate datastores, and accept distributed-systems complexity in exchange for independent release cadence and fault isolation.",
+      "use_when": [
+        "Multiple teams need to release features on different schedules.",
+        "Subdomains have sharply different scaling or availability needs.",
+        "Clear bounded contexts with stable interfaces can be identified."
+      ],
+      "avoid_when": [
+        "The product is early and domain boundaries are still uncertain.",
+        "The team lacks tooling for deployment, tracing, and incident response.",
+        "A single database transaction must span most operations."
+      ],
+      "tradeoffs": [
+        {
+          "benefit": "Teams can change and deploy their own service without a coordinated release.",
+          "cost": "Network calls replace in-process calls, adding latency and partial failure modes."
+        },
+        {
+          "benefit": "A failure in one service can be isolated with bulkheads and breakers.",
+          "cost": "Distributed data requires sagas and eventual consistency instead of simple joins."
+        }
+      ],
+      "components": [
+        {
+          "name": "Service",
+          "role": "Owns one business capability, its data, and its own deployment lifecycle."
+        },
+        {
+          "name": "API gateway",
+          "role": "Provides a single entry point for clients and handles routing, authentication, and rate limits."
+        },
+        {
+          "name": "Service datastore",
+          "role": "Persists state private to one service so schemas cannot be coupled across teams."
+        },
+        {
+          "name": "Messaging backbone",
+          "role": "Carries asynchronous events and commands between services without direct coupling."
+        }
+      ],
+      "measure": [],
+      "mechanism": "",
+      "related": [],
+      "tags": [
+        "style",
+        "architecture"
+      ],
+      "source": "architecture/content/styles/microservices.yaml",
+      "links": [
+        {
+          "label": "Catalogue",
+          "path": "architecture/CATALOGUE.md"
+        },
+        {
+          "label": "Graph page",
+          "path": "visual/architecture/index.html"
+        }
+      ],
+      "uid": "architecture:style:microservices"
+    },
+    {
+      "id": "pipe-and-filter",
+      "title": "Pipe and Filter",
+      "family": "architecture",
+      "kind": "style",
+      "summary": "Compose a stream of processing stages where each filter transforms data incrementally and passes results to the next stage through a buffer or pipe.",
+      "decision": "Break a data workflow into small independent filters connected by bounded pipes so stages can be reused, reordered, and scaled without rewriting the whole pipeline.",
+      "use_when": [
+        "Data can be processed incrementally as a stream.",
+        "Stages are reusable and can be recombined for different jobs.",
+        "Throughput matters more than single-record round-trip latency."
+      ],
+      "avoid_when": [
+        "Each record needs a long interactive transaction across stages.",
+        "Stages must share large mutable state.",
+        "Strict end-to-end ordering with no buffering is required."
+      ],
+      "tradeoffs": [
+        {
+          "benefit": "Filters are small, reusable, and easy to test in isolation.",
+          "cost": "Serializing records between stages adds CPU and memory overhead."
+        },
+        {
+          "benefit": "Slow stages can be scaled independently behind bounded buffers.",
+          "cost": "A failing stage can block or drop records unless dead-letter handling is designed in."
+        }
+      ],
+      "components": [
+        {
+          "name": "Source",
+          "role": "Emits raw records into the first pipe from a file, stream, or message topic."
+        },
+        {
+          "name": "Filter",
+          "role": "Performs one focused transformation and emits output without knowing upstream or downstream stages."
+        },
+        {
+          "name": "Pipe",
+          "role": "Buffers and transports records between filters, decoupling their processing rates."
+        },
+        {
+          "name": "Sink",
+          "role": "Persists or forwards the final transformed records to their destination."
+        }
+      ],
+      "measure": [],
+      "mechanism": "",
+      "related": [],
+      "tags": [
+        "style",
+        "architecture"
+      ],
+      "source": "architecture/content/styles/pipe-and-filter.yaml",
+      "links": [
+        {
+          "label": "Catalogue",
+          "path": "architecture/CATALOGUE.md"
+        },
+        {
+          "label": "Graph page",
+          "path": "visual/architecture/index.html"
+        }
+      ],
+      "uid": "architecture:style:pipe-and-filter"
+    },
+    {
+      "id": "serverless",
+      "title": "Serverless Architecture",
+      "family": "architecture",
+      "kind": "style",
+      "summary": "Run application logic in short-lived managed functions triggered by events, with the platform handling capacity, scaling, and operational plumbing.",
+      "decision": "Express behaviour as small functions behind managed triggers and pay for actual execution, accepting cold starts and statelessness in exchange for minimal idle cost and elastic scale.",
+      "use_when": [
+        "Traffic is spiky or unpredictable and idle capacity would be wasted.",
+        "Work is naturally event driven, such as API requests, queues, or schedules.",
+        "A small team wants to avoid server and runtime patching."
+      ],
+      "avoid_when": [
+        "Workloads are long-running, CPU-bound, or need persistent in-process state.",
+        "Strict p95 latency budgets cannot tolerate cold starts.",
+        "Deep vendor-specific integration is unacceptable."
+      ],
+      "tradeoffs": [
+        {
+          "benefit": "Capacity scales to zero and back without provisioning servers.",
+          "cost": "Cold starts can add hundreds of milliseconds to p95 latency for infrequent paths."
+        },
+        {
+          "benefit": "The team stops managing operating systems and runtime patching.",
+          "cost": "Stateless execution pushes all state to external services and complicates local testing."
+        }
+      ],
+      "components": [
+        {
+          "name": "Function",
+          "role": "Executes one stateless unit of business logic in response to a trigger."
+        },
+        {
+          "name": "API gateway",
+          "role": "Maps HTTP requests to functions and handles throttling and request validation."
+        },
+        {
+          "name": "Managed trigger",
+          "role": "Starts a function from a queue, schedule, object store, or stream event."
+        },
+        {
+          "name": "Managed datastore",
+          "role": "Stores durable state outside the function so invocations remain stateless."
+        }
+      ],
+      "measure": [],
+      "mechanism": "",
+      "related": [],
+      "tags": [
+        "style",
+        "architecture"
+      ],
+      "source": "architecture/content/styles/serverless.yaml",
+      "links": [
+        {
+          "label": "Catalogue",
+          "path": "architecture/CATALOGUE.md"
+        },
+        {
+          "label": "Graph page",
+          "path": "visual/architecture/index.html"
+        }
+      ],
+      "uid": "architecture:style:serverless"
+    },
+    {
+      "id": "blue-green-deploy",
+      "title": "Blue-Green Deploy",
+      "family": "architecture",
+      "kind": "tactic",
+      "summary": "Run two identical production environments and switch traffic from the current one to the prepared one only after the new version is verified.",
+      "decision": "Keep a stable blue environment serving users while green is deployed and tested, then flip the router or DNS so rollback is a fast switch back rather than a redeploy.",
+      "use_when": [
+        "Rollback must be fast and predictable for availability targets.",
+        "The environment can be duplicated at acceptable cost.",
+        "Releases are infrequent enough that warm standby capacity is justified."
+      ],
+      "avoid_when": [
+        "Infrastructure cost of a full second environment is unacceptable.",
+        "The system is stateful in a way that prevents quick traffic switching.",
+        "Deployments happen many times a day with tiny changes and rolling updates suffice."
+      ],
+      "tradeoffs": [
+        {
+          "benefit": "Rollback is a traffic switch, reducing recovery time after a bad release.",
+          "cost": "Doubling capacity for the standby environment raises cost."
+        },
+        {
+          "benefit": "Green can be validated with real traffic patterns before users see it.",
+          "cost": "Database migrations must be backward compatible across both versions."
+        }
+      ],
+      "components": null,
+      "measure": [],
+      "mechanism": "Provision an equal green environment, deploy and smoke-test the new release there, shift traffic gradually or atomically at the router, and keep blue warm for immediate rollback.",
+      "related": [],
+      "tags": [
+        "tactic",
+        "architecture"
+      ],
+      "source": "architecture/content/tactics/blue-green-deploy.yaml",
+      "links": [
+        {
+          "label": "Catalogue",
+          "path": "architecture/CATALOGUE.md"
+        },
+        {
+          "label": "Graph page",
+          "path": "visual/architecture/index.html"
+        }
+      ],
+      "uid": "architecture:tactic:blue-green-deploy"
+    },
+    {
+      "id": "bulkhead",
+      "title": "Bulkhead",
+      "family": "architecture",
+      "kind": "tactic",
+      "summary": "Partition capacity into isolated pools so a failure or traffic surge in one area cannot consume all resources and starve unrelated work.",
+      "decision": "Allocate separate thread pools, connection pools, queues, or compute quotas per workload and cap each pool so one caller cannot exhaust the whole system.",
+      "use_when": [
+        "Multiple tenants or workloads share one process or cluster.",
+        "A slow dependency must not block unrelated requests.",
+        "Blast radius must be bounded for availability targets."
+      ],
+      "avoid_when": [
+        "The system has a single workload with uniform priority.",
+        "Resource overhead of many pools exceeds the available budget.",
+        "Work cannot be classified before resources are assigned."
+      ],
+      "tradeoffs": [
+        {
+          "benefit": "A stuck dependency is contained, keeping other request classes available.",
+          "cost": "Static partitions waste idle capacity that another pool could use."
+        },
+        {
+          "benefit": "Bounded queues give predictable memory use and p95 latency under load.",
+          "cost": "Requests beyond a pool cap are rejected and need explicit fallback handling."
+        }
+      ],
+      "components": null,
+      "measure": [],
+      "mechanism": "Assign each dependency or request class its own bounded resource pool with a fixed size and queue, and reject or shed load locally when that pool is full.",
+      "related": [],
+      "tags": [
+        "tactic",
+        "architecture"
+      ],
+      "source": "architecture/content/tactics/bulkhead.yaml",
+      "links": [
+        {
+          "label": "Catalogue",
+          "path": "architecture/CATALOGUE.md"
+        },
+        {
+          "label": "Graph page",
+          "path": "visual/architecture/index.html"
+        }
+      ],
+      "uid": "architecture:tactic:bulkhead"
+    },
+    {
+      "id": "cache-aside",
+      "title": "Cache Aside",
+      "family": "architecture",
+      "kind": "tactic",
+      "summary": "Load data into a cache on demand from the application, reading from the cache first and populating it from the source of truth on a miss.",
+      "decision": "Treat the datastore as authoritative and let application code populate the cache lazily with a time to live and invalidation on writes.",
+      "use_when": [
+        "Reads greatly outnumber writes and data is reused.",
+        "Some staleness within a defined freshness window is acceptable.",
+        "The source datastore cannot sustain peak read load alone."
+      ],
+      "avoid_when": [
+        "Every read must see the latest committed write.",
+        "Data is write-heavy or almost never reused.",
+        "The value is large relative to the cache and churns constantly."
+      ],
+      "tradeoffs": [
+        {
+          "benefit": "Common reads avoid a datastore round trip and lower p95 latency.",
+          "cost": "Invalidation logic adds application complexity and stale windows."
+        },
+        {
+          "benefit": "Read load on the primary datastore drops, improving headroom and availability.",
+          "cost": "A cold cache produces a latency spike and a burst of datastore traffic."
+        }
+      ],
+      "components": null,
+      "measure": [],
+      "mechanism": "On read, check the cache, return a hit, or read the datastore, write the result to the cache with an expiry, then return it; on write, update the datastore and invalidate or refresh the cached key.",
+      "related": [],
+      "tags": [
+        "tactic",
+        "architecture"
+      ],
+      "source": "architecture/content/tactics/cache-aside.yaml",
+      "links": [
+        {
+          "label": "Catalogue",
+          "path": "architecture/CATALOGUE.md"
+        },
+        {
+          "label": "Graph page",
+          "path": "visual/architecture/index.html"
+        }
+      ],
+      "uid": "architecture:tactic:cache-aside"
+    },
+    {
+      "id": "circuit-breaker",
+      "title": "Circuit Breaker",
+      "family": "architecture",
+      "kind": "tactic",
+      "summary": "Stop sending requests to a failing dependency for a cooling-off period, then probe cautiously before restoring normal traffic.",
+      "decision": "Wrap calls in a breaker that trips after a failure threshold, fails fast while open, and moves through half-open probes to decide when to close.",
+      "use_when": [
+        "A remote dependency can degrade or fail for a sustained period.",
+        "Failing fast is better than queueing calls that will time out.",
+        "A fallback response or degraded mode exists."
+      ],
+      "avoid_when": [
+        "The dependency is in-process with no independent failure mode.",
+        "No acceptable degraded response exists and every call must be attempted.",
+        "Call volume is so low that a failure threshold is rarely reached."
+      ],
+      "tradeoffs": [
+        {
+          "benefit": "Fast failure protects callers from p95 latency blowups and thread exhaustion.",
+          "cost": "Requests are rejected even after the dependency begins to recover until a probe succeeds."
+        },
+        {
+          "benefit": "A failing dependency gets time to recover without sustained load.",
+          "cost": "Requires tuning thresholds, windows, and timeouts per dependency."
+        }
+      ],
+      "components": null,
+      "measure": [],
+      "mechanism": "Count failures in a rolling window, open the circuit when the threshold is crossed, reject calls immediately while open, and allow a limited probe after a timeout.",
+      "related": [],
+      "tags": [
+        "tactic",
+        "architecture"
+      ],
+      "source": "architecture/content/tactics/circuit-breaker.yaml",
+      "links": [
+        {
+          "label": "Catalogue",
+          "path": "architecture/CATALOGUE.md"
+        },
+        {
+          "label": "Graph page",
+          "path": "visual/architecture/index.html"
+        }
+      ],
+      "uid": "architecture:tactic:circuit-breaker"
+    },
+    {
+      "id": "idempotent-consumer",
+      "title": "Idempotent Consumer",
+      "family": "architecture",
+      "kind": "tactic",
+      "summary": "Make message handling safe to repeat so redelivery of the same event produces exactly the same observable result as a single delivery.",
+      "decision": "Attach a stable identity to each message and record processed identities atomically with the resulting state change so duplicates are detected and skipped.",
+      "use_when": [
+        "A broker delivers at least once and duplicates are expected.",
+        "Retry and replay are part of normal operation.",
+        "Side effects can be tied to a stable message identity."
+      ],
+      "avoid_when": [
+        "Delivery is genuinely exactly once and never replayed.",
+        "The operation has no persistent state to record keys.",
+        "Each identical request is meant to produce a distinct effect."
+      ],
+      "tradeoffs": [
+        {
+          "benefit": "Retries and replay become safe, improving recoverability after failures.",
+          "cost": "A deduplication store adds a read or unique constraint on every message."
+        },
+        {
+          "benefit": "Duplicate events no longer corrupt counts or create repeated orders.",
+          "cost": "Key retention must be designed so old duplicates cannot be accepted after cleanup."
+        }
+      ],
+      "components": null,
+      "measure": [],
+      "mechanism": "Extract a deduplication key, check a processed-key store or unique constraint inside the same transaction as the side effect, commit once, and treat a duplicate as a successful no-op.",
+      "related": [],
+      "tags": [
+        "tactic",
+        "architecture"
+      ],
+      "source": "architecture/content/tactics/idempotent-consumer.yaml",
+      "links": [
+        {
+          "label": "Catalogue",
+          "path": "architecture/CATALOGUE.md"
+        },
+        {
+          "label": "Graph page",
+          "path": "visual/architecture/index.html"
+        }
+      ],
+      "uid": "architecture:tactic:idempotent-consumer"
+    },
+    {
+      "id": "observability",
+      "title": "Observability",
+      "family": "architecture",
+      "kind": "tactic",
+      "summary": "Instrument the system so its internal state can be inferred from externally emitted logs, metrics, and traces without shipping new code during an incident.",
+      "decision": "Emit structured telemetry with correlation identifiers across every service boundary, define service level indicators up front, and build dashboards and alerts around user-visible symptoms.",
+      "use_when": [
+        "The system is distributed and failures cross service boundaries.",
+        "Availability and latency targets must be measured, not guessed.",
+        "On-call responders need fast triage with runbooks."
+      ],
+      "avoid_when": [
+        "The system is a single process with trivial behaviour and short lifetime.",
+        "There is no capacity to store or respond to telemetry.",
+        "Telemetry would capture regulated data that cannot be safely handled."
+      ],
+      "tradeoffs": [
+        {
+          "benefit": "Incidents are diagnosed faster because a request can be traced end to end.",
+          "cost": "Telemetry storage and processing add ongoing cost and capacity planning."
+        },
+        {
+          "benefit": "Symptom-based alerts reduce noise and focus responders on user impact.",
+          "cost": "Good instrumentation must be designed into code, which lengthens initial development."
+        }
+      ],
+      "components": null,
+      "measure": [],
+      "mechanism": "Attach a correlation identifier to each request, emit structured logs, dimensional metrics, and distributed traces, then alert on symptom-based service level indicators with runbook links.",
+      "related": [],
+      "tags": [
+        "tactic",
+        "architecture"
+      ],
+      "source": "architecture/content/tactics/observability.yaml",
+      "links": [
+        {
+          "label": "Catalogue",
+          "path": "architecture/CATALOGUE.md"
+        },
+        {
+          "label": "Graph page",
+          "path": "visual/architecture/index.html"
+        }
+      ],
+      "uid": "architecture:tactic:observability"
+    },
+    {
+      "id": "queue-based-load-leveling",
+      "title": "Queue-Based Load Leveling",
+      "family": "architecture",
+      "kind": "tactic",
+      "summary": "Place a durable queue between producers and workers so bursts are buffered and consumers process work at a steady, controlled rate.",
+      "decision": "Accept work into a bounded durable queue and let workers drain it at a sustainable pace, exposing backlog depth as a first-class operational signal.",
+      "use_when": [
+        "Incoming traffic is bursty but the backend has a steady capacity.",
+        "Work can be processed asynchronously with eventual completion.",
+        "Backlog depth can be monitored and acted on."
+      ],
+      "avoid_when": [
+        "The caller needs an immediate result before returning.",
+        "Messages cannot tolerate any delay or reordering.",
+        "There is no plan for overflow or poison messages."
+      ],
+      "tradeoffs": [
+        {
+          "benefit": "Producers stay responsive and available during bursts instead of overload failing calls.",
+          "cost": "Completion is delayed and users need a way to observe pending work."
+        },
+        {
+          "benefit": "Workers can scale on backlog depth with predictable throughput.",
+          "cost": "A queue adds delivery, deduplication, and dead-letter operational burden."
+        }
+      ],
+      "components": null,
+      "measure": [],
+      "mechanism": "Producers enqueue messages with a delivery guarantee, workers pull at a configured concurrency, and backlog depth drives autoscaling, throttling, or load shedding.",
+      "related": [],
+      "tags": [
+        "tactic",
+        "architecture"
+      ],
+      "source": "architecture/content/tactics/queue-based-load-leveling.yaml",
+      "links": [
+        {
+          "label": "Catalogue",
+          "path": "architecture/CATALOGUE.md"
+        },
+        {
+          "label": "Graph page",
+          "path": "visual/architecture/index.html"
+        }
+      ],
+      "uid": "architecture:tactic:queue-based-load-leveling"
+    },
+    {
+      "id": "retry-with-backoff",
+      "title": "Retry with Backoff",
+      "family": "architecture",
+      "kind": "tactic",
+      "summary": "Repeat a failed transient operation after a delay that grows between attempts, often with jitter, so a struggling dependency is not overwhelmed.",
+      "decision": "Retry only failures that are likely transient, cap the attempt count, and use exponential delay with jitter to avoid synchronized retry storms.",
+      "use_when": [
+        "Failures are transient, such as timeouts or brief network resets.",
+        "The operation is safe to repeat or is idempotent.",
+        "The caller can wait within an overall deadline."
+      ],
+      "avoid_when": [
+        "The error is deterministic and repeating it cannot succeed.",
+        "The operation has non-idempotent side effects without a deduplication key.",
+        "The dependency is down for an extended outage and a breaker should open instead."
+      ],
+      "tradeoffs": [
+        {
+          "benefit": "Brief transient faults are hidden from users without operator action.",
+          "cost": "Retries add tail latency and can multiply request volume on a sick dependency."
+        },
+        {
+          "benefit": "Jitter spreads retries so recovery is not delayed by a thundering herd.",
+          "cost": "More attempts consume worker capacity and can exhaust connection pools."
+        }
+      ],
+      "components": null,
+      "measure": [],
+      "mechanism": "On a transient error, wait for a delay that doubles per attempt up to a cap, add random jitter, and stop after a fixed maximum or a deadline.",
+      "related": [],
+      "tags": [
+        "tactic",
+        "architecture"
+      ],
+      "source": "architecture/content/tactics/retry-with-backoff.yaml",
+      "links": [
+        {
+          "label": "Catalogue",
+          "path": "architecture/CATALOGUE.md"
+        },
+        {
+          "label": "Graph page",
+          "path": "visual/architecture/index.html"
+        }
+      ],
+      "uid": "architecture:tactic:retry-with-backoff"
+    },
+    {
+      "id": "saga",
+      "title": "Saga",
+      "family": "architecture",
+      "kind": "tactic",
+      "summary": "Manage a long-running multi-service transaction as a sequence of local transactions with compensating actions that undo completed steps on failure.",
+      "decision": "Replace a distributed transaction with an orchestrated or choreographed saga where each step commits locally and publishes the event that triggers the next step or a compensation.",
+      "use_when": [
+        "A business process spans several services with separate databases.",
+        "The process is long-running and cannot hold a distributed lock.",
+        "Each step has a meaningful compensating action."
+      ],
+      "avoid_when": [
+        "All steps can share one database transaction.",
+        "No reliable compensation exists for a committed step.",
+        "The process is short and a simple synchronous call suffices."
+      ],
+      "tradeoffs": [
+        {
+          "benefit": "Cross-service consistency is achieved without a two-phase commit.",
+          "cost": "Intermediate states are visible to other observers until the saga finishes."
+        },
+        {
+          "benefit": "Each service keeps private data and independent deployment.",
+          "cost": "Every step needs a tested compensation, roughly doubling logic and test cases."
+        }
+      ],
+      "components": null,
+      "measure": [],
+      "mechanism": "Define an ordered set of local transactions and matching compensations, track saga state, and on failure run compensations in reverse until the system returns to a consistent state.",
+      "related": [],
+      "tags": [
+        "tactic",
+        "architecture"
+      ],
+      "source": "architecture/content/tactics/saga.yaml",
+      "links": [
+        {
+          "label": "Catalogue",
+          "path": "architecture/CATALOGUE.md"
+        },
+        {
+          "label": "Graph page",
+          "path": "visual/architecture/index.html"
+        }
+      ],
+      "uid": "architecture:tactic:saga"
+    },
+    {
+      "id": "arrays-and-2d-arrays",
+      "title": "Arrays and 2D arrays: subarrays, sliding window, and in-place operations",
+      "family": "data-structures",
+      "kind": "data-structure",
+      "summary": "Arrays store elements in contiguous memory for O(1) indexing. Subarrays are contiguous ranges; sliding windows and prefix sums solve subarray problems in linear time. Two pointers on sorted arrays find pairs without nested loops. In-place operations on 2D arrays avoid allocating new matrices by using index algebra and element swaps.\n",
+      "problem": "",
+      "related": [],
+      "tags": [
+        "data-structures",
+        "data-structure"
+      ],
+      "source": "data-structures/content/arrays_and_2d_arrays.yaml",
+      "links": [
+        {
+          "label": "README",
+          "path": "data-structures/arrays-and-2d-arrays/README.md"
+        },
+        {
+          "label": "Quiz",
+          "path": "data-structures/arrays-and-2d-arrays/quiz_guide.md"
+        },
+        {
+          "label": "Page",
+          "path": "data-structures/arrays-and-2d-arrays/index.html"
+        },
+        {
+          "label": "Glossary",
+          "path": "data-structures/arrays-and-2d-arrays/glossary.json"
+        }
+      ],
+      "uid": "data-structures:data-structure:arrays-and-2d-arrays"
+    },
+    {
+      "id": "trees",
+      "title": "Binary trees and BSTs: traversal, recursion, and tree properties",
+      "family": "data-structures",
+      "kind": "data-structure",
+      "summary": "A tree is a directed acyclic graph where each node (except the root) has one parent. A binary tree restricts each node to at most two children. A binary search tree adds the invariant that left descendants are smaller and right descendants are larger, making search and insertion natural recursive tasks. Tree problems are solved by recognizing that each subtree is a smaller instance of the same problem.\n",
+      "problem": "",
+      "related": [],
+      "tags": [
+        "data-structures",
+        "data-structure"
+      ],
+      "source": "data-structures/content/trees.yaml",
+      "links": [
+        {
+          "label": "README",
+          "path": "data-structures/trees/README.md"
+        },
+        {
+          "label": "Quiz",
+          "path": "data-structures/trees/quiz_guide.md"
+        },
+        {
+          "label": "Page",
+          "path": "data-structures/trees/index.html"
+        },
+        {
+          "label": "Glossary",
+          "path": "data-structures/trees/glossary.json"
+        }
+      ],
+      "uid": "data-structures:data-structure:trees"
+    },
+    {
+      "id": "hash-tables",
+      "title": "Hash tables: dict and set",
+      "family": "data-structures",
+      "kind": "data-structure",
+      "summary": "A dict and a set find an item by hashing its key, so a lookup costs about the same whether the container holds ten items or a million. The price is that keys must be hashable and must not change while they are stored.\n",
+      "problem": "",
+      "related": [],
+      "tags": [
+        "data-structures",
+        "data-structure"
+      ],
+      "source": "data-structures/content/hash_tables.yaml",
+      "links": [
+        {
+          "label": "README",
+          "path": "data-structures/hash-tables/README.md"
+        },
+        {
+          "label": "Quiz",
+          "path": "data-structures/hash-tables/quiz_guide.md"
+        },
+        {
+          "label": "Page",
+          "path": "data-structures/hash-tables/index.html"
+        },
+        {
+          "label": "Glossary",
+          "path": "data-structures/hash-tables/glossary.json"
+        }
+      ],
+      "uid": "data-structures:data-structure:hash-tables"
+    },
+    {
+      "id": "heaps",
+      "title": "Heaps: a priority queue in a flat list",
+      "family": "data-structures",
+      "kind": "data-structure",
+      "summary": "heapq keeps a binary heap inside an ordinary list. The smallest element is always at index 0, so reading it is O(1); insertion and removal are O(log n). It is the standard tool when a problem asks for the next smallest or largest element while the data keeps changing.\n",
+      "problem": "",
+      "related": [],
+      "tags": [
+        "data-structures",
+        "data-structure"
+      ],
+      "source": "data-structures/content/heaps.yaml",
+      "links": [
+        {
+          "label": "README",
+          "path": "data-structures/heaps/README.md"
+        },
+        {
+          "label": "Quiz",
+          "path": "data-structures/heaps/quiz_guide.md"
+        },
+        {
+          "label": "Page",
+          "path": "data-structures/heaps/index.html"
+        },
+        {
+          "label": "Glossary",
+          "path": "data-structures/heaps/glossary.json"
+        }
+      ],
+      "uid": "data-structures:data-structure:heaps"
+    },
+    {
+      "id": "linked-lists",
+      "title": "Linked lists: pointers, reversal, and cycle detection",
+      "family": "data-structures",
+      "kind": "data-structure",
+      "summary": "A linked list chains nodes together with pointers, so insertion and deletion at a known position cost O(1). The price is that reaching a position requires walking from the head, which costs O(n). Linked list problems are solved by careful pointer manipulation: maintaining two pointers to track state, reversing in-place by redirecting links, or detecting cycles by observing that two pointers moving at different speeds must meet if a cycle exists.\n",
+      "problem": "",
+      "related": [],
+      "tags": [
+        "data-structures",
+        "data-structure"
+      ],
+      "source": "data-structures/content/linked_lists.yaml",
+      "links": [
+        {
+          "label": "README",
+          "path": "data-structures/linked-lists/README.md"
+        },
+        {
+          "label": "Quiz",
+          "path": "data-structures/linked-lists/quiz_guide.md"
+        },
+        {
+          "label": "Page",
+          "path": "data-structures/linked-lists/index.html"
+        },
+        {
+          "label": "Glossary",
+          "path": "data-structures/linked-lists/glossary.json"
+        }
+      ],
+      "uid": "data-structures:data-structure:linked-lists"
+    },
+    {
+      "id": "lists-and-deques",
+      "title": "Lists and deques: contiguous arrays versus block lists",
+      "family": "data-structures",
+      "kind": "data-structure",
+      "summary": "A Python list is a contiguous array of object pointers that grows geometrically. A deque is a chain of fixed-size blocks, so both of its ends are cheap to change. Choosing between them is a question about where a container changes.\n",
+      "problem": "",
+      "related": [],
+      "tags": [
+        "data-structures",
+        "data-structure"
+      ],
+      "source": "data-structures/content/lists_and_deques.yaml",
+      "links": [
+        {
+          "label": "README",
+          "path": "data-structures/lists-and-deques/README.md"
+        },
+        {
+          "label": "Quiz",
+          "path": "data-structures/lists-and-deques/quiz_guide.md"
+        },
+        {
+          "label": "Page",
+          "path": "data-structures/lists-and-deques/index.html"
+        },
+        {
+          "label": "Glossary",
+          "path": "data-structures/lists-and-deques/glossary.json"
+        }
+      ],
+      "uid": "data-structures:data-structure:lists-and-deques"
+    },
+    {
+      "id": "strings",
+      "title": "Strings: pattern matching, substring search, and palindromes",
+      "family": "data-structures",
+      "kind": "data-structure",
+      "summary": "Strings are sequences of characters. Finding patterns in strings uses two pointers to check palindromes and reverse sequences without allocating new strings. Hashing character positions or frequencies enables substring search and anagram detection in linear time without nested loops.\n",
+      "problem": "",
+      "related": [],
+      "tags": [
+        "data-structures",
+        "data-structure"
+      ],
+      "source": "data-structures/content/strings.yaml",
+      "links": [
+        {
+          "label": "README",
+          "path": "data-structures/strings/README.md"
+        },
+        {
+          "label": "Quiz",
+          "path": "data-structures/strings/quiz_guide.md"
+        },
+        {
+          "label": "Page",
+          "path": "data-structures/strings/index.html"
+        },
+        {
+          "label": "Glossary",
+          "path": "data-structures/strings/glossary.json"
+        }
+      ],
+      "uid": "data-structures:data-structure:strings"
+    },
+    {
+      "id": "dependency-injection",
+      "title": "Dependency Injection",
+      "family": "design-patterns",
+      "kind": "application",
+      "summary": "Supply an object’s dependencies from the outside rather than having it construct or locate them internally.",
+      "intent": "Supply an object’s dependencies from the outside rather than having it construct or locate them internally.",
+      "problem": "Hard-coded dependencies make code difficult to test, configure, and extend across environments.",
+      "use_when": [
+        "Implementations vary by environment or test context.",
+        "Clients should follow inversion of control.",
+        "Wiring logic should be centralized and explicit."
+      ],
+      "tradeoffs": {
+        "benefit": "Improves testability, configurability, and adherence to dependency inversion.",
+        "cost": "Can obscure object creation flow and introduce container/configuration complexity."
+      },
+      "participants": [
+        {
+          "name": "Client",
+          "role": "Declares required dependencies through constructor, setter, or parameters."
+        },
+        {
+          "name": "Dependency (abstraction)",
+          "role": "Contract the client relies on."
+        },
+        {
+          "name": "Assembler/Container",
+          "role": "Constructs and wires concrete dependencies into clients."
+        }
+      ],
+      "related": [
+        "09-microservices",
+        "layered",
+        "04-crud-api"
+      ],
+      "tags": [
+        "application",
+        "design-pattern"
+      ],
+      "source": "design-patterns/content/dependency_injection.yaml",
+      "links": [
+        {
+          "label": "README",
+          "path": "design-patterns/dependency-injection/README.md"
+        },
+        {
+          "label": "Quiz",
+          "path": "design-patterns/dependency-injection/quiz_guide.md"
+        },
+        {
+          "label": "Page",
+          "path": "design-patterns/dependency-injection/index.html"
+        }
+      ],
+      "uid": "design-patterns:application:dependency-injection"
+    },
+    {
+      "id": "repository",
+      "title": "Repository",
+      "family": "design-patterns",
+      "kind": "application",
+      "summary": "Mediate between domain and data mapping layers through a collection-like interface for aggregates.",
+      "intent": "Mediate between domain and data mapping layers through a collection-like interface for aggregates.",
+      "problem": "Domain logic becomes coupled to queries, ORM APIs, and persistence details, making it hard to test and evolve.",
+      "use_when": [
+        "Domain model should be persistence-ignorant.",
+        "Query and storage technologies may change.",
+        "Testing needs in-memory substitutes."
+      ],
+      "tradeoffs": {
+        "benefit": "Improves separation of concerns and testability of domain logic.",
+        "cost": "Can hide important query capabilities or add leaky abstractions if over-generalized."
+      },
+      "participants": [
+        {
+          "name": "Repository interface",
+          "role": "Declares collection-oriented access methods for aggregates."
+        },
+        {
+          "name": "ConcreteRepository",
+          "role": "Implements persistence using a data store or ORM."
+        },
+        {
+          "name": "Domain aggregate",
+          "role": "Business object managed and returned by the repository."
+        }
+      ],
+      "related": [
+        "04-crud-api",
+        "layered",
+        "cqrs"
+      ],
+      "tags": [
+        "application",
+        "design-pattern"
+      ],
+      "source": "design-patterns/content/repository.yaml",
+      "links": [
+        {
+          "label": "README",
+          "path": "design-patterns/repository/README.md"
+        },
+        {
+          "label": "Quiz",
+          "path": "design-patterns/repository/quiz_guide.md"
+        },
+        {
+          "label": "Page",
+          "path": "design-patterns/repository/index.html"
+        }
+      ],
+      "uid": "design-patterns:application:repository"
+    },
+    {
+      "id": "unit-of-work",
+      "title": "Unit of Work",
+      "family": "design-patterns",
+      "kind": "application",
+      "summary": "Track changes to objects during a business transaction and coordinate writing them out as a single unit.",
+      "intent": "Track changes to objects during a business transaction and coordinate writing them out as a single unit.",
+      "problem": "Multiple repository operations within one use case can become inconsistent without coordinated commit/rollback boundaries.",
+      "use_when": [
+        "A use case spans multiple aggregates or repositories.",
+        "Atomic commit or rollback semantics are required.",
+        "Change tracking should be centralized."
+      ],
+      "tradeoffs": {
+        "benefit": "Ensures consistency within a transaction and simplifies commit coordination.",
+        "cost": "Adds complexity and can be awkward across distributed systems or microservice boundaries."
+      },
+      "participants": [
+        {
+          "name": "UnitOfWork",
+          "role": "Maintains change tracking and transaction boundary."
+        },
+        {
+          "name": "Repository",
+          "role": "Registers object changes with the unit of work."
+        },
+        {
+          "name": "Data mapper/session",
+          "role": "Flushes coordinated changes to the persistence store."
+        }
+      ],
+      "related": [
+        "05-3tier-web",
+        "layered",
+        "saga"
+      ],
+      "tags": [
+        "application",
+        "design-pattern"
+      ],
+      "source": "design-patterns/content/unit_of_work.yaml",
+      "links": [
+        {
+          "label": "README",
+          "path": "design-patterns/unit-of-work/README.md"
+        },
+        {
+          "label": "Quiz",
+          "path": "design-patterns/unit-of-work/quiz_guide.md"
+        },
+        {
+          "label": "Page",
+          "path": "design-patterns/unit-of-work/index.html"
+        }
+      ],
+      "uid": "design-patterns:application:unit-of-work"
+    },
+    {
+      "id": "chain-of-responsibility",
+      "title": "Chain of Responsibility",
+      "family": "design-patterns",
+      "kind": "behavioral",
+      "summary": "Pass a request along a chain of handlers until one handles or processes it.",
+      "intent": "Pass a request along a chain of handlers until one handles or processes it.",
+      "problem": "Coupling senders to specific handlers or writing large conditional dispatch logic makes request processing rigid.",
+      "use_when": [
+        "More than one object may handle a request.",
+        "Handler set or order may vary.",
+        "Sender should not know the concrete handler."
+      ],
+      "tradeoffs": {
+        "benefit": "Decouples senders from receivers and makes pipelines of checks or transforms composable.",
+        "cost": "A request may go unhandled and chains can be harder to trace."
+      },
+      "participants": [
+        {
+          "name": "Handler",
+          "role": "Declares handling interface and reference to the next handler."
+        },
+        {
+          "name": "ConcreteHandler",
+          "role": "Handles requests it is responsible for or forwards them."
+        },
+        {
+          "name": "Client",
+          "role": "Submits requests to the chain entry point."
+        }
+      ],
+      "related": [
+        "09-microservices",
+        "layered",
+        "02-serverless-api"
+      ],
+      "tags": [
+        "behavioral",
+        "design-pattern"
+      ],
+      "source": "design-patterns/content/chain_of_responsibility.yaml",
+      "links": [
+        {
+          "label": "README",
+          "path": "design-patterns/chain-of-responsibility/README.md"
+        },
+        {
+          "label": "Quiz",
+          "path": "design-patterns/chain-of-responsibility/quiz_guide.md"
+        },
+        {
+          "label": "Page",
+          "path": "design-patterns/chain-of-responsibility/index.html"
+        }
+      ],
+      "uid": "design-patterns:behavioral:chain-of-responsibility"
+    },
+    {
+      "id": "command",
+      "title": "Command",
+      "family": "design-patterns",
+      "kind": "behavioral",
+      "summary": "Encapsulate a request as an object, allowing parameterization, queuing, logging, and undo.",
+      "intent": "Encapsulate a request as an object, allowing parameterization, queuing, logging, and undo.",
+      "problem": "Invokers are tightly coupled to concrete operations, making it hard to queue, audit, retry, or reverse actions.",
+      "use_when": [
+        "Actions must be queued, logged, or retried.",
+        "Invoker should be decoupled from operation details.",
+        "Undo/redo or audit trails may be required."
+      ],
+      "tradeoffs": {
+        "benefit": "Decouples invocation from execution and enables scheduling, auditing, and reversal.",
+        "cost": "Introduces many small command objects and lifecycle management concerns."
+      },
+      "participants": [
+        {
+          "name": "Command",
+          "role": "Declares an execution interface for an action."
+        },
+        {
+          "name": "ConcreteCommand",
+          "role": "Binds a receiver and parameters to implement the action."
+        },
+        {
+          "name": "Invoker",
+          "role": "Triggers commands without knowing operation details."
+        },
+        {
+          "name": "Receiver",
+          "role": "Contains the business logic needed to fulfill the request."
+        }
+      ],
+      "related": [
+        "03-event-driven",
+        "queue-based-load-leveling",
+        "cqrs"
+      ],
+      "tags": [
+        "behavioral",
+        "design-pattern"
+      ],
+      "source": "design-patterns/content/command.yaml",
+      "links": [
+        {
+          "label": "README",
+          "path": "design-patterns/command/README.md"
+        },
+        {
+          "label": "Quiz",
+          "path": "design-patterns/command/quiz_guide.md"
+        },
+        {
+          "label": "Page",
+          "path": "design-patterns/command/index.html"
+        }
+      ],
+      "uid": "design-patterns:behavioral:command"
+    },
+    {
+      "id": "iterator",
+      "title": "Iterator",
+      "family": "design-patterns",
+      "kind": "behavioral",
+      "summary": "Provide a way to access elements of an aggregate sequentially without exposing its representation.",
+      "intent": "Provide a way to access elements of an aggregate sequentially without exposing its representation.",
+      "problem": "Clients need to traverse collections with different internal structures without depending on their concrete storage details.",
+      "use_when": [
+        "Multiple traversal strategies may be needed.",
+        "Internal representation should remain encapsulated.",
+        "Clients want a uniform traversal interface."
+      ],
+      "tradeoffs": {
+        "benefit": "Simplifies client traversal logic and supports multiple simultaneous traversals.",
+        "cost": "Adds objects and can be redundant in languages with rich built-in iteration."
+      },
+      "participants": [
+        {
+          "name": "Iterator",
+          "role": "Defines traversal operations such as next and completion checks."
+        },
+        {
+          "name": "ConcreteIterator",
+          "role": "Maintains traversal state over a specific aggregate."
+        },
+        {
+          "name": "Aggregate",
+          "role": "Declares an operation to create an iterator."
+        },
+        {
+          "name": "ConcreteAggregate",
+          "role": "Returns an iterator over its internal collection."
+        }
+      ],
+      "related": [
+        "08-streaming",
+        "pipe-and-filter",
+        "layered"
+      ],
+      "tags": [
+        "behavioral",
+        "design-pattern"
+      ],
+      "source": "design-patterns/content/iterator.yaml",
+      "links": [
+        {
+          "label": "README",
+          "path": "design-patterns/iterator/README.md"
+        },
+        {
+          "label": "Quiz",
+          "path": "design-patterns/iterator/quiz_guide.md"
+        },
+        {
+          "label": "Page",
+          "path": "design-patterns/iterator/index.html"
+        }
+      ],
+      "uid": "design-patterns:behavioral:iterator"
+    },
+    {
+      "id": "mediator",
+      "title": "Mediator",
+      "family": "design-patterns",
+      "kind": "behavioral",
+      "summary": "Centralize complex interactions between related objects in a mediator to reduce direct dependencies.",
+      "intent": "Centralize complex interactions between related objects in a mediator to reduce direct dependencies.",
+      "problem": "Many components reference each other directly, creating tangled communication and fragile change propagation.",
+      "use_when": [
+        "Object interactions are many-to-many and hard to reason about.",
+        "Reuse of components is limited by peer coupling.",
+        "Interaction rules change frequently."
+      ],
+      "tradeoffs": {
+        "benefit": "Reduces coupling between components and localizes collaboration logic.",
+        "cost": "Mediator can grow into a complex central controller."
+      },
+      "participants": [
+        {
+          "name": "Mediator",
+          "role": "Defines coordination interface for colleagues."
+        },
+        {
+          "name": "ConcreteMediator",
+          "role": "Encapsulates interaction rules between colleagues."
+        },
+        {
+          "name": "Colleague",
+          "role": "Communicates through the mediator rather than directly with peers."
+        }
+      ],
+      "related": [
+        "09-microservices",
+        "layered",
+        "saga"
+      ],
+      "tags": [
+        "behavioral",
+        "design-pattern"
+      ],
+      "source": "design-patterns/content/mediator.yaml",
+      "links": [
+        {
+          "label": "README",
+          "path": "design-patterns/mediator/README.md"
+        },
+        {
+          "label": "Quiz",
+          "path": "design-patterns/mediator/quiz_guide.md"
+        },
+        {
+          "label": "Page",
+          "path": "design-patterns/mediator/index.html"
+        }
+      ],
+      "uid": "design-patterns:behavioral:mediator"
+    },
+    {
+      "id": "memento",
+      "title": "Memento",
+      "family": "design-patterns",
+      "kind": "behavioral",
+      "summary": "Capture and externalize an object’s internal state so it can be restored later without violating encapsulation.",
+      "intent": "Capture and externalize an object’s internal state so it can be restored later without violating encapsulation.",
+      "problem": "Implementing undo, checkpoints, or rollback requires access to internal state that should remain private.",
+      "use_when": [
+        "Undo/rollback capability is required.",
+        "Internal state must stay encapsulated.",
+        "Snapshots may be frequent or large."
+      ],
+      "tradeoffs": {
+        "benefit": "Supports rollback and checkpoints while preserving encapsulation boundaries.",
+        "cost": "Can consume significant memory or require careful snapshot sizing."
+      },
+      "participants": [
+        {
+          "name": "Originator",
+          "role": "Creates mementos from its state and restores from them."
+        },
+        {
+          "name": "Memento",
+          "role": "Stores a snapshot of the originator’s internal state."
+        },
+        {
+          "name": "Caretaker",
+          "role": "Keeps mementos without inspecting or modifying their contents."
+        }
+      ],
+      "related": [
+        "cqrs",
+        "event-driven",
+        "layered"
+      ],
+      "tags": [
+        "behavioral",
+        "design-pattern"
+      ],
+      "source": "design-patterns/content/memento.yaml",
+      "links": [
+        {
+          "label": "README",
+          "path": "design-patterns/memento/README.md"
+        },
+        {
+          "label": "Quiz",
+          "path": "design-patterns/memento/quiz_guide.md"
+        },
+        {
+          "label": "Page",
+          "path": "design-patterns/memento/index.html"
+        }
+      ],
+      "uid": "design-patterns:behavioral:memento"
+    },
+    {
+      "id": "observer",
+      "title": "Observer",
+      "family": "design-patterns",
+      "kind": "behavioral",
+      "summary": "Define a one-to-many dependency so dependents are notified when a subject changes state.",
+      "intent": "Define a one-to-many dependency so dependents are notified when a subject changes state.",
+      "problem": "Components need to react to state changes without hard-coded polling or tight coupling between publisher and subscribers.",
+      "use_when": [
+        "Multiple consumers react to the same state change.",
+        "Publisher should not know concrete subscribers.",
+        "Subscription set can change at runtime."
+      ],
+      "tradeoffs": {
+        "benefit": "Enables loose coupling and dynamic subscription for change propagation.",
+        "cost": "Notification order, storms, and debugging event flows can be challenging."
+      },
+      "participants": [
+        {
+          "name": "Subject",
+          "role": "Maintains observer list and emits notifications on change."
+        },
+        {
+          "name": "Observer",
+          "role": "Declares the update interface for receiving events."
+        },
+        {
+          "name": "ConcreteObserver",
+          "role": "Reacts to notifications with specific behavior."
+        }
+      ],
+      "related": [
+        "03-event-driven",
+        "event-driven",
+        "08-streaming"
+      ],
+      "tags": [
+        "behavioral",
+        "design-pattern"
+      ],
+      "source": "design-patterns/content/observer.yaml",
+      "links": [
+        {
+          "label": "README",
+          "path": "design-patterns/observer/README.md"
+        },
+        {
+          "label": "Quiz",
+          "path": "design-patterns/observer/quiz_guide.md"
+        },
+        {
+          "label": "Page",
+          "path": "design-patterns/observer/index.html"
+        }
+      ],
+      "uid": "design-patterns:behavioral:observer"
+    },
+    {
+      "id": "state",
+      "title": "State",
+      "family": "design-patterns",
+      "kind": "behavioral",
+      "summary": "Allow an object to alter its behavior when its internal state changes by delegating to state objects.",
+      "intent": "Allow an object to alter its behavior when its internal state changes by delegating to state objects.",
+      "problem": "Behavior that depends on lifecycle state leads to large conditional blocks and invalid transitions scattered through methods.",
+      "use_when": [
+        "Object behavior varies by explicit lifecycle state.",
+        "Transitions must be controlled and understandable.",
+        "Conditionals on state flags are proliferating."
+      ],
+      "tradeoffs": {
+        "benefit": "Localizes state-specific behavior and makes transitions explicit.",
+        "cost": "Increases number of classes and requires careful transition ownership."
+      },
+      "participants": [
+        {
+          "name": "Context",
+          "role": "Maintains current state and delegates behavior to it."
+        },
+        {
+          "name": "State",
+          "role": "Defines the interface for state-specific behavior."
+        },
+        {
+          "name": "ConcreteState",
+          "role": "Implements behavior and transitions for a particular state."
+        }
+      ],
+      "related": [
+        "06-cicd-pipeline",
+        "saga",
+        "event-driven"
+      ],
+      "tags": [
+        "behavioral",
+        "design-pattern"
+      ],
+      "source": "design-patterns/content/state.yaml",
+      "links": [
+        {
+          "label": "README",
+          "path": "design-patterns/state/README.md"
+        },
+        {
+          "label": "Quiz",
+          "path": "design-patterns/state/quiz_guide.md"
+        },
+        {
+          "label": "Page",
+          "path": "design-patterns/state/index.html"
+        }
+      ],
+      "uid": "design-patterns:behavioral:state"
+    },
+    {
+      "id": "strategy",
+      "title": "Strategy",
+      "family": "design-patterns",
+      "kind": "behavioral",
+      "summary": "Define interchangeable algorithms behind a stable interface so behavior can vary at runtime.",
+      "intent": "Define interchangeable algorithms behind a stable interface so behavior can vary at runtime.",
+      "problem": "A service needs multiple pricing, routing, or ranking behaviors without scattering conditionals across callers.",
+      "use_when": [
+        "Behavior must change without modifying callers.",
+        "Variants share inputs but differ in policy.",
+        "Selection may happen per request or tenant."
+      ],
+      "tradeoffs": {
+        "benefit": "Replaces branching logic with composable, testable policies.",
+        "cost": "Adds indirection and requires explicit strategy selection."
+      },
+      "participants": [
+        {
+          "name": "Strategy",
+          "role": "Declares the algorithm interface used by the context."
+        },
+        {
+          "name": "ConcreteStrategy",
+          "role": "Implements one algorithm variant."
+        },
+        {
+          "name": "Context",
+          "role": "Delegates work to the selected strategy and holds shared state."
+        }
+      ],
+      "related": [
+        "02-serverless-api",
+        "microservices",
+        "layered"
+      ],
+      "tags": [
+        "behavioral",
+        "design-pattern"
+      ],
+      "source": "design-patterns/content/strategy.yaml",
+      "links": [
+        {
+          "label": "README",
+          "path": "design-patterns/strategy/README.md"
+        },
+        {
+          "label": "Quiz",
+          "path": "design-patterns/strategy/quiz_guide.md"
+        },
+        {
+          "label": "Page",
+          "path": "design-patterns/strategy/index.html"
+        }
+      ],
+      "uid": "design-patterns:behavioral:strategy"
+    },
+    {
+      "id": "template-method",
+      "title": "Template Method",
+      "family": "design-patterns",
+      "kind": "behavioral",
+      "summary": "Define the skeleton of an algorithm in a base operation, deferring specific steps to subclasses or hooks.",
+      "intent": "Define the skeleton of an algorithm in a base operation, deferring specific steps to subclasses or hooks.",
+      "problem": "Multiple implementations share the same overall process but duplicate its structure while varying a few steps.",
+      "use_when": [
+        "Algorithm structure is stable but some steps vary.",
+        "Code duplication appears across similar workflows.",
+        "Control over step order must remain centralized."
+      ],
+      "tradeoffs": {
+        "benefit": "Reuses invariant workflow logic and enforces consistent sequencing.",
+        "cost": "Relies on inheritance and can make flows harder to follow across class hierarchy."
+      },
+      "participants": [
+        {
+          "name": "AbstractClass",
+          "role": "Defines the template method and invariant algorithm structure."
+        },
+        {
+          "name": "ConcreteClass",
+          "role": "Implements or overrides variable steps of the algorithm."
+        }
+      ],
+      "related": [
+        "pipe-and-filter",
+        "08-streaming",
+        "layered"
+      ],
+      "tags": [
+        "behavioral",
+        "design-pattern"
+      ],
+      "source": "design-patterns/content/template_method.yaml",
+      "links": [
+        {
+          "label": "README",
+          "path": "design-patterns/template-method/README.md"
+        },
+        {
+          "label": "Quiz",
+          "path": "design-patterns/template-method/quiz_guide.md"
+        },
+        {
+          "label": "Page",
+          "path": "design-patterns/template-method/index.html"
+        }
+      ],
+      "uid": "design-patterns:behavioral:template-method"
+    },
+    {
+      "id": "visitor",
+      "title": "Visitor",
+      "family": "design-patterns",
+      "kind": "behavioral",
+      "summary": "Represent an operation to be performed on elements of an object structure without changing the element classes.",
+      "intent": "Represent an operation to be performed on elements of an object structure without changing the element classes.",
+      "problem": "Adding new operations across a stable set of element types leads to repeated edits and scattered logic in those classes.",
+      "use_when": [
+        "Element hierarchy is stable but operations change often.",
+        "Related behavior should be grouped by operation.",
+        "Double dispatch or equivalent is available."
+      ],
+      "tradeoffs": {
+        "benefit": "Makes adding new operations easy and keeps operation-specific logic cohesive.",
+        "cost": "Adding new element types requires changing every visitor."
+      },
+      "participants": [
+        {
+          "name": "Visitor",
+          "role": "Declares visit operations for each concrete element type."
+        },
+        {
+          "name": "ConcreteVisitor",
+          "role": "Implements a specific operation over the structure."
+        },
+        {
+          "name": "Element",
+          "role": "Declares accept to dispatch to the visitor."
+        },
+        {
+          "name": "ConcreteElement",
+          "role": "Implements accept by calling the matching visit method."
+        }
+      ],
+      "related": [
+        "06-cicd-pipeline",
+        "pipe-and-filter",
+        "layered"
+      ],
+      "tags": [
+        "behavioral",
+        "design-pattern"
+      ],
+      "source": "design-patterns/content/visitor.yaml",
+      "links": [
+        {
+          "label": "README",
+          "path": "design-patterns/visitor/README.md"
+        },
+        {
+          "label": "Quiz",
+          "path": "design-patterns/visitor/quiz_guide.md"
+        },
+        {
+          "label": "Page",
+          "path": "design-patterns/visitor/index.html"
+        }
+      ],
+      "uid": "design-patterns:behavioral:visitor"
+    },
+    {
+      "id": "design-pattern-index",
+      "title": "Design patterns index",
+      "family": "design-patterns",
+      "kind": "catalogue",
+      "summary": "Generated design pattern index.",
+      "tags": [
+        "catalogue",
+        "design-patterns"
+      ],
+      "source": "design-patterns/INDEX.md",
+      "links": [
+        {
+          "label": "Open",
+          "path": "design-patterns/INDEX.md"
+        }
+      ],
+      "related": [],
+      "uid": "design-patterns:catalogue:design-pattern-index"
+    },
+    {
+      "id": "abstract-factory",
+      "title": "Abstract Factory",
+      "family": "design-patterns",
+      "kind": "creational",
+      "summary": "Provide an interface for creating families of related objects without specifying concrete classes.",
+      "intent": "Provide an interface for creating families of related objects without specifying concrete classes.",
+      "problem": "A system must produce compatible sets of components (UI widgets, storage clients, drivers) that vary by environment but must work together.",
+      "use_when": [
+        "Products must be used in compatible families.",
+        "Environment or vendor changes should not leak into clients.",
+        "Switching families should be a single decision."
+      ],
+      "tradeoffs": {
+        "benefit": "Enforces consistency among related products and centralizes family selection.",
+        "cost": "Adding a new product kind requires changing every factory interface and implementation."
+      },
+      "participants": [
+        {
+          "name": "AbstractFactory",
+          "role": "Declares creation operations for each product in the family."
+        },
+        {
+          "name": "ConcreteFactory",
+          "role": "Creates a consistent family of concrete products."
+        },
+        {
+          "name": "AbstractProduct",
+          "role": "Defines interfaces for each kind of product."
+        },
+        {
+          "name": "Client",
+          "role": "Uses only abstract interfaces to assemble behavior."
+        }
+      ],
+      "related": [
+        "03-event-driven",
+        "microservices",
+        "layered"
+      ],
+      "tags": [
+        "creational",
+        "design-pattern"
+      ],
+      "source": "design-patterns/content/abstract_factory.yaml",
+      "links": [
+        {
+          "label": "README",
+          "path": "design-patterns/abstract-factory/README.md"
+        },
+        {
+          "label": "Quiz",
+          "path": "design-patterns/abstract-factory/quiz_guide.md"
+        },
+        {
+          "label": "Page",
+          "path": "design-patterns/abstract-factory/index.html"
+        }
+      ],
+      "uid": "design-patterns:creational:abstract-factory"
+    },
+    {
+      "id": "builder",
+      "title": "Builder",
+      "family": "design-patterns",
+      "kind": "creational",
+      "summary": "Separate construction of a complex object from its representation so the same process can create different forms.",
+      "intent": "Separate construction of a complex object from its representation so the same process can create different forms.",
+      "problem": "Creating objects with many optional parts, validation rules, or assembly steps leads to telescoping constructors and fragile setup code.",
+      "use_when": [
+        "Construction requires multiple ordered steps or validation.",
+        "Different representations share a construction process.",
+        "Clients should not manage partial, invalid states."
+      ],
+      "tradeoffs": {
+        "benefit": "Improves readability and correctness for complex object assembly.",
+        "cost": "Adds classes/objects and can be overkill for simple data structures."
+      },
+      "participants": [
+        {
+          "name": "Builder",
+          "role": "Declares steps for constructing parts of the product."
+        },
+        {
+          "name": "ConcreteBuilder",
+          "role": "Implements steps and keeps the product being assembled."
+        },
+        {
+          "name": "Director",
+          "role": "Orchestrates construction steps in a particular order."
+        },
+        {
+          "name": "Product",
+          "role": "The complex object produced by the builder."
+        }
+      ],
+      "related": [
+        "06-cicd-pipeline",
+        "layered",
+        "cqrs"
+      ],
+      "tags": [
+        "creational",
+        "design-pattern"
+      ],
+      "source": "design-patterns/content/builder.yaml",
+      "links": [
+        {
+          "label": "README",
+          "path": "design-patterns/builder/README.md"
+        },
+        {
+          "label": "Quiz",
+          "path": "design-patterns/builder/quiz_guide.md"
+        },
+        {
+          "label": "Page",
+          "path": "design-patterns/builder/index.html"
+        }
+      ],
+      "uid": "design-patterns:creational:builder"
+    },
+    {
+      "id": "factory-method",
+      "title": "Factory Method",
+      "family": "design-patterns",
+      "kind": "creational",
+      "summary": "Let subclasses or hook implementations decide which concrete object to create.",
+      "intent": "Let subclasses or hook implementations decide which concrete object to create.",
+      "problem": "A framework needs to create products while allowing extensions to choose concrete types without changing core workflow code.",
+      "use_when": [
+        "Creation varies by environment or extension point.",
+        "Core workflow must remain stable.",
+        "Callers should depend on abstractions, not concrete classes."
+      ],
+      "tradeoffs": {
+        "benefit": "Decouples object creation from the high-level algorithm that uses it.",
+        "cost": "Introduces subclassing or hook points that can proliferate."
+      },
+      "participants": [
+        {
+          "name": "Product",
+          "role": "Defines the interface of objects the creator produces."
+        },
+        {
+          "name": "Creator",
+          "role": "Declares the factory method and uses products in its workflow."
+        },
+        {
+          "name": "ConcreteCreator",
+          "role": "Overrides creation to return a specific concrete product."
+        }
+      ],
+      "related": [
+        "06-cicd-pipeline",
+        "layered",
+        "microservices"
+      ],
+      "tags": [
+        "creational",
+        "design-pattern"
+      ],
+      "source": "design-patterns/content/factory_method.yaml",
+      "links": [
+        {
+          "label": "README",
+          "path": "design-patterns/factory-method/README.md"
+        },
+        {
+          "label": "Quiz",
+          "path": "design-patterns/factory-method/quiz_guide.md"
+        },
+        {
+          "label": "Page",
+          "path": "design-patterns/factory-method/index.html"
+        }
+      ],
+      "uid": "design-patterns:creational:factory-method"
+    },
+    {
+      "id": "prototype",
+      "title": "Prototype",
+      "family": "design-patterns",
+      "kind": "creational",
+      "summary": "Create new objects by copying a prototypical instance instead of instantiating from scratch.",
+      "intent": "Create new objects by copying a prototypical instance instead of instantiating from scratch.",
+      "problem": "Object creation is expensive or configuration-heavy, and new instances should start from known templates with small variations.",
+      "use_when": [
+        "Initialization cost or complexity is high.",
+        "Instances share a baseline configuration.",
+        "Copies must define clear deep vs shallow semantics."
+      ],
+      "tradeoffs": {
+        "benefit": "Speeds creation and centralizes default templates.",
+        "cost": "Cloning graphs with shared references or cycles can be error-prone."
+      },
+      "participants": [
+        {
+          "name": "Prototype",
+          "role": "Declares a cloning operation."
+        },
+        {
+          "name": "ConcretePrototype",
+          "role": "Implements cloning, including deep-copy decisions."
+        },
+        {
+          "name": "Client",
+          "role": "Requests new objects by cloning prototypes."
+        },
+        {
+          "name": "PrototypeRegistry",
+          "role": "Optionally stores and retrieves canonical prototypes by key."
+        }
+      ],
+      "related": [
+        "06-cicd-pipeline",
+        "serverless",
+        "layered"
+      ],
+      "tags": [
+        "creational",
+        "design-pattern"
+      ],
+      "source": "design-patterns/content/prototype.yaml",
+      "links": [
+        {
+          "label": "README",
+          "path": "design-patterns/prototype/README.md"
+        },
+        {
+          "label": "Quiz",
+          "path": "design-patterns/prototype/quiz_guide.md"
+        },
+        {
+          "label": "Page",
+          "path": "design-patterns/prototype/index.html"
+        }
+      ],
+      "uid": "design-patterns:creational:prototype"
+    },
+    {
+      "id": "adapter",
+      "title": "Adapter",
+      "family": "design-patterns",
+      "kind": "structural",
+      "summary": "Convert the interface of a component into one clients expect so incompatible interfaces can collaborate.",
+      "intent": "Convert the interface of a component into one clients expect so incompatible interfaces can collaborate.",
+      "problem": "Integrating third-party or legacy APIs requires changing client code or duplicating translation logic across the system.",
+      "use_when": [
+        "Existing interfaces cannot be changed easily.",
+        "Integration logic should be isolated.",
+        "Multiple clients need a uniform API."
+      ],
+      "tradeoffs": {
+        "benefit": "Enables reuse of existing components without polluting client code.",
+        "cost": "Adds a translation layer that can hide impedance mismatches or performance costs."
+      },
+      "participants": [
+        {
+          "name": "Target",
+          "role": "Interface expected by the client."
+        },
+        {
+          "name": "Adapter",
+          "role": "Translates Target calls to the adaptee interface."
+        },
+        {
+          "name": "Adaptee",
+          "role": "Existing component with an incompatible interface."
+        },
+        {
+          "name": "Client",
+          "role": "Works against the Target abstraction."
+        }
+      ],
+      "related": [
+        "04-crud-api",
+        "layered",
+        "microservices"
+      ],
+      "tags": [
+        "structural",
+        "design-pattern"
+      ],
+      "source": "design-patterns/content/adapter.yaml",
+      "links": [
+        {
+          "label": "README",
+          "path": "design-patterns/adapter/README.md"
+        },
+        {
+          "label": "Quiz",
+          "path": "design-patterns/adapter/quiz_guide.md"
+        },
+        {
+          "label": "Page",
+          "path": "design-patterns/adapter/index.html"
+        }
+      ],
+      "uid": "design-patterns:structural:adapter"
+    },
+    {
+      "id": "bridge",
+      "title": "Bridge",
+      "family": "design-patterns",
+      "kind": "structural",
+      "summary": "Decouple an abstraction from its implementation so both can vary independently.",
+      "intent": "Decouple an abstraction from its implementation so both can vary independently.",
+      "problem": "Combining multiple abstractions with multiple implementations via inheritance causes class explosion and tight coupling.",
+      "use_when": [
+        "Abstraction and implementation dimensions vary independently.",
+        "Inheritance combinations are multiplying.",
+        "Runtime selection of implementation is needed."
+      ],
+      "tradeoffs": {
+        "benefit": "Reduces subclass explosion and enables independent evolution of both hierarchies.",
+        "cost": "Increases design complexity and requires up-front separation of concerns."
+      },
+      "participants": [
+        {
+          "name": "Abstraction",
+          "role": "Defines high-level control logic and holds a reference to an implementor."
+        },
+        {
+          "name": "RefinedAbstraction",
+          "role": "Extends the abstraction without changing implementors."
+        },
+        {
+          "name": "Implementor",
+          "role": "Declares low-level operations used by the abstraction."
+        },
+        {
+          "name": "ConcreteImplementor",
+          "role": "Provides a specific implementation of the low-level operations."
+        }
+      ],
+      "related": [
+        "07-monitoring",
+        "layered",
+        "microservices"
+      ],
+      "tags": [
+        "structural",
+        "design-pattern"
+      ],
+      "source": "design-patterns/content/bridge.yaml",
+      "links": [
+        {
+          "label": "README",
+          "path": "design-patterns/bridge/README.md"
+        },
+        {
+          "label": "Quiz",
+          "path": "design-patterns/bridge/quiz_guide.md"
+        },
+        {
+          "label": "Page",
+          "path": "design-patterns/bridge/index.html"
+        }
+      ],
+      "uid": "design-patterns:structural:bridge"
+    },
+    {
+      "id": "composite",
+      "title": "Composite",
+      "family": "design-patterns",
+      "kind": "structural",
+      "summary": "Compose objects into tree structures and let clients treat individual objects and compositions uniformly.",
+      "intent": "Compose objects into tree structures and let clients treat individual objects and compositions uniformly.",
+      "problem": "Client code must distinguish leaves from containers when operating over hierarchical structures, leading to special-case logic.",
+      "use_when": [
+        "Part-whole hierarchies must be represented.",
+        "Clients should ignore leaf vs container differences.",
+        "Operations should apply recursively over the structure."
+      ],
+      "tradeoffs": {
+        "benefit": "Simplifies client code and makes it easy to add new component types.",
+        "cost": "Can make it harder to restrict which children a composite may contain."
+      },
+      "participants": [
+        {
+          "name": "Component",
+          "role": "Common interface for leaves and composites."
+        },
+        {
+          "name": "Leaf",
+          "role": "Represents end objects with no children."
+        },
+        {
+          "name": "Composite",
+          "role": "Stores children and implements operations by delegating to them."
+        },
+        {
+          "name": "Client",
+          "role": "Manipulates the tree through the Component interface."
+        }
+      ],
+      "related": [
+        "01-static-website",
+        "pipe-and-filter",
+        "layered"
+      ],
+      "tags": [
+        "structural",
+        "design-pattern"
+      ],
+      "source": "design-patterns/content/composite.yaml",
+      "links": [
+        {
+          "label": "README",
+          "path": "design-patterns/composite/README.md"
+        },
+        {
+          "label": "Quiz",
+          "path": "design-patterns/composite/quiz_guide.md"
+        },
+        {
+          "label": "Page",
+          "path": "design-patterns/composite/index.html"
+        }
+      ],
+      "uid": "design-patterns:structural:composite"
+    },
+    {
+      "id": "decorator",
+      "title": "Decorator",
+      "family": "design-patterns",
+      "kind": "structural",
+      "summary": "Attach additional responsibilities to an object dynamically by wrapping it.",
+      "intent": "Attach additional responsibilities to an object dynamically by wrapping it.",
+      "problem": "Subclassing to add combinations of behaviors (logging, caching, auth, metrics) causes class explosion and rigid composition.",
+      "use_when": [
+        "Behavior combinations should be composed at runtime.",
+        "Core class should remain closed to modification.",
+        "Wrappers must preserve the component interface."
+      ],
+      "tradeoffs": {
+        "benefit": "Enables flexible, mix-and-match behavior without subclass explosions.",
+        "cost": "Many small wrappers can complicate debugging and object identity."
+      },
+      "participants": [
+        {
+          "name": "Component",
+          "role": "Common interface for core objects and decorators."
+        },
+        {
+          "name": "ConcreteComponent",
+          "role": "The original object receiving added behavior."
+        },
+        {
+          "name": "Decorator",
+          "role": "Base wrapper that forwards to a component."
+        },
+        {
+          "name": "ConcreteDecorator",
+          "role": "Adds specific behavior around delegation."
+        }
+      ],
+      "related": [
+        "04-crud-api",
+        "layered",
+        "cache-aside"
+      ],
+      "tags": [
+        "structural",
+        "design-pattern"
+      ],
+      "source": "design-patterns/content/decorator.yaml",
+      "links": [
+        {
+          "label": "README",
+          "path": "design-patterns/decorator/README.md"
+        },
+        {
+          "label": "Quiz",
+          "path": "design-patterns/decorator/quiz_guide.md"
+        },
+        {
+          "label": "Page",
+          "path": "design-patterns/decorator/index.html"
+        }
+      ],
+      "uid": "design-patterns:structural:decorator"
+    },
+    {
+      "id": "facade",
+      "title": "Facade",
+      "family": "design-patterns",
+      "kind": "structural",
+      "summary": "Provide a simplified interface to a complex subsystem.",
+      "intent": "Provide a simplified interface to a complex subsystem.",
+      "problem": "Clients must orchestrate many subsystem classes and calls, increasing coupling and misuse risk.",
+      "use_when": [
+        "Subsystem APIs are complex or unstable.",
+        "Most clients need a narrow, common workflow.",
+        "Direct access may still be required for advanced cases."
+      ],
+      "tradeoffs": {
+        "benefit": "Reduces coupling and makes common use cases easier and safer.",
+        "cost": "Can become a god object if it accumulates unrelated responsibilities."
+      },
+      "participants": [
+        {
+          "name": "Facade",
+          "role": "Offers coarse-grained operations that coordinate subsystem work."
+        },
+        {
+          "name": "Subsystem classes",
+          "role": "Implement detailed functionality behind the facade."
+        },
+        {
+          "name": "Client",
+          "role": "Uses the facade for common cases instead of subsystem internals."
+        }
+      ],
+      "related": [
+        "02-serverless-api",
+        "layered",
+        "microservices"
+      ],
+      "tags": [
+        "structural",
+        "design-pattern"
+      ],
+      "source": "design-patterns/content/facade.yaml",
+      "links": [
+        {
+          "label": "README",
+          "path": "design-patterns/facade/README.md"
+        },
+        {
+          "label": "Quiz",
+          "path": "design-patterns/facade/quiz_guide.md"
+        },
+        {
+          "label": "Page",
+          "path": "design-patterns/facade/index.html"
+        }
+      ],
+      "uid": "design-patterns:structural:facade"
+    },
+    {
+      "id": "flyweight",
+      "title": "Flyweight",
+      "family": "design-patterns",
+      "kind": "structural",
+      "summary": "Share common intrinsic state across many fine-grained objects to reduce memory use.",
+      "intent": "Share common intrinsic state across many fine-grained objects to reduce memory use.",
+      "problem": "Large numbers of similar objects duplicate immutable data, causing high memory overhead.",
+      "use_when": [
+        "Many objects share immutable data.",
+        "Memory footprint is a bottleneck.",
+        "Intrinsic and extrinsic state can be separated clearly."
+      ],
+      "tradeoffs": {
+        "benefit": "Reduces memory and allocation costs for large object populations.",
+        "cost": "Adds complexity and may increase CPU cost to manage extrinsic state."
+      },
+      "participants": [
+        {
+          "name": "Flyweight",
+          "role": "Stores shared intrinsic state and operates on extrinsic state."
+        },
+        {
+          "name": "FlyweightFactory",
+          "role": "Creates and caches flyweights by intrinsic key."
+        },
+        {
+          "name": "Client",
+          "role": "Maintains or computes extrinsic state passed to flyweights."
+        }
+      ],
+      "related": [
+        "07-monitoring",
+        "cache-aside",
+        "01-static-website"
+      ],
+      "tags": [
+        "structural",
+        "design-pattern"
+      ],
+      "source": "design-patterns/content/flyweight.yaml",
+      "links": [
+        {
+          "label": "README",
+          "path": "design-patterns/flyweight/README.md"
+        },
+        {
+          "label": "Quiz",
+          "path": "design-patterns/flyweight/quiz_guide.md"
+        },
+        {
+          "label": "Page",
+          "path": "design-patterns/flyweight/index.html"
+        }
+      ],
+      "uid": "design-patterns:structural:flyweight"
+    },
+    {
+      "id": "proxy",
+      "title": "Proxy",
+      "family": "design-patterns",
+      "kind": "structural",
+      "summary": "Provide a surrogate or placeholder that controls access to another object.",
+      "intent": "Provide a surrogate or placeholder that controls access to another object.",
+      "problem": "Direct access to an object is expensive, remote, unsafe, or needs cross-cutting controls like caching or lazy loading.",
+      "use_when": [
+        "Access requires indirection (lazy init, remote, protection, caching).",
+        "Clients should use the same interface as the real object.",
+        "Control logic must be centralized."
+      ],
+      "tradeoffs": {
+        "benefit": "Adds access control or optimization transparently to clients.",
+        "cost": "Introduces latency/complexity and can obscure failure modes of the real subject."
+      },
+      "participants": [
+        {
+          "name": "Subject",
+          "role": "Common interface implemented by proxy and real subject."
+        },
+        {
+          "name": "RealSubject",
+          "role": "The actual object providing core functionality."
+        },
+        {
+          "name": "Proxy",
+          "role": "Controls access to the real subject and may add behavior."
+        }
+      ],
+      "related": [
+        "04-crud-api",
+        "cache-aside",
+        "microservices"
+      ],
+      "tags": [
+        "structural",
+        "design-pattern"
+      ],
+      "source": "design-patterns/content/proxy.yaml",
+      "links": [
+        {
+          "label": "README",
+          "path": "design-patterns/proxy/README.md"
+        },
+        {
+          "label": "Quiz",
+          "path": "design-patterns/proxy/quiz_guide.md"
+        },
+        {
+          "label": "Page",
+          "path": "design-patterns/proxy/index.html"
+        }
+      ],
+      "uid": "design-patterns:structural:proxy"
+    },
+    {
+      "id": "2401.12345",
+      "title": "[Paper title will be extracted from arXiv]",
+      "family": "papers",
+      "kind": "paper",
+      "summary": "[Abstract will be extracted]",
+      "tags": [
+        "paper",
+        "[Authors will be extracted]"
+      ],
+      "source": "papers/content/arxiv-2401.12345.yaml",
+      "links": [],
+      "related": [],
+      "uid": "papers:paper:2401.12345"
+    },
+    {
+      "id": "2401.54321",
+      "title": "[Paper title will be extracted from arXiv]",
+      "family": "papers",
+      "kind": "paper",
+      "summary": "[Abstract will be extracted]",
+      "tags": [
+        "paper",
+        "[Authors will be extracted]"
+      ],
+      "source": "papers/content/arxiv-2401.54321.yaml",
+      "links": [],
+      "related": [],
+      "uid": "papers:paper:2401.54321"
+    },
+    {
+      "id": "2405.02850v7",
+      "title": "Halfway Escape Optimization: A Quantum-Inspired Solution for General Optimization Problems",
+      "family": "papers",
+      "kind": "paper",
+      "summary": "Introduces Halfway Escape Optimization, a quantum-inspired metaheuristic that models tunnelling and entanglement effects to move candidates between search regions. The paper evaluates it on fourteen thirty-dimensional be",
+      "tags": [
+        "paper"
+      ],
+      "source": "papers/content/arxiv-2405.02850v7.yaml",
+      "links": [
+        {
+          "label": "Overview",
+          "path": "papers/2405.02850v7/README.md"
+        },
+        {
+          "label": "Page",
+          "path": "papers/2405.02850v7/index.html"
+        },
+        {
+          "label": "Concepts",
+          "path": "papers/2405.02850v7/concepts.json"
+        }
+      ],
+      "related": [],
+      "uid": "papers:paper:2405.02850v7"
+    },
+    {
+      "id": "2409.13788v1",
+      "title": "Quantum evolutionary algorithm for TSP combinatorial optimisation problem",
+      "family": "papers",
+      "kind": "paper",
+      "summary": "An experimental comparison of a quantum-inspired genetic algorithm with a classical genetic algorithm on standard TSPLIB tours. The study varies instance size and type, then compares solution quality, iteration count, ru",
+      "tags": [
+        "paper"
+      ],
+      "source": "papers/content/arxiv-2409.13788v1.yaml",
+      "links": [
+        {
+          "label": "Overview",
+          "path": "papers/2409.13788v1/README.md"
+        },
+        {
+          "label": "Page",
+          "path": "papers/2409.13788v1/index.html"
+        },
+        {
+          "label": "Concepts",
+          "path": "papers/2409.13788v1/concepts.json"
+        }
+      ],
+      "related": [],
+      "uid": "papers:paper:2409.13788v1"
+    },
+    {
+      "id": "asynchronous-job-processing",
+      "title": "Asynchronous Job Processing",
+      "family": "pattern-catalogue",
+      "kind": "delivery-and-reliability",
+      "summary": "A synchronous request invokes work whose duration, failure rate, or throughput cannot safely be handled within the request-response path. Waiting for completion can exhaust client connections, exceed request timeouts, or",
+      "decision": "Accept the request durably into a queue, return immediately to the client, and process it asynchronously through a worker pool. Expose work status, retry behavior, and failure handling explicitly. The queue acts as a durable buffer and allows workers to scale independently.",
+      "use_when": [
+        "Work duration is unpredictable or exceeds request timeouts",
+        "Retries and durable audit trails matter for compliance or reliability",
+        "You need to prioritize work, batch it, or distribute it across multiple workers",
+        "Multiple workers may process the same type of work in parallel",
+        "Decoupling producers from execution improves system resilience"
+      ],
+      "avoid_when": [
+        "Immediate synchronous confirmation is non-negotiable (e.g., payment authorization, form validation)",
+        "The operation is simple and always completes in milliseconds",
+        "The operational complexity and cost of queue infrastructure is unjustifiable for the workload",
+        "You have no mechanism to report completion status back to the client"
+      ],
+      "tradeoffs": [
+        {
+          "benefit": "Decouples producers from workers; workers scale independently from request rate",
+          "cost": "Operational complexity: queue, worker pool, monitoring, dead-letter handling, idempotency logic"
+        },
+        {
+          "benefit": "Enables retries with backoff, durable record of work, and recovery from transient failures",
+          "cost": "Eventual consistency; client cannot immediately verify success; must poll or use webhooks"
+        },
+        {
+          "benefit": "Graceful degradation under load; queue absorbs spikes and workers process at their own pace",
+          "cost": "Requires idempotency design and duplicate-detection policy to avoid executing the same work twice"
+        },
+        {
+          "benefit": "Visibility into work status, failures, and processing time across the entire pipeline",
+          "cost": "Requires comprehensive logging and monitoring; operational alerts are essential"
+        }
+      ],
+      "tags": [
+        "visual-pattern",
+        "reliability",
+        "scalability",
+        "observability"
+      ],
+      "source": "data/patterns.json",
+      "links": [
+        {
+          "label": "Diagram",
+          "path": "assets/diagrams/asynchronous-job-processing.svg"
+        }
+      ],
+      "related": [],
+      "uid": "pattern-catalogue:delivery-and-reliability:asynchronous-job-processing"
+    },
+    {
+      "id": "strangler-pattern",
+      "title": "Strangler Fig: Incremental Legacy Modernization",
+      "family": "pattern-catalogue",
+      "kind": "migration",
+      "summary": "A legacy system is mission-critical but increasingly costly to maintain, lacks desired features, or blocks adoption of new technologies. A complete rewrite is too risky and blocks business value. You need to modernize in",
+      "decision": "Build a facade (strangler) that intercepts requests destined for the legacy system. Route specific feature requests to the new system, while others continue through to the legacy implementation. Over time, shift more traffic to the new system as capabilities are proven. The legacy system is gradually 'strangled' until it can be retired entirely.",
+      "use_when": [
+        "The legacy system is stable, mission-critical, and cannot be taken offline",
+        "You can identify seams or boundaries—features or flows that can be migrated incrementally",
+        "The new system can coexist with the legacy system for a transition period",
+        "You have the organizational capacity to maintain two systems in parallel",
+        "Risk reduction and business continuity are higher priorities than speed"
+      ],
+      "avoid_when": [
+        "The entire system must be replaced simultaneously (regulatory deadline, hardware EOL)",
+        "The legacy system has deeply entangled logic with no clear seams",
+        "Operating two systems in parallel is infeasible (cost, complexity, skill constraints)",
+        "The legacy system is already isolated and easy to replace in one go"
+      ],
+      "tradeoffs": [
+        {
+          "benefit": "Risk is spread across multiple deployments; each feature can be tested independently before full cutover",
+          "cost": "Operational complexity increases: need to run, monitor, and debug two systems in parallel for months"
+        },
+        {
+          "benefit": "Business value is delivered incrementally; users gain new capabilities while stability is maintained",
+          "cost": "Seam identification takes careful analysis; poor boundaries create cross-system dependencies and make migration harder"
+        },
+        {
+          "benefit": "Graceful fallback is possible; if the new system fails, traffic reverts to legacy without data loss",
+          "cost": "Requires robust routing/facade logic and data synchronization between systems"
+        },
+        {
+          "benefit": "Team can learn and iterate on new system design while legacy system handles baseline load",
+          "cost": "Legacy system must remain operational; cannot be abandoned immediately even after new system goes live"
+        }
+      ],
+      "tags": [
+        "visual-pattern",
+        "reliability",
+        "migration",
+        "risk-reduction"
+      ],
+      "source": "data/patterns.json",
+      "links": [
+        {
+          "label": "Diagram",
+          "path": "assets/diagrams/strangler-pattern.svg"
+        }
+      ],
+      "related": [],
+      "uid": "pattern-catalogue:migration:strangler-pattern"
+    },
+    {
+      "id": "08-circuit-breaker",
+      "title": "Pattern: Circuit Breaker & Resilience",
+      "family": "patterns-library",
+      "kind": "pattern-doc",
+      "summary": "When Service A calls Service B and Service B becomes slow/down:",
+      "tags": [
+        "pattern-doc",
+        "pattern-doc"
+      ],
+      "source": "patterns/08-circuit-breaker.md",
+      "links": [
+        {
+          "label": "Open",
+          "path": "patterns/08-circuit-breaker.md"
+        }
+      ],
+      "related": [],
+      "uid": "patterns-library:pattern-doc:08-circuit-breaker"
+    },
+    {
+      "id": "09-database-replication-sharding",
+      "title": "Pattern: Database Replication & Sharding",
+      "family": "patterns-library",
+      "kind": "pattern-doc",
+      "summary": "",
+      "tags": [
+        "pattern-doc",
+        "pattern-doc"
+      ],
+      "source": "patterns/09-database-replication-sharding.md",
+      "links": [
+        {
+          "label": "Open",
+          "path": "patterns/09-database-replication-sharding.md"
+        }
+      ],
+      "related": [],
+      "uid": "patterns-library:pattern-doc:09-database-replication-sharding"
+    },
+    {
+      "id": "05-event-sourcing",
+      "title": "Pattern: Event Sourcing",
+      "family": "patterns-library",
+      "kind": "pattern-doc",
+      "summary": "Client says: \"We need an audit trail.\"",
+      "tags": [
+        "pattern-doc",
+        "pattern-doc"
+      ],
+      "source": "patterns/05-event-sourcing.md",
+      "links": [
+        {
+          "label": "Open",
+          "path": "patterns/05-event-sourcing.md"
+        }
+      ],
+      "related": [],
+      "uid": "patterns-library:pattern-doc:05-event-sourcing"
+    },
+    {
+      "id": "02-multi-tenant",
+      "title": "Pattern: Multi-Tenant Architecture",
+      "family": "patterns-library",
+      "kind": "pattern-doc",
+      "summary": "",
+      "tags": [
+        "pattern-doc",
+        "pattern-doc"
+      ],
+      "source": "patterns/02-multi-tenant.md",
+      "links": [
+        {
+          "label": "Open",
+          "path": "patterns/02-multi-tenant.md"
+        }
+      ],
+      "related": [],
+      "uid": "patterns-library:pattern-doc:02-multi-tenant"
+    },
+    {
+      "id": "01-strangler-fig",
+      "title": "Pattern: Strangler Fig (Monolith-to-Microservices)",
+      "family": "patterns-library",
+      "kind": "pattern-doc",
+      "summary": "Large monoliths become difficult to:",
+      "tags": [
+        "pattern-doc",
+        "pattern-doc"
+      ],
+      "source": "patterns/01-strangler-fig.md",
+      "links": [
+        {
+          "label": "Open",
+          "path": "patterns/01-strangler-fig.md"
+        }
+      ],
+      "related": [],
+      "uid": "patterns-library:pattern-doc:01-strangler-fig"
+    },
+    {
+      "id": "PATTERN_TEMPLATE",
+      "title": "Pattern: [NAME]",
+      "family": "patterns-library",
+      "kind": "template",
+      "summary": "Describe the core issue this pattern addresses. What pain point or constraint drove its creation?",
+      "tags": [
+        "pattern-doc",
+        "template"
+      ],
+      "source": "patterns/PATTERN_TEMPLATE.md",
+      "links": [
+        {
+          "label": "Open",
+          "path": "patterns/PATTERN_TEMPLATE.md"
+        }
+      ],
+      "related": [],
+      "uid": "patterns-library:template:PATTERN_TEMPLATE"
+    },
+    {
+      "id": "heapify-linear",
+      "title": "Bottom-up heapify is linear",
+      "family": "proofs",
+      "kind": "proof",
+      "summary": "Constructing a binary heap by calling sift-down from the last internal node to the root takes O(n) time.",
+      "problem": "Constructing a binary heap by calling sift-down from the last internal node to the root takes O(n) time.",
+      "related": [
+        "heapify-is-linear"
+      ],
+      "tags": [
+        "proofs",
+        "proof"
+      ],
+      "source": "proofs/content/heapify-linear.yaml",
+      "links": [
+        {
+          "label": "README",
+          "path": "proofs/heapify-linear/README.md"
+        },
+        {
+          "label": "Glossary",
+          "path": "proofs/heapify-linear/glossary.json"
+        }
+      ],
+      "uid": "proofs:proof:heapify-linear"
+    },
+    {
+      "id": "dynamic-array-amortized",
+      "title": "Dynamic array append is amortized O(1)",
+      "family": "proofs",
+      "kind": "proof",
+      "summary": "A sequence of n appends to a geometrically growing array costs O(n) time in total.",
+      "problem": "A sequence of n appends to a geometrically growing array costs O(n) time in total.",
+      "related": [
+        "list-append-is-amortized-constant"
+      ],
+      "tags": [
+        "proofs",
+        "proof"
+      ],
+      "source": "proofs/content/dynamic-array-amortized.yaml",
+      "links": [
+        {
+          "label": "README",
+          "path": "proofs/dynamic-array-amortized/README.md"
+        },
+        {
+          "label": "Glossary",
+          "path": "proofs/dynamic-array-amortized/glossary.json"
+        }
+      ],
+      "uid": "proofs:proof:dynamic-array-amortized"
+    },
+    {
+      "id": "sliding-window-linear",
+      "title": "Sliding window moves each pointer at most n times",
+      "family": "proofs",
+      "kind": "proof",
+      "summary": "A sliding window over an array of n elements runs in O(n) time when each pointer only moves forward.",
+      "problem": "A sliding window over an array of n elements runs in O(n) time when each pointer only moves forward.",
+      "related": [
+        "sliding-window-is-linear"
+      ],
+      "tags": [
+        "proofs",
+        "proof"
+      ],
+      "source": "proofs/content/sliding-window-linear.yaml",
+      "links": [
+        {
+          "label": "README",
+          "path": "proofs/sliding-window-linear/README.md"
+        },
+        {
+          "label": "Glossary",
+          "path": "proofs/sliding-window-linear/glossary.json"
+        }
+      ],
+      "uid": "proofs:proof:sliding-window-linear"
+    },
+    {
+      "id": "provider-matrix",
+      "title": "Provider matrix",
+      "family": "providers",
+      "kind": "catalogue",
+      "summary": "Generated cross-provider mapping matrix.",
+      "tags": [
+        "catalogue",
+        "providers"
+      ],
+      "source": "providers/matrix.md",
+      "links": [
+        {
+          "label": "Open",
+          "path": "providers/matrix.md"
+        }
+      ],
+      "related": [],
+      "uid": "providers:catalogue:provider-matrix"
+    },
+    {
+      "id": "event-driven",
+      "title": "Event-driven processing",
+      "family": "providers",
+      "kind": "mapping",
+      "summary": "Producers publish events to a managed queue or topic; a consumer function processes them and moves repeated failures to a dead-letter destination, with a managed store for processed-event state. The pattern is provider-neutral and every fixture is plan-only and cost-free.",
+      "providers": {
+        "aws": "SQS queue with dead-letter queue + AWS Lambda + DynamoDB",
+        "azure": "Azure Storage Queues with poison queue + Azure Functions + Table Storage",
+        "gcp": "Pub/Sub topic with dead-letter topic + Cloud Functions + Firestore"
+      },
+      "tags": [
+        "provider",
+        "mapping"
+      ],
+      "source": "providers/content/event-driven.yaml",
+      "links": [
+        {
+          "label": "Matrix",
+          "path": "providers/matrix.md"
+        },
+        {
+          "label": "Page",
+          "path": "providers/index.html"
+        }
+      ],
+      "related": [],
+      "uid": "providers:mapping:event-driven"
+    },
+    {
+      "id": "serverless-api",
+      "title": "Serverless API",
+      "family": "providers",
+      "kind": "mapping",
+      "summary": "A managed HTTP endpoint fronts a short-lived, stateless function that reads and writes a managed table or document store. The pattern is provider-neutral: route the request, run the handler, persist the result. Every fixture is plan-only and cost-free.",
+      "providers": {
+        "aws": "API Gateway HTTP API + AWS Lambda + DynamoDB",
+        "azure": "API Management + Azure Functions + Table Storage",
+        "gcp": "Cloud Run endpoint + Cloud Functions + Firestore"
+      },
+      "tags": [
+        "provider",
+        "mapping"
+      ],
+      "source": "providers/content/serverless-api.yaml",
+      "links": [
+        {
+          "label": "Matrix",
+          "path": "providers/matrix.md"
+        },
+        {
+          "label": "Page",
+          "path": "providers/index.html"
+        }
+      ],
+      "related": [],
+      "uid": "providers:mapping:serverless-api"
+    },
+    {
+      "id": "cards-review",
+      "title": "Card review",
+      "family": "review",
+      "kind": "interactive",
+      "summary": "Timed local review over the canonical card deck.",
+      "tags": [
+        "interactive",
+        "review"
+      ],
+      "source": "cards/index.html",
+      "links": [
+        {
+          "label": "Open",
+          "path": "cards/index.html"
+        }
+      ],
+      "related": [],
+      "uid": "review:interactive:cards-review"
+    },
+    {
+      "id": "visual-hub",
+      "title": "Visual review hub",
+      "family": "review",
+      "kind": "interactive",
+      "summary": "Concept maps, diagrams, architecture graph, and proof pages.",
+      "tags": [
+        "interactive",
+        "review"
+      ],
+      "source": "visual/index.html",
+      "links": [
+        {
+          "label": "Open",
+          "path": "visual/index.html"
+        }
+      ],
+      "related": [],
+      "uid": "review:interactive:visual-hub"
+    },
+    {
+      "id": "08-streaming",
+      "title": "Clickstream streaming pipeline",
+      "family": "scenarios",
+      "kind": "implemented",
+      "summary": "Scenario 08-streaming",
+      "artifacts": {
+        "path": "scenarios/08-streaming/README.md",
+        "hints": "scenarios/08-streaming/HINTS.md",
+        "solution": "scenarios/08-streaming/SOLUTION.md",
+        "rubric": "scenarios/08-streaming/RUBRIC.md"
+      },
+      "related": [
+        "event-driven",
+        "pipe-and-filter",
+        "queue-based-load-leveling"
+      ],
+      "tags": [
+        "scenario",
+        "implemented"
+      ],
+      "source": "architecture/content/catalogue.yaml",
+      "links": [
+        {
+          "label": "Path",
+          "path": "scenarios/08-streaming/README.md"
+        },
+        {
+          "label": "Hints",
+          "path": "scenarios/08-streaming/HINTS.md"
+        },
+        {
+          "label": "Solution",
+          "path": "scenarios/08-streaming/SOLUTION.md"
+        },
+        {
+          "label": "Rubric",
+          "path": "scenarios/08-streaming/RUBRIC.md"
+        }
+      ],
+      "uid": "scenarios:implemented:08-streaming"
+    },
+    {
+      "id": "03-event-driven",
+      "title": "Event-driven order ingress",
+      "family": "scenarios",
+      "kind": "implemented",
+      "summary": "Scenario 03-event-driven",
+      "artifacts": {
+        "path": "scenarios/03-event-driven/README.md",
+        "hints": "scenarios/03-event-driven/HINTS.md",
+        "solution": "scenarios/03-event-driven/SOLUTION.md",
+        "rubric": "scenarios/03-event-driven/RUBRIC.md"
+      },
+      "related": [
+        "event-driven",
+        "queue-based-load-leveling",
+        "idempotent-consumer"
+      ],
+      "tags": [
+        "scenario",
+        "implemented"
+      ],
+      "source": "architecture/content/catalogue.yaml",
+      "links": [
+        {
+          "label": "Path",
+          "path": "scenarios/03-event-driven/README.md"
+        },
+        {
+          "label": "Hints",
+          "path": "scenarios/03-event-driven/HINTS.md"
+        },
+        {
+          "label": "Solution",
+          "path": "scenarios/03-event-driven/SOLUTION.md"
+        },
+        {
+          "label": "Rubric",
+          "path": "scenarios/03-event-driven/RUBRIC.md"
+        }
+      ],
+      "uid": "scenarios:implemented:03-event-driven"
+    },
+    {
+      "id": "09-microservices",
+      "title": "Microservices order system",
+      "family": "scenarios",
+      "kind": "implemented",
+      "summary": "Scenario 09-microservices",
+      "artifacts": {
+        "path": "scenarios/09-microservices/README.md",
+        "hints": "scenarios/09-microservices/HINTS.md",
+        "solution": "scenarios/09-microservices/SOLUTION.md",
+        "rubric": "scenarios/09-microservices/RUBRIC.md"
+      },
+      "related": [
+        "microservices",
+        "saga",
+        "bulkhead",
+        "circuit-breaker"
+      ],
+      "tags": [
+        "scenario",
+        "implemented"
+      ],
+      "source": "architecture/content/catalogue.yaml",
+      "links": [
+        {
+          "label": "Path",
+          "path": "scenarios/09-microservices/README.md"
+        },
+        {
+          "label": "Hints",
+          "path": "scenarios/09-microservices/HINTS.md"
+        },
+        {
+          "label": "Solution",
+          "path": "scenarios/09-microservices/SOLUTION.md"
+        },
+        {
+          "label": "Rubric",
+          "path": "scenarios/09-microservices/RUBRIC.md"
+        }
+      ],
+      "uid": "scenarios:implemented:09-microservices"
+    },
+    {
+      "id": "07-monitoring",
+      "title": "Observability and incident response",
+      "family": "scenarios",
+      "kind": "implemented",
+      "summary": "Scenario 07-monitoring",
+      "artifacts": {
+        "path": "scenarios/07-monitoring/README.md",
+        "hints": "scenarios/07-monitoring/HINTS.md",
+        "solution": "scenarios/07-monitoring/SOLUTION.md",
+        "rubric": "scenarios/07-monitoring/RUBRIC.md"
+      },
+      "related": [
+        "recoverability",
+        "observability",
+        "circuit-breaker"
+      ],
+      "tags": [
+        "scenario",
+        "implemented"
+      ],
+      "source": "architecture/content/catalogue.yaml",
+      "links": [
+        {
+          "label": "Path",
+          "path": "scenarios/07-monitoring/README.md"
+        },
+        {
+          "label": "Hints",
+          "path": "scenarios/07-monitoring/HINTS.md"
+        },
+        {
+          "label": "Solution",
+          "path": "scenarios/07-monitoring/SOLUTION.md"
+        },
+        {
+          "label": "Rubric",
+          "path": "scenarios/07-monitoring/RUBRIC.md"
+        }
+      ],
+      "uid": "scenarios:implemented:07-monitoring"
+    },
+    {
+      "id": "10-disaster-recovery",
+      "title": "Regional disaster recovery",
+      "family": "scenarios",
+      "kind": "implemented",
+      "summary": "Scenario 10-disaster-recovery",
+      "artifacts": {
+        "path": "scenarios/10-disaster-recovery/README.md",
+        "hints": "scenarios/10-disaster-recovery/HINTS.md",
+        "solution": "scenarios/10-disaster-recovery/SOLUTION.md",
+        "rubric": "scenarios/10-disaster-recovery/RUBRIC.md"
+      },
+      "related": [
+        "availability",
+        "recoverability",
+        "blue-green-deploy"
+      ],
+      "tags": [
+        "scenario",
+        "implemented"
+      ],
+      "source": "architecture/content/catalogue.yaml",
+      "links": [
+        {
+          "label": "Path",
+          "path": "scenarios/10-disaster-recovery/README.md"
+        },
+        {
+          "label": "Hints",
+          "path": "scenarios/10-disaster-recovery/HINTS.md"
+        },
+        {
+          "label": "Solution",
+          "path": "scenarios/10-disaster-recovery/SOLUTION.md"
+        },
+        {
+          "label": "Rubric",
+          "path": "scenarios/10-disaster-recovery/RUBRIC.md"
+        }
+      ],
+      "uid": "scenarios:implemented:10-disaster-recovery"
+    },
+    {
+      "id": "06-cicd-pipeline",
+      "title": "Safe multi-environment CI/CD pipeline",
+      "family": "scenarios",
+      "kind": "implemented",
+      "summary": "Scenario 06-cicd-pipeline",
+      "artifacts": {
+        "path": "scenarios/06-cicd-pipeline/README.md",
+        "hints": "scenarios/06-cicd-pipeline/HINTS.md",
+        "solution": "scenarios/06-cicd-pipeline/SOLUTION.md",
+        "rubric": "scenarios/06-cicd-pipeline/RUBRIC.md"
+      },
+      "related": [
+        "blue-green-deploy",
+        "circuit-breaker",
+        "modifiability"
+      ],
+      "tags": [
+        "scenario",
+        "implemented"
+      ],
+      "source": "architecture/content/catalogue.yaml",
+      "links": [
+        {
+          "label": "Path",
+          "path": "scenarios/06-cicd-pipeline/README.md"
+        },
+        {
+          "label": "Hints",
+          "path": "scenarios/06-cicd-pipeline/HINTS.md"
+        },
+        {
+          "label": "Solution",
+          "path": "scenarios/06-cicd-pipeline/SOLUTION.md"
+        },
+        {
+          "label": "Rubric",
+          "path": "scenarios/06-cicd-pipeline/RUBRIC.md"
+        }
+      ],
+      "uid": "scenarios:implemented:06-cicd-pipeline"
+    },
+    {
+      "id": "04-crud-api",
+      "title": "Serverless CRUD API",
+      "family": "scenarios",
+      "kind": "implemented",
+      "summary": "Scenario 04-crud-api",
+      "artifacts": {
+        "path": "scenarios/04-crud-api/README.md",
+        "hints": "scenarios/04-crud-api/HINTS.md",
+        "solution": "scenarios/04-crud-api/SOLUTION.md",
+        "rubric": "scenarios/04-crud-api/RUBRIC.md"
+      },
+      "related": [
+        "layered",
+        "repository",
+        "serverless"
+      ],
+      "tags": [
+        "scenario",
+        "implemented"
+      ],
+      "source": "architecture/content/catalogue.yaml",
+      "links": [
+        {
+          "label": "Path",
+          "path": "scenarios/04-crud-api/README.md"
+        },
+        {
+          "label": "Hints",
+          "path": "scenarios/04-crud-api/HINTS.md"
+        },
+        {
+          "label": "Solution",
+          "path": "scenarios/04-crud-api/SOLUTION.md"
+        },
+        {
+          "label": "Rubric",
+          "path": "scenarios/04-crud-api/RUBRIC.md"
+        }
+      ],
+      "uid": "scenarios:implemented:04-crud-api"
+    },
+    {
+      "id": "02-serverless-api",
+      "title": "Serverless URL shortener",
+      "family": "scenarios",
+      "kind": "implemented",
+      "summary": "Scenario 02-serverless-api",
+      "artifacts": {
+        "path": "scenarios/02-serverless-api/README.md",
+        "hints": "scenarios/02-serverless-api/HINTS.md",
+        "solution": "scenarios/02-serverless-api/SOLUTION.md",
+        "rubric": "scenarios/02-serverless-api/RUBRIC.md"
+      },
+      "related": [
+        "serverless",
+        "idempotent-consumer",
+        "retry-with-backoff"
+      ],
+      "tags": [
+        "scenario",
+        "implemented"
+      ],
+      "source": "architecture/content/catalogue.yaml",
+      "links": [
+        {
+          "label": "Path",
+          "path": "scenarios/02-serverless-api/README.md"
+        },
+        {
+          "label": "Hints",
+          "path": "scenarios/02-serverless-api/HINTS.md"
+        },
+        {
+          "label": "Solution",
+          "path": "scenarios/02-serverless-api/SOLUTION.md"
+        },
+        {
+          "label": "Rubric",
+          "path": "scenarios/02-serverless-api/RUBRIC.md"
+        }
+      ],
+      "uid": "scenarios:implemented:02-serverless-api"
+    },
+    {
+      "id": "01-static-website",
+      "title": "Static website with CDN",
+      "family": "scenarios",
+      "kind": "implemented",
+      "summary": "Scenario 01-static-website",
+      "artifacts": {
+        "path": "scenarios/01-static-website/README.md",
+        "hints": "scenarios/01-static-website/HINTS.md",
+        "solution": "scenarios/01-static-website/SOLUTION.md",
+        "rubric": "scenarios/01-static-website/RUBRIC.md"
+      },
+      "related": [
+        "layered",
+        "cache-aside"
+      ],
+      "tags": [
+        "scenario",
+        "implemented"
+      ],
+      "source": "architecture/content/catalogue.yaml",
+      "links": [
+        {
+          "label": "Path",
+          "path": "scenarios/01-static-website/README.md"
+        },
+        {
+          "label": "Hints",
+          "path": "scenarios/01-static-website/HINTS.md"
+        },
+        {
+          "label": "Solution",
+          "path": "scenarios/01-static-website/SOLUTION.md"
+        },
+        {
+          "label": "Rubric",
+          "path": "scenarios/01-static-website/RUBRIC.md"
+        }
+      ],
+      "uid": "scenarios:implemented:01-static-website"
+    },
+    {
+      "id": "05-3tier-web",
+      "title": "Three-tier web application",
+      "family": "scenarios",
+      "kind": "implemented",
+      "summary": "Scenario 05-3tier-web",
+      "artifacts": {
+        "path": "scenarios/05-3tier-web/README.md",
+        "hints": "scenarios/05-3tier-web/HINTS.md",
+        "solution": "scenarios/05-3tier-web/SOLUTION.md",
+        "rubric": "scenarios/05-3tier-web/RUBRIC.md"
+      },
+      "related": [
+        "layered",
+        "bulkhead",
+        "cache-aside"
+      ],
+      "tags": [
+        "scenario",
+        "implemented"
+      ],
+      "source": "architecture/content/catalogue.yaml",
+      "links": [
+        {
+          "label": "Path",
+          "path": "scenarios/05-3tier-web/README.md"
+        },
+        {
+          "label": "Hints",
+          "path": "scenarios/05-3tier-web/HINTS.md"
+        },
+        {
+          "label": "Solution",
+          "path": "scenarios/05-3tier-web/SOLUTION.md"
+        },
+        {
+          "label": "Rubric",
+          "path": "scenarios/05-3tier-web/RUBRIC.md"
+        }
+      ],
+      "uid": "scenarios:implemented:05-3tier-web"
+    },
+    {
+      "id": "contract-testing",
+      "title": "Contract testing: API contracts and consumer-driven contracts",
+      "family": "testing",
+      "kind": "testing-pattern",
+      "summary": "Contract tests verify that a client and a server agree on the shape and behavior of their API: request format, response schema, status codes, and error handling. Consumer-driven contracts start with the client's expectations and verify the server meets them. Provider contracts test the server's behavior independently. Contract tests prevent integration breaks: when a contract test fails, the API has changed in a way that breaks the client. Contract tests are faster than end-to-end tests and catch misalignment early.\n",
+      "problem": "",
+      "related": [],
+      "tags": [
+        "testing",
+        "testing-pattern"
+      ],
+      "source": "testing/content/contract_testing.yaml",
+      "links": [
+        {
+          "label": "README",
+          "path": "testing/contract-testing/README.md"
+        },
+        {
+          "label": "Quiz",
+          "path": "testing/contract-testing/quiz_guide.md"
+        },
+        {
+          "label": "Page",
+          "path": "testing/contract-testing/index.html"
+        },
+        {
+          "label": "Glossary",
+          "path": "testing/contract-testing/glossary.json"
+        }
+      ],
+      "uid": "testing:testing-pattern:contract-testing"
+    },
+    {
+      "id": "integration-testing",
+      "title": "Integration testing: service boundaries, fixture lifecycle, and database tests",
+      "family": "testing",
+      "kind": "testing-pattern",
+      "summary": "Integration tests verify interactions between multiple components: a service calling a repository, a repository querying a database, or an API calling a downstream service. Unlike unit tests, integration tests may use real databases (or in-memory replicas), but they must still be hermetic and reproducible. Fixture scopes (function, session, module) manage expensive setup; transaction rollback keeps tests isolated. Contract tests define boundaries between services and verify both sides adhere to the contract.\n",
+      "problem": "",
+      "related": [],
+      "tags": [
+        "testing",
+        "testing-pattern"
+      ],
+      "source": "testing/content/integration_testing.yaml",
+      "links": [
+        {
+          "label": "README",
+          "path": "testing/integration-testing/README.md"
+        },
+        {
+          "label": "Quiz",
+          "path": "testing/integration-testing/quiz_guide.md"
+        },
+        {
+          "label": "Page",
+          "path": "testing/integration-testing/index.html"
+        },
+        {
+          "label": "Glossary",
+          "path": "testing/integration-testing/glossary.json"
+        }
+      ],
+      "uid": "testing:testing-pattern:integration-testing"
+    },
+    {
+      "id": "test-fixtures",
+      "title": "Test fixtures: pytest conftest patterns, scope, and dependency injection",
+      "family": "testing",
+      "kind": "testing-pattern",
+      "summary": "Pytest fixtures are reusable setup/teardown functions that tests depend on. Fixtures manage resources (databases, temporary files, mocks) and provide them to tests via dependency injection. A fixture's scope (function, class, module, session) determines when setup runs and cleanup happens. conftest.py is a pytest file that defines fixtures shared across tests in a directory and subdirectories. Fixtures compose: one fixture can depend on another, building up complex test environments from simple pieces.\n",
+      "problem": "",
+      "related": [],
+      "tags": [
+        "testing",
+        "testing-pattern"
+      ],
+      "source": "testing/content/test_fixtures.yaml",
+      "links": [
+        {
+          "label": "README",
+          "path": "testing/test-fixtures/README.md"
+        },
+        {
+          "label": "Quiz",
+          "path": "testing/test-fixtures/quiz_guide.md"
+        },
+        {
+          "label": "Page",
+          "path": "testing/test-fixtures/index.html"
+        },
+        {
+          "label": "Glossary",
+          "path": "testing/test-fixtures/glossary.json"
+        }
+      ],
+      "uid": "testing:testing-pattern:test-fixtures"
+    },
+    {
+      "id": "unit-testing",
+      "title": "Unit testing: test isolation, hermetic tests, and mocking strategies",
+      "family": "testing",
+      "kind": "testing-pattern",
+      "summary": "Unit tests verify single functions or classes in isolation, fast and deterministically. Hermetic tests are self-contained: they never touch external services, file systems, or databases. Mocking replaces dependencies, allowing tests to control inputs and verify behavior. Pytest markers (@pytest.mark.unit) organize tests by scope. Fixtures manage setup and teardown, keeping tests DRY.\n",
+      "problem": "",
+      "related": [],
+      "tags": [
+        "testing",
+        "testing-pattern"
+      ],
+      "source": "testing/content/unit_testing.yaml",
+      "links": [
+        {
+          "label": "README",
+          "path": "testing/unit-testing/README.md"
+        },
+        {
+          "label": "Quiz",
+          "path": "testing/unit-testing/quiz_guide.md"
+        },
+        {
+          "label": "Page",
+          "path": "testing/unit-testing/index.html"
+        },
+        {
+          "label": "Glossary",
+          "path": "testing/unit-testing/glossary.json"
+        }
+      ],
+      "uid": "testing:testing-pattern:unit-testing"
+    }
+  ]
+}

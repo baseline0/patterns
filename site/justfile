@@ -1,0 +1,13 @@
+# Local interactive content explorer. Paths are relative to this justfile's directory.
+
+# Regenerate the catalog and interactive explorer page.
+build:
+    uv run python tools/build.py
+
+# Fail when a checked-in site output differs from committed content.
+check:
+    uv run python tools/build.py --check
+
+# Serve the repository root (open http://localhost:8000/site/index.html).
+serve:
+    python -m http.server 8000 --directory ..
