@@ -19,7 +19,9 @@ def load_attributes(directory: Path = QUALITY) -> list[dict[str, Any]]:
     attributes = []
     for path in sorted(directory.glob("*.yaml")):
         item = yaml.safe_load(path.read_text(encoding="utf-8"))
-        if not isinstance(item, dict) or not all(key in item for key in ("id", "name", "stimulus", "response", "measure", "tactics")):
+        if not isinstance(item, dict) or not all(
+            key in item for key in ("id", "name", "stimulus", "response", "measure", "tactics")
+        ):
             raise ValueError(f"{path.name}: incomplete quality attribute")
         attributes.append(item)
     if not attributes:

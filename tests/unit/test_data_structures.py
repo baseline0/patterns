@@ -220,6 +220,7 @@ def _dict_lookup_is_constant_time() -> None:
 
 def _tree_is_recursive_structure() -> None:
     """A tree is recursively defined: each subtree is a tree."""
+
     class Node:
         def __init__(self, val, left=None, right=None):
             self.val = val
@@ -237,7 +238,8 @@ def _tree_is_recursive_structure() -> None:
 
 def _bst_maintains_invariant() -> None:
     """In a BST, all left descendants are smaller, all right descendants are larger."""
-    def is_bst(node, min_val=float('-inf'), max_val=float('inf')):
+
+    def is_bst(node, min_val=float("-inf"), max_val=float("inf")):
         if node is None:
             return True
         if not min_val < node.val < max_val:
@@ -261,6 +263,7 @@ def _bst_maintains_invariant() -> None:
 
 def _inorder_traversal_yields_sorted() -> None:
     """In-order traversal of a BST visits nodes in sorted order."""
+
     class Node:
         def __init__(self, val, left=None, right=None):
             self.val = val
@@ -281,6 +284,7 @@ def _inorder_traversal_yields_sorted() -> None:
 
 def _tree_height_bounds_recursive_depth() -> None:
     """Tree height determines the recursion depth and required stack space."""
+
     class Node:
         def __init__(self, val, left=None, right=None):
             self.val = val
@@ -303,6 +307,7 @@ def _tree_height_bounds_recursive_depth() -> None:
 
 def _balanced_tree_search_is_logarithmic() -> None:
     """In a balanced BST, search eliminates about half the tree per comparison."""
+
     class Node:
         def __init__(self, val, left=None, right=None):
             self.val = val
@@ -325,6 +330,7 @@ def _balanced_tree_search_is_logarithmic() -> None:
 
 def _linked_list_no_random_access() -> None:
     """Reaching a position in a linked list requires walking from the head."""
+
     class Node:
         def __init__(self, val, next=None):
             self.val = val
@@ -347,6 +353,7 @@ def _linked_list_no_random_access() -> None:
 
 def _linked_list_insert_delete_constant() -> None:
     """Insertion and deletion at a known node cost O(1)."""
+
     class Node:
         def __init__(self, val, next=None):
             self.val = val
@@ -366,6 +373,7 @@ def _linked_list_insert_delete_constant() -> None:
 
 def _reversal_redirects_pointers_inplace() -> None:
     """Reversing a linked list in-place uses O(1) extra space by redirecting pointers."""
+
     class Node:
         def __init__(self, val, next=None):
             self.val = val
@@ -392,6 +400,7 @@ def _reversal_redirects_pointers_inplace() -> None:
 
 def _cycle_detection_two_pointers() -> None:
     """Two pointers at different speeds detect a cycle: they meet if one exists."""
+
     class Node:
         def __init__(self, val, next=None):
             self.val = val
@@ -421,6 +430,7 @@ def _cycle_detection_two_pointers() -> None:
 
 def _dummy_node_simplifies_head_cases() -> None:
     """A dummy node eliminates special cases when modifying the head."""
+
     class Node:
         def __init__(self, val, next=None):
             self.val = val

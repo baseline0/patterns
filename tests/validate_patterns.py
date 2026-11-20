@@ -21,6 +21,7 @@ def load_patterns():
     with open(patterns_file) as f:
         return json.load(f)
 
+
 def validate_schema(data):
     """Validate top-level schema."""
     required_keys = {"version", "metadata", "patterns"}
@@ -32,14 +33,24 @@ def validate_schema(data):
 
     print("✓ Top-level schema valid")
 
+
 def validate_pattern(pattern, index):
     """Validate individual pattern structure."""
     required_fields = {
-        "id", "title", "slug", "category", "status",
-        "concerns", "problem", "decision",
-        "use_when", "avoid_when", "tradeoffs",
-        "conceptual_components", "diagram",
-        "design_decisions"
+        "id",
+        "title",
+        "slug",
+        "category",
+        "status",
+        "concerns",
+        "problem",
+        "decision",
+        "use_when",
+        "avoid_when",
+        "tradeoffs",
+        "conceptual_components",
+        "diagram",
+        "design_decisions",
     }
 
     missing = required_fields - set(pattern.keys())
@@ -91,7 +102,9 @@ def validate_pattern(pattern, index):
 
     for i, decision in enumerate(pattern["design_decisions"]):
         if "decision" not in decision or "rationale" not in decision:
-            raise AssertionError(f"Pattern {index} '{pattern['id']}' decision {i}: must have 'decision' and 'rationale'")
+            raise AssertionError(
+                f"Pattern {index} '{pattern['id']}' decision {i}: must have 'decision' and 'rationale'"
+            )
 
     # Validate diagram
     if pattern.get("diagram"):
@@ -104,6 +117,7 @@ def validate_pattern(pattern, index):
 
     print(f"✓ Pattern {index}: '{pattern['id']}' schema valid")
 
+
 def validate_diagram_files(data):
     """Check that all referenced diagram files exist."""
     base_path = REPO_ROOT
@@ -112,12 +126,15 @@ def validate_diagram_files(data):
         if "diagram" in pattern and pattern["diagram"] and "file" in pattern["diagram"]:
             diagram_file = base_path / pattern["diagram"]["file"]
             if not diagram_file.exists():
-                raise AssertionError(f"Pattern {i} '{pattern['id']}': diagram file not found: {pattern['diagram']['file']}")
+                raise AssertionError(
+                    f"Pattern {i} '{pattern['id']}': diagram file not found: {pattern['diagram']['file']}"
+                )
 
             if not diagram_file.suffix == ".svg":
                 raise AssertionError(f"Pattern {i} '{pattern['id']}': diagram must be SVG, got {diagram_file.suffix}")
 
             print(f"✓ Pattern {i} '{pattern['id']}': diagram file exists")
+
 
 def validate_unique_ids(data):
     """Ensure all pattern IDs are unique."""
@@ -128,6 +145,7 @@ def validate_unique_ids(data):
         raise AssertionError(f"Duplicate pattern IDs: {set(duplicates)}")
 
     print(f"✓ All {len(ids)} pattern IDs are unique")
+
 
 def main():
     """Run all validations."""
@@ -154,6 +172,7 @@ def main():
     except (json.JSONDecodeError, FileNotFoundError, AssertionError) as e:
         print(f"\n❌ Validation failed: {e}", file=sys.stderr)
         return 1
+
 
 if __name__ == "__main__":
     sys.exit(main())

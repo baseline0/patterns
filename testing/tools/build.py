@@ -23,7 +23,18 @@ import yaml
 
 ROOT = Path(__file__).resolve().parent.parent
 CONTENT = ROOT / "content"
-REQUIRED_TOPIC_KEYS = ("id", "title", "summary", "mechanics", "claims", "complexity", "signals", "problems", "quiz", "examples")
+REQUIRED_TOPIC_KEYS = (
+    "id",
+    "title",
+    "summary",
+    "mechanics",
+    "claims",
+    "complexity",
+    "signals",
+    "problems",
+    "quiz",
+    "examples",
+)
 
 
 class ContentError(ValueError):
@@ -146,44 +157,38 @@ def glossary_slides(topic: dict) -> list[dict]:
     topic_id = topic["id"]
 
     for claim in topic["claims"]:
-        slides.append({
-            "title": f"Claim: {claim['id']}",
-            "body": claim["text"],
-            "metadata": {"tags": [topic_id, "claim"]}
-        })
+        slides.append(
+            {"title": f"Claim: {claim['id']}", "body": claim["text"], "metadata": {"tags": [topic_id, "claim"]}}
+        )
 
     for row in topic["complexity"]:
-        slides.append({
-            "title": f"Complexity: {row['operation']}",
-            "body": f"**{row['time']}**\n\n{row['note']}",
-            "metadata": {"tags": [topic_id, "complexity"]}
-        })
+        slides.append(
+            {
+                "title": f"Complexity: {row['operation']}",
+                "body": f"**{row['time']}**\n\n{row['note']}",
+                "metadata": {"tags": [topic_id, "complexity"]},
+            }
+        )
 
     for i, item in enumerate(topic["quiz"], 1):
         choices_str = "\n".join(f"{chr(65 + j)}. {c}" for j, c in enumerate(item["choices"]))
         answer_letter = chr(65 + item["answer"])
         body = f"{choices_str}\n\n**{answer_letter}.** {item['explanation']}"
-        slides.append({
-            "title": f"Q{i}: {item['question'][:60]}",
-            "body": body,
-            "metadata": {"tags": [topic_id, "question"]}
-        })
+        slides.append(
+            {"title": f"Q{i}: {item['question'][:60]}", "body": body, "metadata": {"tags": [topic_id, "question"]}}
+        )
 
     for p in topic["problems"]:
         body = f"**Pattern**: {p['pattern']}\n\n**Why**: {p['why']}\n\n**Python**: `{p['stdlib']}`"
-        slides.append({
-            "title": f"{p['number']}. {p['title']}",
-            "body": body,
-            "metadata": {"tags": [topic_id, "problem"]}
-        })
+        slides.append(
+            {"title": f"{p['number']}. {p['title']}", "body": body, "metadata": {"tags": [topic_id, "problem"]}}
+        )
 
     for s in topic["signals"]:
         body = f"**Structure**: {s['structure']}\n\n**Requirement**: {s['requirement']}\n\n**Python**: `{s['stdlib']}`\n\n**Example**: {s['example']}"
-        slides.append({
-            "title": f"Signal: {s['signal'][:60]}",
-            "body": body,
-            "metadata": {"tags": [topic_id, "signal"]}
-        })
+        slides.append(
+            {"title": f"Signal: {s['signal'][:60]}", "body": body, "metadata": {"tags": [topic_id, "signal"]}}
+        )
 
     return slides
 

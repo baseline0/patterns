@@ -39,11 +39,7 @@ def lambda_handler(event: dict[str, Any], context: Any) -> dict[str, Any]:
                 logger.error(f"Error processing record: {e!s}", exc_info=True)
                 error_count += 1
 
-        result = {
-            "statusCode": 200,
-            "processed": processed_count,
-            "errors": error_count
-        }
+        result = {"statusCode": 200, "processed": processed_count, "errors": error_count}
         logger.info(f"Processing complete: {processed_count} processed, {error_count} errors")
         return result
 

@@ -69,7 +69,9 @@ def cards(mappings: list[dict[str, Any]]) -> list[dict[str, Any]]:
                 }
             )
         for index, question in enumerate(mapping["quiz"], start=1):
-            choices = "\n".join(f"{letter}. {choice}" for letter, choice in zip("ABCDEFGH", question["choices"], strict=False))
+            choices = "\n".join(
+                f"{letter}. {choice}" for letter, choice in zip("ABCDEFGH", question["choices"], strict=False)
+            )
             answer = f"**{'ABCDEFGH'[question['answer']]}.** {question['explanation']}"
             result.append(
                 {
@@ -152,7 +154,11 @@ def build(check: bool = typer.Option(False, "--check", help="Fail when a checked
     """Regenerate provider mappings from committed YAML."""
     outputs = render_all()
     if check:
-        stale = [path.as_posix() for path, value in outputs.items() if not (ROOT / path).exists() or (ROOT / path).read_text(encoding="utf-8") != value]
+        stale = [
+            path.as_posix()
+            for path, value in outputs.items()
+            if not (ROOT / path).exists() or (ROOT / path).read_text(encoding="utf-8") != value
+        ]
         if stale:
             typer.echo(f"Stale provider outputs: {', '.join(stale)}", err=True)
             raise typer.Exit(1)

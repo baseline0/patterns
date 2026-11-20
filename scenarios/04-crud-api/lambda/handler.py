@@ -12,29 +12,29 @@ from typing import Any
 import boto3
 
 # DynamoDB client
-dynamodb = boto3.resource('dynamodb')
-table = dynamodb.Table(os.environ.get('TABLE_NAME', 'todos'))
+dynamodb = boto3.resource("dynamodb")
+table = dynamodb.Table(os.environ.get("TABLE_NAME", "todos"))
 
 
 def lambda_handler(event: dict[str, Any], context: Any) -> dict[str, Any]:
     """Route HTTP requests to CRUD operations."""
-    method = event.get('requestContext', {}).get('http', {}).get('method', 'GET')
-    path = event.get('rawPath', '')
+    method = event.get("requestContext", {}).get("http", {}).get("method", "GET")
+    path = event.get("rawPath", "")
 
     try:
         # Parse path and route
-        if path == '/todos' and method == 'GET':
+        if path == "/todos" and method == "GET":
             return list_todos()
-        elif path == '/todos' and method == 'POST':
+        elif path == "/todos" and method == "POST":
             return create_todo(event)
-        elif path.startswith('/todos/') and method == 'GET':
-            todo_id = path.split('/todos/')[-1]
+        elif path.startswith("/todos/") and method == "GET":
+            todo_id = path.split("/todos/")[-1]
             return get_todo(todo_id)
-        elif path.startswith('/todos/') and method == 'PUT':
-            todo_id = path.split('/todos/')[-1]
+        elif path.startswith("/todos/") and method == "PUT":
+            todo_id = path.split("/todos/")[-1]
             return update_todo(todo_id, event)
-        elif path.startswith('/todos/') and method == 'DELETE':
-            todo_id = path.split('/todos/')[-1]
+        elif path.startswith("/todos/") and method == "DELETE":
+            todo_id = path.split("/todos/")[-1]
             return delete_todo(todo_id)
         else:
             return error_response(404, f"Endpoint {method} {path} not found")
@@ -48,13 +48,9 @@ def list_todos() -> dict[str, Any]:
     """GET /todos - List all todos."""
     try:
         response = table.scan()
-        todos = response.get('Items', [])
+        todos = response.get("Items", [])
 
-        return success_response({
-            "todos": todos,
-            "count": len(todos),
-            "timestamp": datetime.utcnow().isoformat() + "Z"
-        })
+        return success_response({"todos": todos, "count": len(todos), "timestamp": datetime.utcnow().isoformat() + "Z"})
     except Exception as e:
         return error_response(500, str(e))
 
@@ -62,8 +58,8 @@ def list_todos() -> dict[str, Any]:
 def create_todo(event: dict[str, Any]) -> dict[str, Any]:
     """POST /todos - Create new todo."""
     try:
-        body = json.loads(event.get('body', '{}'))
-        title = body.get('title', '').strip()
+        body = json.loads(event.get("body", "{}"))
+        title = body.get("title", "").strip()
 
         if not title or len(title) == 0:
             return error_response(400, "Title is required")
@@ -73,13 +69,7 @@ def create_todo(event: dict[str, Any]) -> dict[str, Any]:
         todo_id = str(uuid.uuid4())
         now = datetime.utcnow().isoformat() + "Z"
 
-        todo = {
-            'id': todo_id,
-            'title': title,
-            'completed': False,
-            'created_at': now,
-            'updated_at': now
-        }
+        todo = {"id": todo_id, "title": title, "completed": False, "created_at": now, "updated_at": now}
 
         table.put_item(Item=todo)
 
@@ -94,12 +84,12 @@ def create_todo(event: dict[str, Any]) -> dict[str, Any]:
 def get_todo(todo_id: str) -> dict[str, Any]:
     """GET /todos/{id} - Get specific todo."""
     try:
-        response = table.get_item(Key={'id': todo_id})
+        response = table.get_item(Key={"id": todo_id})
 
-        if 'Item' not in response:
+        if "Item" not in response:
             return error_response(404, f"Todo {todo_id} not found")
 
-        return success_response(response['Item'])
+        return success_response(response["Item"])
 
     except Exception as e:
         return error_response(500, str(e))
@@ -108,39 +98,39 @@ def get_todo(todo_id: str) -> dict[str, Any]:
 def update_todo(todo_id: str, event: dict[str, Any]) -> dict[str, Any]:
     """PUT /todos/{id} - Update existing todo."""
     try:
-        body = json.loads(event.get('body', '{}'))
+        body = json.loads(event.get("body", "{}"))
 
         # Check if todo exists
-        response = table.get_item(Key={'id': todo_id})
-        if 'Item' not in response:
+        response = table.get_item(Key={"id": todo_id})
+        if "Item" not in response:
             return error_response(404, f"Todo {todo_id} not found")
 
         # Build update expression
         update_expr = "SET updated_at = :now"
-        expr_values = {':now': datetime.utcnow().isoformat() + "Z"}
+        expr_values = {":now": datetime.utcnow().isoformat() + "Z"}
 
-        if 'title' in body:
-            title = body['title'].strip()
+        if "title" in body:
+            title = body["title"].strip()
             if not title:
                 return error_response(400, "Title cannot be empty")
             update_expr += ", title = :title"
-            expr_values[':title'] = title
+            expr_values[":title"] = title
 
-        if 'completed' in body:
+        if "completed" in body:
             update_expr += ", completed = :completed"
-            expr_values[':completed'] = bool(body['completed'])
+            expr_values[":completed"] = bool(body["completed"])
 
         # Update item
         table.update_item(
-            Key={'id': todo_id},
+            Key={"id": todo_id},
             UpdateExpression=update_expr,
             ExpressionAttributeValues=expr_values,
-            ReturnValues='ALL_NEW'
+            ReturnValues="ALL_NEW",
         )
 
         # Fetch updated item
-        response = table.get_item(Key={'id': todo_id})
-        return success_response(response['Item'])
+        response = table.get_item(Key={"id": todo_id})
+        return success_response(response["Item"])
 
     except json.JSONDecodeError:
         return error_response(400, "Invalid JSON in request body")
@@ -152,12 +142,12 @@ def delete_todo(todo_id: str) -> dict[str, Any]:
     """DELETE /todos/{id} - Delete todo."""
     try:
         # Check if exists
-        response = table.get_item(Key={'id': todo_id})
-        if 'Item' not in response:
+        response = table.get_item(Key={"id": todo_id})
+        if "Item" not in response:
             return error_response(404, f"Todo {todo_id} not found")
 
         # Delete
-        table.delete_item(Key={'id': todo_id})
+        table.delete_item(Key={"id": todo_id})
 
         return success_response({"deleted": todo_id})
 
@@ -167,21 +157,13 @@ def delete_todo(todo_id: str) -> dict[str, Any]:
 
 def success_response(data: dict[str, Any], status_code: int = 200) -> dict[str, Any]:
     """Format success response."""
-    return {
-        'statusCode': status_code,
-        'headers': {'Content-Type': 'application/json'},
-        'body': json.dumps(data)
-    }
+    return {"statusCode": status_code, "headers": {"Content-Type": "application/json"}, "body": json.dumps(data)}
 
 
 def error_response(status_code: int, message: str) -> dict[str, Any]:
     """Format error response."""
     return {
-        'statusCode': status_code,
-        'headers': {'Content-Type': 'application/json'},
-        'body': json.dumps({
-            "error": True,
-            "status": status_code,
-            "message": message
-        })
+        "statusCode": status_code,
+        "headers": {"Content-Type": "application/json"},
+        "body": json.dumps({"error": True, "status": status_code, "message": message}),
     }

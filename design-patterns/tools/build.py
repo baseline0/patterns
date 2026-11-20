@@ -271,7 +271,11 @@ def build(check: bool = typer.Option(False, "--check", help="Fail when a checked
     """Regenerate design-pattern notes, quizzes, and cards from committed YAML."""
     outputs = render_all()
     if check:
-        stale = [path.as_posix() for path, value in outputs.items() if not (ROOT / path).exists() or (ROOT / path).read_text(encoding="utf-8") != value]
+        stale = [
+            path.as_posix()
+            for path, value in outputs.items()
+            if not (ROOT / path).exists() or (ROOT / path).read_text(encoding="utf-8") != value
+        ]
         if stale:
             typer.echo(f"Stale design-pattern outputs: {', '.join(stale)}", err=True)
             raise typer.Exit(1)

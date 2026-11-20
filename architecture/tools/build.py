@@ -18,9 +18,45 @@ ROOT = Path(__file__).resolve().parent.parent
 CONTENT = ROOT / "content"
 REPO_ROOT = ROOT.parent
 KINDS = {
-    "styles": ("id", "name", "summary", "decision", "use_when", "avoid_when", "components", "tradeoffs", "quality_impacts", "related_patterns", "scenarios", "quiz"),
-    "tactics": ("id", "name", "summary", "mechanism", "failure_modes", "use_when", "avoid_when", "tradeoffs", "quality_impacts", "related_patterns", "scenarios", "quiz"),
-    "quality-attributes": ("id", "name", "definition", "stimulus", "response", "measure", "tactics", "related_patterns", "quiz"),
+    "styles": (
+        "id",
+        "name",
+        "summary",
+        "decision",
+        "use_when",
+        "avoid_when",
+        "components",
+        "tradeoffs",
+        "quality_impacts",
+        "related_patterns",
+        "scenarios",
+        "quiz",
+    ),
+    "tactics": (
+        "id",
+        "name",
+        "summary",
+        "mechanism",
+        "failure_modes",
+        "use_when",
+        "avoid_when",
+        "tradeoffs",
+        "quality_impacts",
+        "related_patterns",
+        "scenarios",
+        "quiz",
+    ),
+    "quality-attributes": (
+        "id",
+        "name",
+        "definition",
+        "stimulus",
+        "response",
+        "measure",
+        "tactics",
+        "related_patterns",
+        "quiz",
+    ),
 }
 
 
@@ -80,7 +116,12 @@ def ids_by_kind(items: dict[str, list[dict[str, Any]]]) -> dict[str, set[str]]:
 
 def validate_references(catalogue: dict[str, Any], items: dict[str, list[dict[str, Any]]]) -> None:
     known = ids_by_kind(items)
-    all_patterns = known["styles"] | known["tactics"] | known["quality-attributes"] | {item["id"] for item in load_design_patterns()}
+    all_patterns = (
+        known["styles"]
+        | known["tactics"]
+        | known["quality-attributes"]
+        | {item["id"] for item in load_design_patterns()}
+    )
     scenario_ids = {scenario["id"] for scenario in catalogue["scenarios"]}
     seen: set[str] = set()
     for kind, group in items.items():
@@ -147,7 +188,9 @@ def cards(items: dict[str, list[dict[str, Any]]]) -> list[dict[str, Any]]:
                     }
                 )
             for index, question in enumerate(item.get("quiz", []), start=1):
-                choices = "\n".join(f"{letter}. {choice}" for letter, choice in zip("ABCDEFGH", question["choices"], strict=False))
+                choices = "\n".join(
+                    f"{letter}. {choice}" for letter, choice in zip("ABCDEFGH", question["choices"], strict=False)
+                )
                 answer = f"**{'ABCDEFGH'[question['answer']]}.** {question['explanation']}"
                 result.append(
                     {
@@ -161,13 +204,11 @@ def cards(items: dict[str, list[dict[str, Any]]]) -> list[dict[str, Any]]:
 
 def graph(catalogue: dict[str, Any], items: dict[str, list[dict[str, Any]]]) -> dict[str, Any]:
     design_patterns = load_design_patterns()
-    nodes = [
-        {"id": item["id"], "kind": kind, "label": item["name"]}
-        for kind, group in items.items()
-        for item in group
-    ]
+    nodes = [{"id": item["id"], "kind": kind, "label": item["name"]} for kind, group in items.items() for item in group]
     nodes += [{"id": item["id"], "kind": "design-pattern", "label": item["name"]} for item in design_patterns]
-    nodes += [{"id": scenario["id"], "kind": "scenario", "label": scenario["title"]} for scenario in catalogue["scenarios"]]
+    nodes += [
+        {"id": scenario["id"], "kind": "scenario", "label": scenario["title"]} for scenario in catalogue["scenarios"]
+    ]
     links: list[dict[str, str]] = []
     for kind, group in items.items():
         for item in group:
@@ -201,7 +242,12 @@ def catalogue_markdown(catalogue: dict[str, Any], items: dict[str, list[dict[str
         lines += [f"### {kind.replace('-', ' ').title()} ({len(items[kind])})", ""]
         lines += [f"- `{item['id']}` — {item['name']}" for item in items[kind]]
         lines.append("")
-    lines += ["## Scenarios", "", "| ID | Title | Status | Prompt | Solution | Rubric |", "| --- | --- | --- | --- | --- | --- |"]
+    lines += [
+        "## Scenarios",
+        "",
+        "| ID | Title | Status | Prompt | Solution | Rubric |",
+        "| --- | --- | --- | --- | --- | --- |",
+    ]
     for scenario in catalogue["scenarios"]:
         lines.append(
             f"| `{scenario['id']}` | {scenario['title']} | {scenario['status']} "
@@ -228,7 +274,9 @@ def catalogue_html(catalogue: dict[str, Any], items: dict[str, list[dict[str, An
         parts += [f"<li><code>{esc(item['id'])}</code> — {esc(item['name'])}</li>" for item in items[kind]]
         parts.append("</ul>")
     parts.append("<h2>Scenarios</h2><ul>")
-    parts += [f"<li><code>{esc(s['id'])}</code> — {esc(s['title'])} ({esc(s['status'])})</li>" for s in catalogue["scenarios"]]
+    parts += [
+        f"<li><code>{esc(s['id'])}</code> — {esc(s['title'])} ({esc(s['status'])})</li>" for s in catalogue["scenarios"]
+    ]
     parts.append("</ul></body></html>")
     return "\n".join(parts) + "\n"
 
@@ -264,7 +312,11 @@ def build(check: bool = typer.Option(False, "--check", help="Fail when a checked
     """Regenerate catalogue, graph, and glossary from committed architecture YAML."""
     outputs = render_all()
     if check:
-        stale = [path.as_posix() for path, value in outputs.items() if not (ROOT / path).exists() or (ROOT / path).read_text(encoding="utf-8") != value]
+        stale = [
+            path.as_posix()
+            for path, value in outputs.items()
+            if not (ROOT / path).exists() or (ROOT / path).read_text(encoding="utf-8") != value
+        ]
         if stale:
             typer.echo(f"Stale architecture outputs: {', '.join(stale)}", err=True)
             raise typer.Exit(1)

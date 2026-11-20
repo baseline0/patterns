@@ -34,20 +34,20 @@ def lambda_handler(event: dict[str, Any], context: Any) -> dict[str, Any]:
 
     try:
         # Route handling
-        path = event.get('rawPath', '')
-        method = event.get('requestContext', {}).get('http', {}).get('method', 'GET')
+        path = event.get("rawPath", "")
+        method = event.get("requestContext", {}).get("http", {}).get("method", "GET")
 
         # GET /hello
-        if path == '/hello' and method == 'GET':
+        if path == "/hello" and method == "GET":
             return handle_hello(event)
 
         # GET /hello/{name}
-        elif path.startswith('/hello/') and method == 'GET':
-            name = path.split('/hello/')[-1]
+        elif path.startswith("/hello/") and method == "GET":
+            name = path.split("/hello/")[-1]
             return handle_hello_with_name(name)
 
         # GET /health
-        elif path == '/health' and method == 'GET':
+        elif path == "/health" and method == "GET":
             return handle_health()
 
         # 404 Not Found
@@ -64,8 +64,8 @@ def handle_hello(event: dict[str, Any]) -> dict[str, Any]:
     GET /hello - Return greeting (optionally with query parameter ?name=World)
     """
     # Get name from query string (e.g., ?name=Alice)
-    query_params = event.get('queryStringParameters') or {}
-    name = query_params.get('name', 'World')
+    query_params = event.get("queryStringParameters") or {}
+    name = query_params.get("name", "World")
 
     # Validate name length
     if len(name) > 100:
@@ -76,9 +76,7 @@ def handle_hello(event: dict[str, Any]) -> dict[str, Any]:
         "message": f"Hello, {name}!",
         "timestamp": datetime.utcnow().isoformat() + "Z",
         "endpoint": "/hello",
-        "parameters": {
-            "name": name
-        }
+        "parameters": {"name": name},
     }
 
     return success_response(response_data)
@@ -91,6 +89,7 @@ def handle_hello_with_name(name: str) -> dict[str, Any]:
     # Decode URL-encoded name (Python doesn't do this automatically)
     try:
         from urllib.parse import unquote
+
         name = unquote(name)
     except Exception:
         pass
@@ -105,9 +104,7 @@ def handle_hello_with_name(name: str) -> dict[str, Any]:
         "message": f"Hello, {name}!",
         "timestamp": datetime.utcnow().isoformat() + "Z",
         "endpoint": "/hello/{name}",
-        "parameters": {
-            "name": name
-        }
+        "parameters": {"name": name},
     }
 
     return success_response(response_data)
@@ -123,11 +120,11 @@ def handle_health() -> dict[str, Any]:
         "status": "healthy",
         "service": "serverless-api",
         "timestamp": datetime.utcnow().isoformat() + "Z",
-        "region": os.environ.get('AWS_REGION', 'unknown'),
-        "environment": os.environ.get('ENVIRONMENT', 'dev'),
-        "stage": os.environ.get('STAGE', 'dev'),
-        "function_version": os.environ.get('AWS_LAMBDA_FUNCTION_VERSION', '1'),
-        "memory_limit": os.environ.get('AWS_LAMBDA_FUNCTION_MEMORY_IN_MB', 'unknown')
+        "region": os.environ.get("AWS_REGION", "unknown"),
+        "environment": os.environ.get("ENVIRONMENT", "dev"),
+        "stage": os.environ.get("STAGE", "dev"),
+        "function_version": os.environ.get("AWS_LAMBDA_FUNCTION_VERSION", "1"),
+        "memory_limit": os.environ.get("AWS_LAMBDA_FUNCTION_MEMORY_IN_MB", "unknown"),
     }
 
     return success_response(response_data)
@@ -145,12 +142,9 @@ def success_response(data: dict[str, Any], status_code: int = 200) -> dict[str, 
         API Gateway response format
     """
     return {
-        'statusCode': status_code,
-        'headers': {
-            'Content-Type': 'application/json',
-            'X-API-Version': '1.0'
-        },
-        'body': json.dumps(data)
+        "statusCode": status_code,
+        "headers": {"Content-Type": "application/json", "X-API-Version": "1.0"},
+        "body": json.dumps(data),
     }
 
 
@@ -169,23 +163,16 @@ def error_response(status_code: int, message: str) -> dict[str, Any]:
         "error": True,
         "status": status_code,
         "message": message,
-        "timestamp": datetime.utcnow().isoformat() + "Z"
+        "timestamp": datetime.utcnow().isoformat() + "Z",
     }
 
     # Map status codes to HTTP status names
-    status_names = {
-        400: "Bad Request",
-        404: "Not Found",
-        500: "Internal Server Error"
-    }
+    status_names = {400: "Bad Request", 404: "Not Found", 500: "Internal Server Error"}
 
     response_data["status_name"] = status_names.get(status_code, "Error")
 
     return {
-        'statusCode': status_code,
-        'headers': {
-            'Content-Type': 'application/json',
-            'X-API-Version': '1.0'
-        },
-        'body': json.dumps(response_data)
+        "statusCode": status_code,
+        "headers": {"Content-Type": "application/json", "X-API-Version": "1.0"},
+        "body": json.dumps(response_data),
     }
