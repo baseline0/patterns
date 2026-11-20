@@ -529,7 +529,10 @@ def discover_pattern_docs(items: list[dict[str, Any]]) -> None:
             links = []
             if text(diagram.get("file")):
                 links.append({"label": "Diagram", "path": text(diagram.get("file"))})
-            concerns = slug_list(pattern.get("concerns"))
+            concerns = list(dict.fromkeys(slug_list(pattern.get("concerns")) + slug_list(pattern.get("quality_attributes"))))
+            related = list(dict.fromkeys(slug_list(pattern.get("related_patterns")) + slug_list(pattern.get("catalogue_refs"))))
+            if slug_list(pattern.get("catalogue_refs")):
+                links = [*links, {"label": "Architecture catalogue", "path": "architecture/CATALOGUE.md"}]
             add(items, {
                 "id": pid,
                 "title": text(pattern.get("title")) or pid,
@@ -541,6 +544,10 @@ def discover_pattern_docs(items: list[dict[str, Any]]) -> None:
                 "use_when": slug_list(pattern.get("use_when")),
                 "avoid_when": slug_list(pattern.get("avoid_when")),
                 "tradeoffs": pattern.get("tradeoffs"),
+                "conceptual_components": pattern.get("conceptual_components"),
+                "design_decisions": pattern.get("design_decisions"),
+                "catalogue_refs": slug_list(pattern.get("catalogue_refs")),
+                "related": related,
                 "concerns": concerns,
                 "tags": ["visual-pattern", *concerns],
                 "source": rel(data_path),

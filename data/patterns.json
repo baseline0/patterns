@@ -13,12 +13,13 @@
       "slug": "asynchronous-job-processing",
       "category": "delivery-and-reliability",
       "status": "implemented",
-      "concerns": ["reliability", "scalability", "observability"],
-
+      "concerns": [
+        "reliability",
+        "scalability",
+        "observability"
+      ],
       "problem": "A synchronous request invokes work whose duration, failure rate, or throughput cannot safely be handled within the request-response path. Waiting for completion can exhaust client connections, exceed request timeouts, or fail under load spikes.",
-
       "decision": "Accept the request durably into a queue, return immediately to the client, and process it asynchronously through a worker pool. Expose work status, retry behavior, and failure handling explicitly. The queue acts as a durable buffer and allows workers to scale independently.",
-
       "use_when": [
         "Work duration is unpredictable or exceeds request timeouts",
         "Retries and durable audit trails matter for compliance or reliability",
@@ -26,14 +27,12 @@
         "Multiple workers may process the same type of work in parallel",
         "Decoupling producers from execution improves system resilience"
       ],
-
       "avoid_when": [
         "Immediate synchronous confirmation is non-negotiable (e.g., payment authorization, form validation)",
         "The operation is simple and always completes in milliseconds",
         "The operational complexity and cost of queue infrastructure is unjustifiable for the workload",
         "You have no mechanism to report completion status back to the client"
       ],
-
       "tradeoffs": [
         {
           "benefit": "Decouples producers from workers; workers scale independently from request rate",
@@ -52,7 +51,6 @@
           "cost": "Requires comprehensive logging and monitoring; operational alerts are essential"
         }
       ],
-
       "conceptual_components": [
         {
           "id": "client",
@@ -97,7 +95,6 @@
           "description": "Tracks queue depth, worker health, latency, error rates, and alerts on anomalies"
         }
       ],
-
       "diagram": {
         "kind": "original_svg",
         "file": "assets/diagrams/asynchronous-job-processing.svg",
@@ -119,7 +116,6 @@
           }
         ]
       },
-
       "implementation_evidence": [
         {
           "name": "fleet-ops async worker framework",
@@ -134,7 +130,6 @@
           "description": "Durable event log for async operations; serves as source of truth for retries and compliance audits"
         }
       ],
-
       "design_decisions": [
         {
           "decision": "Durable Acceptance",
@@ -165,7 +160,6 @@
           "rationale": "Log task lifecycle (submitted, claimed, executed, completed, failed); trace correlation across components"
         }
       ],
-
       "variations": [
         {
           "name": "Push vs. Pull",
@@ -184,13 +178,15 @@
           "description": "Task is invisible to other workers for a duration after being claimed; prevents concurrent execution; must extend if work takes longer"
         }
       ],
-
       "related_patterns": [
         "circuit-breaker",
         "saga-pattern",
-        "bulkhead-pattern"
+        "bulkhead-pattern",
+        "bulkhead",
+        "saga",
+        "queue-based-load-leveling",
+        "idempotent-consumer"
       ],
-
       "further_reading": [
         {
           "title": "Asynchronous Request-Reply Pattern",
@@ -207,6 +203,17 @@
           "publisher": "Fowler, Patterns of Distributed Systems",
           "url": "https://martinfowler.com/articles/patterns-of-distributed-systems/message-queue.html"
         }
+      ],
+      "catalogue_refs": [
+        "queue-based-load-leveling",
+        "idempotent-consumer",
+        "retry-with-backoff",
+        "event-driven"
+      ],
+      "quality_attributes": [
+        "reliability",
+        "scalability",
+        "recoverability"
       ]
     },
     {
@@ -215,12 +222,13 @@
       "slug": "strangler-pattern",
       "category": "migration",
       "status": "implemented",
-      "concerns": ["reliability", "migration", "risk-reduction"],
-
+      "concerns": [
+        "reliability",
+        "migration",
+        "risk-reduction"
+      ],
       "problem": "A legacy system is mission-critical but increasingly costly to maintain, lacks desired features, or blocks adoption of new technologies. A complete rewrite is too risky and blocks business value. You need to modernize incrementally while keeping the system live.",
-
       "decision": "Build a facade (strangler) that intercepts requests destined for the legacy system. Route specific feature requests to the new system, while others continue through to the legacy implementation. Over time, shift more traffic to the new system as capabilities are proven. The legacy system is gradually 'strangled' until it can be retired entirely.",
-
       "use_when": [
         "The legacy system is stable, mission-critical, and cannot be taken offline",
         "You can identify seams or boundaries—features or flows that can be migrated incrementally",
@@ -228,14 +236,12 @@
         "You have the organizational capacity to maintain two systems in parallel",
         "Risk reduction and business continuity are higher priorities than speed"
       ],
-
       "avoid_when": [
         "The entire system must be replaced simultaneously (regulatory deadline, hardware EOL)",
         "The legacy system has deeply entangled logic with no clear seams",
         "Operating two systems in parallel is infeasible (cost, complexity, skill constraints)",
         "The legacy system is already isolated and easy to replace in one go"
       ],
-
       "tradeoffs": [
         {
           "benefit": "Risk is spread across multiple deployments; each feature can be tested independently before full cutover",
@@ -254,7 +260,6 @@
           "cost": "Legacy system must remain operational; cannot be abandoned immediately even after new system goes live"
         }
       ],
-
       "conceptual_components": [
         {
           "id": "client",
@@ -305,7 +310,6 @@
           "description": "Tracks routing decisions, error rates, and controls cutover via feature flags"
         }
       ],
-
       "diagram": {
         "kind": "original_svg",
         "file": "assets/diagrams/strangler-pattern.svg",
@@ -327,7 +331,6 @@
           }
         ]
       },
-
       "implementation_evidence": [
         {
           "name": "fleet-ops modernization router",
@@ -342,7 +345,6 @@
           "description": "Durable event log for cross-system consistency; enables reconciliation and rollback"
         }
       ],
-
       "design_decisions": [
         {
           "decision": "Seam Identification",
@@ -369,7 +371,6 @@
           "rationale": "Plan a sunset date for legacy system; at cutover, retire legacy and data bridge; celebrate migration completion"
         }
       ],
-
       "variations": [
         {
           "name": "Routing Strategy",
@@ -388,13 +389,13 @@
           "description": "Replace one feature (micro), one domain (domain-driven), or one tier (API vs. backend); larger scopes are riskier but faster"
         }
       ],
-
       "related_patterns": [
         "asynchronous-job-processing",
         "circuit-breaker",
-        "event-driven-architecture"
+        "event-driven-architecture",
+        "blue-green-deploy",
+        "event-driven"
       ],
-
       "further_reading": [
         {
           "title": "How to Strangle a Monolith",
@@ -411,6 +412,17 @@
           "publisher": "InfoQ",
           "url": "https://www.infoq.com"
         }
+      ],
+      "catalogue_refs": [
+        "blue-green-deploy",
+        "circuit-breaker",
+        "proxy",
+        "modifiability"
+      ],
+      "quality_attributes": [
+        "modifiability",
+        "reliability",
+        "testability"
       ]
     }
   ]

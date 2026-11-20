@@ -5539,25 +5539,121 @@ a{color:inherit}ul.links{padding-left:1.2rem}.empty{padding:1rem;color:#888}
           "cost": "Requires comprehensive logging and monitoring; operational alerts are essential"
         }
       ],
+      "conceptual_components": [
+        {
+          "id": "client",
+          "label": "Client/User",
+          "kind": "actor",
+          "description": "Application or user initiating work"
+        },
+        {
+          "id": "api",
+          "label": "Request API",
+          "kind": "boundary",
+          "description": "Accepts work requests, validates input, checks for duplicates, enqueues work"
+        },
+        {
+          "id": "queue",
+          "label": "Durable Queue",
+          "kind": "messaging",
+          "description": "Persists work durably; enables workers to pull tasks and guarantees no loss on producer failure"
+        },
+        {
+          "id": "worker",
+          "label": "Worker Pool",
+          "kind": "compute",
+          "description": "Processes tasks; executes business logic, retries on transient failure, reports results"
+        },
+        {
+          "id": "store",
+          "label": "Status/Result Store",
+          "kind": "data",
+          "description": "Persists work completion status and results; allows client to check progress or retrieve output"
+        },
+        {
+          "id": "dlq",
+          "label": "Dead-Letter Queue",
+          "kind": "error-handling",
+          "description": "Captures tasks that have failed after max retries; allows manual inspection and recovery"
+        },
+        {
+          "id": "monitoring",
+          "label": "Monitoring & Alerts",
+          "kind": "observability",
+          "description": "Tracks queue depth, worker health, latency, error rates, and alerts on anomalies"
+        }
+      ],
+      "design_decisions": [
+        {
+          "decision": "Durable Acceptance",
+          "rationale": "Work is persisted to queue before API returns to client; guarantees no loss on client disconnect or API failure"
+        },
+        {
+          "decision": "Idempotency",
+          "rationale": "Requests with same ID are deduplicated; safe to retry without duplicate execution; critical for state mutations"
+        },
+        {
+          "decision": "Retry Policy with Backoff",
+          "rationale": "Failed tasks are requeued with exponential backoff; transient failures resolve; max retries prevent infinite loops"
+        },
+        {
+          "decision": "Dead-Letter Queue",
+          "rationale": "Tasks that fail after max retries move to separate queue; allows human inspection, debugging, and manual recovery"
+        },
+        {
+          "decision": "Status Visibility",
+          "rationale": "Client can poll API for work status or subscribe to webhooks; no surprise failures or silent discards"
+        },
+        {
+          "decision": "Backpressure Monitoring",
+          "rationale": "Queue depth monitored; can reject new work if queue exceeds threshold; alerts if workers lag behind producers"
+        },
+        {
+          "decision": "Observability & Tracing",
+          "rationale": "Log task lifecycle (submitted, claimed, executed, completed, failed); trace correlation across components"
+        }
+      ],
+      "catalogue_refs": [
+        "queue-based-load-leveling",
+        "idempotent-consumer",
+        "retry-with-backoff",
+        "event-driven"
+      ],
+      "related": [
+        "circuit-breaker",
+        "saga-pattern",
+        "bulkhead-pattern",
+        "bulkhead",
+        "saga",
+        "queue-based-load-leveling",
+        "idempotent-consumer",
+        "retry-with-backoff",
+        "event-driven"
+      ],
       "concerns": [
         "reliability",
         "scalability",
-        "observability"
+        "observability",
+        "recoverability"
       ],
       "tags": [
         "visual-pattern",
         "reliability",
         "scalability",
-        "observability"
+        "observability",
+        "recoverability"
       ],
       "source": "data/patterns.json",
       "links": [
         {
           "label": "Diagram",
           "path": "assets/diagrams/asynchronous-job-processing.svg"
+        },
+        {
+          "label": "Architecture catalogue",
+          "path": "architecture/CATALOGUE.md"
         }
       ],
-      "related": [],
       "uid": "pattern-catalogue:delivery-and-reliability:asynchronous-job-processing"
     },
     {
@@ -5599,25 +5695,123 @@ a{color:inherit}ul.links{padding-left:1.2rem}.empty{padding:1rem;color:#888}
           "cost": "Legacy system must remain operational; cannot be abandoned immediately even after new system goes live"
         }
       ],
+      "conceptual_components": [
+        {
+          "id": "client",
+          "label": "Client/User",
+          "kind": "actor",
+          "description": "Application or user making requests"
+        },
+        {
+          "id": "router",
+          "label": "Routing Facade",
+          "kind": "boundary",
+          "description": "Intercepts requests, decides routing based on feature flags, user cohorts, or request patterns"
+        },
+        {
+          "id": "new-system",
+          "label": "New System (Capability X)",
+          "kind": "compute",
+          "description": "Newly built system handling specific features or domains"
+        },
+        {
+          "id": "legacy",
+          "label": "Legacy System",
+          "kind": "compute",
+          "description": "Existing system; continues handling unmigrated features"
+        },
+        {
+          "id": "data-bridge",
+          "label": "Data Bridge / Reconciliation",
+          "kind": "messaging",
+          "description": "Syncs data between new and legacy systems; ensures consistency for cross-system operations"
+        },
+        {
+          "id": "data-new",
+          "label": "New Data Store",
+          "kind": "data",
+          "description": "Database for new system"
+        },
+        {
+          "id": "data-legacy",
+          "label": "Legacy Data Store",
+          "kind": "data",
+          "description": "Database for legacy system"
+        },
+        {
+          "id": "monitoring",
+          "label": "Monitoring & Feature Flags",
+          "kind": "observability",
+          "description": "Tracks routing decisions, error rates, and controls cutover via feature flags"
+        }
+      ],
+      "design_decisions": [
+        {
+          "decision": "Seam Identification",
+          "rationale": "Identify feature boundaries or domain-driven slices that can be migrated independently; loose coupling between seams reduces migration friction"
+        },
+        {
+          "decision": "Feature Flags for Routing",
+          "rationale": "Use flags to control which users/requests go to new system; enables A/B testing and gradual rollout; quick rollback if issues arise"
+        },
+        {
+          "decision": "Data Bridge / Reconciliation",
+          "rationale": "Sync state between old and new databases; ensures consistency if cross-system operations occur; may use event streaming or periodic reconciliation"
+        },
+        {
+          "decision": "Graceful Fallback",
+          "rationale": "If new system fails, requests revert to legacy; no user data loss; enables safe experimentation"
+        },
+        {
+          "decision": "Monitoring & Metrics",
+          "rationale": "Track routing decisions, latency, error rates in both systems; alerts on divergence or new system degradation"
+        },
+        {
+          "decision": "Parallel Operation Window",
+          "rationale": "Plan a sunset date for legacy system; at cutover, retire legacy and data bridge; celebrate migration completion"
+        }
+      ],
+      "catalogue_refs": [
+        "blue-green-deploy",
+        "circuit-breaker",
+        "proxy",
+        "modifiability"
+      ],
+      "related": [
+        "asynchronous-job-processing",
+        "circuit-breaker",
+        "event-driven-architecture",
+        "blue-green-deploy",
+        "event-driven",
+        "proxy",
+        "modifiability"
+      ],
       "concerns": [
         "reliability",
         "migration",
-        "risk-reduction"
+        "risk-reduction",
+        "modifiability",
+        "testability"
       ],
       "tags": [
         "visual-pattern",
         "reliability",
         "migration",
-        "risk-reduction"
+        "risk-reduction",
+        "modifiability",
+        "testability"
       ],
       "source": "data/patterns.json",
       "links": [
         {
           "label": "Diagram",
           "path": "assets/diagrams/strangler-pattern.svg"
+        },
+        {
+          "label": "Architecture catalogue",
+          "path": "architecture/CATALOGUE.md"
         }
       ],
-      "related": [],
       "uid": "pattern-catalogue:migration:strangler-pattern"
     },
     {
