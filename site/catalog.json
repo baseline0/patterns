@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "generated_by": "site/tools/build.py",
-  "total": 88,
+  "total": 89,
   "families": [
     "architecture",
     "data-structures",
@@ -13,6 +13,7 @@
     "providers",
     "review",
     "scenarios",
+    "site",
     "testing"
   ],
   "kinds": [
@@ -22,7 +23,6 @@
     "creational",
     "data-structure",
     "delivery-and-reliability",
-    "implemented",
     "interactive",
     "mapping",
     "migration",
@@ -30,6 +30,7 @@
     "pattern-doc",
     "proof",
     "quality-attribute",
+    "scenario",
     "structural",
     "style",
     "tactic",
@@ -55,6 +56,8 @@
         }
       ],
       "related": [],
+      "concerns": [],
+      "status": "",
       "uid": "architecture:catalogue:architecture-catalogue"
     },
     {
@@ -102,6 +105,8 @@
           "path": "visual/architecture/index.html"
         }
       ],
+      "concerns": [],
+      "status": "",
       "uid": "architecture:quality-attribute:availability"
     },
     {
@@ -145,6 +150,8 @@
           "path": "visual/architecture/index.html"
         }
       ],
+      "concerns": [],
+      "status": "",
       "uid": "architecture:quality-attribute:modifiability"
     },
     {
@@ -190,6 +197,8 @@
           "path": "visual/architecture/index.html"
         }
       ],
+      "concerns": [],
+      "status": "",
       "uid": "architecture:quality-attribute:performance"
     },
     {
@@ -236,6 +245,8 @@
           "path": "visual/architecture/index.html"
         }
       ],
+      "concerns": [],
+      "status": "",
       "uid": "architecture:quality-attribute:recoverability"
     },
     {
@@ -279,6 +290,8 @@
           "path": "visual/architecture/index.html"
         }
       ],
+      "concerns": [],
+      "status": "",
       "uid": "architecture:quality-attribute:security"
     },
     {
@@ -321,6 +334,8 @@
           "path": "visual/architecture/index.html"
         }
       ],
+      "concerns": [],
+      "status": "",
       "uid": "architecture:quality-attribute:testability"
     },
     {
@@ -386,6 +401,8 @@
           "path": "visual/architecture/index.html"
         }
       ],
+      "concerns": [],
+      "status": "",
       "uid": "architecture:style:cqrs"
     },
     {
@@ -451,6 +468,8 @@
           "path": "visual/architecture/index.html"
         }
       ],
+      "concerns": [],
+      "status": "",
       "uid": "architecture:style:event-driven"
     },
     {
@@ -516,6 +535,8 @@
           "path": "visual/architecture/index.html"
         }
       ],
+      "concerns": [],
+      "status": "",
       "uid": "architecture:style:layered"
     },
     {
@@ -581,6 +602,8 @@
           "path": "visual/architecture/index.html"
         }
       ],
+      "concerns": [],
+      "status": "",
       "uid": "architecture:style:microservices"
     },
     {
@@ -646,6 +669,8 @@
           "path": "visual/architecture/index.html"
         }
       ],
+      "concerns": [],
+      "status": "",
       "uid": "architecture:style:pipe-and-filter"
     },
     {
@@ -711,6 +736,8 @@
           "path": "visual/architecture/index.html"
         }
       ],
+      "concerns": [],
+      "status": "",
       "uid": "architecture:style:serverless"
     },
     {
@@ -759,6 +786,8 @@
           "path": "visual/architecture/index.html"
         }
       ],
+      "concerns": [],
+      "status": "",
       "uid": "architecture:tactic:blue-green-deploy"
     },
     {
@@ -807,6 +836,8 @@
           "path": "visual/architecture/index.html"
         }
       ],
+      "concerns": [],
+      "status": "",
       "uid": "architecture:tactic:bulkhead"
     },
     {
@@ -855,6 +886,8 @@
           "path": "visual/architecture/index.html"
         }
       ],
+      "concerns": [],
+      "status": "",
       "uid": "architecture:tactic:cache-aside"
     },
     {
@@ -903,6 +936,8 @@
           "path": "visual/architecture/index.html"
         }
       ],
+      "concerns": [],
+      "status": "",
       "uid": "architecture:tactic:circuit-breaker"
     },
     {
@@ -951,6 +986,8 @@
           "path": "visual/architecture/index.html"
         }
       ],
+      "concerns": [],
+      "status": "",
       "uid": "architecture:tactic:idempotent-consumer"
     },
     {
@@ -999,6 +1036,8 @@
           "path": "visual/architecture/index.html"
         }
       ],
+      "concerns": [],
+      "status": "",
       "uid": "architecture:tactic:observability"
     },
     {
@@ -1047,6 +1086,8 @@
           "path": "visual/architecture/index.html"
         }
       ],
+      "concerns": [],
+      "status": "",
       "uid": "architecture:tactic:queue-based-load-leveling"
     },
     {
@@ -1095,6 +1136,8 @@
           "path": "visual/architecture/index.html"
         }
       ],
+      "concerns": [],
+      "status": "",
       "uid": "architecture:tactic:retry-with-backoff"
     },
     {
@@ -1143,6 +1186,8 @@
           "path": "visual/architecture/index.html"
         }
       ],
+      "concerns": [],
+      "status": "",
       "uid": "architecture:tactic:saga"
     },
     {
@@ -1150,9 +1195,12 @@
       "title": "Arrays and 2D arrays: subarrays, sliding window, and in-place operations",
       "family": "data-structures",
       "kind": "data-structure",
+      "status": "",
       "summary": "Arrays store elements in contiguous memory for O(1) indexing. Subarrays are contiguous ranges; sliding windows and prefix sums solve subarray problems in linear time. Two pointers on sorted arrays find pairs without nested loops. In-place operations on 2D arrays avoid allocating new matrices by using index algebra and element swaps.\n",
       "problem": "",
+      "tradeoffs": null,
       "related": [],
+      "concerns": [],
       "tags": [
         "data-structures",
         "data-structure"
@@ -1183,9 +1231,12 @@
       "title": "Binary trees and BSTs: traversal, recursion, and tree properties",
       "family": "data-structures",
       "kind": "data-structure",
+      "status": "",
       "summary": "A tree is a directed acyclic graph where each node (except the root) has one parent. A binary tree restricts each node to at most two children. A binary search tree adds the invariant that left descendants are smaller and right descendants are larger, making search and insertion natural recursive tasks. Tree problems are solved by recognizing that each subtree is a smaller instance of the same problem.\n",
       "problem": "",
+      "tradeoffs": null,
       "related": [],
+      "concerns": [],
       "tags": [
         "data-structures",
         "data-structure"
@@ -1216,9 +1267,12 @@
       "title": "Hash tables: dict and set",
       "family": "data-structures",
       "kind": "data-structure",
+      "status": "",
       "summary": "A dict and a set find an item by hashing its key, so a lookup costs about the same whether the container holds ten items or a million. The price is that keys must be hashable and must not change while they are stored.\n",
       "problem": "",
+      "tradeoffs": null,
       "related": [],
+      "concerns": [],
       "tags": [
         "data-structures",
         "data-structure"
@@ -1249,9 +1303,12 @@
       "title": "Heaps: a priority queue in a flat list",
       "family": "data-structures",
       "kind": "data-structure",
+      "status": "",
       "summary": "heapq keeps a binary heap inside an ordinary list. The smallest element is always at index 0, so reading it is O(1); insertion and removal are O(log n). It is the standard tool when a problem asks for the next smallest or largest element while the data keeps changing.\n",
       "problem": "",
+      "tradeoffs": null,
       "related": [],
+      "concerns": [],
       "tags": [
         "data-structures",
         "data-structure"
@@ -1282,9 +1339,12 @@
       "title": "Linked lists: pointers, reversal, and cycle detection",
       "family": "data-structures",
       "kind": "data-structure",
+      "status": "",
       "summary": "A linked list chains nodes together with pointers, so insertion and deletion at a known position cost O(1). The price is that reaching a position requires walking from the head, which costs O(n). Linked list problems are solved by careful pointer manipulation: maintaining two pointers to track state, reversing in-place by redirecting links, or detecting cycles by observing that two pointers moving at different speeds must meet if a cycle exists.\n",
       "problem": "",
+      "tradeoffs": null,
       "related": [],
+      "concerns": [],
       "tags": [
         "data-structures",
         "data-structure"
@@ -1315,9 +1375,12 @@
       "title": "Lists and deques: contiguous arrays versus block lists",
       "family": "data-structures",
       "kind": "data-structure",
+      "status": "",
       "summary": "A Python list is a contiguous array of object pointers that grows geometrically. A deque is a chain of fixed-size blocks, so both of its ends are cheap to change. Choosing between them is a question about where a container changes.\n",
       "problem": "",
+      "tradeoffs": null,
       "related": [],
+      "concerns": [],
       "tags": [
         "data-structures",
         "data-structure"
@@ -1348,9 +1411,12 @@
       "title": "Strings: pattern matching, substring search, and palindromes",
       "family": "data-structures",
       "kind": "data-structure",
+      "status": "",
       "summary": "Strings are sequences of characters. Finding patterns in strings uses two pointers to check palindromes and reverse sequences without allocating new strings. Hashing character positions or frequencies enables substring search and anagram detection in linear time without nested loops.\n",
       "problem": "",
+      "tradeoffs": null,
       "related": [],
+      "concerns": [],
       "tags": [
         "data-structures",
         "data-structure"
@@ -1431,6 +1497,8 @@
           "path": "design-patterns/dependency-injection/index.html"
         }
       ],
+      "concerns": [],
+      "status": "",
       "uid": "design-patterns:application:dependency-injection"
     },
     {
@@ -1488,6 +1556,8 @@
           "path": "design-patterns/repository/index.html"
         }
       ],
+      "concerns": [],
+      "status": "",
       "uid": "design-patterns:application:repository"
     },
     {
@@ -1545,6 +1615,8 @@
           "path": "design-patterns/unit-of-work/index.html"
         }
       ],
+      "concerns": [],
+      "status": "",
       "uid": "design-patterns:application:unit-of-work"
     },
     {
@@ -1602,6 +1674,8 @@
           "path": "design-patterns/chain-of-responsibility/index.html"
         }
       ],
+      "concerns": [],
+      "status": "",
       "uid": "design-patterns:behavioral:chain-of-responsibility"
     },
     {
@@ -1663,6 +1737,8 @@
           "path": "design-patterns/command/index.html"
         }
       ],
+      "concerns": [],
+      "status": "",
       "uid": "design-patterns:behavioral:command"
     },
     {
@@ -1724,6 +1800,8 @@
           "path": "design-patterns/iterator/index.html"
         }
       ],
+      "concerns": [],
+      "status": "",
       "uid": "design-patterns:behavioral:iterator"
     },
     {
@@ -1781,6 +1859,8 @@
           "path": "design-patterns/mediator/index.html"
         }
       ],
+      "concerns": [],
+      "status": "",
       "uid": "design-patterns:behavioral:mediator"
     },
     {
@@ -1838,6 +1918,8 @@
           "path": "design-patterns/memento/index.html"
         }
       ],
+      "concerns": [],
+      "status": "",
       "uid": "design-patterns:behavioral:memento"
     },
     {
@@ -1895,6 +1977,8 @@
           "path": "design-patterns/observer/index.html"
         }
       ],
+      "concerns": [],
+      "status": "",
       "uid": "design-patterns:behavioral:observer"
     },
     {
@@ -1952,6 +2036,8 @@
           "path": "design-patterns/state/index.html"
         }
       ],
+      "concerns": [],
+      "status": "",
       "uid": "design-patterns:behavioral:state"
     },
     {
@@ -2009,6 +2095,8 @@
           "path": "design-patterns/strategy/index.html"
         }
       ],
+      "concerns": [],
+      "status": "",
       "uid": "design-patterns:behavioral:strategy"
     },
     {
@@ -2062,6 +2150,8 @@
           "path": "design-patterns/template-method/index.html"
         }
       ],
+      "concerns": [],
+      "status": "",
       "uid": "design-patterns:behavioral:template-method"
     },
     {
@@ -2123,6 +2213,8 @@
           "path": "design-patterns/visitor/index.html"
         }
       ],
+      "concerns": [],
+      "status": "",
       "uid": "design-patterns:behavioral:visitor"
     },
     {
@@ -2143,6 +2235,8 @@
         }
       ],
       "related": [],
+      "concerns": [],
+      "status": "",
       "uid": "design-patterns:catalogue:design-pattern-index"
     },
     {
@@ -2204,6 +2298,8 @@
           "path": "design-patterns/abstract-factory/index.html"
         }
       ],
+      "concerns": [],
+      "status": "",
       "uid": "design-patterns:creational:abstract-factory"
     },
     {
@@ -2265,6 +2361,8 @@
           "path": "design-patterns/builder/index.html"
         }
       ],
+      "concerns": [],
+      "status": "",
       "uid": "design-patterns:creational:builder"
     },
     {
@@ -2322,6 +2420,8 @@
           "path": "design-patterns/factory-method/index.html"
         }
       ],
+      "concerns": [],
+      "status": "",
       "uid": "design-patterns:creational:factory-method"
     },
     {
@@ -2383,6 +2483,8 @@
           "path": "design-patterns/prototype/index.html"
         }
       ],
+      "concerns": [],
+      "status": "",
       "uid": "design-patterns:creational:prototype"
     },
     {
@@ -2444,6 +2546,8 @@
           "path": "design-patterns/adapter/index.html"
         }
       ],
+      "concerns": [],
+      "status": "",
       "uid": "design-patterns:structural:adapter"
     },
     {
@@ -2505,6 +2609,8 @@
           "path": "design-patterns/bridge/index.html"
         }
       ],
+      "concerns": [],
+      "status": "",
       "uid": "design-patterns:structural:bridge"
     },
     {
@@ -2566,6 +2672,8 @@
           "path": "design-patterns/composite/index.html"
         }
       ],
+      "concerns": [],
+      "status": "",
       "uid": "design-patterns:structural:composite"
     },
     {
@@ -2627,6 +2735,8 @@
           "path": "design-patterns/decorator/index.html"
         }
       ],
+      "concerns": [],
+      "status": "",
       "uid": "design-patterns:structural:decorator"
     },
     {
@@ -2684,6 +2794,8 @@
           "path": "design-patterns/facade/index.html"
         }
       ],
+      "concerns": [],
+      "status": "",
       "uid": "design-patterns:structural:facade"
     },
     {
@@ -2741,6 +2853,8 @@
           "path": "design-patterns/flyweight/index.html"
         }
       ],
+      "concerns": [],
+      "status": "",
       "uid": "design-patterns:structural:flyweight"
     },
     {
@@ -2798,6 +2912,8 @@
           "path": "design-patterns/proxy/index.html"
         }
       ],
+      "concerns": [],
+      "status": "",
       "uid": "design-patterns:structural:proxy"
     },
     {
@@ -2807,12 +2923,18 @@
       "kind": "paper",
       "summary": "[Abstract will be extracted]",
       "tags": [
-        "paper",
-        "[Authors will be extracted]"
+        "paper"
       ],
       "source": "papers/content/arxiv-2401.12345.yaml",
-      "links": [],
+      "links": [
+        {
+          "label": "Concept map",
+          "path": "visual/concepts/arxiv-2401.12345.html"
+        }
+      ],
       "related": [],
+      "concerns": [],
+      "status": "",
       "uid": "papers:paper:2401.12345"
     },
     {
@@ -2822,12 +2944,18 @@
       "kind": "paper",
       "summary": "[Abstract will be extracted]",
       "tags": [
-        "paper",
-        "[Authors will be extracted]"
+        "paper"
       ],
       "source": "papers/content/arxiv-2401.54321.yaml",
-      "links": [],
+      "links": [
+        {
+          "label": "Concept map",
+          "path": "visual/concepts/arxiv-2401.54321.html"
+        }
+      ],
       "related": [],
+      "concerns": [],
+      "status": "",
       "uid": "papers:paper:2401.54321"
     },
     {
@@ -2852,9 +2980,15 @@
         {
           "label": "Concepts",
           "path": "papers/2405.02850v7/concepts.json"
+        },
+        {
+          "label": "Concept map",
+          "path": "visual/concepts/arxiv-2405.02850v7.html"
         }
       ],
       "related": [],
+      "concerns": [],
+      "status": "",
       "uid": "papers:paper:2405.02850v7"
     },
     {
@@ -2879,9 +3013,15 @@
         {
           "label": "Concepts",
           "path": "papers/2409.13788v1/concepts.json"
+        },
+        {
+          "label": "Concept map",
+          "path": "visual/concepts/arxiv-2409.13788v1.html"
         }
       ],
       "related": [],
+      "concerns": [],
+      "status": "",
       "uid": "papers:paper:2409.13788v1"
     },
     {
@@ -2889,6 +3029,7 @@
       "title": "Asynchronous Job Processing",
       "family": "pattern-catalogue",
       "kind": "delivery-and-reliability",
+      "status": "implemented",
       "summary": "A synchronous request invokes work whose duration, failure rate, or throughput cannot safely be handled within the request-response path. Waiting for completion can exhaust client connections, exceed request timeouts, or",
       "decision": "Accept the request durably into a queue, return immediately to the client, and process it asynchronously through a worker pool. Expose work status, retry behavior, and failure handling explicitly. The queue acts as a durable buffer and allows workers to scale independently.",
       "use_when": [
@@ -2922,6 +3063,11 @@
           "cost": "Requires comprehensive logging and monitoring; operational alerts are essential"
         }
       ],
+      "concerns": [
+        "reliability",
+        "scalability",
+        "observability"
+      ],
       "tags": [
         "visual-pattern",
         "reliability",
@@ -2943,6 +3089,7 @@
       "title": "Strangler Fig: Incremental Legacy Modernization",
       "family": "pattern-catalogue",
       "kind": "migration",
+      "status": "implemented",
       "summary": "A legacy system is mission-critical but increasingly costly to maintain, lacks desired features, or blocks adoption of new technologies. A complete rewrite is too risky and blocks business value. You need to modernize in",
       "decision": "Build a facade (strangler) that intercepts requests destined for the legacy system. Route specific feature requests to the new system, while others continue through to the legacy implementation. Over time, shift more traffic to the new system as capabilities are proven. The legacy system is gradually 'strangled' until it can be retired entirely.",
       "use_when": [
@@ -2975,6 +3122,11 @@
           "benefit": "Team can learn and iterate on new system design while legacy system handles baseline load",
           "cost": "Legacy system must remain operational; cannot be abandoned immediately even after new system goes live"
         }
+      ],
+      "concerns": [
+        "reliability",
+        "migration",
+        "risk-reduction"
       ],
       "tags": [
         "visual-pattern",
@@ -3010,6 +3162,8 @@
         }
       ],
       "related": [],
+      "concerns": [],
+      "status": "",
       "uid": "patterns-library:pattern-doc:08-circuit-breaker"
     },
     {
@@ -3030,6 +3184,8 @@
         }
       ],
       "related": [],
+      "concerns": [],
+      "status": "",
       "uid": "patterns-library:pattern-doc:09-database-replication-sharding"
     },
     {
@@ -3050,6 +3206,8 @@
         }
       ],
       "related": [],
+      "concerns": [],
+      "status": "",
       "uid": "patterns-library:pattern-doc:05-event-sourcing"
     },
     {
@@ -3070,6 +3228,8 @@
         }
       ],
       "related": [],
+      "concerns": [],
+      "status": "",
       "uid": "patterns-library:pattern-doc:02-multi-tenant"
     },
     {
@@ -3090,6 +3250,8 @@
         }
       ],
       "related": [],
+      "concerns": [],
+      "status": "",
       "uid": "patterns-library:pattern-doc:01-strangler-fig"
     },
     {
@@ -3110,6 +3272,8 @@
         }
       ],
       "related": [],
+      "concerns": [],
+      "status": "",
       "uid": "patterns-library:template:PATTERN_TEMPLATE"
     },
     {
@@ -3117,11 +3281,14 @@
       "title": "Bottom-up heapify is linear",
       "family": "proofs",
       "kind": "proof",
+      "status": "",
       "summary": "Constructing a binary heap by calling sift-down from the last internal node to the root takes O(n) time.",
       "problem": "Constructing a binary heap by calling sift-down from the last internal node to the root takes O(n) time.",
+      "tradeoffs": null,
       "related": [
         "heapify-is-linear"
       ],
+      "concerns": [],
       "tags": [
         "proofs",
         "proof"
@@ -3135,6 +3302,10 @@
         {
           "label": "Glossary",
           "path": "proofs/heapify-linear/glossary.json"
+        },
+        {
+          "label": "Proof graph",
+          "path": "visual/proofs/heapify-linear.html"
         }
       ],
       "uid": "proofs:proof:heapify-linear"
@@ -3144,11 +3315,14 @@
       "title": "Dynamic array append is amortized O(1)",
       "family": "proofs",
       "kind": "proof",
+      "status": "",
       "summary": "A sequence of n appends to a geometrically growing array costs O(n) time in total.",
       "problem": "A sequence of n appends to a geometrically growing array costs O(n) time in total.",
+      "tradeoffs": null,
       "related": [
         "list-append-is-amortized-constant"
       ],
+      "concerns": [],
       "tags": [
         "proofs",
         "proof"
@@ -3162,6 +3336,10 @@
         {
           "label": "Glossary",
           "path": "proofs/dynamic-array-amortized/glossary.json"
+        },
+        {
+          "label": "Proof graph",
+          "path": "visual/proofs/dynamic-array-amortized.html"
         }
       ],
       "uid": "proofs:proof:dynamic-array-amortized"
@@ -3171,11 +3349,14 @@
       "title": "Sliding window moves each pointer at most n times",
       "family": "proofs",
       "kind": "proof",
+      "status": "",
       "summary": "A sliding window over an array of n elements runs in O(n) time when each pointer only moves forward.",
       "problem": "A sliding window over an array of n elements runs in O(n) time when each pointer only moves forward.",
+      "tradeoffs": null,
       "related": [
         "sliding-window-is-linear"
       ],
+      "concerns": [],
       "tags": [
         "proofs",
         "proof"
@@ -3189,6 +3370,10 @@
         {
           "label": "Glossary",
           "path": "proofs/sliding-window-linear/glossary.json"
+        },
+        {
+          "label": "Proof graph",
+          "path": "visual/proofs/sliding-window-linear.html"
         }
       ],
       "uid": "proofs:proof:sliding-window-linear"
@@ -3211,6 +3396,8 @@
         }
       ],
       "related": [],
+      "concerns": [],
+      "status": "",
       "uid": "providers:catalogue:provider-matrix"
     },
     {
@@ -3240,6 +3427,8 @@
         }
       ],
       "related": [],
+      "concerns": [],
+      "status": "",
       "uid": "providers:mapping:event-driven"
     },
     {
@@ -3269,6 +3458,8 @@
         }
       ],
       "related": [],
+      "concerns": [],
+      "status": "",
       "uid": "providers:mapping:serverless-api"
     },
     {
@@ -3289,6 +3480,8 @@
         }
       ],
       "related": [],
+      "concerns": [],
+      "status": "",
       "uid": "review:interactive:cards-review"
     },
     {
@@ -3309,14 +3502,17 @@
         }
       ],
       "related": [],
+      "concerns": [],
+      "status": "",
       "uid": "review:interactive:visual-hub"
     },
     {
       "id": "08-streaming",
       "title": "Clickstream streaming pipeline",
       "family": "scenarios",
-      "kind": "implemented",
-      "summary": "Scenario 08-streaming",
+      "kind": "scenario",
+      "status": "implemented",
+      "summary": "Scenario 08-streaming: Clickstream streaming pipeline",
       "artifacts": {
         "path": "scenarios/08-streaming/README.md",
         "hints": "scenarios/08-streaming/HINTS.md",
@@ -3351,14 +3547,16 @@
           "path": "scenarios/08-streaming/RUBRIC.md"
         }
       ],
-      "uid": "scenarios:implemented:08-streaming"
+      "concerns": [],
+      "uid": "scenarios:scenario:08-streaming"
     },
     {
       "id": "03-event-driven",
       "title": "Event-driven order ingress",
       "family": "scenarios",
-      "kind": "implemented",
-      "summary": "Scenario 03-event-driven",
+      "kind": "scenario",
+      "status": "implemented",
+      "summary": "Scenario 03-event-driven: Event-driven order ingress",
       "artifacts": {
         "path": "scenarios/03-event-driven/README.md",
         "hints": "scenarios/03-event-driven/HINTS.md",
@@ -3393,14 +3591,16 @@
           "path": "scenarios/03-event-driven/RUBRIC.md"
         }
       ],
-      "uid": "scenarios:implemented:03-event-driven"
+      "concerns": [],
+      "uid": "scenarios:scenario:03-event-driven"
     },
     {
       "id": "09-microservices",
       "title": "Microservices order system",
       "family": "scenarios",
-      "kind": "implemented",
-      "summary": "Scenario 09-microservices",
+      "kind": "scenario",
+      "status": "implemented",
+      "summary": "Scenario 09-microservices: Microservices order system",
       "artifacts": {
         "path": "scenarios/09-microservices/README.md",
         "hints": "scenarios/09-microservices/HINTS.md",
@@ -3436,14 +3636,16 @@
           "path": "scenarios/09-microservices/RUBRIC.md"
         }
       ],
-      "uid": "scenarios:implemented:09-microservices"
+      "concerns": [],
+      "uid": "scenarios:scenario:09-microservices"
     },
     {
       "id": "07-monitoring",
       "title": "Observability and incident response",
       "family": "scenarios",
-      "kind": "implemented",
-      "summary": "Scenario 07-monitoring",
+      "kind": "scenario",
+      "status": "implemented",
+      "summary": "Scenario 07-monitoring: Observability and incident response",
       "artifacts": {
         "path": "scenarios/07-monitoring/README.md",
         "hints": "scenarios/07-monitoring/HINTS.md",
@@ -3478,14 +3680,16 @@
           "path": "scenarios/07-monitoring/RUBRIC.md"
         }
       ],
-      "uid": "scenarios:implemented:07-monitoring"
+      "concerns": [],
+      "uid": "scenarios:scenario:07-monitoring"
     },
     {
       "id": "10-disaster-recovery",
       "title": "Regional disaster recovery",
       "family": "scenarios",
-      "kind": "implemented",
-      "summary": "Scenario 10-disaster-recovery",
+      "kind": "scenario",
+      "status": "implemented",
+      "summary": "Scenario 10-disaster-recovery: Regional disaster recovery",
       "artifacts": {
         "path": "scenarios/10-disaster-recovery/README.md",
         "hints": "scenarios/10-disaster-recovery/HINTS.md",
@@ -3520,14 +3724,16 @@
           "path": "scenarios/10-disaster-recovery/RUBRIC.md"
         }
       ],
-      "uid": "scenarios:implemented:10-disaster-recovery"
+      "concerns": [],
+      "uid": "scenarios:scenario:10-disaster-recovery"
     },
     {
       "id": "06-cicd-pipeline",
       "title": "Safe multi-environment CI/CD pipeline",
       "family": "scenarios",
-      "kind": "implemented",
-      "summary": "Scenario 06-cicd-pipeline",
+      "kind": "scenario",
+      "status": "implemented",
+      "summary": "Scenario 06-cicd-pipeline: Safe multi-environment CI/CD pipeline",
       "artifacts": {
         "path": "scenarios/06-cicd-pipeline/README.md",
         "hints": "scenarios/06-cicd-pipeline/HINTS.md",
@@ -3562,14 +3768,16 @@
           "path": "scenarios/06-cicd-pipeline/RUBRIC.md"
         }
       ],
-      "uid": "scenarios:implemented:06-cicd-pipeline"
+      "concerns": [],
+      "uid": "scenarios:scenario:06-cicd-pipeline"
     },
     {
       "id": "04-crud-api",
       "title": "Serverless CRUD API",
       "family": "scenarios",
-      "kind": "implemented",
-      "summary": "Scenario 04-crud-api",
+      "kind": "scenario",
+      "status": "implemented",
+      "summary": "Scenario 04-crud-api: Serverless CRUD API",
       "artifacts": {
         "path": "scenarios/04-crud-api/README.md",
         "hints": "scenarios/04-crud-api/HINTS.md",
@@ -3604,14 +3812,16 @@
           "path": "scenarios/04-crud-api/RUBRIC.md"
         }
       ],
-      "uid": "scenarios:implemented:04-crud-api"
+      "concerns": [],
+      "uid": "scenarios:scenario:04-crud-api"
     },
     {
       "id": "02-serverless-api",
       "title": "Serverless URL shortener",
       "family": "scenarios",
-      "kind": "implemented",
-      "summary": "Scenario 02-serverless-api",
+      "kind": "scenario",
+      "status": "implemented",
+      "summary": "Scenario 02-serverless-api: Serverless URL shortener",
       "artifacts": {
         "path": "scenarios/02-serverless-api/README.md",
         "hints": "scenarios/02-serverless-api/HINTS.md",
@@ -3646,14 +3856,16 @@
           "path": "scenarios/02-serverless-api/RUBRIC.md"
         }
       ],
-      "uid": "scenarios:implemented:02-serverless-api"
+      "concerns": [],
+      "uid": "scenarios:scenario:02-serverless-api"
     },
     {
       "id": "01-static-website",
       "title": "Static website with CDN",
       "family": "scenarios",
-      "kind": "implemented",
-      "summary": "Scenario 01-static-website",
+      "kind": "scenario",
+      "status": "implemented",
+      "summary": "Scenario 01-static-website: Static website with CDN",
       "artifacts": {
         "path": "scenarios/01-static-website/README.md",
         "hints": "scenarios/01-static-website/HINTS.md",
@@ -3687,14 +3899,16 @@
           "path": "scenarios/01-static-website/RUBRIC.md"
         }
       ],
-      "uid": "scenarios:implemented:01-static-website"
+      "concerns": [],
+      "uid": "scenarios:scenario:01-static-website"
     },
     {
       "id": "05-3tier-web",
       "title": "Three-tier web application",
       "family": "scenarios",
-      "kind": "implemented",
-      "summary": "Scenario 05-3tier-web",
+      "kind": "scenario",
+      "status": "implemented",
+      "summary": "Scenario 05-3tier-web: Three-tier web application",
       "artifacts": {
         "path": "scenarios/05-3tier-web/README.md",
         "hints": "scenarios/05-3tier-web/HINTS.md",
@@ -3729,16 +3943,42 @@
           "path": "scenarios/05-3tier-web/RUBRIC.md"
         }
       ],
-      "uid": "scenarios:implemented:05-3tier-web"
+      "concerns": [],
+      "uid": "scenarios:scenario:05-3tier-web"
+    },
+    {
+      "id": "site-explorer",
+      "title": "Content explorer",
+      "family": "site",
+      "kind": "interactive",
+      "summary": "Autogenerated local searchable catalogue of repository content.",
+      "tags": [
+        "interactive",
+        "site"
+      ],
+      "source": "site/index.html",
+      "links": [
+        {
+          "label": "Open",
+          "path": "site/index.html"
+        }
+      ],
+      "related": [],
+      "concerns": [],
+      "status": "",
+      "uid": "site:interactive:site-explorer"
     },
     {
       "id": "contract-testing",
       "title": "Contract testing: API contracts and consumer-driven contracts",
       "family": "testing",
       "kind": "testing-pattern",
+      "status": "",
       "summary": "Contract tests verify that a client and a server agree on the shape and behavior of their API: request format, response schema, status codes, and error handling. Consumer-driven contracts start with the client's expectations and verify the server meets them. Provider contracts test the server's behavior independently. Contract tests prevent integration breaks: when a contract test fails, the API has changed in a way that breaks the client. Contract tests are faster than end-to-end tests and catch misalignment early.\n",
       "problem": "",
+      "tradeoffs": null,
       "related": [],
+      "concerns": [],
       "tags": [
         "testing",
         "testing-pattern"
@@ -3769,9 +4009,12 @@
       "title": "Integration testing: service boundaries, fixture lifecycle, and database tests",
       "family": "testing",
       "kind": "testing-pattern",
+      "status": "",
       "summary": "Integration tests verify interactions between multiple components: a service calling a repository, a repository querying a database, or an API calling a downstream service. Unlike unit tests, integration tests may use real databases (or in-memory replicas), but they must still be hermetic and reproducible. Fixture scopes (function, session, module) manage expensive setup; transaction rollback keeps tests isolated. Contract tests define boundaries between services and verify both sides adhere to the contract.\n",
       "problem": "",
+      "tradeoffs": null,
       "related": [],
+      "concerns": [],
       "tags": [
         "testing",
         "testing-pattern"
@@ -3802,9 +4045,12 @@
       "title": "Test fixtures: pytest conftest patterns, scope, and dependency injection",
       "family": "testing",
       "kind": "testing-pattern",
+      "status": "",
       "summary": "Pytest fixtures are reusable setup/teardown functions that tests depend on. Fixtures manage resources (databases, temporary files, mocks) and provide them to tests via dependency injection. A fixture's scope (function, class, module, session) determines when setup runs and cleanup happens. conftest.py is a pytest file that defines fixtures shared across tests in a directory and subdirectories. Fixtures compose: one fixture can depend on another, building up complex test environments from simple pieces.\n",
       "problem": "",
+      "tradeoffs": null,
       "related": [],
+      "concerns": [],
       "tags": [
         "testing",
         "testing-pattern"
@@ -3835,9 +4081,12 @@
       "title": "Unit testing: test isolation, hermetic tests, and mocking strategies",
       "family": "testing",
       "kind": "testing-pattern",
+      "status": "",
       "summary": "Unit tests verify single functions or classes in isolation, fast and deterministically. Hermetic tests are self-contained: they never touch external services, file systems, or databases. Mocking replaces dependencies, allowing tests to control inputs and verify behavior. Pytest markers (@pytest.mark.unit) organize tests by scope. Fixtures manage setup and teardown, keeping tests DRY.\n",
       "problem": "",
+      "tradeoffs": null,
       "related": [],
+      "concerns": [],
       "tags": [
         "testing",
         "testing-pattern"

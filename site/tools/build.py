@@ -222,6 +222,8 @@ def add(items: list[dict[str, Any]], item: dict[str, Any]) -> None:
     item.setdefault("tags", [])
     item.setdefault("links", [])
     item.setdefault("related", [])
+    item.setdefault("concerns", [])
+    item.setdefault("status", "")
     item["uid"] = f"{item['family']}:{item['kind']}:{item['id']}"
     items.append(item)
 
@@ -287,15 +289,17 @@ def discover_architecture(items: list[dict[str, Any]]) -> None:
             continue
         artifacts = {k: text(scenario.get(k)) for k in ("path", "hints", "solution", "rubric") if text(scenario.get(k))}
         links = [{"label": k.title(), "path": v} for k, v in artifacts.items()]
+        status = text(scenario.get("status")) or "scenario"
         add(items, {
             "id": sid,
             "title": text(scenario.get("title")) or sid,
             "family": "scenarios",
-            "kind": text(scenario.get("status")) or "scenario",
-            "summary": f"Scenario {sid}",
+            "kind": "scenario",
+            "status": status,
+            "summary": f"Scenario {sid}: {text(scenario.get('title')) or sid}",
             "artifacts": artifacts,
             "related": slug_list(scenario.get("patterns")),
-            "tags": ["scenario", text(scenario.get("status")) or "scenario"],
+            "tags": ["scenario", status],
             "source": rel(catalogue_path),
             "links": links,
         })
@@ -310,15 +314,24 @@ def discover_yaml_family(items: list[dict[str, Any]], family: str, content_dir: 
         for label, p in [("README", base / "README.md"), ("Quiz", base / "quiz_guide.md"), ("Page", base / "index.html"), ("Glossary", base / "glossary.json")]:
             if p.exists():
                 links.append({"label": label, "path": rel(p)})
+        if family == "proofs":
+            vpage = REPO_ROOT / "visual" / "proofs" / f"{fid}.html"
+            if vpage.exists():
+                links.append({"label": "Proof graph", "path": rel(vpage)})
+        tags = [family, kind, *slug_list(data.get("tags"))]
+        concerns = slug_list(data.get("concerns")) or slug_list(data.get("quality_attributes"))
         add(items, {
             "id": fid,
             "title": text(data.get("title")) or text(data.get("name")) or fid,
             "family": family,
             "kind": kind,
+            "status": text(data.get("status")),
             "summary": text(data.get("summary")) or text(data.get("statement")) or text(data.get("intent")),
             "problem": text(data.get("problem")) or text(data.get("statement")),
-            "related": slug_list(data.get("claim_ids")) + slug_list(data.get("related")),
-            "tags": [family, kind],
+            "tradeoffs": data.get("tradeoffs") or data.get("consequences"),
+            "related": slug_list(data.get("claim_ids")) + slug_list(data.get("related")) + slug_list(data.get("related_architecture")),
+            "concerns": concerns,
+            "tags": [t for t in tags if t],
             "source": rel(path),
             "links": links,
         })
@@ -330,13 +343,16 @@ def discover_papers(items: list[dict[str, Any]]) -> None:
         arxiv = text(data.get("arxiv_id")) or path.stem.removeprefix("arxiv-")
         base = REPO_ROOT / "papers" / arxiv
         links = [{"label": label, "path": rel(base / name)} for label, name in [("Overview", "README.md"), ("Page", "index.html"), ("Concepts", "concepts.json")] if (base / name).exists()]
+        vmap = REPO_ROOT / "visual" / "concepts" / f"arxiv-{arxiv}.html"
+        if vmap.exists():
+            links.append({"label": "Concept map", "path": rel(vmap)})
         add(items, {
             "id": arxiv,
             "title": text(data.get("title")) or arxiv,
             "family": "papers",
             "kind": "paper",
             "summary": text(data.get("abstract"))[:220],
-            "tags": ["paper", *slug_list(data.get("authors"))[:3]],
+            "tags": ["paper"],
             "source": rel(path),
             "links": links,
         })
@@ -390,17 +406,20 @@ def discover_pattern_docs(items: list[dict[str, Any]]) -> None:
             links = []
             if text(diagram.get("file")):
                 links.append({"label": "Diagram", "path": text(diagram.get("file"))})
+            concerns = slug_list(pattern.get("concerns"))
             add(items, {
                 "id": pid,
                 "title": text(pattern.get("title")) or pid,
                 "family": "pattern-catalogue",
                 "kind": text(pattern.get("category")) or "pattern",
+                "status": text(pattern.get("status")),
                 "summary": text(pattern.get("problem"))[:220],
                 "decision": text(pattern.get("decision")),
                 "use_when": slug_list(pattern.get("use_when")),
                 "avoid_when": slug_list(pattern.get("avoid_when")),
                 "tradeoffs": pattern.get("tradeoffs"),
-                "tags": ["visual-pattern", *slug_list(pattern.get("concerns"))],
+                "concerns": concerns,
+                "tags": ["visual-pattern", *concerns],
                 "source": rel(data_path),
                 "links": links,
             })
@@ -408,6 +427,7 @@ def discover_pattern_docs(items: list[dict[str, Any]]) -> None:
 
 def discover_surfaces(items: list[dict[str, Any]]) -> None:
     for path, fid, title, family, kind, summary in [
+        (REPO_ROOT / "site" / "index.html", "site-explorer", "Content explorer", "site", "interactive", "Autogenerated local searchable catalogue of repository content."),
         (REPO_ROOT / "cards" / "index.html", "cards-review", "Card review", "review", "interactive", "Timed local review over the canonical card deck."),
         (REPO_ROOT / "visual" / "index.html", "visual-hub", "Visual review hub", "review", "interactive", "Concept maps, diagrams, architecture graph, and proof pages."),
         (REPO_ROOT / "architecture" / "CATALOGUE.md", "architecture-catalogue", "Architecture catalogue", "architecture", "catalogue", "Generated canonical architecture index."),
