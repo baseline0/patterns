@@ -91,12 +91,12 @@ test: test-unit
     done
 
 # Unit tests only (what CI and the pre-push gate run). Self-contained: depends on no other recipe.
+[group("testing")]
 test-unit:
     #!/usr/bin/env bash
     set -euo pipefail
     if uv run pytest --version >/dev/null 2>&1; then
         uv run pytest -m unit --tb=short -v
-        just -f site/justfile check
         exit 0
     fi
     echo "error: test-unit cannot run in this repo: install pytest as a dev dependency (uv add --dev pytest)" >&2
