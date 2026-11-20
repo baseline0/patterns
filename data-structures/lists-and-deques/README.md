@@ -2,7 +2,7 @@
 
 > Generated from `content/`. Edit the YAML, then run `tools/build.py`.
 
-- Explore in local catalogue: `just -f site/justfile serve` → `site/index.html`
+- Open in explorer: `../../site/index.html#data-structures:data-structure:lists-and-deques` (`just -f site/justfile serve`)
 
 A Python list is a contiguous array of object pointers that grows geometrically. A deque is a chain of fixed-size blocks, so both of its ends are cheap to change. Choosing between them is a question about where a container changes.
 

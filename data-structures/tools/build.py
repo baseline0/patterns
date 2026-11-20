@@ -56,7 +56,7 @@ def validate(topic: dict, source: str) -> None:
 
 
 def readme(topic: dict) -> str:
-    lines = [f"# {topic['title']}", "", "> Generated from `content/`. Edit the YAML, then run `tools/build.py`.", "", "- Explore in local catalogue: `just -f site/justfile serve` → `site/index.html`", ""]
+    lines = [f"# {topic['title']}", "", "> Generated from `content/`. Edit the YAML, then run `tools/build.py`.", "", f"- Open in explorer: `../../site/index.html#data-structures:data-structure:{topic['id']}` (`just -f site/justfile serve`)", ""]
     lines += [topic["summary"].strip(), ""]
     for part in topic["mechanics"]:
         lines += [f"## {part['heading']}", "", part["body"].strip(), ""]
@@ -103,8 +103,9 @@ def index_html(topic: dict) -> str:
         f"<title>{esc(topic['title'])}</title>",
         "<style>body{font-family:system-ui,sans-serif;max-width:52rem;margin:2rem auto;padding:0 1rem;line-height:1.5}"
         "table{border-collapse:collapse;width:100%}td,th{border:1px solid #ccc;padding:.4rem;text-align:left;vertical-align:top}"
-        "code{background:#f3f3f3;padding:0 .2rem}</style>",
+        "code{background:#f3f3f3;padding:0 .2rem}nav a{margin-right:1rem}</style>",
         "</head><body>",
+        f'<nav><a href="../../site/index.html#data-structures:data-structure:{topic["id"]}">Explorer</a><a href="../../visual/index.html">Visual hub</a><a href="../../cards/index.html">Cards</a></nav>',
         f"<h1>{esc(topic['title'])}</h1>",
         f"<p>{esc(topic['summary'].strip())}</p>",
     ]

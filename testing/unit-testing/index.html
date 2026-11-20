@@ -2,8 +2,9 @@
 <html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Unit testing: test isolation, hermetic tests, and mocking strategies</title>
-<style>body{font-family:system-ui,sans-serif;max-width:52rem;margin:2rem auto;padding:0 1rem;line-height:1.5}table{border-collapse:collapse;width:100%}td,th{border:1px solid #ccc;padding:.4rem;text-align:left;vertical-align:top}code{background:#f3f3f3;padding:0 .2rem}pre{background:#f3f3f3;padding:1rem;overflow-x:auto}</style>
+<style>body{font-family:system-ui,sans-serif;max-width:52rem;margin:2rem auto;padding:0 1rem;line-height:1.5}table{border-collapse:collapse;width:100%}td,th{border:1px solid #ccc;padding:.4rem;text-align:left;vertical-align:top}code{background:#f3f3f3;padding:0 .2rem}pre{background:#f3f3f3;padding:1rem;overflow-x:auto}nav a{margin-right:1rem}</style>
 </head><body>
+<nav><a href="../../site/index.html#testing:testing-pattern:unit-testing">Explorer</a><a href="../../visual/index.html">Visual hub</a><a href="../../cards/index.html">Cards</a></nav>
 <h1>Unit testing: test isolation, hermetic tests, and mocking strategies</h1>
 <p>Unit tests verify single functions or classes in isolation, fast and deterministically. Hermetic tests are self-contained: they never touch external services, file systems, or databases. Mocking replaces dependencies, allowing tests to control inputs and verify behavior. Pytest markers (@pytest.mark.unit) organize tests by scope. Fixtures manage setup and teardown, keeping tests DRY.</p>
 <h2>Isolation through dependency injection</h2><p>Tests pass dependencies explicitly: a function takes a database connector as a parameter, and the test passes a mock. This breaks coupling and makes behavior testable. Avoid global state; instead, inject or monkeypatch.</p>

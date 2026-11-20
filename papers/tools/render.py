@@ -75,7 +75,7 @@ def concept_graph(paper: dict[str, Any]) -> dict[str, Any]:
 
 def _readme(paper: dict[str, Any], topic: str) -> str:
     title = _text(paper.get("title")) or topic
-    lines = [f"# {title}", "", "> Generated from `content/`. Edit the YAML, then run `tools/render.py`.", ""]
+    lines = [f"# {title}", "", "> Generated from `content/`. Edit the YAML, then run `tools/render.py`.", "", f"- Open in explorer: `../../site/index.html#papers:paper:{topic}` (`just -f site/justfile serve`)", ""]
     authors = paper.get("authors")
     if isinstance(authors, list) and authors:
         lines += [f"**Authors**: {', '.join(str(author) for author in authors)}", ""]
@@ -139,8 +139,9 @@ def _index_html(paper: dict[str, Any], topic: str) -> str:
         '<meta name="viewport" content="width=device-width, initial-scale=1">',
         f"<title>{esc(title)}</title>",
         "<style>body{font-family:system-ui,sans-serif;max-width:52rem;margin:2rem auto;padding:0 1rem;line-height:1.5}"
-        "code{background:#f3f3f3;padding:0 .2rem}</style>",
+        "code{background:#f3f3f3;padding:0 .2rem}nav a{margin-right:1rem}</style>",
         "</head><body>",
+        f'<nav><a href="../../site/index.html#papers:paper:{topic}">Explorer</a><a href="../../visual/index.html">Visual hub</a><a href="../../cards/index.html">Cards</a></nav>',
         f"<h1>{esc(title)}</h1>",
     ]
     if _text(paper.get("abstract")):

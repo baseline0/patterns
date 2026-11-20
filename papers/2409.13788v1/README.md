@@ -2,6 +2,8 @@
 
 > Generated from `content/`. Edit the YAML, then run `tools/render.py`.
 
+- Open in explorer: `../../site/index.html#papers:paper:2409.13788v1` (`just -f site/justfile serve`)
+
 ## Abstract
 
 An experimental comparison of a quantum-inspired genetic algorithm with a classical genetic algorithm on standard TSPLIB tours. The study varies instance size and type, then compares solution quality, iteration count, runtime, and stability. Across most instances, especially larger ones, the classical algorithm found better tours sooner. The paper points to difficult quantum-gate parameter tuning and notes that no real quantum hardware was used, so the results describe a simulation rather than a hardware speedup.

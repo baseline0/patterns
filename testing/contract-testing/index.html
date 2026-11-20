@@ -2,8 +2,9 @@
 <html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Contract testing: API contracts and consumer-driven contracts</title>
-<style>body{font-family:system-ui,sans-serif;max-width:52rem;margin:2rem auto;padding:0 1rem;line-height:1.5}table{border-collapse:collapse;width:100%}td,th{border:1px solid #ccc;padding:.4rem;text-align:left;vertical-align:top}code{background:#f3f3f3;padding:0 .2rem}pre{background:#f3f3f3;padding:1rem;overflow-x:auto}</style>
+<style>body{font-family:system-ui,sans-serif;max-width:52rem;margin:2rem auto;padding:0 1rem;line-height:1.5}table{border-collapse:collapse;width:100%}td,th{border:1px solid #ccc;padding:.4rem;text-align:left;vertical-align:top}code{background:#f3f3f3;padding:0 .2rem}pre{background:#f3f3f3;padding:1rem;overflow-x:auto}nav a{margin-right:1rem}</style>
 </head><body>
+<nav><a href="../../site/index.html#testing:testing-pattern:contract-testing">Explorer</a><a href="../../visual/index.html">Visual hub</a><a href="../../cards/index.html">Cards</a></nav>
 <h1>Contract testing: API contracts and consumer-driven contracts</h1>
 <p>Contract tests verify that a client and a server agree on the shape and behavior of their API: request format, response schema, status codes, and error handling. Consumer-driven contracts start with the client&#x27;s expectations and verify the server meets them. Provider contracts test the server&#x27;s behavior independently. Contract tests prevent integration breaks: when a contract test fails, the API has changed in a way that breaks the client. Contract tests are faster than end-to-end tests and catch misalignment early.</p>
 <h2>Consumer-driven contracts: client defines expectations</h2><p>The client (consumer) defines what it expects from the server (provider) in a contract file. The contract specifies request format, response schema, status codes, and error messages. The provider implements to satisfy the contract; both sides validate against it.</p>

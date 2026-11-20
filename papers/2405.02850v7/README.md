@@ -2,6 +2,8 @@
 
 > Generated from `content/`. Edit the YAML, then run `tools/render.py`.
 
+- Open in explorer: `../../site/index.html#papers:paper:2405.02850v7` (`just -f site/justfile serve`)
+
 ## Abstract
 
 Introduces Halfway Escape Optimization, a quantum-inspired metaheuristic that models tunnelling and entanglement effects to move candidates between search regions. The paper evaluates it on fourteen thirty-dimensional benchmark functions against particle swarm, genetic, artificial fish swarm, grey wolf, and quantum-behaved particle swarm optimizers. It then tries two constrained engineering designs and a rice-classification task, reporting competitive optimizer performance and stronger accuracy on the classification example.

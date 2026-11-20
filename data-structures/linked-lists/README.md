@@ -2,7 +2,7 @@
 
 > Generated from `content/`. Edit the YAML, then run `tools/build.py`.
 
-- Explore in local catalogue: `just -f site/justfile serve` → `site/index.html`
+- Open in explorer: `../../site/index.html#data-structures:data-structure:linked-lists` (`just -f site/justfile serve`)
 
 A linked list chains nodes together with pointers, so insertion and deletion at a known position cost O(1). The price is that reaching a position requires walking from the head, which costs O(n). Linked list problems are solved by careful pointer manipulation: maintaining two pointers to track state, reversing in-place by redirecting links, or detecting cycles by observing that two pointers moving at different speeds must meet if a cycle exists.
 

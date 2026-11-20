@@ -111,7 +111,7 @@ def readme(proof: dict[str, Any]) -> str:
         deps = step.get("depends_on", [])
         suffix = f" (depends on {', '.join(str(dep) for dep in deps)})" if deps else ""
         lines += [f"- **{text(step.get('label')) or text(step['id'])}**{suffix}: {text(step['detail'])}"]
-    lines += ["", f"**Complexity**: {text(proof['complexity'])}", "", "## Explore", "", "- Searchable local catalogue: `just -f site/justfile serve` then open `site/index.html`."]
+    lines += ["", f"**Complexity**: {text(proof['complexity'])}", "", "## Explore", "", f"- Open in explorer: `../../site/index.html#proofs:proof:{text(proof['id'])}` (`just -f site/justfile serve`)"]
     claim_ids = proof.get("claim_ids", [])
     if claim_ids:
         lines += ["", "## Linked claims", ""] + [f"- `{claim}`" for claim in claim_ids]

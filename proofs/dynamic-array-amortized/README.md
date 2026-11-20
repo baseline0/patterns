@@ -17,7 +17,7 @@
 
 ## Explore
 
-- Searchable local catalogue: `just -f site/justfile serve` then open `site/index.html`.
+- Open in explorer: `../../site/index.html#proofs:proof:dynamic-array-amortized` (`just -f site/justfile serve`)
 
 ## Linked claims
 

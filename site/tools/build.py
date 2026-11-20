@@ -135,6 +135,29 @@ a{color:inherit}ul.links{padding-left:1.2rem}.empty{padding:1rem;color:#888}
     const render = (v) => Array.isArray(v) ? `<ul>${v.map(x => `<li>${typeof x === 'object' ? '<pre>'+esc(JSON.stringify(x,null,2))+'</pre>' : esc(x)}</li>`).join('')}</ul>` : `<p>${esc(v)}</p>`;
     return `<h3>${esc(label)}</h3>${render(value)}`;
   }
+  const isObj = (v) => v && typeof v === 'object' && !Array.isArray(v);
+  function table(rows, cols) {
+    if (!Array.isArray(rows) || !rows.length) return '';
+    const c = cols || [...new Set(rows.flatMap(r => isObj(r) ? Object.keys(r) : []))];
+    return `<table><tr>${c.map(x=>`<th>${esc(x)}</th>`).join('')}</tr>${rows.map(r => `<tr>${c.map(x => {
+      const v = isObj(r) ? r[x] : r;
+      return `<td>${typeof v === 'object' ? '<pre>'+esc(JSON.stringify(v,null,2))+'</pre>' : esc(v ?? '')}</td>`;
+    }).join('')}</tr>`).join('')}</table>`;
+  }
+  function listOf(v, renderItem) {
+    if (!Array.isArray(v) || !v.length) return '';
+    return `<ul>${v.map(x => `<li>${renderItem ? renderItem(x) : (typeof x === 'object' ? '<pre>'+esc(JSON.stringify(x,null,2))+'</pre>' : esc(x))}</li>`).join('')}</ul>`;
+  }
+  function mapBlock(v) {
+    if (!isObj(v)) return '';
+    return `<table>${Object.entries(v).map(([k,val]) => `<tr><th>${esc(k)}</th><td>${typeof val === 'object' ? '<pre>'+esc(JSON.stringify(val,null,2))+'</pre>' : esc(val)}</td></tr>`).join('')}</table>`;
+  }
+  function tradeoffBlock(v) {
+    if (!v) return '';
+    if (isObj(v) && (v.benefit || v.cost)) return `<ul><li><strong>Benefit:</strong> ${esc(v.benefit || '')}</li><li><strong>Cost:</strong> ${esc(v.cost || '')}</li></ul>`;
+    if (Array.isArray(v)) return table(v, v.some(x=>isObj(x)&&x.attribute)?['attribute','effect','note']:undefined) || listOf(v);
+    return kv('', v);
+  }
 
   function renderDetail(item) {
     if (!item) { detail.innerHTML = '<p class="empty">Select an item to inspect its content, links, and source.</p>'; return; }
@@ -147,17 +170,48 @@ a{color:inherit}ul.links{padding-left:1.2rem}.empty{padding:1rem;color:#888}
     (item.tags||[]).forEach(t => pills.push(`<span class="pill">${esc(t)}</span>`));
     out += `<p>${pills.join('')}</p>`;
     if (item.summary) out += `<p>${esc(item.summary)}</p>`;
+    const metaBits = [];
+    if (item.quiz_count) metaBits.push(`${item.quiz_count} quiz items`);
+    if (item.examples_count) metaBits.push(`${item.examples_count} examples`);
+    if (Array.isArray(item.claims) && item.claims.length) metaBits.push(`${item.claims.length} claims`);
+    if (Array.isArray(item.steps) && item.steps.length) metaBits.push(`${item.steps.length} proof steps`);
+    if (Array.isArray(item.concepts) && item.concepts.length) metaBits.push(`${item.concepts.length} concepts`);
+    if (Array.isArray(item.equations) && item.equations.length) metaBits.push(`${item.equations.length} equations`);
+    if (metaBits.length) out += `<p class="meta">${esc(metaBits.join(' · '))}</p>`;
     if (links.length) out += `<h3>Open</h3><ul class="links">${links.map(l => `<li><a href="${esc(href(l.path))}">${esc(l.label || l.path)}</a> <span class="meta">${esc(l.path)}</span></li>`).join('')}</ul>`;
     if (item.source) out += `<h3>Source</h3><p class="meta">${esc(item.source)}</p>`;
     out += kv('Intent', item.intent);
+    out += kv('Definition', item.definition);
+    out += kv('Statement', item.statement);
+    out += kv('Invariant', item.invariant);
     out += kv('Problem / decision', item.problem || item.decision);
+    out += kv('Mechanism', item.mechanism);
     out += kv('Use when', item.use_when);
     out += kv('Avoid when', item.avoid_when);
-    out += kv('Trade-offs / consequences', item.tradeoffs || item.consequences);
+    out += kv('Forces', item.forces);
+    if (Array.isArray(item.tradeoffs) || (isObj(item.tradeoffs) && (item.tradeoffs.benefit||item.tradeoffs.cost)) || Array.isArray(item.quality_impacts)) {
+      out += '<h3>Trade-offs / consequences</h3>' + tradeoffBlock(item.tradeoffs || item.consequences);
+    } else {
+      out += kv('Trade-offs / consequences', item.tradeoffs || item.consequences);
+    }
+    if (Array.isArray(item.quality_impacts) && item.quality_impacts.length) out += '<h3>Quality impacts</h3>' + table(item.quality_impacts, ['attribute','effect','note']);
+    out += kv('Failure modes', item.failure_modes);
+    out += kv('Smells fixed', item.smells_fixed);
+    out += kv('Smells created', item.smells_created);
+    out += kv('Stimulus / response / measure', (item.stimulus||item.response||item.measure) ? {stimulus:item.stimulus, response:item.response, measure:item.measure} : null);
     out += kv('Components / participants', item.components || item.participants);
-    out += kv('Measure / mechanism', item.measure || item.mechanism);
-    out += kv('Scenario artifacts', item.artifacts);
+    if (Array.isArray(item.mechanics) && item.mechanics.length) out += '<h3>Mechanics</h3>' + table(item.mechanics, ['heading','body']);
+    if (Array.isArray(item.claims) && item.claims.length) out += '<h3>Claims</h3>' + table(item.claims, ['id','text']);
+    if (Array.isArray(item.steps) && item.steps.length) out += '<h3>Steps</h3>' + table(item.steps, ['id','label','detail','depends_on']);
+    if (Array.isArray(item.complexity) && item.complexity.length) out += '<h3>Complexity</h3>' + table(item.complexity, ['operation','time','note']);
+    else if (item.complexity && typeof item.complexity === 'string') out += kv('Complexity', item.complexity);
+    if (Array.isArray(item.signals) && item.signals.length) out += '<h3>Signals</h3>' + table(item.signals, ['signal','requirement','structure','stdlib','example']);
+    if (Array.isArray(item.problems) && item.problems.length) out += '<h3>Problems</h3>' + table(item.problems, ['number','title','container','pattern','stdlib','why']);
+    if (Array.isArray(item.concepts) && item.concepts.length) out += '<h3>Concepts</h3>' + table(item.concepts, ['id','name','definition','mentions','related']);
+    if (Array.isArray(item.equations) && item.equations.length) out += '<h3>Equations</h3>' + table(item.equations, ['id','latex','description','section']);
     out += kv('Providers', item.providers);
+    out += kv('Scenario artifacts', item.artifacts);
+    if (item.rights) out += '<h3>Rights</h3>' + mapBlock(item.rights);
     if (rel.length) out += `<h3>Related in catalog</h3><ul class="links">${rel.map(r => `<li><a href="#" data-uid="${esc(r.uid)}">${esc(r.title || r.id)}</a> <span class="meta">${esc(r.kind)}</span></li>`).join('')}</ul>`;
     out += kv('Related ids', (item.related||[]).filter(id => !rel.find(r => r.id===id || r.uid===id)));
     detail.innerHTML = out;
@@ -259,9 +313,14 @@ def discover_design_patterns(items: list[dict[str, Any]]) -> None:
             "summary": text(data.get("intent")),
             "intent": text(data.get("intent")),
             "problem": text(data.get("problem")),
+            "forces": slug_list(data.get("forces")),
             "use_when": slug_list(data.get("forces")),
+            "consequences": data.get("consequences"),
             "tradeoffs": data.get("consequences"),
             "participants": data.get("participants"),
+            "smells_fixed": slug_list(data.get("smells_fixed")),
+            "smells_created": slug_list(data.get("smells_created")),
+            "quiz_count": len(data.get("quiz", [])) if isinstance(data.get("quiz"), list) else 0,
             "related": slug_list(data.get("related_architecture")),
             "tags": [text(data.get("category")), "design-pattern"],
             "source": rel(path),
@@ -275,7 +334,9 @@ def discover_architecture(items: list[dict[str, Any]]) -> None:
         for path in sorted((root / folder).glob("*.yaml")):
             data = read_yaml(path) or {}
             aid = text(data.get("id")) or path.stem
-            related = slug_list(data.get("tactics")) + slug_list(data.get("related_styles")) + slug_list(data.get("related_tactics")) + slug_list(data.get("quality_attributes"))
+            related = slug_list(data.get("tactics")) + slug_list(data.get("related_styles")) + slug_list(data.get("related_tactics")) + slug_list(data.get("quality_attributes")) + slug_list(data.get("related_patterns"))
+            impacts = data.get("quality_impacts") if isinstance(data.get("quality_impacts"), list) else []
+            concerns = list(dict.fromkeys(slug_list(data.get("quality_attributes")) + [i.get("attribute") for i in impacts if isinstance(i, dict) and i.get("attribute")]))
             add(items, {
                 "id": aid,
                 "title": text(data.get("name")) or aid,
@@ -283,16 +344,23 @@ def discover_architecture(items: list[dict[str, Any]]) -> None:
                 "kind": kind,
                 "summary": text(data.get("summary")) or text(data.get("definition")),
                 "decision": text(data.get("decision")),
+                "definition": text(data.get("definition")),
+                "stimulus": slug_list(data.get("stimulus")),
+                "response": slug_list(data.get("response")),
+                "measure": slug_list(data.get("measure")),
                 "use_when": slug_list(data.get("use_when")) or slug_list(data.get("stimulus")),
                 "avoid_when": slug_list(data.get("avoid_when")),
                 "tradeoffs": data.get("tradeoffs"),
+                "quality_impacts": impacts,
                 "components": data.get("components"),
-                "measure": slug_list(data.get("measure")) or slug_list(data.get("response")),
                 "mechanism": text(data.get("mechanism")),
+                "failure_modes": slug_list(data.get("failure_modes")),
+                "quiz_count": len(data.get("quiz", [])) if isinstance(data.get("quiz"), list) else 0,
+                "concerns": concerns,
                 "related": list(dict.fromkeys(related)),
                 "tags": [kind, "architecture"],
                 "source": rel(path),
-                "links": [{"label": "Catalogue", "path": "architecture/CATALOGUE.md"}, {"label": "Graph page", "path": "visual/architecture/index.html"}],
+                "links": [{"label": "Catalogue", "path": "architecture/CATALOGUE.md"}, {"label": "Graph page", "path": "visual/architecture/index.html"}, {"label": "Site", "path": "site/index.html"}],
             })
     catalogue_path = REPO_ROOT / "architecture" / "content" / "catalogue.yaml"
     catalogue = read_yaml(catalogue_path) or {}
@@ -303,6 +371,7 @@ def discover_architecture(items: list[dict[str, Any]]) -> None:
         artifacts = {k: text(scenario.get(k)) for k in ("path", "hints", "solution", "rubric") if text(scenario.get(k))}
         links = [{"label": k.title(), "path": v} for k, v in artifacts.items()]
         status = text(scenario.get("status")) or "scenario"
+        patterns = slug_list(scenario.get("patterns"))
         add(items, {
             "id": sid,
             "title": text(scenario.get("title")) or sid,
@@ -311,8 +380,9 @@ def discover_architecture(items: list[dict[str, Any]]) -> None:
             "status": status,
             "summary": f"Scenario {sid}: {text(scenario.get('title')) or sid}",
             "artifacts": artifacts,
-            "related": slug_list(scenario.get("patterns")),
-            "tags": ["scenario", status],
+            "related": patterns,
+            "concerns": patterns,
+            "tags": ["scenario", status, *patterns[:2]],
             "source": rel(catalogue_path),
             "links": links,
         })
@@ -331,9 +401,10 @@ def discover_yaml_family(items: list[dict[str, Any]], family: str, content_dir: 
             vpage = REPO_ROOT / "visual" / "proofs" / f"{fid}.html"
             if vpage.exists():
                 links.append({"label": "Proof graph", "path": rel(vpage)})
+            links.append({"label": "Open in explorer", "path": f"site/index.html#{family}:{kind}:{fid}"})
         tags = [family, kind, *slug_list(data.get("tags"))]
         concerns = slug_list(data.get("concerns")) or slug_list(data.get("quality_attributes"))
-        add(items, {
+        item: dict[str, Any] = {
             "id": fid,
             "title": text(data.get("title")) or text(data.get("name")) or fid,
             "family": family,
@@ -347,7 +418,38 @@ def discover_yaml_family(items: list[dict[str, Any]], family: str, content_dir: 
             "tags": [t for t in tags if t],
             "source": rel(path),
             "links": links,
-        })
+        }
+        if family in {"data-structures", "testing"}:
+            claims = data.get("claims") if isinstance(data.get("claims"), list) else []
+            complexity = data.get("complexity") if isinstance(data.get("complexity"), list) else []
+            signals = data.get("signals") if isinstance(data.get("signals"), list) else []
+            problems = data.get("problems") if isinstance(data.get("problems"), list) else []
+            quiz = data.get("quiz") if isinstance(data.get("quiz"), list) else []
+            mechanics = data.get("mechanics") if isinstance(data.get("mechanics"), list) else []
+            examples = data.get("examples") if isinstance(data.get("examples"), list) else []
+            item.update({
+                "claims": [{"id": c.get("id"), "text": c.get("text")} for c in claims if isinstance(c, dict)],
+                "complexity": complexity,
+                "signals": signals,
+                "problems": problems,
+                "mechanics": mechanics,
+                "quiz_count": len(quiz),
+                "examples_count": len(examples),
+                "concerns": concerns or [row.get("requirement", "") for row in signals[:3] if isinstance(row, dict) and row.get("requirement")],
+            })
+            item["tags"] = list(dict.fromkeys([*item["tags"], "claims", "complexity", "signals"] if claims or complexity or signals else item["tags"]))
+        if family == "proofs":
+            steps = data.get("steps") if isinstance(data.get("steps"), list) else []
+            item.update({
+                "statement": text(data.get("statement")),
+                "invariant": text(data.get("invariant")),
+                "complexity": text(data.get("complexity")),
+                "steps": steps,
+                "claim_ids": slug_list(data.get("claim_ids")),
+            })
+            item["related"] = list(dict.fromkeys([*slug_list(data.get("claim_ids")), *slug_list(data.get("related"))]))
+        add(items, item)
+
 
 
 def discover_papers(items: list[dict[str, Any]]) -> None:
@@ -355,17 +457,25 @@ def discover_papers(items: list[dict[str, Any]]) -> None:
         data = read_yaml(path) or {}
         arxiv = text(data.get("arxiv_id")) or path.stem.removeprefix("arxiv-")
         base = REPO_ROOT / "papers" / arxiv
-        links = [{"label": label, "path": rel(base / name)} for label, name in [("Overview", "README.md"), ("Page", "index.html"), ("Concepts", "concepts.json")] if (base / name).exists()]
+        links = [{"label": label, "path": rel(base / name)} for label, name in [("Overview", "README.md"), ("Page", "index.html"), ("Concepts", "concepts.json"), ("Equations", "equations.md"), ("Glossary", "glossary.json")] if (base / name).exists()]
         vmap = REPO_ROOT / "visual" / "concepts" / f"arxiv-{arxiv}.html"
         if vmap.exists():
             links.append({"label": "Concept map", "path": rel(vmap)})
+        concepts = data.get("concepts") if isinstance(data.get("concepts"), list) else []
+        equations = data.get("equations") if isinstance(data.get("equations"), list) else []
+        claims = data.get("claims") if isinstance(data.get("claims"), list) else []
+        rights = data.get("rights") if isinstance(data.get("rights"), dict) else {}
         add(items, {
             "id": arxiv,
             "title": text(data.get("title")) or arxiv,
             "family": "papers",
             "kind": "paper",
             "summary": text(data.get("abstract"))[:220],
-            "tags": ["paper"],
+            "concepts": concepts,
+            "equations": equations,
+            "claims": claims,
+            "rights": rights,
+            "tags": ["paper"] + (["concepts"] if concepts else []) + (["claims"] if claims else []),
             "source": rel(path),
             "links": links,
         })

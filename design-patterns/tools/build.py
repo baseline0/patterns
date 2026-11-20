@@ -146,8 +146,9 @@ def index_html(pattern: dict[str, Any]) -> str:
         '<meta name="viewport" content="width=device-width, initial-scale=1">',
         f"<title>{esc(pattern['name'])}</title>",
         "<style>body{font-family:system-ui,sans-serif;max-width:52rem;margin:2rem auto;padding:0 1rem;line-height:1.5}"
-        "pre{background:#f3f3f3;padding:1rem;overflow-x:auto}code{background:#f3f3f3;padding:0 .2rem}</style>",
+        "pre{background:#f3f3f3;padding:1rem;overflow-x:auto}code{background:#f3f3f3;padding:0 .2rem}nav a{margin-right:1rem}</style>",
         "</head><body>",
+        '<nav><a href="../../site/index.html">Explorer</a><a href="../../visual/index.html">Visual hub</a><a href="../../cards/index.html">Cards</a><a href="../INDEX.md">Index</a></nav>',
         f"<h1>{esc(pattern['name'])}</h1>",
         f"<p><strong>{esc(pattern['category'])}</strong> — {esc(pattern['intent'])}</p>",
         f"<h2>Problem</h2><p>{esc(pattern['problem'])}</p>",

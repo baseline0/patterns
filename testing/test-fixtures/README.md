@@ -2,7 +2,7 @@
 
 > Generated from `content/`. Edit the YAML, then run `tools/build.py`.
 
-- Explore in local catalogue: `just -f site/justfile serve` → `site/index.html`
+- Open in explorer: `../../site/index.html#testing:testing-pattern:test-fixtures` (`just -f site/justfile serve`)
 
 Pytest fixtures are reusable setup/teardown functions that tests depend on. Fixtures manage resources (databases, temporary files, mocks) and provide them to tests via dependency injection. A fixture's scope (function, class, module, session) determines when setup runs and cleanup happens. conftest.py is a pytest file that defines fixtures shared across tests in a directory and subdirectories. Fixtures compose: one fixture can depend on another, building up complex test environments from simple pieces.
 

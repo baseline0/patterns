@@ -2,8 +2,9 @@
 <html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Heaps: a priority queue in a flat list</title>
-<style>body{font-family:system-ui,sans-serif;max-width:52rem;margin:2rem auto;padding:0 1rem;line-height:1.5}table{border-collapse:collapse;width:100%}td,th{border:1px solid #ccc;padding:.4rem;text-align:left;vertical-align:top}code{background:#f3f3f3;padding:0 .2rem}</style>
+<style>body{font-family:system-ui,sans-serif;max-width:52rem;margin:2rem auto;padding:0 1rem;line-height:1.5}table{border-collapse:collapse;width:100%}td,th{border:1px solid #ccc;padding:.4rem;text-align:left;vertical-align:top}code{background:#f3f3f3;padding:0 .2rem}nav a{margin-right:1rem}</style>
 </head><body>
+<nav><a href="../../site/index.html#data-structures:data-structure:heaps">Explorer</a><a href="../../visual/index.html">Visual hub</a><a href="../../cards/index.html">Cards</a></nav>
 <h1>Heaps: a priority queue in a flat list</h1>
 <p>heapq keeps a binary heap inside an ordinary list. The smallest element is always at index 0, so reading it is O(1); insertion and removal are O(log n). It is the standard tool when a problem asks for the next smallest or largest element while the data keeps changing.</p>
 <h2>a binary heap in a flat array</h2><p>A heap is a complete binary tree stored level by level in a list. The children of index i sit at 2i+1 and 2i+2, and the parent of i sits at (i-1)//2. heapq maintains the min-heap rule: every parent is no larger than its children, so the minimum is at index 0.</p>

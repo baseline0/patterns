@@ -2,8 +2,9 @@
 <html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Arrays and 2D arrays: subarrays, sliding window, and in-place operations</title>
-<style>body{font-family:system-ui,sans-serif;max-width:52rem;margin:2rem auto;padding:0 1rem;line-height:1.5}table{border-collapse:collapse;width:100%}td,th{border:1px solid #ccc;padding:.4rem;text-align:left;vertical-align:top}code{background:#f3f3f3;padding:0 .2rem}</style>
+<style>body{font-family:system-ui,sans-serif;max-width:52rem;margin:2rem auto;padding:0 1rem;line-height:1.5}table{border-collapse:collapse;width:100%}td,th{border:1px solid #ccc;padding:.4rem;text-align:left;vertical-align:top}code{background:#f3f3f3;padding:0 .2rem}nav a{margin-right:1rem}</style>
 </head><body>
+<nav><a href="../../site/index.html#data-structures:data-structure:arrays-and-2d-arrays">Explorer</a><a href="../../visual/index.html">Visual hub</a><a href="../../cards/index.html">Cards</a></nav>
 <h1>Arrays and 2D arrays: subarrays, sliding window, and in-place operations</h1>
 <p>Arrays store elements in contiguous memory for O(1) indexing. Subarrays are contiguous ranges; sliding windows and prefix sums solve subarray problems in linear time. Two pointers on sorted arrays find pairs without nested loops. In-place operations on 2D arrays avoid allocating new matrices by using index algebra and element swaps.</p>
 <h2>sliding window for subarray conditions</h2><p>Two pointers bound a window. The right pointer expands to add elements; the left contracts to maintain a condition (max length, sum within range, no repeats). Each element is added and removed once, keeping work linear.</p>

@@ -2,7 +2,7 @@
 
 > Generated from `content/`. Edit the YAML, then run `tools/build.py`.
 
-- Explore in local catalogue: `just -f site/justfile serve` → `site/index.html`
+- Open in explorer: `../../site/index.html#data-structures:data-structure:strings` (`just -f site/justfile serve`)
 
 Strings are sequences of characters. Finding patterns in strings uses two pointers to check palindromes and reverse sequences without allocating new strings. Hashing character positions or frequencies enables substring search and anagram detection in linear time without nested loops.
 

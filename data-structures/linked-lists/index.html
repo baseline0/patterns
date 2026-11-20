@@ -2,8 +2,9 @@
 <html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Linked lists: pointers, reversal, and cycle detection</title>
-<style>body{font-family:system-ui,sans-serif;max-width:52rem;margin:2rem auto;padding:0 1rem;line-height:1.5}table{border-collapse:collapse;width:100%}td,th{border:1px solid #ccc;padding:.4rem;text-align:left;vertical-align:top}code{background:#f3f3f3;padding:0 .2rem}</style>
+<style>body{font-family:system-ui,sans-serif;max-width:52rem;margin:2rem auto;padding:0 1rem;line-height:1.5}table{border-collapse:collapse;width:100%}td,th{border:1px solid #ccc;padding:.4rem;text-align:left;vertical-align:top}code{background:#f3f3f3;padding:0 .2rem}nav a{margin-right:1rem}</style>
 </head><body>
+<nav><a href="../../site/index.html#data-structures:data-structure:linked-lists">Explorer</a><a href="../../visual/index.html">Visual hub</a><a href="../../cards/index.html">Cards</a></nav>
 <h1>Linked lists: pointers, reversal, and cycle detection</h1>
 <p>A linked list chains nodes together with pointers, so insertion and deletion at a known position cost O(1). The price is that reaching a position requires walking from the head, which costs O(n). Linked list problems are solved by careful pointer manipulation: maintaining two pointers to track state, reversing in-place by redirecting links, or detecting cycles by observing that two pointers moving at different speeds must meet if a cycle exists.</p>
 <h2>node-based structure: pointer chaining</h2><p>Each node holds a value and a pointer to the next node. Unlike arrays, there is no random access; reaching a node requires starting at the head and following pointers. This sequential access makes insertion and deletion at a known position cheap (no shifting), but finding a position is expensive (no binary search).</p>

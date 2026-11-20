@@ -2,7 +2,7 @@
 
 > Generated from `content/`. Edit the YAML, then run `tools/build.py`.
 
-- Explore in local catalogue: `just -f site/justfile serve` → `site/index.html`
+- Open in explorer: `../../site/index.html#data-structures:data-structure:arrays-and-2d-arrays` (`just -f site/justfile serve`)
 
 Arrays store elements in contiguous memory for O(1) indexing. Subarrays are contiguous ranges; sliding windows and prefix sums solve subarray problems in linear time. Two pointers on sorted arrays find pairs without nested loops. In-place operations on 2D arrays avoid allocating new matrices by using index algebra and element swaps.
 

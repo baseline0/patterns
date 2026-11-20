@@ -2,7 +2,7 @@
 
 > Generated from `content/`. Edit the YAML, then run `tools/build.py`.
 
-- Explore in local catalogue: `just -f site/justfile serve` → `site/index.html`
+- Open in explorer: `../../site/index.html#data-structures:data-structure:hash-tables` (`just -f site/justfile serve`)
 
 A dict and a set find an item by hashing its key, so a lookup costs about the same whether the container holds ten items or a million. The price is that keys must be hashable and must not change while they are stored.
 

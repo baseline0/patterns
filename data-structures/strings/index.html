@@ -2,8 +2,9 @@
 <html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Strings: pattern matching, substring search, and palindromes</title>
-<style>body{font-family:system-ui,sans-serif;max-width:52rem;margin:2rem auto;padding:0 1rem;line-height:1.5}table{border-collapse:collapse;width:100%}td,th{border:1px solid #ccc;padding:.4rem;text-align:left;vertical-align:top}code{background:#f3f3f3;padding:0 .2rem}</style>
+<style>body{font-family:system-ui,sans-serif;max-width:52rem;margin:2rem auto;padding:0 1rem;line-height:1.5}table{border-collapse:collapse;width:100%}td,th{border:1px solid #ccc;padding:.4rem;text-align:left;vertical-align:top}code{background:#f3f3f3;padding:0 .2rem}nav a{margin-right:1rem}</style>
 </head><body>
+<nav><a href="../../site/index.html#data-structures:data-structure:strings">Explorer</a><a href="../../visual/index.html">Visual hub</a><a href="../../cards/index.html">Cards</a></nav>
 <h1>Strings: pattern matching, substring search, and palindromes</h1>
 <p>Strings are sequences of characters. Finding patterns in strings uses two pointers to check palindromes and reverse sequences without allocating new strings. Hashing character positions or frequencies enables substring search and anagram detection in linear time without nested loops.</p>
 <h2>two pointers for symmetry checks</h2><p>Two pointers starting from opposite ends move inward simultaneously. This checks palindromes and validates symmetric properties without reversing the string. The only extra space is the pointers.</p>
