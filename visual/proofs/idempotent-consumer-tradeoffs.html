@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Idempotent consumers trade storage for safe retries</title>
+<style>
+body{font-family:system-ui,sans-serif;max-width:60rem;margin:2rem auto;padding:0 1rem;line-height:1.5}
+h1,h2{margin-top:1.8rem}nav a{margin-right:1rem}figure{margin:1.5rem 0;border:1px solid #8884;border-radius:8px;padding:1rem}
+img{max-width:100%;height:auto}pre{background:#8882;padding:.8rem;overflow:auto;border-radius:6px}
+.meta{color:#888;font-size:.85rem}table{border-collapse:collapse;width:100%}td,th{border:1px solid #8884;padding:.4rem;text-align:left}
+svg{max-width:100%;height:auto}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(16rem,1fr));gap:1rem}
+</style></head><body>
+<nav><a href="../../site/index.html">Explorer</a><a href="../index.html">Visual hub</a><a href="../../cards/index.html">Cards</a><a href="index.html">Section index</a></nav>
+<h1>Idempotent consumers trade storage for safe retries</h1>
+<h2>Statement</h2>
+<p>Making message consumers idempotent allows at-least-once delivery and retries without duplicate side effects, at the cost of deduplication state, retention policy, and coordination.</p>
+<h2>Invariant</h2>
+<p>For a given idempotency key, applying the same operation more than once produces the same externally visible result as applying it once.</p>
+<h2>Proof graph</h2>
+<svg viewBox="0 0 930 230" role="img" aria-label="Proof dependency graph">
+<defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto"><path d="M0,0 L0,6 L7,3 z" fill="#666"/></marker></defs>
+<line x1="190" y1="170" x2="215" y2="170" stroke="#666" stroke-width="1.5" marker-end="url(#arrow)"/>
+<line x1="400" y1="170" x2="425" y2="170" stroke="#666" stroke-width="1.5" marker-end="url(#arrow)"/>
+<line x1="610" y1="170" x2="635" y2="170" stroke="#666" stroke-width="1.5" marker-end="url(#arrow)"/>
+<line x1="400" y1="170" x2="635" y2="170" stroke="#666" stroke-width="1.5" marker-end="url(#arrow)"/>
+<rect x="10" y="145" width="180" height="50" rx="8" fill="#3a7" stroke="#263"/>
+<text x="100" y="174" text-anchor="middle" fill="#fff" font-size="13">Identify operations unique</text>
+<rect x="220" y="145" width="180" height="50" rx="8" fill="#3a7" stroke="#263"/>
+<text x="310" y="174" text-anchor="middle" fill="#fff" font-size="13">Check-before-apply</text>
+<rect x="430" y="145" width="180" height="50" rx="8" fill="#3a7" stroke="#263"/>
+<text x="520" y="174" text-anchor="middle" fill="#fff" font-size="13">Record effect atomically e</text>
+<rect x="640" y="145" width="180" height="50" rx="8" fill="#3a7" stroke="#263"/>
+<text x="730" y="174" text-anchor="middle" fill="#fff" font-size="13">Safety gained, state and l</text>
+</svg>
+<h2>Steps</h2>
+<table><tr><th>Step</th><th>Detail</th><th>Depends on</th></tr>
+<tr><td>Identify operations uniquely</td><td>Each message or request carries a stable idempotency key so repeated deliveries can be recognized as the same logical operation.</td><td></td></tr>
+<tr><td>Check-before-apply</td><td>The consumer tests whether the key was already processed; constant-time hash lookups or set membership checks avoid linear scans as processed history grows.</td><td>dedupe-key</td></tr>
+<tr><td>Record effect atomically enough</td><td>On first application the consumer persists the result or marks the key seen so subsequent retries take the no-op/return-prior-result path.</td><td>seen-check</td></tr>
+<tr><td>Safety gained, state and lifecycle added</td><td>Retries become safe under redelivery and crashes, but the system must store, expire, and sometimes distribute dedupe state, and define behavior when keys collide or state is lost.</td><td>record, seen-check</td></tr>
+</table>
+<h2>Complexity</h2>
+<p>O(1) average deduplication check/record per message plus storage proportional to retained keys; enables correctness under at-least-once delivery.</p>
+</body></html>

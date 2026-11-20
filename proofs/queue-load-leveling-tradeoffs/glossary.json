@@ -1,0 +1,80 @@
+[
+  {
+    "title": "Prove: Queue-based load leveling trades latency for stability",
+    "body": "Inserting a queue between producers and consumers smooths bursty demand and protects downstream services, at the cost of added latency, backlog, and operational complexity.\n\nComplexity: Admission and dequeue are O(1) amortized per item; end-to-end latency includes queue wait time proportional to backlog and service time.",
+    "metadata": {
+      "tags": [
+        "architecture",
+        "proof",
+        "queue-load-leveling-tradeoffs",
+        "statement"
+      ],
+      "source": "proofs/content/queue-load-leveling-tradeoffs.yaml"
+    }
+  },
+  {
+    "title": "Invariant: Queue-based load leveling trades latency for stability",
+    "body": "The queue decouples arrival rate from processing rate: accepted work is durable until a consumer processes it, so overload becomes backlog rather than immediate failure.",
+    "metadata": {
+      "tags": [
+        "architecture",
+        "proof",
+        "queue-load-leveling-tradeoffs",
+        "invariant"
+      ],
+      "source": "proofs/content/queue-load-leveling-tradeoffs.yaml"
+    }
+  },
+  {
+    "title": "Proof step: Absorb bursts at the boundary",
+    "body": "Producers append work items to a buffer instead of calling the downstream service synchronously; amortized-constant append keeps admission cheap under bursts.",
+    "metadata": {
+      "tags": [
+        "architecture",
+        "proof",
+        "queue-load-leveling-tradeoffs",
+        "step"
+      ],
+      "source": "proofs/content/queue-load-leveling-tradeoffs.yaml"
+    }
+  },
+  {
+    "title": "Proof step: Consumers process at a steady rate",
+    "body": "Workers dequeue from the front at a controlled pace; constant-time front removal supports steady drain without re-scanning buffered work.\n\nDepends on: enqueue",
+    "metadata": {
+      "tags": [
+        "architecture",
+        "proof",
+        "queue-load-leveling-tradeoffs",
+        "step"
+      ],
+      "source": "proofs/content/queue-load-leveling-tradeoffs.yaml"
+    }
+  },
+  {
+    "title": "Proof step: Backpressure becomes queue depth",
+    "body": "When arrivals exceed service rate, latency grows with depth and unbounded queues risk memory/time exhaustion; bounds, TTLs, or dead-lettering make the trade-off explicit.\n\nDepends on: enqueue, drain",
+    "metadata": {
+      "tags": [
+        "architecture",
+        "proof",
+        "queue-load-leveling-tradeoffs",
+        "step"
+      ],
+      "source": "proofs/content/queue-load-leveling-tradeoffs.yaml"
+    }
+  },
+  {
+    "title": "Proof step: Reliability gained, simplicity lost",
+    "body": "The design improves resilience and elasticity but introduces eventual processing, ordering/idempotency concerns, monitoring of lag, and extra infrastructure to operate.\n\nDepends on: backlog",
+    "metadata": {
+      "tags": [
+        "architecture",
+        "proof",
+        "queue-load-leveling-tradeoffs",
+        "step"
+      ],
+      "source": "proofs/content/queue-load-leveling-tradeoffs.yaml"
+    }
+  }
+]

@@ -6395,6 +6395,90 @@
       }
     },
     {
+      "id": "4fce2a6316c0",
+      "title": "Prove: Cache-aside trades consistency for latency",
+      "body": "Cache-aside reduces read latency and backend load by serving hot data from a cache, at the cost of staleness, invalidation complexity, and failure modes.\n\nComplexity: O(1) average cache lookup on hits; end-to-end read cost becomes source-of-truth cost on misses plus invalidation/coordination overhead on writes.",
+      "metadata": {
+        "tags": [
+          "architecture",
+          "proof",
+          "cache-aside-tradeoffs",
+          "statement"
+        ],
+        "source": "proofs/cache-aside-tradeoffs/glossary.json"
+      }
+    },
+    {
+      "id": "49364703dc40",
+      "title": "Invariant: Cache-aside trades consistency for latency",
+      "body": "A cache entry is treated as an optimization: the source of truth remains authoritative, and correctness depends on an explicit freshness or invalidation policy.",
+      "metadata": {
+        "tags": [
+          "architecture",
+          "proof",
+          "cache-aside-tradeoffs",
+          "invariant"
+        ],
+        "source": "proofs/cache-aside-tradeoffs/glossary.json"
+      }
+    },
+    {
+      "id": "9c1c34fb1ad4",
+      "title": "Proof step: Fast-path cache lookup",
+      "body": "On a read, the application probes the cache first; a hash-based cache makes membership/lookup constant time on average, so hits avoid the slower source-of-truth path.",
+      "metadata": {
+        "tags": [
+          "architecture",
+          "proof",
+          "cache-aside-tradeoffs",
+          "step"
+        ],
+        "source": "proofs/cache-aside-tradeoffs/glossary.json"
+      }
+    },
+    {
+      "id": "e44220d81444",
+      "title": "Proof step: Miss populates cache",
+      "body": "On a miss, the application reads from the source of truth and writes the result into the cache for subsequent reads.\n\nDepends on: lookup",
+      "metadata": {
+        "tags": [
+          "architecture",
+          "proof",
+          "cache-aside-tradeoffs",
+          "step"
+        ],
+        "source": "proofs/cache-aside-tradeoffs/glossary.json"
+      }
+    },
+    {
+      "id": "70ba57b2931e",
+      "title": "Proof step: Freshness is bounded by policy",
+      "body": "Because updates may bypass or race the cache, entries can become stale until TTL expiry or explicit invalidation; stronger consistency requires tighter coordination and higher write cost.\n\nDepends on: miss-fill",
+      "metadata": {
+        "tags": [
+          "architecture",
+          "proof",
+          "cache-aside-tradeoffs",
+          "step"
+        ],
+        "source": "proofs/cache-aside-tradeoffs/glossary.json"
+      }
+    },
+    {
+      "id": "9c83350e6a7c",
+      "title": "Proof step: Operational trade-offs surface",
+      "body": "Benefits (lower latency, reduced load) trade against cold-start misses, stampedes on expiry, cache eviction, and extra invalidation logic that increases system complexity.\n\nDepends on: lookup, staleness",
+      "metadata": {
+        "tags": [
+          "architecture",
+          "proof",
+          "cache-aside-tradeoffs",
+          "step"
+        ],
+        "source": "proofs/cache-aside-tradeoffs/glossary.json"
+      }
+    },
+    {
       "id": "f37340d96371",
       "title": "Prove: Dynamic array append is amortized O(1)",
       "body": "A sequence of n appends to a geometrically growing array costs O(n) time in total.\n\nComplexity: O(n) for n appends; O(1) amortized, O(n) worst case for a single resize.",
@@ -6560,6 +6644,174 @@
           "step"
         ],
         "source": "proofs/heapify-linear/glossary.json"
+      }
+    },
+    {
+      "id": "b22cfb69e6c9",
+      "title": "Prove: Idempotent consumers trade storage for safe retries",
+      "body": "Making message consumers idempotent allows at-least-once delivery and retries without duplicate side effects, at the cost of deduplication state, retention policy, and coordination.\n\nComplexity: O(1) average deduplication check/record per message plus storage proportional to retained keys; enables correctness under at-least-once delivery.",
+      "metadata": {
+        "tags": [
+          "architecture",
+          "proof",
+          "idempotent-consumer-tradeoffs",
+          "statement"
+        ],
+        "source": "proofs/idempotent-consumer-tradeoffs/glossary.json"
+      }
+    },
+    {
+      "id": "e73a7df1b98f",
+      "title": "Invariant: Idempotent consumers trade storage for safe retries",
+      "body": "For a given idempotency key, applying the same operation more than once produces the same externally visible result as applying it once.",
+      "metadata": {
+        "tags": [
+          "architecture",
+          "proof",
+          "idempotent-consumer-tradeoffs",
+          "invariant"
+        ],
+        "source": "proofs/idempotent-consumer-tradeoffs/glossary.json"
+      }
+    },
+    {
+      "id": "ff4b6a275a71",
+      "title": "Proof step: Identify operations uniquely",
+      "body": "Each message or request carries a stable idempotency key so repeated deliveries can be recognized as the same logical operation.",
+      "metadata": {
+        "tags": [
+          "architecture",
+          "proof",
+          "idempotent-consumer-tradeoffs",
+          "step"
+        ],
+        "source": "proofs/idempotent-consumer-tradeoffs/glossary.json"
+      }
+    },
+    {
+      "id": "1ff1c107fdd3",
+      "title": "Proof step: Check-before-apply",
+      "body": "The consumer tests whether the key was already processed; constant-time hash lookups or set membership checks avoid linear scans as processed history grows.\n\nDepends on: dedupe-key",
+      "metadata": {
+        "tags": [
+          "architecture",
+          "proof",
+          "idempotent-consumer-tradeoffs",
+          "step"
+        ],
+        "source": "proofs/idempotent-consumer-tradeoffs/glossary.json"
+      }
+    },
+    {
+      "id": "0347a34d3848",
+      "title": "Proof step: Record effect atomically enough",
+      "body": "On first application the consumer persists the result or marks the key seen so subsequent retries take the no-op/return-prior-result path.\n\nDepends on: seen-check",
+      "metadata": {
+        "tags": [
+          "architecture",
+          "proof",
+          "idempotent-consumer-tradeoffs",
+          "step"
+        ],
+        "source": "proofs/idempotent-consumer-tradeoffs/glossary.json"
+      }
+    },
+    {
+      "id": "c94fcea06e44",
+      "title": "Proof step: Safety gained, state and lifecycle added",
+      "body": "Retries become safe under redelivery and crashes, but the system must store, expire, and sometimes distribute dedupe state, and define behavior when keys collide or state is lost.\n\nDepends on: record, seen-check",
+      "metadata": {
+        "tags": [
+          "architecture",
+          "proof",
+          "idempotent-consumer-tradeoffs",
+          "step"
+        ],
+        "source": "proofs/idempotent-consumer-tradeoffs/glossary.json"
+      }
+    },
+    {
+      "id": "ca7639f3574b",
+      "title": "Prove: Queue-based load leveling trades latency for stability",
+      "body": "Inserting a queue between producers and consumers smooths bursty demand and protects downstream services, at the cost of added latency, backlog, and operational complexity.\n\nComplexity: Admission and dequeue are O(1) amortized per item; end-to-end latency includes queue wait time proportional to backlog and service time.",
+      "metadata": {
+        "tags": [
+          "architecture",
+          "proof",
+          "queue-load-leveling-tradeoffs",
+          "statement"
+        ],
+        "source": "proofs/queue-load-leveling-tradeoffs/glossary.json"
+      }
+    },
+    {
+      "id": "a3311a0e35c2",
+      "title": "Invariant: Queue-based load leveling trades latency for stability",
+      "body": "The queue decouples arrival rate from processing rate: accepted work is durable until a consumer processes it, so overload becomes backlog rather than immediate failure.",
+      "metadata": {
+        "tags": [
+          "architecture",
+          "proof",
+          "queue-load-leveling-tradeoffs",
+          "invariant"
+        ],
+        "source": "proofs/queue-load-leveling-tradeoffs/glossary.json"
+      }
+    },
+    {
+      "id": "f1c892f1c7e9",
+      "title": "Proof step: Absorb bursts at the boundary",
+      "body": "Producers append work items to a buffer instead of calling the downstream service synchronously; amortized-constant append keeps admission cheap under bursts.",
+      "metadata": {
+        "tags": [
+          "architecture",
+          "proof",
+          "queue-load-leveling-tradeoffs",
+          "step"
+        ],
+        "source": "proofs/queue-load-leveling-tradeoffs/glossary.json"
+      }
+    },
+    {
+      "id": "e4faa2900e97",
+      "title": "Proof step: Consumers process at a steady rate",
+      "body": "Workers dequeue from the front at a controlled pace; constant-time front removal supports steady drain without re-scanning buffered work.\n\nDepends on: enqueue",
+      "metadata": {
+        "tags": [
+          "architecture",
+          "proof",
+          "queue-load-leveling-tradeoffs",
+          "step"
+        ],
+        "source": "proofs/queue-load-leveling-tradeoffs/glossary.json"
+      }
+    },
+    {
+      "id": "7617677471a1",
+      "title": "Proof step: Backpressure becomes queue depth",
+      "body": "When arrivals exceed service rate, latency grows with depth and unbounded queues risk memory/time exhaustion; bounds, TTLs, or dead-lettering make the trade-off explicit.\n\nDepends on: enqueue, drain",
+      "metadata": {
+        "tags": [
+          "architecture",
+          "proof",
+          "queue-load-leveling-tradeoffs",
+          "step"
+        ],
+        "source": "proofs/queue-load-leveling-tradeoffs/glossary.json"
+      }
+    },
+    {
+      "id": "ed091962b080",
+      "title": "Proof step: Reliability gained, simplicity lost",
+      "body": "The design improves resilience and elasticity but introduces eventual processing, ordering/idempotency concerns, monitoring of lag, and extra infrastructure to operate.\n\nDepends on: backlog",
+      "metadata": {
+        "tags": [
+          "architecture",
+          "proof",
+          "queue-load-leveling-tradeoffs",
+          "step"
+        ],
+        "source": "proofs/queue-load-leveling-tradeoffs/glossary.json"
       }
     },
     {

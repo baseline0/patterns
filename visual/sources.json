@@ -10,8 +10,11 @@
     "strangler-pattern"
   ],
   "proofs": [
+    "cache-aside-tradeoffs",
     "dynamic-array-amortized",
     "heapify-linear",
+    "idempotent-consumer-tradeoffs",
+    "queue-load-leveling-tradeoffs",
     "sliding-window-linear"
   ],
   "architecture_nodes": [

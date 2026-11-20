@@ -1,0 +1,25 @@
+id: queue-load-leveling-tradeoffs
+title: Queue-based load leveling trades latency for stability
+family: architecture
+claim_ids:
+  - deque-popleft-is-constant
+  - list-append-is-amortized-constant
+statement: "Inserting a queue between producers and consumers smooths bursty demand and protects downstream services, at the cost of added latency, backlog, and operational complexity."
+invariant: "The queue decouples arrival rate from processing rate: accepted work is durable until a consumer processes it, so overload becomes backlog rather than immediate failure."
+steps:
+  - id: enqueue
+    label: "Absorb bursts at the boundary"
+    detail: "Producers append work items to a buffer instead of calling the downstream service synchronously; amortized-constant append keeps admission cheap under bursts."
+  - id: drain
+    label: "Consumers process at a steady rate"
+    detail: "Workers dequeue from the front at a controlled pace; constant-time front removal supports steady drain without re-scanning buffered work."
+    depends_on: [enqueue]
+  - id: backlog
+    label: "Backpressure becomes queue depth"
+    detail: "When arrivals exceed service rate, latency grows with depth and unbounded queues risk memory/time exhaustion; bounds, TTLs, or dead-lettering make the trade-off explicit."
+    depends_on: [enqueue, drain]
+  - id: tradeoff
+    label: "Reliability gained, simplicity lost"
+    detail: "The design improves resilience and elasticity but introduces eventual processing, ordering/idempotency concerns, monitoring of lag, and extra infrastructure to operate."
+    depends_on: [backlog]
+complexity: "Admission and dequeue are O(1) amortized per item; end-to-end latency includes queue wait time proportional to backlog and service time."

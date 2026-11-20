@@ -48,7 +48,7 @@ a{color:inherit}ul.links{padding-left:1.2rem}.empty{padding:1rem;color:#888}
 <script type="application/json" id="catalog">{
   "schema_version": 1,
   "generated_by": "site/tools/build.py",
-  "total": 90,
+  "total": 93,
   "families": [
     "architecture",
     "data-structures",
@@ -6022,6 +6022,82 @@ a{color:inherit}ul.links{padding-left:1.2rem}.empty{padding:1rem;color:#888}
       "uid": "proofs:proof:heapify-linear"
     },
     {
+      "id": "cache-aside-tradeoffs",
+      "title": "Cache-aside trades consistency for latency",
+      "family": "proofs",
+      "kind": "proof",
+      "status": "",
+      "summary": "Cache-aside reduces read latency and backend load by serving hot data from a cache, at the cost of staleness, invalidation complexity, and failure modes.",
+      "problem": "Cache-aside reduces read latency and backend load by serving hot data from a cache, at the cost of staleness, invalidation complexity, and failure modes.",
+      "tradeoffs": null,
+      "related": [
+        "dict-lookup-is-constant-time"
+      ],
+      "concerns": [],
+      "tags": [
+        "proofs",
+        "proof"
+      ],
+      "source": "proofs/content/cache-aside-tradeoffs.yaml",
+      "links": [
+        {
+          "label": "README",
+          "path": "proofs/cache-aside-tradeoffs/README.md"
+        },
+        {
+          "label": "Glossary",
+          "path": "proofs/cache-aside-tradeoffs/glossary.json"
+        },
+        {
+          "label": "Proof graph",
+          "path": "visual/proofs/cache-aside-tradeoffs.html"
+        },
+        {
+          "label": "Open in explorer",
+          "path": "site/index.html#proofs:proof:cache-aside-tradeoffs"
+        }
+      ],
+      "statement": "Cache-aside reduces read latency and backend load by serving hot data from a cache, at the cost of staleness, invalidation complexity, and failure modes.",
+      "invariant": "A cache entry is treated as an optimization: the source of truth remains authoritative, and correctness depends on an explicit freshness or invalidation policy.",
+      "complexity": "O(1) average cache lookup on hits; end-to-end read cost becomes source-of-truth cost on misses plus invalidation/coordination overhead on writes.",
+      "steps": [
+        {
+          "id": "lookup",
+          "label": "Fast-path cache lookup",
+          "detail": "On a read, the application probes the cache first; a hash-based cache makes membership/lookup constant time on average, so hits avoid the slower source-of-truth path."
+        },
+        {
+          "id": "miss-fill",
+          "label": "Miss populates cache",
+          "detail": "On a miss, the application reads from the source of truth and writes the result into the cache for subsequent reads.",
+          "depends_on": [
+            "lookup"
+          ]
+        },
+        {
+          "id": "staleness",
+          "label": "Freshness is bounded by policy",
+          "detail": "Because updates may bypass or race the cache, entries can become stale until TTL expiry or explicit invalidation; stronger consistency requires tighter coordination and higher write cost.",
+          "depends_on": [
+            "miss-fill"
+          ]
+        },
+        {
+          "id": "failure-modes",
+          "label": "Operational trade-offs surface",
+          "detail": "Benefits (lower latency, reduced load) trade against cold-start misses, stampedes on expiry, cache eviction, and extra invalidation logic that increases system complexity.",
+          "depends_on": [
+            "lookup",
+            "staleness"
+          ]
+        }
+      ],
+      "claim_ids": [
+        "dict-lookup-is-constant-time"
+      ],
+      "uid": "proofs:proof:cache-aside-tradeoffs"
+    },
+    {
       "id": "dynamic-array-amortized",
       "title": "Dynamic array append is amortized O(1)",
       "family": "proofs",
@@ -6095,6 +6171,162 @@ a{color:inherit}ul.links{padding-left:1.2rem}.empty{padding:1rem;color:#888}
         "list-append-is-amortized-constant"
       ],
       "uid": "proofs:proof:dynamic-array-amortized"
+    },
+    {
+      "id": "idempotent-consumer-tradeoffs",
+      "title": "Idempotent consumers trade storage for safe retries",
+      "family": "proofs",
+      "kind": "proof",
+      "status": "",
+      "summary": "Making message consumers idempotent allows at-least-once delivery and retries without duplicate side effects, at the cost of deduplication state, retention policy, and coordination.",
+      "problem": "Making message consumers idempotent allows at-least-once delivery and retries without duplicate side effects, at the cost of deduplication state, retention policy, and coordination.",
+      "tradeoffs": null,
+      "related": [
+        "set-membership-beats-list-search",
+        "dict-lookup-is-constant-time"
+      ],
+      "concerns": [],
+      "tags": [
+        "proofs",
+        "proof"
+      ],
+      "source": "proofs/content/idempotent-consumer-tradeoffs.yaml",
+      "links": [
+        {
+          "label": "README",
+          "path": "proofs/idempotent-consumer-tradeoffs/README.md"
+        },
+        {
+          "label": "Glossary",
+          "path": "proofs/idempotent-consumer-tradeoffs/glossary.json"
+        },
+        {
+          "label": "Proof graph",
+          "path": "visual/proofs/idempotent-consumer-tradeoffs.html"
+        },
+        {
+          "label": "Open in explorer",
+          "path": "site/index.html#proofs:proof:idempotent-consumer-tradeoffs"
+        }
+      ],
+      "statement": "Making message consumers idempotent allows at-least-once delivery and retries without duplicate side effects, at the cost of deduplication state, retention policy, and coordination.",
+      "invariant": "For a given idempotency key, applying the same operation more than once produces the same externally visible result as applying it once.",
+      "complexity": "O(1) average deduplication check/record per message plus storage proportional to retained keys; enables correctness under at-least-once delivery.",
+      "steps": [
+        {
+          "id": "dedupe-key",
+          "label": "Identify operations uniquely",
+          "detail": "Each message or request carries a stable idempotency key so repeated deliveries can be recognized as the same logical operation."
+        },
+        {
+          "id": "seen-check",
+          "label": "Check-before-apply",
+          "detail": "The consumer tests whether the key was already processed; constant-time hash lookups or set membership checks avoid linear scans as processed history grows.",
+          "depends_on": [
+            "dedupe-key"
+          ]
+        },
+        {
+          "id": "record",
+          "label": "Record effect atomically enough",
+          "detail": "On first application the consumer persists the result or marks the key seen so subsequent retries take the no-op/return-prior-result path.",
+          "depends_on": [
+            "seen-check"
+          ]
+        },
+        {
+          "id": "tradeoff",
+          "label": "Safety gained, state and lifecycle added",
+          "detail": "Retries become safe under redelivery and crashes, but the system must store, expire, and sometimes distribute dedupe state, and define behavior when keys collide or state is lost.",
+          "depends_on": [
+            "record",
+            "seen-check"
+          ]
+        }
+      ],
+      "claim_ids": [
+        "set-membership-beats-list-search",
+        "dict-lookup-is-constant-time"
+      ],
+      "uid": "proofs:proof:idempotent-consumer-tradeoffs"
+    },
+    {
+      "id": "queue-load-leveling-tradeoffs",
+      "title": "Queue-based load leveling trades latency for stability",
+      "family": "proofs",
+      "kind": "proof",
+      "status": "",
+      "summary": "Inserting a queue between producers and consumers smooths bursty demand and protects downstream services, at the cost of added latency, backlog, and operational complexity.",
+      "problem": "Inserting a queue between producers and consumers smooths bursty demand and protects downstream services, at the cost of added latency, backlog, and operational complexity.",
+      "tradeoffs": null,
+      "related": [
+        "deque-popleft-is-constant",
+        "list-append-is-amortized-constant"
+      ],
+      "concerns": [],
+      "tags": [
+        "proofs",
+        "proof"
+      ],
+      "source": "proofs/content/queue-load-leveling-tradeoffs.yaml",
+      "links": [
+        {
+          "label": "README",
+          "path": "proofs/queue-load-leveling-tradeoffs/README.md"
+        },
+        {
+          "label": "Glossary",
+          "path": "proofs/queue-load-leveling-tradeoffs/glossary.json"
+        },
+        {
+          "label": "Proof graph",
+          "path": "visual/proofs/queue-load-leveling-tradeoffs.html"
+        },
+        {
+          "label": "Open in explorer",
+          "path": "site/index.html#proofs:proof:queue-load-leveling-tradeoffs"
+        }
+      ],
+      "statement": "Inserting a queue between producers and consumers smooths bursty demand and protects downstream services, at the cost of added latency, backlog, and operational complexity.",
+      "invariant": "The queue decouples arrival rate from processing rate: accepted work is durable until a consumer processes it, so overload becomes backlog rather than immediate failure.",
+      "complexity": "Admission and dequeue are O(1) amortized per item; end-to-end latency includes queue wait time proportional to backlog and service time.",
+      "steps": [
+        {
+          "id": "enqueue",
+          "label": "Absorb bursts at the boundary",
+          "detail": "Producers append work items to a buffer instead of calling the downstream service synchronously; amortized-constant append keeps admission cheap under bursts."
+        },
+        {
+          "id": "drain",
+          "label": "Consumers process at a steady rate",
+          "detail": "Workers dequeue from the front at a controlled pace; constant-time front removal supports steady drain without re-scanning buffered work.",
+          "depends_on": [
+            "enqueue"
+          ]
+        },
+        {
+          "id": "backlog",
+          "label": "Backpressure becomes queue depth",
+          "detail": "When arrivals exceed service rate, latency grows with depth and unbounded queues risk memory/time exhaustion; bounds, TTLs, or dead-lettering make the trade-off explicit.",
+          "depends_on": [
+            "enqueue",
+            "drain"
+          ]
+        },
+        {
+          "id": "tradeoff",
+          "label": "Reliability gained, simplicity lost",
+          "detail": "The design improves resilience and elasticity but introduces eventual processing, ordering/idempotency concerns, monitoring of lag, and extra infrastructure to operate.",
+          "depends_on": [
+            "backlog"
+          ]
+        }
+      ],
+      "claim_ids": [
+        "deque-popleft-is-constant",
+        "list-append-is-amortized-constant"
+      ],
+      "uid": "proofs:proof:queue-load-leveling-tradeoffs"
     },
     {
       "id": "sliding-window-linear",

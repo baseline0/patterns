@@ -1589,6 +1589,20 @@ Concept: TSPLIB benchmarks,A standard library of tour instances used to compare 
 Concept: Rotation-angle tuning,The gate angle that controls how candidates change; the paper identifies it as a key tuning burden.,2409.13788v1 concept
 Claim: Experiments,"On the tested TSPLIB instances, the classical genetic algorithm usually converged to better tours faster than the quantum-inspired variant.",2409.13788v1 claim
 Claim: Limitations,The quantum-inspired results come from simulation; no real quantum hardware was evaluated.,2409.13788v1 claim
+Prove: Cache-aside trades consistency for latency,"Cache-aside reduces read latency and backend load by serving hot data from a cache, at the cost of staleness, invalidation complexity, and failure modes.
+
+Complexity: O(1) average cache lookup on hits; end-to-end read cost becomes source-of-truth cost on misses plus invalidation/coordination overhead on writes.",architecture proof cache-aside-tradeoffs statement
+Invariant: Cache-aside trades consistency for latency,"A cache entry is treated as an optimization: the source of truth remains authoritative, and correctness depends on an explicit freshness or invalidation policy.",architecture proof cache-aside-tradeoffs invariant
+Proof step: Fast-path cache lookup,"On a read, the application probes the cache first; a hash-based cache makes membership/lookup constant time on average, so hits avoid the slower source-of-truth path.",architecture proof cache-aside-tradeoffs step
+Proof step: Miss populates cache,"On a miss, the application reads from the source of truth and writes the result into the cache for subsequent reads.
+
+Depends on: lookup",architecture proof cache-aside-tradeoffs step
+Proof step: Freshness is bounded by policy,"Because updates may bypass or race the cache, entries can become stale until TTL expiry or explicit invalidation; stronger consistency requires tighter coordination and higher write cost.
+
+Depends on: miss-fill",architecture proof cache-aside-tradeoffs step
+Proof step: Operational trade-offs surface,"Benefits (lower latency, reduced load) trade against cold-start misses, stampedes on expiry, cache eviction, and extra invalidation logic that increases system complexity.
+
+Depends on: lookup, staleness",architecture proof cache-aside-tradeoffs step
 Prove: Dynamic array append is amortized O(1),"A sequence of n appends to a geometrically growing array costs O(n) time in total.
 
 Complexity: O(n) for n appends; O(1) amortized, O(n) worst case for a single resize.",data-structures proof dynamic-array-amortized statement
@@ -1617,6 +1631,34 @@ Depends on: reverse",data-structures proof heapify-linear step
 Proof step: Bound the weighted sum,"The sum over heights of h * n / 2^(h+1) is at most n, because the series sum h / 2^h converges to 2.
 
 Depends on: height-cost",data-structures proof heapify-linear step
+Prove: Idempotent consumers trade storage for safe retries,"Making message consumers idempotent allows at-least-once delivery and retries without duplicate side effects, at the cost of deduplication state, retention policy, and coordination.
+
+Complexity: O(1) average deduplication check/record per message plus storage proportional to retained keys; enables correctness under at-least-once delivery.",architecture proof idempotent-consumer-tradeoffs statement
+Invariant: Idempotent consumers trade storage for safe retries,"For a given idempotency key, applying the same operation more than once produces the same externally visible result as applying it once.",architecture proof idempotent-consumer-tradeoffs invariant
+Proof step: Identify operations uniquely,Each message or request carries a stable idempotency key so repeated deliveries can be recognized as the same logical operation.,architecture proof idempotent-consumer-tradeoffs step
+Proof step: Check-before-apply,"The consumer tests whether the key was already processed; constant-time hash lookups or set membership checks avoid linear scans as processed history grows.
+
+Depends on: dedupe-key",architecture proof idempotent-consumer-tradeoffs step
+Proof step: Record effect atomically enough,"On first application the consumer persists the result or marks the key seen so subsequent retries take the no-op/return-prior-result path.
+
+Depends on: seen-check",architecture proof idempotent-consumer-tradeoffs step
+"Proof step: Safety gained, state and lifecycle added","Retries become safe under redelivery and crashes, but the system must store, expire, and sometimes distribute dedupe state, and define behavior when keys collide or state is lost.
+
+Depends on: record, seen-check",architecture proof idempotent-consumer-tradeoffs step
+Prove: Queue-based load leveling trades latency for stability,"Inserting a queue between producers and consumers smooths bursty demand and protects downstream services, at the cost of added latency, backlog, and operational complexity.
+
+Complexity: Admission and dequeue are O(1) amortized per item; end-to-end latency includes queue wait time proportional to backlog and service time.",architecture proof queue-load-leveling-tradeoffs statement
+Invariant: Queue-based load leveling trades latency for stability,"The queue decouples arrival rate from processing rate: accepted work is durable until a consumer processes it, so overload becomes backlog rather than immediate failure.",architecture proof queue-load-leveling-tradeoffs invariant
+Proof step: Absorb bursts at the boundary,Producers append work items to a buffer instead of calling the downstream service synchronously; amortized-constant append keeps admission cheap under bursts.,architecture proof queue-load-leveling-tradeoffs step
+Proof step: Consumers process at a steady rate,"Workers dequeue from the front at a controlled pace; constant-time front removal supports steady drain without re-scanning buffered work.
+
+Depends on: enqueue",architecture proof queue-load-leveling-tradeoffs step
+Proof step: Backpressure becomes queue depth,"When arrivals exceed service rate, latency grows with depth and unbounded queues risk memory/time exhaustion; bounds, TTLs, or dead-lettering make the trade-off explicit.
+
+Depends on: enqueue, drain",architecture proof queue-load-leveling-tradeoffs step
+"Proof step: Reliability gained, simplicity lost","The design improves resilience and elasticity but introduces eventual processing, ordering/idempotency concerns, monitoring of lag, and extra infrastructure to operate.
+
+Depends on: backlog",architecture proof queue-load-leveling-tradeoffs step
 Prove: Sliding window moves each pointer at most n times,"A sliding window over an array of n elements runs in O(n) time when each pointer only moves forward.
 
 Complexity: O(n) time, O(1) extra space.",data-structures proof sliding-window-linear statement

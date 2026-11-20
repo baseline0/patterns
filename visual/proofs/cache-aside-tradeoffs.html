@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cache-aside trades consistency for latency</title>
+<style>
+body{font-family:system-ui,sans-serif;max-width:60rem;margin:2rem auto;padding:0 1rem;line-height:1.5}
+h1,h2{margin-top:1.8rem}nav a{margin-right:1rem}figure{margin:1.5rem 0;border:1px solid #8884;border-radius:8px;padding:1rem}
+img{max-width:100%;height:auto}pre{background:#8882;padding:.8rem;overflow:auto;border-radius:6px}
+.meta{color:#888;font-size:.85rem}table{border-collapse:collapse;width:100%}td,th{border:1px solid #8884;padding:.4rem;text-align:left}
+svg{max-width:100%;height:auto}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(16rem,1fr));gap:1rem}
+</style></head><body>
+<nav><a href="../../site/index.html">Explorer</a><a href="../index.html">Visual hub</a><a href="../../cards/index.html">Cards</a><a href="index.html">Section index</a></nav>
+<h1>Cache-aside trades consistency for latency</h1>
+<h2>Statement</h2>
+<p>Cache-aside reduces read latency and backend load by serving hot data from a cache, at the cost of staleness, invalidation complexity, and failure modes.</p>
+<h2>Invariant</h2>
+<p>A cache entry is treated as an optimization: the source of truth remains authoritative, and correctness depends on an explicit freshness or invalidation policy.</p>
+<h2>Proof graph</h2>
+<svg viewBox="0 0 930 230" role="img" aria-label="Proof dependency graph">
+<defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto"><path d="M0,0 L0,6 L7,3 z" fill="#666"/></marker></defs>
+<line x1="190" y1="170" x2="215" y2="170" stroke="#666" stroke-width="1.5" marker-end="url(#arrow)"/>
+<line x1="400" y1="170" x2="425" y2="170" stroke="#666" stroke-width="1.5" marker-end="url(#arrow)"/>
+<line x1="190" y1="170" x2="635" y2="170" stroke="#666" stroke-width="1.5" marker-end="url(#arrow)"/>
+<line x1="610" y1="170" x2="635" y2="170" stroke="#666" stroke-width="1.5" marker-end="url(#arrow)"/>
+<rect x="10" y="145" width="180" height="50" rx="8" fill="#3a7" stroke="#263"/>
+<text x="100" y="174" text-anchor="middle" fill="#fff" font-size="13">Fast-path cache lookup</text>
+<rect x="220" y="145" width="180" height="50" rx="8" fill="#3a7" stroke="#263"/>
+<text x="310" y="174" text-anchor="middle" fill="#fff" font-size="13">Miss populates cache</text>
+<rect x="430" y="145" width="180" height="50" rx="8" fill="#3a7" stroke="#263"/>
+<text x="520" y="174" text-anchor="middle" fill="#fff" font-size="13">Freshness is bounded by po</text>
+<rect x="640" y="145" width="180" height="50" rx="8" fill="#3a7" stroke="#263"/>
+<text x="730" y="174" text-anchor="middle" fill="#fff" font-size="13">Operational trade-offs sur</text>
+</svg>
+<h2>Steps</h2>
+<table><tr><th>Step</th><th>Detail</th><th>Depends on</th></tr>
+<tr><td>Fast-path cache lookup</td><td>On a read, the application probes the cache first; a hash-based cache makes membership/lookup constant time on average, so hits avoid the slower source-of-truth path.</td><td></td></tr>
+<tr><td>Miss populates cache</td><td>On a miss, the application reads from the source of truth and writes the result into the cache for subsequent reads.</td><td>lookup</td></tr>
+<tr><td>Freshness is bounded by policy</td><td>Because updates may bypass or race the cache, entries can become stale until TTL expiry or explicit invalidation; stronger consistency requires tighter coordination and higher write cost.</td><td>miss-fill</td></tr>
+<tr><td>Operational trade-offs surface</td><td>Benefits (lower latency, reduced load) trade against cold-start misses, stampedes on expiry, cache eviction, and extra invalidation logic that increases system complexity.</td><td>lookup, staleness</td></tr>
+</table>
+<h2>Complexity</h2>
+<p>O(1) average cache lookup on hits; end-to-end read cost becomes source-of-truth cost on misses plus invalidation/coordination overhead on writes.</p>
+</body></html>

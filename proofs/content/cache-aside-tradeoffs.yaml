@@ -1,0 +1,24 @@
+id: cache-aside-tradeoffs
+title: Cache-aside trades consistency for latency
+family: architecture
+claim_ids:
+  - dict-lookup-is-constant-time
+statement: "Cache-aside reduces read latency and backend load by serving hot data from a cache, at the cost of staleness, invalidation complexity, and failure modes."
+invariant: "A cache entry is treated as an optimization: the source of truth remains authoritative, and correctness depends on an explicit freshness or invalidation policy."
+steps:
+  - id: lookup
+    label: "Fast-path cache lookup"
+    detail: "On a read, the application probes the cache first; a hash-based cache makes membership/lookup constant time on average, so hits avoid the slower source-of-truth path."
+  - id: miss-fill
+    label: "Miss populates cache"
+    detail: "On a miss, the application reads from the source of truth and writes the result into the cache for subsequent reads."
+    depends_on: [lookup]
+  - id: staleness
+    label: "Freshness is bounded by policy"
+    detail: "Because updates may bypass or race the cache, entries can become stale until TTL expiry or explicit invalidation; stronger consistency requires tighter coordination and higher write cost."
+    depends_on: [miss-fill]
+  - id: failure-modes
+    label: "Operational trade-offs surface"
+    detail: "Benefits (lower latency, reduced load) trade against cold-start misses, stampedes on expiry, cache eviction, and extra invalidation logic that increases system complexity."
+    depends_on: [lookup, staleness]
+complexity: "O(1) average cache lookup on hits; end-to-end read cost becomes source-of-truth cost on misses plus invalidation/coordination overhead on writes."

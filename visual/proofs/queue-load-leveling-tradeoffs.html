@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Queue-based load leveling trades latency for stability</title>
+<style>
+body{font-family:system-ui,sans-serif;max-width:60rem;margin:2rem auto;padding:0 1rem;line-height:1.5}
+h1,h2{margin-top:1.8rem}nav a{margin-right:1rem}figure{margin:1.5rem 0;border:1px solid #8884;border-radius:8px;padding:1rem}
+img{max-width:100%;height:auto}pre{background:#8882;padding:.8rem;overflow:auto;border-radius:6px}
+.meta{color:#888;font-size:.85rem}table{border-collapse:collapse;width:100%}td,th{border:1px solid #8884;padding:.4rem;text-align:left}
+svg{max-width:100%;height:auto}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(16rem,1fr));gap:1rem}
+</style></head><body>
+<nav><a href="../../site/index.html">Explorer</a><a href="../index.html">Visual hub</a><a href="../../cards/index.html">Cards</a><a href="index.html">Section index</a></nav>
+<h1>Queue-based load leveling trades latency for stability</h1>
+<h2>Statement</h2>
+<p>Inserting a queue between producers and consumers smooths bursty demand and protects downstream services, at the cost of added latency, backlog, and operational complexity.</p>
+<h2>Invariant</h2>
+<p>The queue decouples arrival rate from processing rate: accepted work is durable until a consumer processes it, so overload becomes backlog rather than immediate failure.</p>
+<h2>Proof graph</h2>
+<svg viewBox="0 0 930 230" role="img" aria-label="Proof dependency graph">
+<defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto"><path d="M0,0 L0,6 L7,3 z" fill="#666"/></marker></defs>
+<line x1="190" y1="170" x2="215" y2="170" stroke="#666" stroke-width="1.5" marker-end="url(#arrow)"/>
+<line x1="190" y1="170" x2="425" y2="170" stroke="#666" stroke-width="1.5" marker-end="url(#arrow)"/>
+<line x1="400" y1="170" x2="425" y2="170" stroke="#666" stroke-width="1.5" marker-end="url(#arrow)"/>
+<line x1="610" y1="170" x2="635" y2="170" stroke="#666" stroke-width="1.5" marker-end="url(#arrow)"/>
+<rect x="10" y="145" width="180" height="50" rx="8" fill="#3a7" stroke="#263"/>
+<text x="100" y="174" text-anchor="middle" fill="#fff" font-size="13">Absorb bursts at the bound</text>
+<rect x="220" y="145" width="180" height="50" rx="8" fill="#3a7" stroke="#263"/>
+<text x="310" y="174" text-anchor="middle" fill="#fff" font-size="13">Consumers process at a ste</text>
+<rect x="430" y="145" width="180" height="50" rx="8" fill="#3a7" stroke="#263"/>
+<text x="520" y="174" text-anchor="middle" fill="#fff" font-size="13">Backpressure becomes queue</text>
+<rect x="640" y="145" width="180" height="50" rx="8" fill="#3a7" stroke="#263"/>
+<text x="730" y="174" text-anchor="middle" fill="#fff" font-size="13">Reliability gained, simpli</text>
+</svg>
+<h2>Steps</h2>
+<table><tr><th>Step</th><th>Detail</th><th>Depends on</th></tr>
+<tr><td>Absorb bursts at the boundary</td><td>Producers append work items to a buffer instead of calling the downstream service synchronously; amortized-constant append keeps admission cheap under bursts.</td><td></td></tr>
+<tr><td>Consumers process at a steady rate</td><td>Workers dequeue from the front at a controlled pace; constant-time front removal supports steady drain without re-scanning buffered work.</td><td>enqueue</td></tr>
+<tr><td>Backpressure becomes queue depth</td><td>When arrivals exceed service rate, latency grows with depth and unbounded queues risk memory/time exhaustion; bounds, TTLs, or dead-lettering make the trade-off explicit.</td><td>enqueue, drain</td></tr>
+<tr><td>Reliability gained, simplicity lost</td><td>The design improves resilience and elasticity but introduces eventual processing, ordering/idempotency concerns, monitoring of lag, and extra infrastructure to operate.</td><td>backlog</td></tr>
+</table>
+<h2>Complexity</h2>
+<p>Admission and dequeue are O(1) amortized per item; end-to-end latency includes queue wait time proportional to backlog and service time.</p>
+</body></html>

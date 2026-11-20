@@ -1,0 +1,80 @@
+[
+  {
+    "title": "Prove: Idempotent consumers trade storage for safe retries",
+    "body": "Making message consumers idempotent allows at-least-once delivery and retries without duplicate side effects, at the cost of deduplication state, retention policy, and coordination.\n\nComplexity: O(1) average deduplication check/record per message plus storage proportional to retained keys; enables correctness under at-least-once delivery.",
+    "metadata": {
+      "tags": [
+        "architecture",
+        "proof",
+        "idempotent-consumer-tradeoffs",
+        "statement"
+      ],
+      "source": "proofs/content/idempotent-consumer-tradeoffs.yaml"
+    }
+  },
+  {
+    "title": "Invariant: Idempotent consumers trade storage for safe retries",
+    "body": "For a given idempotency key, applying the same operation more than once produces the same externally visible result as applying it once.",
+    "metadata": {
+      "tags": [
+        "architecture",
+        "proof",
+        "idempotent-consumer-tradeoffs",
+        "invariant"
+      ],
+      "source": "proofs/content/idempotent-consumer-tradeoffs.yaml"
+    }
+  },
+  {
+    "title": "Proof step: Identify operations uniquely",
+    "body": "Each message or request carries a stable idempotency key so repeated deliveries can be recognized as the same logical operation.",
+    "metadata": {
+      "tags": [
+        "architecture",
+        "proof",
+        "idempotent-consumer-tradeoffs",
+        "step"
+      ],
+      "source": "proofs/content/idempotent-consumer-tradeoffs.yaml"
+    }
+  },
+  {
+    "title": "Proof step: Check-before-apply",
+    "body": "The consumer tests whether the key was already processed; constant-time hash lookups or set membership checks avoid linear scans as processed history grows.\n\nDepends on: dedupe-key",
+    "metadata": {
+      "tags": [
+        "architecture",
+        "proof",
+        "idempotent-consumer-tradeoffs",
+        "step"
+      ],
+      "source": "proofs/content/idempotent-consumer-tradeoffs.yaml"
+    }
+  },
+  {
+    "title": "Proof step: Record effect atomically enough",
+    "body": "On first application the consumer persists the result or marks the key seen so subsequent retries take the no-op/return-prior-result path.\n\nDepends on: seen-check",
+    "metadata": {
+      "tags": [
+        "architecture",
+        "proof",
+        "idempotent-consumer-tradeoffs",
+        "step"
+      ],
+      "source": "proofs/content/idempotent-consumer-tradeoffs.yaml"
+    }
+  },
+  {
+    "title": "Proof step: Safety gained, state and lifecycle added",
+    "body": "Retries become safe under redelivery and crashes, but the system must store, expire, and sometimes distribute dedupe state, and define behavior when keys collide or state is lost.\n\nDepends on: record, seen-check",
+    "metadata": {
+      "tags": [
+        "architecture",
+        "proof",
+        "idempotent-consumer-tradeoffs",
+        "step"
+      ],
+      "source": "proofs/content/idempotent-consumer-tradeoffs.yaml"
+    }
+  }
+]

@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "total": 593,
+  "total": 611,
   "sources": [
     {
       "path": "architecture/glossary.json",
@@ -47,11 +47,23 @@
       "cards": 7
     },
     {
+      "path": "proofs/cache-aside-tradeoffs/glossary.json",
+      "cards": 6
+    },
+    {
       "path": "proofs/dynamic-array-amortized/glossary.json",
       "cards": 6
     },
     {
       "path": "proofs/heapify-linear/glossary.json",
+      "cards": 6
+    },
+    {
+      "path": "proofs/idempotent-consumer-tradeoffs/glossary.json",
+      "cards": 6
+    },
+    {
+      "path": "proofs/queue-load-leveling-tradeoffs/glossary.json",
       "cards": 6
     },
     {
