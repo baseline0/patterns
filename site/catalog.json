@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "generated_by": "site/tools/build.py",
-  "total": 89,
+  "total": 90,
   "families": [
     "architecture",
     "data-structures",
@@ -30,6 +30,7 @@
     "pattern-doc",
     "proof",
     "quality-attribute",
+    "reference",
     "scenario",
     "structural",
     "style",
@@ -5929,6 +5930,28 @@
         "sliding-window-is-linear"
       ],
       "uid": "proofs:proof:sliding-window-linear"
+    },
+    {
+      "id": "lean4-tactics",
+      "title": "Lean 4 tactics",
+      "family": "proofs",
+      "kind": "reference",
+      "summary": "Common Lean 4 tactics and when to use them.",
+      "tags": [
+        "reference",
+        "proofs"
+      ],
+      "source": "proofs/lean4-tactics.md",
+      "links": [
+        {
+          "label": "Open",
+          "path": "proofs/lean4-tactics.md"
+        }
+      ],
+      "related": [],
+      "concerns": [],
+      "status": "",
+      "uid": "proofs:reference:lean4-tactics"
     },
     {
       "id": "provider-matrix",

@@ -556,6 +556,7 @@ def discover_surfaces(items: list[dict[str, Any]]) -> None:
         (REPO_ROOT / "architecture" / "CATALOGUE.md", "architecture-catalogue", "Architecture catalogue", "architecture", "catalogue", "Generated canonical architecture index."),
         (REPO_ROOT / "providers" / "matrix.md", "provider-matrix", "Provider matrix", "providers", "catalogue", "Generated cross-provider mapping matrix."),
         (REPO_ROOT / "design-patterns" / "INDEX.md", "design-pattern-index", "Design patterns index", "design-patterns", "catalogue", "Generated design pattern index."),
+        (REPO_ROOT / "proofs" / "lean4-tactics.md", "lean4-tactics", "Lean 4 tactics", "proofs", "reference", "Common Lean 4 tactics and when to use them."),
     ]:
         if path.exists():
             add(items, {"id": fid, "title": title, "family": family, "kind": kind, "summary": summary, "tags": [kind, family], "source": rel(path), "links": [{"label": "Open", "path": rel(path)}]})
