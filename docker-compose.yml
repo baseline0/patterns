@@ -5,10 +5,10 @@ services:
   gateway:
     image: nginx:alpine
     ports:
-      - "8080:80"
+      - "8081:80"
     volumes:
-      # Layer 0: shared nginx config (read-only)
-      - ../infrastructure/nginx/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+      # Gateway config for local review (self-contained; adds /patterns redirect)
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
 
       # Layer 1: static pattern catalogue (read-only)
       - .:/usr/share/nginx/html/patterns:ro

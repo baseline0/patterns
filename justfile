@@ -22,16 +22,16 @@ import 'just/fleet-test.just'
 
 # Integrated review: Docker Compose (realistic paths, API proxy)
 @up:
-    echo "🚀 Starting gateway + API on http://localhost:8080/"
+    echo "🚀 Starting gateway + API on http://localhost:8081/"
     docker compose up gateway api
 
 # Start in background, show URLs
 @up-bg:
     docker compose up -d gateway api
     echo "✅ Gateway started"
-    echo "   - Patterns: http://localhost:8080/patterns/"
-    echo "   - API:      http://localhost:8080/api/"
-    echo "   - Health:   http://localhost:8080/healthz"
+    echo "   - Patterns: http://localhost:8081/patterns/"
+    echo "   - API:      http://localhost:8081/api/"
+    echo "   - Health:   http://localhost:8081/healthz"
 
 # Stop services
 @down:
@@ -41,8 +41,8 @@ import 'just/fleet-test.just'
 @check:
     #!/bin/bash
     echo "🔍 Running health checks..."
-    curl -fsS http://localhost:8080/healthz && echo "✓ Gateway healthy" || echo "✗ Gateway down"
-    curl -fsS http://localhost:8080/patterns/ > /dev/null && echo "✓ Patterns reachable" || echo "✗ Patterns 404"
+    curl -fsS http://localhost:8081/healthz && echo "✓ Gateway healthy" || echo "✗ Gateway down"
+    curl -fsS http://localhost:8081/patterns/ > /dev/null && echo "✓ Patterns reachable" || echo "✗ Patterns 404"
     echo "Done."
 
 # === Build & Preview ===
