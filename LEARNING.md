@@ -313,7 +313,7 @@ For your pattern: Identify 5-10 failure modes, mitigation per each.
 
 Run this before each timed scenario; it mixes recall, spatial memory, and claim defence:
 
-1. **Visual recall (5 min)** — open `visual/index.html`, pick one concept map or architecture diagram, and say the
+1. **Visual recall (5 min)** — open `site/index.html` (catalogue) or `visual/index.html`, pick one concept map or architecture diagram, and say the
    components and data flow aloud without reading the captions.
 2. **Cards (10 min)** — `just -f cards/justfile review --minutes 10`; answer before revealing, then grade honestly.
 3. **Proof drill (10 min)** — pick one of the three real DAGs in `visual/proofs/` (amortized append, sliding-window
