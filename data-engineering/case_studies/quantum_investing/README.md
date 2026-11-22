@@ -298,11 +298,11 @@ just dev-api
 3. Add Silver model in `dbt/models/silver/`
 4. Add Gold metrics in `dbt/models/gold/`
 5. Add API endpoint in `api/serve.py`
-6. Run `just dbt && just test-dbt`
+6. Run `dbt build && dbt test`
 
 ### Test data quality
 ```bash
-just test-dbt
+dbt test
 ```
 
 ### View dbt documentation
