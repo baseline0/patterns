@@ -1438,6 +1438,9 @@ export const architectureCatalogue = {
         "02-serverless-api",
         "07-monitoring"
       ],
+      "catalog_refs": [
+        "technology/protocol"
+      ],
       "quiz": [
         {
           "question": "Why should exponential backoff include jitter?",

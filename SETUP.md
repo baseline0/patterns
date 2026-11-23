@@ -26,9 +26,9 @@ just up
 ```
 
 Then visit:
-- **Patterns:** `http://localhost:8080/patterns/`
-- **API:** `http://localhost:8080/api/` (future)
-- **Health:** `http://localhost:8080/healthz`
+- **Patterns:** `http://localhost:8081/patterns/`
+- **API:** `http://localhost:8081/api/` (future)
+- **Health:** `http://localhost:8081/healthz`
 
 **Use when:** Final review, demo, testing API integration  
 **Advantage:** Matches production path structure
@@ -38,7 +38,7 @@ Then visit:
 ## Architecture
 
 ```
-Browser (localhost:8080)
+Browser (localhost:8081)
   │
   └── Nginx Reverse Proxy (gateway)
         ├── /patterns/   → patterns/ (static files)
@@ -46,7 +46,7 @@ Browser (localhost:8080)
         └── /healthz     → health check
 
 Layer 0 (Shared):
-  ../../infrastructure/nginx/nginx.conf  ← Reverse proxy config
+  ./nginx.conf                           ← Reverse proxy config (mounted by docker-compose.yml)
 
 Layer 1 (This Project):
   ./docker-compose.yml                   ← Services
@@ -124,7 +124,7 @@ Once `math-trace` and `equations-history` are built:
    - ../equations-history:/usr/share/nginx/html/equations:ro
    ```
 
-2. Uncomment location blocks in `../../infrastructure/nginx/nginx.conf`
+2. Uncomment location blocks in `./nginx.conf`
 
 3. Restart: `just restart`
 
@@ -132,9 +132,9 @@ Once `math-trace` and `equations-history` are built:
 
 ## Troubleshooting
 
-**Port 8080 already in use:**
+**Port 8081 already in use:**
 ```bash
-lsof -i :8080
+lsof -i :8081
 kill -9 <PID>
 ```
 

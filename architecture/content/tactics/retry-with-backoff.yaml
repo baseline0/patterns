@@ -41,6 +41,9 @@ related_patterns:
 scenarios:
   - 02-serverless-api
   - 07-monitoring
+# Shallow reference into the catalog subject-data incubator; see docs/adr/0005-catalog-boundary.md.
+catalog_refs:
+  - technology/protocol
 quiz:
   - question: Why should exponential backoff include jitter?
     choices:

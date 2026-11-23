@@ -1,12 +1,12 @@
 # patterns Configuration
 
-**Reusable patterns: data structures, cloud architecture, and game theory.** (Formerly `cloud-patterns`.)
+**Reusable patterns: data structures and cloud architecture.** Game theory subject data lives in `catalog`. (Formerly `cloud-patterns`.)
 
 For universal rules, see `~/.claude/CLAUDE.md`.
 
 ## Project Context
 
-**Purpose**: Hold three pattern families: data structures, cloud architecture (vendor-agnostic, taught through local emulators, Terraform, and scenario-based learning), and game theory. Cloud architecture is the only family with content today.
+**Purpose**: Hold two pattern families here: data structures and cloud architecture (vendor-agnostic, taught through local emulators, Terraform, and scenario-based learning). Game theory is owned as subject data by `catalog/game-theory/`; see ADR 0005. Cloud architecture is the only family with content today.
 
 **Key Principles**:
 - Patterns first, provider details second
@@ -179,8 +179,7 @@ patterns/
 ├── papers/                        # imported paper content and rendering
 ├── cards/                         # canonical deck and review paths
 ├── visual/                        # concept maps, diagrams, proof pages
-└── .github/workflows/
-    └── validate.yml               # CI: Terraform validation
+└── .github/workflows/             # empty: no CI workflow is committed
 ```
 
 ## Git Workflow
@@ -194,7 +193,7 @@ The git rules (commits, pushes, branches) are in the fleet standard, which is in
 
 ## Testing & Validation
 
-**Terraform validation** (CI-automated via GitHub Actions):
+**Terraform validation** (run locally; no CI workflow is committed):
 ```bash
 terraform init
 terraform validate

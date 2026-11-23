@@ -58,7 +58,7 @@ Inventories are generated from source content. Use these instead of hand-maintai
 
 - **Data structures:** how information is shaped, indexed, and kept consistent (see [data-structures/README.md](data-structures/README.md)).
 - **Cloud architecture:** vendor-agnostic design patterns, taught through local emulators, IaC, and scenarios (current primary content; see site/catalogue).
-- **Game theory:** strategic interaction, incentives, and equilibria (scoped, not yet written).
+- **Game theory:** subject data (strategic interaction, incentives, equilibria) lives in `catalog/game-theory/`; no teachable family here yet — see [ADR 0005](docs/adr/0005-catalog-boundary.md).
 
 ## Build and check
 
@@ -92,7 +92,9 @@ rendering**. Neither absorbs the other.
   are a **template to copy**, not a dependency to import.
 
 Decision record: [docs/adr/0005-catalog-boundary.md](docs/adr/0005-catalog-boundary.md). Contract tests:
-[tests/unit/test_catalog_contract.py](tests/unit/test_catalog_contract.py).
+[unit shape guards](tests/unit/test_catalog_contract.py) run in `just test`;
+[host resolution](tests/host/test_catalog_refs.py) runs with `uv run pytest tests/host` when the catalog checkout is
+beside this one (fleet workspace layout).
 
 ## Philosophy
 

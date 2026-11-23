@@ -136,7 +136,7 @@ def test_catalog_ref_rejects_paths_and_urls(value: str) -> None:
 def test_committed_catalog_refs_are_shallow_ids() -> None:
     offenders: list[str] = []
     for family in CONTENT_FAMILIES:
-        for path in sorted((REPO_ROOT / family).glob("*.yaml")):
+        for path in sorted((REPO_ROOT / family).rglob("*.yaml")):
             document = yaml.safe_load(path.read_text(encoding="utf-8"))
             for ref in _refs(document):
                 if not isinstance(ref, str) or CATALOG_REF.fullmatch(ref) is None:
