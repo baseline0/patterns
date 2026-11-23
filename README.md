@@ -75,6 +75,25 @@ just -f visual/justfile serve   # http://localhost:8000/visual/index.html
 just -f cards/justfile review --minutes 30
 ```
 
+### Relationship to `catalog`
+
+<!-- catalog-boundary: subject-data-vs-pattern-rendering -->
+
+`catalog` (L3, private) is the incubator for **domain subject data and provenance**: one folder per subject, with its
+own sources and licence terms. This repo (L2, public) owns **reusable pattern structure, teaching content and
+rendering**. Neither absorbs the other.
+
+- This repo never imports, reads or ingests `catalog` at runtime or build time; a build runs from committed files only.
+- Links to subjects are **references by ID** (`catalog_refs`: `subject` or `subject/id`), not copies of subject data and
+  not absolute or parent-traversing paths. Source data and its terms stay in `catalog`.
+- Overlap is split by ownership: `catalog` owns subject taxonomies (including `algorithms` and `game-theory`); this
+  repo owns the teachable pattern layer (data structures, scenarios, quizzes, proof DAGs) and cites the subject by ID.
+- When a subject matures it graduates to its own site repository, as `periodic-table-inspector` did. The builders here
+  are a **template to copy**, not a dependency to import.
+
+Decision record: [docs/adr/0005-catalog-boundary.md](docs/adr/0005-catalog-boundary.md). Contract tests:
+[tests/unit/test_catalog_contract.py](tests/unit/test_catalog_contract.py).
+
 ## Philosophy
 
 - **Vendor-agnostic:** patterns first, provider details second
