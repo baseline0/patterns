@@ -6,6 +6,7 @@ Run it locally with the catalog checkout beside this one (the fleet workspace la
 
 from __future__ import annotations
 
+import json
 import re
 from typing import Any
 
@@ -14,6 +15,7 @@ import yaml
 from constants import REPO_ROOT
 
 CATALOG = REPO_ROOT.parent / "catalog"
+INDEX = CATALOG / "subjects.json"
 CONTENT_FAMILIES = (
     "architecture/content",
     "data-structures/content",
@@ -23,7 +25,6 @@ CONTENT_FAMILIES = (
     "providers/content",
     "testing/content",
 )
-SUBJECT_LINE = re.compile(r"^- ([a-z0-9]+(?:-[a-z0-9]+)*):")
 
 
 def _normalize(value: str) -> str:
@@ -42,27 +43,24 @@ def _refs(node: Any) -> list[Any]:
     return []
 
 
-def _subject_ids() -> set[str]:
-    readme = (CATALOG / "README.md").read_text(encoding="utf-8")
-    section = readme.split("## Subjects", 1)[1].split("\n## ", 1)[0]
-    return {match.group(1) for line in section.splitlines() if (match := SUBJECT_LINE.match(line))}
+def _subject_index() -> dict[str, str | None]:
+    document = json.loads(INDEX.read_text(encoding="utf-8"))
+    assert document.get("schema_version") == 1, "unsupported catalog subject index schema"
+    subjects = document.get("subjects", {})
+    assert subjects, "no subjects in catalog/subjects.json"
+    return {subject: entry.get("ontology") for subject, entry in subjects.items()}
 
 
-def _entity_ids(subject: str) -> set[str]:
-    ontology = CATALOG / subject / "ontology.yaml"
-    if not ontology.is_file():
-        return set()
-    document = yaml.safe_load(ontology.read_text(encoding="utf-8")) or {}
+def _entity_ids(ontology: str) -> set[str]:
+    document = yaml.safe_load((CATALOG / ontology).read_text(encoding="utf-8")) or {}
     return {_normalize(item["name"]) for item in document.get("entity_types", [])}
 
 
 def test_catalog_refs_resolve_against_the_sibling_catalog() -> None:
-    if not (CATALOG / "README.md").is_file():
-        pytest.skip(f"sibling catalog checkout not found at {CATALOG}")
+    if not INDEX.is_file():
+        pytest.skip(f"sibling catalog subject index not found at {INDEX}")
 
-    subjects = _subject_ids()
-    assert subjects, "no subjects parsed from catalog/README.md"
-
+    subjects = _subject_index()
     refs = [
         ref
         for family in CONTENT_FAMILIES
@@ -71,15 +69,30 @@ def test_catalog_refs_resolve_against_the_sibling_catalog() -> None:
     ]
     assert refs, "no catalog_refs in committed content; the contract has no live example"
 
+    entity_cache: dict[str, set[str]] = {}
     broken: list[str] = []
     for ref in refs:
-        if not isinstance(ref, str) or "/" not in ref:
-            broken.append(f"{ref!r}: expected subject/id")
+        if not isinstance(ref, str) or not ref:
+            broken.append(f"{ref!r}: expected a shallow subject or subject/id string")
             continue
-        subject, entity = ref.split("/", 1)
+        subject, separator, entity = ref.partition("/")
         if subject not in subjects:
-            broken.append(f"{ref!r}: unknown subject")
-        elif _entity_ids(subject) and _normalize(entity) not in _entity_ids(subject):
-            broken.append(f"{ref!r}: unknown entity in {subject}/ontology.yaml")
+            broken.append(f"{ref!r}: unknown subject (not in catalog/subjects.json)")
+            continue
+        if not separator:
+            continue
+        ontology = subjects[subject]
+        if not ontology:
+            broken.append(
+                f"{ref!r}: subject {subject!r} has no ontology; use a subject-only ref or add one to catalog/subjects.json"
+            )
+            continue
+        if ontology not in entity_cache:
+            entity_cache[ontology] = _entity_ids(ontology)
+        known = entity_cache[ontology]
+        if not known:
+            broken.append(f"{ref!r}: ontology {ontology} declares no entity_types")
+        elif _normalize(entity) not in known:
+            broken.append(f"{ref!r}: unknown entity in {ontology}")
 
     assert not broken, f"unresolved catalog_refs: {broken}"

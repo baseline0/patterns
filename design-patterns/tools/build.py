@@ -126,6 +126,9 @@ def readme(pattern: dict[str, Any]) -> str:
         "",
     ]
     lines += [f"- `{item}`" for item in pattern["related_architecture"]]
+    if pattern.get("catalog_refs"):
+        lines += ["", "## Catalog subjects", ""]
+        lines += [f"- `{ref}`" for ref in pattern["catalog_refs"]]
     return "\n".join(lines).rstrip("\n") + "\n"
 
 
@@ -165,6 +168,11 @@ def index_html(pattern: dict[str, Any]) -> str:
         f"<h2>Python sketch</h2><pre>{esc(pattern['python'])}</pre>",
         f"<h2>Interview example</h2><p>{esc(pattern['example'])}</p>",
     ]
+    refs = pattern.get("catalog_refs", [])
+    if refs:
+        parts += ["<h2>Catalog subjects</h2><ul>"]
+        parts += [f"<li><code>{esc(ref)}</code></li>" for ref in refs]
+        parts += ["</ul>"]
     return "\n".join(parts) + "\n</body></html>\n"
 
 

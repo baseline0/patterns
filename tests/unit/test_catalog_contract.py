@@ -80,6 +80,8 @@ def test_readme_declares_the_catalog_boundary() -> None:
     assert MARKER in readme
     assert "catalog" in readme and "catalog_refs" in readme
     assert "periodic-table-inspector" in readme
+    assert "How to add a catalog_ref" in readme
+    assert "subjects.json" in readme
 
 
 def test_adr_records_the_no_absorption_decision() -> None:

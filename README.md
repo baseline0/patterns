@@ -94,7 +94,19 @@ rendering**. Neither absorbs the other.
 Decision record: [docs/adr/0005-catalog-boundary.md](docs/adr/0005-catalog-boundary.md). Contract tests:
 [unit shape guards](tests/unit/test_catalog_contract.py) run in `just test`;
 [host resolution](tests/host/test_catalog_refs.py) runs with `uv run pytest tests/host` when the catalog checkout is
-beside this one (fleet workspace layout).
+beside this one (fleet workspace layout). The subject list is `catalog/subjects.json`, checked there by
+`tests/test_subject_index.py`.
+
+### How to add a catalog_ref
+
+1. Pick a subject from `catalog/subjects.json`. Use `subject` for a whole subject, or `subject/id` for an entity in that
+   subject's `ontology.yaml` (entity names are case- and punctuation-insensitive).
+2. Add a `catalog_refs` list to the relevant content YAML. Keep it shallow: no paths, URLs, file names, imports or
+   copied subject data.
+3. Rebuild the affected family (`just -f architecture/justfile build` or `just -f design-patterns/justfile build`).
+   Refs are rendered as non-linked provenance metadata.
+4. Run `just test` and `uv run pytest tests/host -q`. A bad ref fails with `unknown subject`, `subject has no ontology`,
+   `unknown entity`, or `unresolved catalog_refs`.
 
 ## Philosophy
 

@@ -63,6 +63,16 @@ def test_generated_outputs_have_no_drift():
             assert (root / relative).read_text(encoding="utf-8") == text, f"{name}/{relative}"
 
 
+def test_catalog_refs_are_surfaced_in_generated_metadata():
+    design_outputs = design.render_all()
+    assert "`technology/protocol`" in design_outputs[Path("adapter/README.md")]
+    assert "<code>technology/protocol</code>" in design_outputs[Path("adapter/index.html")]
+
+    architecture_outputs = architecture.render_all()
+    assert "`technology/protocol`" in architecture_outputs[Path("CATALOGUE.md")]
+    assert "<code>technology/protocol</code>" in architecture_outputs[Path("index.html")]
+
+
 def test_design_patterns_cover_all_categories_and_link_to_catalogue():
     patterns = design.load_patterns()
     assert len(patterns) == 24

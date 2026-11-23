@@ -102,6 +102,11 @@ test-unit:
     echo "error: test-unit cannot run in this repo: install pytest as a dev dependency (uv add --dev pytest)" >&2
     exit 1
 
+# Host-tier catalog reference resolution; requires a sibling catalog checkout.
+[group("testing")]
+test-catalog-refs:
+    uv run pytest tests/host/test_catalog_refs.py -q
+
 # ============================================================================
 # Shared fleet recipes, run by fleet-base's installed tool (run `just -f $FLEET_ROOT/fleet-base/justfile install-fleet`; ADR-020).
 # Each line calls `fleet recipe NAME`; define a recipe here instead to override it.

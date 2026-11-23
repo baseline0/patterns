@@ -42,6 +42,9 @@ related_architecture:
 - 04-crud-api
 - layered
 - microservices
+# Shallow reference into the catalog subject-data incubator; see docs/adr/0005-catalog-boundary.md.
+catalog_refs:
+- technology/protocol
 quiz:
 - question: 'Adapter primarily addresses:'
   choices:

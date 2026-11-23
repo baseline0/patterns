@@ -36,6 +36,10 @@ This is the canonical index for design patterns, architecture styles, tactics, q
 - `security` — Security
 - `testability` — Testability
 
+## Catalog subjects
+
+- `technology/protocol`
+
 ## Scenarios
 
 | ID | Title | Status | Prompt | Solution | Rubric |

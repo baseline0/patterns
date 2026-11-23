@@ -242,6 +242,11 @@ def catalogue_markdown(catalogue: dict[str, Any], items: dict[str, list[dict[str
         lines += [f"### {kind.replace('-', ' ').title()} ({len(items[kind])})", ""]
         lines += [f"- `{item['id']}` — {item['name']}" for item in items[kind]]
         lines.append("")
+    refs = sorted({ref for group in items.values() for item in group for ref in item.get("catalog_refs", [])})
+    if refs:
+        lines += ["## Catalog subjects", ""]
+        lines += [f"- `{ref}`" for ref in refs]
+        lines.append("")
     lines += [
         "## Scenarios",
         "",
@@ -272,6 +277,11 @@ def catalogue_html(catalogue: dict[str, Any], items: dict[str, list[dict[str, An
     for kind in KINDS:
         parts.append(f"<h2>{esc(kind.replace('-', ' ').title())}</h2><ul>")
         parts += [f"<li><code>{esc(item['id'])}</code> — {esc(item['name'])}</li>" for item in items[kind]]
+        parts.append("</ul>")
+    refs = sorted({ref for group in items.values() for item in group for ref in item.get("catalog_refs", [])})
+    if refs:
+        parts.append("<h2>Catalog subjects</h2><ul>")
+        parts += [f"<li><code>{esc(ref)}</code></li>" for ref in refs]
         parts.append("</ul>")
     parts.append("<h2>Scenarios</h2><ul>")
     parts += [

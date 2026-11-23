@@ -74,3 +74,7 @@ A CRUD API (04-crud-api) can adapt a legacy billing SDK to the application port 
 - `04-crud-api`
 - `layered`
 - `microservices`
+
+## Catalog subjects
+
+- `technology/protocol`

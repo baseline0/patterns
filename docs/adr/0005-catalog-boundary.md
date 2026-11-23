@@ -39,10 +39,12 @@ Option 3. No absorption in either direction.
 
 - Both READMEs carry the `catalog-boundary: subject-data-vs-pattern-rendering` marker; unit tests bind the docs and
   the code to it.
-- `catalog_refs` values are `subject` or `subject/id`, never paths, URLs or file names. A committed example flows into
-  the generated architecture catalogue.
-- A host-tier test resolves every ref against the sibling catalog's subject list and ontology; it never runs in CI or
-  the unit gate.
+- `catalog_refs` values are `subject` or `subject/id`, never paths, URLs or file names. Committed examples flow into
+  the generated architecture and design-pattern pages as non-linked provenance metadata.
+- `catalog/subjects.json` is the machine-readable subject list. `catalog` checks it against its README and ontologies
+  with stdlib `unittest`; the host test reads it instead of scraping prose.
+- A host-tier test resolves every ref against that index. A `subject/id` ref must name an entity in the subject's
+  ontology; a missing ontology is a failure, not an open-ended match. The host test never runs in CI or the unit gate.
 - Adding a subject does not change `patterns`' generated catalogue; adding a pattern does not change `catalog` data.
 - Each repo keeps its own gate and publication posture. `catalog` has no Python build; `patterns` keeps the
   no-sibling-import guard.
