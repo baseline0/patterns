@@ -1,6 +1,6 @@
 """Check that commits being pushed do not carry Co-Authored-By trailers.
 
-Used by just/repo-push.just. Exits non-zero if any commit in the range contains a
+Used by the installed fleet-base push recipe via `just/fleet-recipes.just`. Exits non-zero if any commit in the range contains a
 Co-authored-by trailer.
 """
 

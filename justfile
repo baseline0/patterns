@@ -2,12 +2,8 @@
 # Cloud Patterns — local development recipes
 
 # Show available recipes
-import 'just/repo-push.just'
+import 'just/fleet-recipes.just'
 
-import 'just/fleet-clean.just'
-import 'just/fleet-checks.just'
-import 'just/fleet-commit.just'
-import 'just/fleet-test.just'
 
 @help:
     just --list
