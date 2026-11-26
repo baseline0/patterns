@@ -1,11 +1,24 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
 [project]
 name = "patterns"
 version = "0.1.0"
 requires-python = ">=3.13"
+
 dependencies = [
     "pyyaml>=6.0.3",
     "typer>=0.29.0",
+    "mcp>=2.2.0,<3",
+    "fastapi>=0.104",
+    "uvicorn>=0.30",
 ]
+
+[project.scripts]
+patterns-index = "pattern_index.cli:app"
+patterns-mcp = "pattern_index.mcp_server:app"
+patterns-server = "pattern_index.server:run"
 
 [dependency-groups]
 dev = [
@@ -49,3 +62,6 @@ exclude = ["**/__pycache__", ".git", ".ruff_cache", ".mypy_cache", ".pytest_cach
 
 [tool.importlinter]
 include_external_packages = true
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/pattern_index"]

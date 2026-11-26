@@ -107,3 +107,10 @@ test-catalog-refs:
 # Shared fleet recipes, run by fleet-base's installed tool (run `just -f $FLEET_ROOT/fleet-base/justfile install-fleet`; ADR-020).
 # Each line calls `fleet recipe NAME`; define a recipe here instead to override it.
 # ============================================================================
+
+# MCP resource (read-only)
+mcp-serve:
+    uv run patterns-mcp --transport stdio
+
+mcp-serve-http:
+    uv run patterns-server

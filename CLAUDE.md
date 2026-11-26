@@ -270,3 +270,14 @@ See `CONTRIBUTING.md` for detailed guidelines.
 ## Questions?
 
 See [README.md](README.md) for overview, [LEARNING.md](LEARNING.md) for curriculum, or [patterns/](patterns/) for specific pattern guides.
+
+## MCP resource
+
+patterns is now a small read-only MCP server over the committed `site/catalog.json` index:
+
+```bash
+uv run patterns-mcp --transport stdio          # stdio
+uv run patterns-server                          # streamable HTTP on :8080
+```
+
+Tools: `list_families`, `list_patterns`, `search_patterns`, `get_pattern`.
