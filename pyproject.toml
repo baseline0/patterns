@@ -35,7 +35,7 @@ test = [
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
-addopts = "--strict-markers"
+addopts = "--strict-markers --durations=5"
 markers = ["unit: deterministic, isolated, no external dependencies", "integration: tests that use real services or files across components", "e2e: end-to-end tests of a whole workflow", "unit: deterministic, isolated, no network/services/sibling repos", "integration: cross-repo/service interaction; requires local setup", "host: runs on the real host (services, sibling repos, LXC); never in CI"]
 
 [tool.uv]
